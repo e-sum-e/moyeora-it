@@ -16,3 +16,10 @@ export const addBookmarkedItem = (item: string) => {
   bookmarkList.push(item);
   localStorage.setItem("bookmarkList", JSON.stringify(bookmarkList));
 };
+
+/** 해당 요소를 localStorage 찜 목록에서 제거하는 함수 */
+export const removeBookmarkedItem = (item: string) => {
+  let bookmarkList = getBookmarkList();
+  bookmarkList = bookmarkList.filter((bookmark) => bookmark !== item);
+  localStorage.setItem("bookmarkList", JSON.stringify(bookmarkList));
+};
