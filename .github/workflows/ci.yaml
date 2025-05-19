@@ -1,0 +1,49 @@
+name: Auto PR to dev
+
+on:
+  push:
+    branches:
+      - feature-*
+
+concurrency:
+  group: auto-pr-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      BRANCH_NAME: ${{ github.ref_name }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref_name }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Lint
+        run: npm run lint
+
+      - name: Create Pull Request
+        if: success()
+        run: |
+          echo "🔍 Checking PR from $BRANCH_NAME to dev"
+          PR_EXISTS=$(gh pr list --base dev --head "$BRANCH_NAME" --state open --json number --jq 'length')
+          if [ "$PR_EXISTS" -eq 0 ]; then
+            gh pr create \
+              --base dev \
+              --head "$BRANCH_NAME" \
+              --title "자동 PR: $BRANCH_NAME → dev" \
+              --body "$(git log --pretty=format:%s origin/dev..$BRANCH_NAME)"
+          else
+            PR_NUMBER=$(gh pr list --base dev --head "$BRANCH_NAME" --state open --json number --jq '.[0].number')
+            gh pr comment "$PR_NUMBER" --body "새로운 커밋이 푸시되었습니다: $(git log -1 --pretty=%B)"
+            gh pr edit "$PR_NUMBER" --add-label "auto-updated"
+          fi
