@@ -22,7 +22,7 @@ export const BookmarkCardContents = ({
 						<Badge text="시간" className="bg-gray-900 text-gray-100" />
 					</div>
 				</div>
-				<BookmarkButton id=1 isBookmark={false} />
+				<BookmarkButton id={1} isBookmark={false} />
 			</div>
 			<footer>
 				<div className="flex flex-col gap-2">
