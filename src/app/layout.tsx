@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Header } from "@/components/organisms/header";
+import { Toaster } from "sonner";
 import { MSWComponent } from "@/providers/MSWComponent";
 
 export const metadata: Metadata = {
@@ -19,6 +20,7 @@ export default function RootLayout({
         <MSWComponent>
           <Header />
           {children}
+          <Toaster />
         </MSWComponent>
       </body>
     </html>
