@@ -1,5 +1,4 @@
 "use client";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -14,6 +13,7 @@ import {
 } from "@/components/ui/form";
 import { useState } from "react";
 import useAuthStore from "@/stores/useAuthStore";
+import { InputText } from "@/components/atoms/input-text";
 
 const formSchema = z.object({
   email: z.string().min(1, { message: "이메일을 입력해주세요" }).email({
@@ -55,7 +55,7 @@ export default function Page() {
               <FormItem>
                 <FormLabel>이메일</FormLabel>
                 <FormControl>
-                  <Input placeholder="shadcn" {...field} />
+                  <InputText placeholder="이메일" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -67,9 +67,13 @@ export default function Page() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Username</FormLabel>
+                <FormLabel>비밀번호</FormLabel>
                 <FormControl>
-                  <Input placeholder="shadcn" {...field} />
+                  <InputText
+                    placeholder="비밀번호"
+                    type="password"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
