@@ -9,3 +9,10 @@ export const getBookmarkList = () => {
 
   return bookmarkList;
 };
+
+/** 해당 요소를 localStorage 찜 목록에 추가하는 함수 */
+export const addBookmarkedItem = (item: string) => {
+  const bookmarkList = getBookmarkList();
+  bookmarkList.push(item);
+  localStorage.setItem("bookmarkList", JSON.stringify(bookmarkList));
+};
