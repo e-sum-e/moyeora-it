@@ -1,7 +1,12 @@
+"use client";
 import React from "react";
 import Link from "next/link";
-
+import { Avatar } from "../avatar";
+import { useRouter } from "next/navigation";
+import { Button } from "../ui/button";
+import { MenuIcon } from "lucide-react";
 export const Header = () => {
+  const router = useRouter();
   const menuItems = [
     {
       label: "모여라-IT",
@@ -28,8 +33,8 @@ export const Header = () => {
       href: "/notification",
       needLogin: true,
     },
-  ];
-  const isLoggedIn = false; //TODO: 로그인 여부 확인 -> 전역에서 상태관리 
+    ];
+  const isLoggedIn = true; //TODO: 로그인 여부 확인 -> 전역에서 상태관리 
 
   const filteredMenuItems = menuItems.filter(
     (item) => !item.needLogin || (item.needLogin && isLoggedIn)
@@ -41,7 +46,16 @@ export const Header = () => {
         <ul className="flex gap-4 w-full justify-between">
           {filteredMenuItems.map((item) => (
             <li key={item.href}>
-              <Link href={item.href}>{item.label}</Link>
+              {
+                isLoggedIn && item.label === "Notification" ? 
+                <Avatar imageSrc="https://github.com/shadcn.png" fallback="user이름" className="w-8 h-8 cursor-pointer"
+                  onClick={() => {
+                    router.push("/");
+                  }}
+                 />
+                :
+                <Link href={item.href}>{item.label}</Link>
+              }
             </li>
           ))}
         </ul>
