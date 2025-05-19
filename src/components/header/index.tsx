@@ -3,8 +3,6 @@ import React from "react";
 import Link from "next/link";
 import { Avatar } from "../avatar";
 import { useRouter } from "next/navigation";
-import { Button } from "../ui/button";
-import { MenuIcon } from "lucide-react";
 export const Header = () => {
   const router = useRouter();
   const menuItems = [
