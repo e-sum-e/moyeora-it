@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Header } from "@/components/organisms/header";
-
+import { MSWComponent } from "@/providers/MSWComponent";
 
 export const metadata: Metadata = {
   title: "모여라-IT",
@@ -16,8 +16,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Header />
-        {children}
+        <MSWComponent>
+          <Header />
+          {children}
+        </MSWComponent>
       </body>
     </html>
   );
