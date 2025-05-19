@@ -1,7 +1,5 @@
 "use client";
 
-const Page = () => {
+export default function Page() {
   return <div>register</div>;
-};
-
-export default Page;
+}

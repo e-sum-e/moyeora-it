@@ -1,7 +1,5 @@
 "use client";
 
-const Page = () => {
-  return <div>reset-password</div>;
-};
-
-export default Page;
+export default function Page() {
+  return <div>reset</div>;
+}
