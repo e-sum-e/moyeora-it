@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { Avatar } from "../avatar";
+import { Avatar } from "../../atoms/avatar";
 import { useRouter } from "next/navigation";
 export const Header = () => {
   const router = useRouter();
