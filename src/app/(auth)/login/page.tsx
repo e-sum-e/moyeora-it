@@ -12,7 +12,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useState } from "react";
-import useAuthStore from "@/stores/useAuthStore";
 import { InputText } from "@/components/atoms/input-text";
 import Link from "next/link";
 
@@ -32,16 +31,18 @@ export default function Page() {
     },
   });
   const [isLoginFailed, setIsLoginFailed] = useState(false);
-  const login = useAuthStore((s) => s.login);
+  // const login = useAuthStore((s) => s.login);
 
   // 로그인
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    console.log(values);
     try {
       // TODO: 로그인 로직 작성 /login
       // TODO: 로그인 성공 후 회원정보 불러오기 /me
     } catch (e) {
       // TODO: 로그인 실패시 에러코드 맞춰서 설정해주기
       setIsLoginFailed(true);
+      console.log(e);
     }
   };
 

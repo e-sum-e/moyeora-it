@@ -93,7 +93,7 @@ export default function Page() {
     },
   });
   const [isRegisterFailed, setIsRegisterFailed] = useState(false);
-  const { login, user } = useAuthStore();
+  const { user } = useAuthStore();
 
   const optionalForm = useForm<z.infer<typeof optionalFormSchema>>({
     resolver: zodResolver(optionalFormSchema),
@@ -108,12 +108,14 @@ export default function Page() {
   const onRegisterSubmit = async (
     values: z.infer<typeof registerFormSchema>
   ) => {
+    console.log(values);
     try {
       // TODO: 회원가입 로직 작성 /register
       // TODO: 회원가입 성공 후 회원정보 불러오기 /me
     } catch (e) {
       // TODO: 회원가입 실패시 에러코드 맞춰서 설정해주기
       setIsRegisterFailed(true);
+      console.log(e);
     }
   };
 
@@ -121,10 +123,12 @@ export default function Page() {
   const onOptionalSubmit = async (
     values: z.infer<typeof optionalFormSchema>
   ) => {
+    console.log(values);
     try {
       //  TODO: 프로필 옵션 설정
     } catch (e) {
       // TODO: 프로필 에러 설정 //
+      console.log(e);
     }
   };
 
