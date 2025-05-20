@@ -16,10 +16,10 @@ import useAuthStore from "@/stores/useAuthStore";
 import { InputText } from "@/components/atoms/input-text";
 
 const formSchema = z.object({
-  email: z.string().min(1, { message: "이메일을 입력해주세요" }).email({
+  email: z.string().nonempty({ message: "이메일을 입력해주세요" }).email({
     message: "유효한 이메일이 아닙니다.",
   }),
-  password: z.string().min(1, { message: "비밀번호를 입력해주세요" }),
+  password: z.string().nonempty({ message: "비밀번호를 입력해주세요" }),
 });
 
 export default function Page() {
@@ -55,7 +55,7 @@ export default function Page() {
               <FormItem>
                 <FormLabel>이메일</FormLabel>
                 <FormControl>
-                  <InputText placeholder="이메일" {...field} />
+                  <InputText placeholder="이메일" type="email" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
