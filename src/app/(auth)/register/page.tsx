@@ -17,27 +17,10 @@ import { useState } from "react";
 import useAuthStore from "@/stores/useAuthStore";
 import { InputText } from "@/components/atoms/input-text";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Position, Skill } from "@/types";
 
-const positions: [string, ...string[]] = [
-  "PM",
-  "PL",
-  "AA",
-  "TA",
-  "DA",
-  "QA",
-  "FE",
-  "BE",
-  "FS",
-];
-const skills: [string, ...string[]] = [
-  "JAVA",
-  "JavaScript",
-  "HTML/CSS",
-  "React",
-  "Vue.js",
-  "Kotlin",
-  "Spring",
-];
+const positions = Object.values(Position) as [string, ...string[]];
+const skills = Object.values(Skill) as [string, ...string[]];
 
 // 회원가입에 쓰이는 이메일과 비밀번호 유효성
 // 규칙은 네이버와 똑같이 했습니다
