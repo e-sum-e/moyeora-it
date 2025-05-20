@@ -66,9 +66,6 @@ export default function Page() {
     defaultValues: {
       title: "",
       maxParticipants: 1,
-      deadline: validDeadline,
-      startDate: validStartDate,
-      endDate: validEndDate,
     },
   });
 
