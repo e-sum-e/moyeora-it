@@ -14,6 +14,7 @@ import {
 import { useState } from "react";
 import useAuthStore from "@/stores/useAuthStore";
 import { InputText } from "@/components/atoms/input-text";
+import Link from "next/link";
 
 const formSchema = z.object({
   email: z.string().nonempty({ message: "이메일을 입력해주세요" }).email({
@@ -31,7 +32,7 @@ export default function Page() {
     },
   });
   const [isLoginFailed, setIsLoginFailed] = useState(false);
-  const { login, user } = useAuthStore();
+  const login = useAuthStore((s) => s.login);
 
   // 로그인
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -86,6 +87,7 @@ export default function Page() {
           <Button type="submit">로그인</Button>
         </form>
       </Form>
+      <Link href="/register">회원가입</Link>
     </div>
   );
 }
