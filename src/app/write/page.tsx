@@ -13,6 +13,7 @@ import {
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { DeadlineCalendar } from "@/components/write-form/deadlineCalendar";
 import { MaxParticipants } from "@/components/write-form/maxParticipants";
+import { StartDateCalendar } from "@/components/write-form/startDateCalendar";
 import { Title } from "@/components/write-form/title";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PopoverContent } from "@radix-ui/react-popover";
@@ -56,28 +57,18 @@ const formSchema = z
 
 export default function Page() {
   const [isDeadlineCalendarOpen, setIsDeadlineCalendarOpen] = useState(false);
-  const [isStartDateOpen, setIsStartDateOpen] = useState(false);
+  const [isStartDateCalendarOpen, setIsStartDateCalendarOpen] = useState(false);
   const [isEndDateOpen, setIsEndDateOpen] = useState(false);
   const [validDeadline, setValidDeadline] = useState(addDays(new Date(), 7));
 
   const validStartDate = useMemo(
-    () => addDays(validDeadline, 0),
+    () => addDays(validDeadline, 1),
     [validDeadline]
   );
   const validEndDate = useMemo(
     () => addDays(validStartDate, 6),
     [validStartDate]
   );
-
-  const startDateSelect = (
-    date: Date | undefined,
-    onChange: (date: Date | undefined) => void
-  ) => {
-    if (!date) return;
-
-    onChange(date);
-    setIsStartDateOpen(false);
-  };
 
   const endDateSelect = (
     date: Date | undefined,
@@ -118,47 +109,12 @@ export default function Page() {
           validDeadline={validDeadline}
         />
         <MaxParticipants form={form} />
-        <FormField
-          control={form.control}
-          name="startDate"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>모임 시작일</FormLabel>
-              <Popover open={isStartDateOpen} onOpenChange={setIsStartDateOpen}>
-                <div>
-                  {field.value ? (
-                    format(field.value, "yyyy.MM.dd")
-                  ) : (
-                    <>
-                      <div className="text-gray-500">
-                        {format(validStartDate, "yyyy.MM.dd")}
-                      </div>
-                      <div>날짜를 선택해주세요.</div>
-                    </>
-                  )}
-                </div>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button type="button" className="w-[fit-content]">
-                      <CalendarIcon />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    onSelect={(e) => {
-                      startDateSelect(e, field.onChange);
-                    }}
-                    disabled={{ before: validStartDate }}
-                    className="bg-pink-100"
-                  />
-                </PopoverContent>
-              </Popover>
-              <FormMessage />
-            </FormItem>
-          )}
+        <StartDateCalendar
+          form={form}
+          isStartDateCalendarOpen={isStartDateCalendarOpen}
+          openStartDateCalendar={() => setIsStartDateCalendarOpen(true)}
+          closeStartDateCalendar={() => setIsStartDateCalendarOpen(false)}
+          validStartDate={validStartDate}
         />
         <FormField
           control={form.control}
