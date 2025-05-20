@@ -1,24 +1,14 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Popover, PopoverTrigger } from "@/components/ui/popover";
+import { Form } from "@/components/ui/form";
 import { DeadlineCalendar } from "@/components/write-form/deadlineCalendar";
+import { EndDateCalendar } from "@/components/write-form/endDateCalendar";
 import { MaxParticipants } from "@/components/write-form/maxParticipants";
 import { StartDateCalendar } from "@/components/write-form/startDateCalendar";
 import { Title } from "@/components/write-form/title";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PopoverContent } from "@radix-ui/react-popover";
-import { addDays, format, isAfter } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { addDays, isAfter } from "date-fns";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -58,7 +48,7 @@ const formSchema = z
 export default function Page() {
   const [isDeadlineCalendarOpen, setIsDeadlineCalendarOpen] = useState(false);
   const [isStartDateCalendarOpen, setIsStartDateCalendarOpen] = useState(false);
-  const [isEndDateOpen, setIsEndDateOpen] = useState(false);
+  const [isEndDateCalendarOpen, setIsEndDateCalendarOpen] = useState(false);
   const [validDeadline, setValidDeadline] = useState(addDays(new Date(), 7));
 
   const validStartDate = useMemo(
@@ -69,16 +59,6 @@ export default function Page() {
     () => addDays(validStartDate, 6),
     [validStartDate]
   );
-
-  const endDateSelect = (
-    date: Date | undefined,
-    onChange: (date: Date | undefined) => void
-  ) => {
-    if (!date) return;
-
-    onChange(date);
-    setIsEndDateOpen(false);
-  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema), // 유효성 검사는 zodResolver로 한다
@@ -116,47 +96,12 @@ export default function Page() {
           closeStartDateCalendar={() => setIsStartDateCalendarOpen(false)}
           validStartDate={validStartDate}
         />
-        <FormField
-          control={form.control}
-          name="endDate"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>모임 종료일</FormLabel>
-              <Popover open={isEndDateOpen} onOpenChange={setIsEndDateOpen}>
-                <div>
-                  {field.value ? (
-                    format(field.value, "yyyy.MM.dd")
-                  ) : (
-                    <>
-                      <div className="text-gray-500">
-                        {format(validStartDate, "yyyy.MM.dd")}
-                      </div>
-                      <div>날짜를 선택해주세요.</div>
-                    </>
-                  )}
-                </div>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button type="button" className="w-[fit-content]">
-                      <CalendarIcon />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    onSelect={(e) => {
-                      endDateSelect(e, field.onChange);
-                    }}
-                    disabled={{ before: validEndDate }}
-                    className="bg-purple-100"
-                  />
-                </PopoverContent>
-              </Popover>
-              <FormMessage />
-            </FormItem>
-          )}
+        <EndDateCalendar
+          form={form}
+          isEndDateCalendarOpen={isEndDateCalendarOpen}
+          openEndDateCalendar={() => setIsEndDateCalendarOpen(true)}
+          closeEndDateCalendar={() => setIsEndDateCalendarOpen(false)}
+          validEndDate={validEndDate}
         />
         <Button type="button">취소하기</Button>
         <Button type="submit">등록하기</Button>
