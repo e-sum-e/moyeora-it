@@ -39,7 +39,7 @@ jobs:
 
           PR_TEMPLATE=$(cat .github/pull_request_template.md)
           COMMIT_LOGS=$(git log --pretty=format:'- %s' origin/dev..$BRANCH_NAME)
-          PR_BODY=$(printf '%s\n' "$PR_TEMPLATE" | perl -pe "s/\(\(commitLogs\)\)/\Q$COMMIT_LOGS\E/")
+          PR_BODY=$(perl -0777 -pe "s/\(\(commitLogs\)\)/\Q$COMMIT_LOGS\E/" <<< "$PR_TEMPLATE")
 
           if [ "$PR_EXISTS" -eq 0 ]; then
             gh pr create \
