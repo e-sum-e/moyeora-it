@@ -100,10 +100,14 @@ export default function Page() {
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    reValidateMode: "onSubmit",
+    resolver: zodResolver(formSchema), // 유효성 검사는 zodResolver로 한다
+    reValidateMode: "onSubmit", // submit 시에만 유효성 검사
     defaultValues: {
       title: "",
+      maxParticipants: 1,
+      deadline: validDeadline,
+      startDate: validStartDate,
+      endDate: validEndDate,
     },
   });
 
