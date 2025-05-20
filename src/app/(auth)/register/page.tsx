@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/form";
 import { useState } from "react";
 import useAuthStore from "@/stores/useAuthStore";
-import { InputText } from "@/components/atoms/input-text";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Position, Skill } from "@/types";
 import { InputTextField } from "@/components/molecules/input-field";
@@ -164,18 +163,12 @@ export default function Page() {
             onSubmit={optionalForm.handleSubmit(onOptionalSubmit)}
             className="space-y-8"
           >
-            <FormField
-              control={optionalForm.control}
+            <InputTextField
+              form={optionalForm}
               name="nickname"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>닉네임</FormLabel>
-                  <FormControl>
-                    <InputText placeholder="닉네임" type="text" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              label="닉네임"
+              type="text"
+              placeholder="닉네임"
             />
 
             <FormField
