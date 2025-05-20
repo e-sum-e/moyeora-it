@@ -46,7 +46,7 @@ jobs:
               --base dev \
               --head "$BRANCH_NAME" \
               --title "자동 PR: $BRANCH_NAME → dev" \
-              --body "$PR_BODY"
+              --body "$PR_BODY" \
               --assignee "$GITHUB_ACTOR"
           else
             PR_NUMBER=$(gh pr list --base dev --head "$BRANCH_NAME" --state open --json number --jq '.[0].number')
