@@ -19,4 +19,4 @@
 
 ### 💬 Commits
 
-((commitLog))
+((commitLogs))
