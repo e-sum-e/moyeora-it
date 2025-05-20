@@ -1,23 +1,15 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { useState } from "react";
 import useAuthStore from "@/stores/useAuthStore";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Position, Skill } from "@/types";
 import { InputTextField } from "@/components/molecules/input-text-field";
+import { FormRadioGroupField } from "@/components/molecules/input-radiogroup-field";
+import { FormCheckboxGroupField } from "@/components/molecules/input-checkbox-field";
 
 const positions = Object.values(Position) as [string, ...string[]];
 const skills = Object.values(Skill) as [string, ...string[]];
@@ -157,7 +149,7 @@ export default function Page() {
       )}
 
       {/* 회원가입 후 로그인상태에서 출력, 이메일은 있지만 아직 닉네임은 설정이 안됨 */}
-      {user && (
+      {!user && (
         <Form {...optionalForm}>
           <form
             onSubmit={optionalForm.handleSubmit(onOptionalSubmit)}
@@ -171,99 +163,19 @@ export default function Page() {
               placeholder="닉네임"
             />
 
-            <FormField
-              control={optionalForm.control}
+            <FormRadioGroupField
+              form={optionalForm}
               name="position"
-              render={({ field }) => (
-                <FormItem className="space-y-3">
-                  <FormLabel>포지션</FormLabel>
-                  <FormControl>
-                    <RadioGroup
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      className="flex gap-4"
-                    >
-                      {positions.map((position) => (
-                        <FormItem
-                          key={position}
-                          className="flex items-center space-x-3 space-y-0"
-                        >
-                          <FormControl>
-                            <RadioGroupItem
-                              value={position}
-                              className="hidden"
-                            />
-                          </FormControl>
-                          <FormLabel
-                            className={`font-normal p-1 rounded text-gray-600 cursor-pointer bg-gray-300 ${
-                              optionalForm.watch("position") === position &&
-                              "bg-red-300"
-                            }`}
-                          >
-                            {position}
-                          </FormLabel>
-                        </FormItem>
-                      ))}
-                    </RadioGroup>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              label="포지션"
+              options={positions}
             />
 
-            <FormField
-              control={optionalForm.control}
+            <FormCheckboxGroupField
+              form={optionalForm}
               name="skills"
-              render={() => (
-                <FormItem>
-                  <div className="mb-4">
-                    <FormLabel className="text-base">기술 스택</FormLabel>
-                    <FormDescription>기술들을 선택해주세요</FormDescription>
-                  </div>
-                  {skills.map((skill) => (
-                    <FormField
-                      key={skill}
-                      control={optionalForm.control}
-                      name="skills"
-                      render={({ field }) => {
-                        return (
-                          <FormItem
-                            key={skill}
-                            className="flex flex-row items-start space-x-3 space-y-0"
-                          >
-                            <FormControl>
-                              <Checkbox
-                                className="hidden"
-                                checked={field.value?.includes(skill)}
-                                onCheckedChange={(checked) => {
-                                  return checked
-                                    ? field.onChange([...field.value, skill])
-                                    : field.onChange(
-                                        field.value?.filter(
-                                          (value) => value !== skill
-                                        )
-                                      );
-                                }}
-                              />
-                            </FormControl>
-                            <FormLabel
-                              className={`font-normal p-1 rounded text-gray-600 cursor-pointer bg-gray-300 ${
-                                optionalForm.watch("skills").includes(skill) &&
-                                "bg-red-300"
-                              }`}
-                            >
-                              {skill}
-                            </FormLabel>
-                          </FormItem>
-                        );
-                      }}
-                    />
-                  ))}
-                  <FormMessage />
-                </FormItem>
-              )}
+              label="기술 스택"
+              options={skills}
             />
-
             <Button>프로필 설정하기</Button>
           </form>
         </Form>
