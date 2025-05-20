@@ -22,6 +22,8 @@ import { z } from "zod";
 
 export default function Page() {
   const [isDeadlineOpen, setIsDeadlineOpen] = useState(false);
+  const [isStartDateOpen, setIsStartDateOpen] = useState(false);
+  const [isEndDateOpen, setIsEndDateOpen] = useState(false);
 
   const formSchema = z.object({
     title: z
@@ -40,6 +42,8 @@ export default function Page() {
         message: "최대 인원은 30명까지 가능합니다.",
       }),
     deadline: z.date(),
+    startDate: z.date(),
+    endDate: z.date(),
   });
 
   /** calendar에서 날짜 선택 후 calendar가 닫히게 하기 위한 함수 */
@@ -51,6 +55,26 @@ export default function Page() {
 
     onChange(date);
     setIsDeadlineOpen(false);
+  };
+
+  const startDateSelect = (
+    date: Date | undefined,
+    onChange: (date: Date | undefined) => void
+  ) => {
+    if (!date) return;
+
+    onChange(date);
+    setIsStartDateOpen(false);
+  };
+
+  const endDateSelect = (
+    date: Date | undefined,
+    onChange: (date: Date | undefined) => void
+  ) => {
+    if (!date) return;
+
+    onChange(date);
+    setIsEndDateOpen(false);
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -128,6 +152,74 @@ export default function Page() {
                 />
               </FormControl>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="startDate"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>모임 시작일</FormLabel>
+              <Popover open={isStartDateOpen} onOpenChange={setIsStartDateOpen}>
+                <div>
+                  {field.value
+                    ? format(field.value, "PPP")
+                    : "날짜를 선택해주세요."}
+                </div>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button type="button" className="w-[fit-content]">
+                      <CalendarIcon />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <Calendar
+                    mode="single"
+                    selected={field.value}
+                    onSelect={(e) => {
+                      startDateSelect(e, field.onChange);
+                    }}
+                    disabled={(date) => date < addDays(new Date(), 7)}
+                    className="bg-pink-100"
+                  />
+                </PopoverContent>
+              </Popover>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="endDate"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>모임 종료일</FormLabel>
+              <Popover open={isEndDateOpen} onOpenChange={setIsEndDateOpen}>
+                <div>
+                  {field.value
+                    ? format(field.value, "PPP")
+                    : "날짜를 선택해주세요."}
+                </div>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button type="button" className="w-[fit-content]">
+                      <CalendarIcon />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <Calendar
+                    mode="single"
+                    selected={field.value}
+                    onSelect={(e) => {
+                      endDateSelect(e, field.onChange);
+                    }}
+                    disabled={(date) => date < addDays(new Date(), 13)}
+                    className="bg-purple-100"
+                  />
+                </PopoverContent>
+              </Popover>
             </FormItem>
           )}
         />
