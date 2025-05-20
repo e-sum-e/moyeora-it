@@ -17,7 +17,7 @@ import { useState } from "react";
 import useAuthStore from "@/stores/useAuthStore";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Position, Skill } from "@/types";
-import { InputTextField } from "@/components/molecules/input-field";
+import { InputTextField } from "@/components/molecules/input-text-field";
 
 const positions = Object.values(Position) as [string, ...string[]];
 const skills = Object.values(Skill) as [string, ...string[]];
