@@ -124,11 +124,11 @@ export default function Page() {
               <Popover open={isDeadlineOpen} onOpenChange={setIsDeadlineOpen}>
                 <div>
                   {field.value ? (
-                    format(field.value, "PPP")
+                    format(field.value, "yyyy.MM.dd")
                   ) : (
                     <>
                       <div className="text-gray-500">
-                        {format(validDeadline, "PPP")}
+                        {format(validDeadline, "yyyy.MM.dd")}
                       </div>
                       <div>날짜를 선택해주세요.</div>
                     </>
@@ -183,11 +183,11 @@ export default function Page() {
               <Popover open={isStartDateOpen} onOpenChange={setIsStartDateOpen}>
                 <div>
                   {field.value ? (
-                    format(field.value, "PPP")
+                    format(field.value, "yyyy.MM.dd")
                   ) : (
                     <>
                       <div className="text-gray-500">
-                        {format(validStartDate, "PPP")}
+                        {format(validStartDate, "yyyy.MM.dd")}
                       </div>
                       <div>날짜를 선택해주세요.</div>
                     </>
@@ -224,11 +224,11 @@ export default function Page() {
               <Popover open={isEndDateOpen} onOpenChange={setIsEndDateOpen}>
                 <div>
                   {field.value ? (
-                    format(field.value, "PPP")
+                    format(field.value, "yyyy.MM.dd")
                   ) : (
                     <>
                       <div className="text-gray-500">
-                        {format(validStartDate, "PPP")}
+                        {format(validStartDate, "yyyy.MM.dd")}
                       </div>
                       <div>날짜를 선택해주세요.</div>
                     </>
