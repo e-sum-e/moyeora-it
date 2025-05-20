@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/atoms/avatar";
-import { isValidImageFile } from "@/features/user/utils/isValidImageFile";
+import { validateImageFile } from "@/features/user/utils/isValidImageFile";
 
 type EditableAvatarProps = {
   imageSrc: string;
@@ -32,10 +32,13 @@ export const EditableAvatar = ({ imageSrc, fallback }: EditableAvatarProps) => {
    */
   const fileChangeHandler: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const file = e.target.files?.[0];
-    if (file && isValidImageFile(file)) {
-      setCurrentImageSrc(URL.createObjectURL(file));
-    } else {
-      toast.error("유효하지 않은 이미지 파일입니다.");
+    if (file) {
+      const { isValid, errorMessage } = validateImageFile(file);
+      if (isValid) {
+        setCurrentImageSrc(URL.createObjectURL(file));
+      } else {
+        toast.error(errorMessage);
+      }
     }
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
