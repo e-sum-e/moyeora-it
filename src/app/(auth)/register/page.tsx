@@ -149,7 +149,7 @@ export default function Page() {
       )}
 
       {/* 회원가입 후 로그인상태에서 출력, 이메일은 있지만 아직 닉네임은 설정이 안됨 */}
-      {!user && (
+      {user && (
         <Form {...optionalForm}>
           <form
             onSubmit={optionalForm.handleSubmit(onOptionalSubmit)}
