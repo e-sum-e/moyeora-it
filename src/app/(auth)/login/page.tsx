@@ -85,7 +85,7 @@ export default function Page() {
           {isLoginFailed && (
             <p className="text-red-600">로그인에 실패했습니다</p>
           )}
-          <Button type="submit">로그인</Button>
+          <Button>로그인</Button>
         </form>
       </Form>
       <Link href="/register">회원가입</Link>

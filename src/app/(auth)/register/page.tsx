@@ -296,7 +296,7 @@ export default function Page() {
               )}
             />
 
-            <Button type="submit">프로필 설정하기</Button>
+            <Button>프로필 설정하기</Button>
           </form>
         </Form>
       )}
