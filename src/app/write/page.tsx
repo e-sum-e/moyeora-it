@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
+import { DeadlineCalendar } from "@/components/write-form/deadlineCalendar";
 import { Title } from "@/components/write-form/title";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PopoverContent } from "@radix-ui/react-popover";
@@ -54,7 +55,7 @@ const formSchema = z
   });
 
 export default function Page() {
-  const [isDeadlineOpen, setIsDeadlineOpen] = useState(false);
+  const [isDeadlineCalendarOpen, setIsDeadlineCalendarOpen] = useState(false);
   const [isStartDateOpen, setIsStartDateOpen] = useState(false);
   const [isEndDateOpen, setIsEndDateOpen] = useState(false);
   const [validDeadline, setValidDeadline] = useState(addDays(new Date(), 7));
@@ -67,18 +68,6 @@ export default function Page() {
     () => addDays(validStartDate, 6),
     [validStartDate]
   );
-
-  /** calendar에서 날짜 선택 후 calendar가 닫히게 하기 위한 함수 */
-  const dealineSelect = (
-    date: Date | undefined,
-    onChange: (date: Date | undefined) => void
-  ) => {
-    if (!date) return;
-
-    onChange(date);
-    setValidDeadline(date);
-    setIsDeadlineOpen(false);
-  };
 
   const startDateSelect = (
     date: Date | undefined,
@@ -120,47 +109,13 @@ export default function Page() {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(formSubmit)}>
         <Title form={form} />
-        <FormField
-          control={form.control}
-          name="deadline"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>모집 마감일</FormLabel>
-              <Popover open={isDeadlineOpen} onOpenChange={setIsDeadlineOpen}>
-                <div>
-                  {field.value ? (
-                    format(field.value, "yyyy.MM.dd")
-                  ) : (
-                    <>
-                      <div className="text-gray-500">
-                        {format(validDeadline, "yyyy.MM.dd")}
-                      </div>
-                      <div>날짜를 선택해주세요.</div>
-                    </>
-                  )}
-                </div>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button type="button" className="w-[fit-content]">
-                      <CalendarIcon />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    onSelect={(e) => {
-                      dealineSelect(e, field.onChange);
-                    }}
-                    disabled={{ before: validDeadline }}
-                    className="bg-blue-100"
-                  />
-                </PopoverContent>
-              </Popover>
-              <FormMessage />
-            </FormItem>
-          )}
+        <DeadlineCalendar
+          form={form}
+          isDeadlineCalendarOpen={isDeadlineCalendarOpen}
+          setValidDeadline={setValidDeadline}
+          openDeadlineCalendar={() => setIsDeadlineCalendarOpen(true)}
+          closeDeadlineCalendar={() => setIsDeadlineCalendarOpen(false)}
+          validDeadline={validDeadline}
         />
         <FormField
           control={form.control}
