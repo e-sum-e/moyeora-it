@@ -3,17 +3,10 @@ import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { useState } from "react";
-import { InputText } from "@/components/atoms/input-text";
 import Link from "next/link";
+import { InputTextField } from "@/components/molecules/input-text-field";
 
 const formSchema = z.object({
   email: z.string().nonempty({ message: "이메일을 입력해주세요" }).email({
@@ -50,36 +43,19 @@ export default function Page() {
     <div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <FormField
-            control={form.control}
+          <InputTextField
+            form={form}
             name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>이메일</FormLabel>
-                <FormControl>
-                  <InputText placeholder="이메일" type="email" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="이메일"
+            type="email"
+            placeholder="myemail@mail.com"
           />
-
-          <FormField
-            control={form.control}
+          <InputTextField
+            form={form}
             name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>비밀번호</FormLabel>
-                <FormControl>
-                  <InputText
-                    placeholder="비밀번호"
-                    type="password"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="비밀번호"
+            type="password"
+            placeholder="나만의 비밀번호..."
           />
 
           {isLoginFailed && (
