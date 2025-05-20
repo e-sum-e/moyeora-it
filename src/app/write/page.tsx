@@ -123,9 +123,16 @@ export default function Page() {
               <FormLabel>모집 마감일</FormLabel>
               <Popover open={isDeadlineOpen} onOpenChange={setIsDeadlineOpen}>
                 <div>
-                  {field.value
-                    ? format(field.value, "PPP")
-                    : "날짜를 선택해주세요."}
+                  {field.value ? (
+                    format(field.value, "PPP")
+                  ) : (
+                    <>
+                      <div className="text-gray-500">
+                        {format(validDeadline, "PPP")}
+                      </div>
+                      <div>날짜를 선택해주세요.</div>
+                    </>
+                  )}
                 </div>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -146,6 +153,7 @@ export default function Page() {
                   />
                 </PopoverContent>
               </Popover>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -174,9 +182,16 @@ export default function Page() {
               <FormLabel>모임 시작일</FormLabel>
               <Popover open={isStartDateOpen} onOpenChange={setIsStartDateOpen}>
                 <div>
-                  {field.value
-                    ? format(field.value, "PPP")
-                    : "날짜를 선택해주세요."}
+                  {field.value ? (
+                    format(field.value, "PPP")
+                  ) : (
+                    <>
+                      <div className="text-gray-500">
+                        {format(validStartDate, "PPP")}
+                      </div>
+                      <div>날짜를 선택해주세요.</div>
+                    </>
+                  )}
                 </div>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -208,9 +223,16 @@ export default function Page() {
               <FormLabel>모임 종료일</FormLabel>
               <Popover open={isEndDateOpen} onOpenChange={setIsEndDateOpen}>
                 <div>
-                  {field.value
-                    ? format(field.value, "PPP")
-                    : "날짜를 선택해주세요."}
+                  {field.value ? (
+                    format(field.value, "PPP")
+                  ) : (
+                    <>
+                      <div className="text-gray-500">
+                        {format(validStartDate, "PPP")}
+                      </div>
+                      <div>날짜를 선택해주세요.</div>
+                    </>
+                  )}
                 </div>
                 <PopoverTrigger asChild>
                   <FormControl>
