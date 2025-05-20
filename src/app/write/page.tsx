@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
+import { Title } from "@/components/write-form/title";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PopoverContent } from "@radix-ui/react-popover";
 import { addDays, format, isAfter } from "date-fns";
@@ -118,19 +119,7 @@ export default function Page() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(formSubmit)}>
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>제목</FormLabel>
-              <FormControl>
-                <Input placeholder="제목을 입력해주세요" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <Title form={form} />
         <FormField
           control={form.control}
           name="deadline"
