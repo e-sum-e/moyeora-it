@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Form,
   FormControl,
@@ -10,11 +11,18 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { PopoverContent } from "@radix-ui/react-popover";
+import { addDays, format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 export default function Page() {
+  const [isDeadlineOpen, setIsDeadlineOpen] = useState(false);
+
   const formSchema = z.object({
     title: z
       .string()
@@ -31,7 +39,19 @@ export default function Page() {
       .max(30, {
         message: "최대 인원은 30명까지 가능합니다.",
       }),
+    deadline: z.date(),
   });
+
+  /** calendar에서 날짜 선택 후 calendar가 닫히게 하기 위한 함수 */
+  const dealineSelect = (
+    date: Date | undefined,
+    onChange: (date: Date | undefined) => void
+  ) => {
+    if (!date) return;
+
+    onChange(date);
+    setIsDeadlineOpen(false);
+  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -57,6 +77,40 @@ export default function Page() {
                 <Input placeholder="제목을 입력해주세요" {...field} />
               </FormControl>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="deadline"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>모집 마감일</FormLabel>
+              <Popover open={isDeadlineOpen} onOpenChange={setIsDeadlineOpen}>
+                <div>
+                  {field.value
+                    ? format(field.value, "PPP")
+                    : "날짜를 선택해주세요."}
+                </div>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button type="button" className="w-[fit-content]">
+                      <CalendarIcon />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <Calendar
+                    mode="single"
+                    selected={field.value}
+                    onSelect={(e) => {
+                      dealineSelect(e, field.onChange);
+                    }}
+                    disabled={(date) => date < addDays(new Date(), 6)}
+                    className="bg-blue-100"
+                  />
+                </PopoverContent>
+              </Popover>
             </FormItem>
           )}
         />
