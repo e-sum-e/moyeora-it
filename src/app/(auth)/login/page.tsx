@@ -64,7 +64,11 @@ export default function Page() {
           <Button>로그인</Button>
         </form>
       </Form>
-      <Link href="/register">회원가입</Link>
+      <div className="flex flex-col">
+        <Link href="/register">회원가입</Link>
+        <Link href="/find-email">이메일 찾기</Link>
+        <Link href="/reset-password">비밀번호 찾기</Link>
+      </div>
     </div>
   );
 }

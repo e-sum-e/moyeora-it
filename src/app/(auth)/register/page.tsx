@@ -10,6 +10,7 @@ import { Position, Skill } from "@/types";
 import { InputTextField } from "@/components/molecules/input-text-field";
 import { FormRadioGroupField } from "@/components/molecules/input-radiogroup-field";
 import { FormCheckboxGroupField } from "@/components/molecules/input-checkbox-field";
+import Link from "next/link";
 
 const positions = Object.values(Position) as [string, ...string[]];
 const skills = Object.values(Skill) as [string, ...string[]];
@@ -180,6 +181,7 @@ export default function Page() {
           </form>
         </Form>
       )}
+      <Link href="/login">로그인으로 돌아가기</Link>
     </div>
   );
 }
