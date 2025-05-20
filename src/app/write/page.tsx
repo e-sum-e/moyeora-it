@@ -24,6 +24,11 @@ export default function Page() {
   const [isDeadlineOpen, setIsDeadlineOpen] = useState(false);
   const [isStartDateOpen, setIsStartDateOpen] = useState(false);
   const [isEndDateOpen, setIsEndDateOpen] = useState(false);
+  const [validDeadline, setValidDeadline] = useState(addDays(new Date(), 7));
+  const [validStartDate, setValidStartDate] = useState(
+    addDays(validDeadline, 1)
+  );
+  const [validEndDate, setValidEndDate] = useState(addDays(validStartDate, 6));
 
   const formSchema = z.object({
     title: z
@@ -53,7 +58,13 @@ export default function Page() {
   ) => {
     if (!date) return;
 
+    const start = addDays(date, 1);
+    const end = addDays(start, 7);
+
     onChange(date);
+    setValidDeadline(date);
+    setValidStartDate(start);
+    setValidEndDate(end);
     setIsDeadlineOpen(false);
   };
 
@@ -62,8 +73,11 @@ export default function Page() {
     onChange: (date: Date | undefined) => void
   ) => {
     if (!date) return;
+    const end = addDays(date, 7);
 
     onChange(date);
+    setValidStartDate(date);
+    setValidEndDate(end);
     setIsStartDateOpen(false);
   };
 
@@ -74,6 +88,7 @@ export default function Page() {
     if (!date) return;
 
     onChange(date);
+    setValidEndDate(date);
     setIsEndDateOpen(false);
   };
 
@@ -130,7 +145,7 @@ export default function Page() {
                     onSelect={(e) => {
                       dealineSelect(e, field.onChange);
                     }}
-                    disabled={(date) => date < addDays(new Date(), 6)}
+                    disabled={{ before: validDeadline }}
                     className="bg-blue-100"
                   />
                 </PopoverContent>
@@ -181,7 +196,7 @@ export default function Page() {
                     onSelect={(e) => {
                       startDateSelect(e, field.onChange);
                     }}
-                    disabled={(date) => date < addDays(new Date(), 7)}
+                    disabled={{ before: validStartDate }}
                     className="bg-pink-100"
                   />
                 </PopoverContent>
@@ -215,7 +230,7 @@ export default function Page() {
                     onSelect={(e) => {
                       endDateSelect(e, field.onChange);
                     }}
-                    disabled={(date) => date < addDays(new Date(), 13)}
+                    disabled={{ before: validEndDate }}
                     className="bg-purple-100"
                   />
                 </PopoverContent>
