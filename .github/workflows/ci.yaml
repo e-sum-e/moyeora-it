@@ -36,6 +36,11 @@ jobs:
         run: |
           echo "🔍 Checking PR from $BRANCH_NAME to dev"
           PR_EXISTS=$(gh pr list --base dev --head "$BRANCH_NAME" --state open --json number --jq 'length')
+
+          PR_TEMPLATE=$(cat .github/pr_template.md)
+          COMMIT_LOGS=$(git log --pretty=format:'- %s' origin/dev..$BRANCH_NAME)
+          PR_BODY=$(echo "$PR_TEMPLATE" | sed "s/(( commit logs ))/$COMMIT_LOGS/")
+
           if [ "$PR_EXISTS" -eq 0 ]; then
             gh pr create \
               --base dev \
