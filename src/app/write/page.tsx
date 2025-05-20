@@ -14,28 +14,14 @@ import { Input } from "@/components/ui/input";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PopoverContent } from "@radix-ui/react-popover";
-import { addDays, format } from "date-fns";
+import { addDays, format, isAfter } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-export default function Page() {
-  const [isDeadlineOpen, setIsDeadlineOpen] = useState(false);
-  const [isStartDateOpen, setIsStartDateOpen] = useState(false);
-  const [isEndDateOpen, setIsEndDateOpen] = useState(false);
-  const [validDeadline, setValidDeadline] = useState(addDays(new Date(), 7));
-
-  const validStartDate = useMemo(
-    () => addDays(validDeadline, 1),
-    [validDeadline]
-  );
-  const validEndDate = useMemo(
-    () => addDays(validStartDate, 6),
-    [validStartDate]
-  );
-
-  const formSchema = z.object({
+const formSchema = z
+  .object({
     title: z
       .string()
       .trim()
@@ -51,10 +37,35 @@ export default function Page() {
       .max(30, {
         message: "최대 인원은 30명까지 가능합니다.",
       }),
-    deadline: z.date(),
+    deadline: z.date().min(addDays(new Date(), 6), {
+      message: "모집 마감일은 오늘로부터 7일 이후부터 설정 가능합니다.",
+    }),
     startDate: z.date(),
     endDate: z.date(),
+  })
+  .refine((data) => isAfter(data.startDate, addDays(data.deadline, 1)), {
+    message: "모임 시작일은 모집 마감일로부터 1일 이후여야 합니다.",
+    path: ["startDate"],
+  })
+  .refine((data) => isAfter(data.endDate, addDays(data.startDate, 6)), {
+    message: "모임 종료일은 모집 시작일로부터 7일 이후여야 합니다.",
+    path: ["endDate"],
   });
+
+export default function Page() {
+  const [isDeadlineOpen, setIsDeadlineOpen] = useState(false);
+  const [isStartDateOpen, setIsStartDateOpen] = useState(false);
+  const [isEndDateOpen, setIsEndDateOpen] = useState(false);
+  const [validDeadline, setValidDeadline] = useState(addDays(new Date(), 7));
+
+  const validStartDate = useMemo(
+    () => addDays(validDeadline, 0),
+    [validDeadline]
+  );
+  const validEndDate = useMemo(
+    () => addDays(validStartDate, 6),
+    [validStartDate]
+  );
 
   /** calendar에서 날짜 선택 후 calendar가 닫히게 하기 위한 함수 */
   const dealineSelect = (
@@ -212,6 +223,7 @@ export default function Page() {
                   />
                 </PopoverContent>
               </Popover>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -253,6 +265,7 @@ export default function Page() {
                   />
                 </PopoverContent>
               </Popover>
+              <FormMessage />
             </FormItem>
           )}
         />
