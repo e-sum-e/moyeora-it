@@ -16,7 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PopoverContent } from "@radix-ui/react-popover";
 import { addDays, format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -25,10 +25,15 @@ export default function Page() {
   const [isStartDateOpen, setIsStartDateOpen] = useState(false);
   const [isEndDateOpen, setIsEndDateOpen] = useState(false);
   const [validDeadline, setValidDeadline] = useState(addDays(new Date(), 7));
-  const [validStartDate, setValidStartDate] = useState(
-    addDays(validDeadline, 1)
+
+  const validStartDate = useMemo(
+    () => addDays(validDeadline, 1),
+    [validDeadline]
   );
-  const [validEndDate, setValidEndDate] = useState(addDays(validStartDate, 6));
+  const validEndDate = useMemo(
+    () => addDays(validStartDate, 6),
+    [validStartDate]
+  );
 
   const formSchema = z.object({
     title: z
@@ -58,13 +63,8 @@ export default function Page() {
   ) => {
     if (!date) return;
 
-    const start = addDays(date, 1);
-    const end = addDays(start, 7);
-
     onChange(date);
     setValidDeadline(date);
-    setValidStartDate(start);
-    setValidEndDate(end);
     setIsDeadlineOpen(false);
   };
 
@@ -73,11 +73,8 @@ export default function Page() {
     onChange: (date: Date | undefined) => void
   ) => {
     if (!date) return;
-    const end = addDays(date, 7);
 
     onChange(date);
-    setValidStartDate(date);
-    setValidEndDate(end);
     setIsStartDateOpen(false);
   };
 
@@ -88,7 +85,6 @@ export default function Page() {
     if (!date) return;
 
     onChange(date);
-    setValidEndDate(date);
     setIsEndDateOpen(false);
   };
 
