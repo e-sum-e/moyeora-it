@@ -124,7 +124,7 @@ export default function Page() {
     try {
       //  TODO: 프로필 옵션 설정
     } catch (e) {
-      // TODO: 프로필 에러 설정
+      // TODO: 프로필 에러 설정 //
     }
   };
 
