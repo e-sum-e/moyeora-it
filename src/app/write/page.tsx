@@ -10,9 +10,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { DeadlineCalendar } from "@/components/write-form/deadlineCalendar";
+import { MaxParticipants } from "@/components/write-form/maxParticipants";
 import { Title } from "@/components/write-form/title";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PopoverContent } from "@radix-ui/react-popover";
@@ -117,23 +117,7 @@ export default function Page() {
           closeDeadlineCalendar={() => setIsDeadlineCalendarOpen(false)}
           validDeadline={validDeadline}
         />
-        <FormField
-          control={form.control}
-          name="maxParticipants"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>정원</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="정원을 입력해주세요"
-                  {...field}
-                  type="number"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <MaxParticipants form={form} />
         <FormField
           control={form.control}
           name="startDate"
