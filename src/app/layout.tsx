@@ -1,12 +1,13 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import { Header } from "@/components/organisms/header";
-import { Toaster } from "sonner";
-import { MSWComponent } from "@/providers/MSWComponent";
+import { Header } from '@/components/organisms/header';
+import { MSWComponent } from '@/providers/MSWComponent';
+import { QueryProvider } from '@/providers/query-client-provider';
+import type { Metadata } from 'next';
+import { Toaster } from 'sonner';
+import './globals.css';
 
 export const metadata: Metadata = {
-  title: "모여라-IT",
-  description: "개발자들의 스터디, 사이트 프로젝트 모집 플랫폼",
+  title: '모여라-IT',
+  description: '개발자들의 스터디, 사이트 프로젝트 모집 플랫폼',
 };
 
 export default function RootLayout({
@@ -18,9 +19,11 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <MSWComponent>
-          <Header />
-          {children}
-          <Toaster />
+          <QueryProvider>
+            <Header />
+            {children}
+            <Toaster />
+          </QueryProvider>
         </MSWComponent>
       </body>
     </html>
