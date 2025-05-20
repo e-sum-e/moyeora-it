@@ -309,10 +309,7 @@ export default function Page() {
               )}
             />
 
-            {isRegisterFailed && (
-              <p className="text-red-600">회원가입에 실패했습니다</p>
-            )}
-            <Button type="submit">회원가입</Button>
+            <Button type="submit">프로필 설정하기</Button>
           </form>
         </Form>
       )}
