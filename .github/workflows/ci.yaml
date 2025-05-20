@@ -47,6 +47,7 @@ jobs:
               --head "$BRANCH_NAME" \
               --title "자동 PR: $BRANCH_NAME → dev" \
               --body "$PR_BODY"
+              --assignee "$GITHUB_ACTOR"
           else
             PR_NUMBER=$(gh pr list --base dev --head "$BRANCH_NAME" --state open --json number --jq '.[0].number')
             gh pr comment "$PR_NUMBER" --body "새로운 커밋이 푸시되었습니다: $(git log -1 --pretty=%B)"
