@@ -18,6 +18,7 @@ import useAuthStore from "@/stores/useAuthStore";
 import { InputText } from "@/components/atoms/input-text";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Position, Skill } from "@/types";
+import { InputTextField } from "@/components/molecules/input-field";
 
 const positions = Object.values(Position) as [string, ...string[]];
 const skills = Object.values(Skill) as [string, ...string[]];
@@ -124,54 +125,28 @@ export default function Page() {
             onSubmit={registerForm.handleSubmit(onRegisterSubmit)}
             className="space-y-8"
           >
-            <FormField
-              control={registerForm.control}
+            <InputTextField
+              form={registerForm}
               name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>이메일</FormLabel>
-                  <FormControl>
-                    <InputText placeholder="이메일" type="email" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              placeholder="이메일"
+              type="email"
+              label="이메일"
             />
 
-            <FormField
-              control={registerForm.control}
+            <InputTextField
+              form={registerForm}
               name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>비밀번호</FormLabel>
-                  <FormControl>
-                    <InputText
-                      placeholder="비밀번호"
-                      type="password"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              placeholder="비밀번호"
+              type="password"
+              label="비밀번호"
             />
 
-            <FormField
-              control={registerForm.control}
+            <InputTextField
+              form={registerForm}
               name="passwordConfirm"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>비밀번호 확인</FormLabel>
-                  <FormControl>
-                    <InputText
-                      placeholder="비밀번호 확인"
-                      type="password"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              label="비밀번호 확인"
+              placeholder="비밀번호 확인"
+              type="password"
             />
 
             {isRegisterFailed && (

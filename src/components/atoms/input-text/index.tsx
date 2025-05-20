@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input";
 import * as React from "react";
 
 // 키보드로 직접 입력하는 type으로 제한
-type InputTextProps = React.ComponentProps<"input"> & {
+export type InputTextProps = React.ComponentProps<"input"> & {
   type?: "text" | "password" | "search" | "email" | "url" | "tel" | "number";
 };
 
