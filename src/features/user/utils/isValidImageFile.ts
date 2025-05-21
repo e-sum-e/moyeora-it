@@ -12,26 +12,24 @@
  * - errorMessage: 유효하지 않은 경우 오류 메시지
  */
 export const validateImageFile = (
-	file: File,
-	maxFileSize = 5 * 1024 * 1024,
+  file: File,
+  maxFileSize = 5 * 1024 * 1024,
 ): { isValid: boolean; errorMessage?: string } => {
-	if (!file.type.startsWith('image/')) {
-		return {
-			isValid: false,
-			errorMessage: '이미지 파일만 업로드할 수 있어요.',
-		};
-	}
+  if (!file.type.startsWith('image/')) {
+    return {
+      isValid: false,
+      errorMessage: '이미지 파일만 업로드할 수 있어요.',
+    };
+  }
 
-	const fileSize = file.size;
-
-	if (fileSize > maxFileSize) {
-		return {
-			isValid: false,
-			errorMessage: `파일 크기는 ${
-				maxFileSize / 1024 / 1024
-			}MB를 초과할 수 없어요.`,
-		};
-	}
-
-	return { isValid: true };
+  const fileSize = file.size;
+  if (fileSize > maxFileSize) {
+    return {
+      isValid: false,
+      errorMessage: `파일 크기는 ${
+        maxFileSize / 1024 / 1024
+      }MB를 초과할 수 없어요.`,
+    };
+  }
+  return { isValid: true };
 };

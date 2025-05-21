@@ -2,10 +2,10 @@
 import { Position, Skill } from './enums';
 
 export type User = {
-	id: string;
-	name: string;
-	email: string;
-	profileImage: string;
+  id: string;
+  name: string;
+  email: string;
+  profileImage: string;
 };
 
 export type Group = {

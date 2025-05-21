@@ -6,6 +6,7 @@ export type ContentInfo = Pick<
 	Group,
 	'title' | 'deadline' | 'maxParticipants' | 'position' | 'skills'
 >;
+
 type CardProps = {
 	info: ContentInfo;
 };
