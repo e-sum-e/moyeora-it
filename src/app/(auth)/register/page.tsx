@@ -12,8 +12,14 @@ import { FormRadioGroupField } from "@/components/molecules/input-radiogroup-fie
 import { FormCheckboxGroupField } from "@/components/molecules/input-checkbox-field";
 import Link from "next/link";
 
-const positions = Object.values(Position) as [string, ...string[]];
-const skills = Object.values(Skill) as [string, ...string[]];
+const positions = Object.keys(Position).filter((k) => isNaN(Number(k))) as [
+  string,
+  ...string[]
+];
+const skills = Object.keys(Skill).filter((k) => isNaN(Number(k))) as [
+  string,
+  ...string[]
+];
 
 // 회원가입에 쓰이는 이메일과 비밀번호 유효성
 // 규칙은 네이버와 똑같이 했습니다
