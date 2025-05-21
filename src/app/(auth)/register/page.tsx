@@ -22,7 +22,6 @@ const skills = Object.keys(Skill).filter((k) => isNaN(Number(k))) as [
 ];
 
 // 회원가입에 쓰이는 이메일과 비밀번호 유효성
-// 규칙은 네이버와 똑같이 했습니다
 const registerFormSchema = z
   .object({
     email: z.string().nonempty({ message: '이메일을 입력해주세요' }).email({
@@ -155,7 +154,7 @@ export default function Page() {
         </Form>
       )}
 
-      {/* 회원가입 후 로그인상태에서 출력, 이메일은 있지만 아직 닉네임은 설정이 안됨 */}
+      {/* 회원가입 후 로그인상태에서 출력,, 이메일은 있지만 아직 닉네임은 설정이 안됨 */}
       {user && (
         <Form {...optionalForm}>
           <form
