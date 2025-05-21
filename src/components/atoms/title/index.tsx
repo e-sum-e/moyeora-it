@@ -1,7 +1,11 @@
-export const Title = () => {
+type TitleProps = {
+	title: string;
+};
+
+export const Title = ({ title }: TitleProps) => {
 	return (
 		<div>
-			<h3>타이틀 | 위치</h3>
+			<h3>{title}</h3>
 		</div>
 	);
 };

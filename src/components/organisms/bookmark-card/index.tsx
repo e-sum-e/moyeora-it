@@ -1,7 +1,14 @@
 import { BookmarkCardContents } from '@/components/molecules/bookmark-card-contents';
 import { CardImage } from '@/components/molecules/card-image';
+import { Group } from '@/types';
 
-export const BookmarkCard = () => {
+
+export type ContentInfo = Pick<Group, "title" | "deadline" | "maxParticipants" | "position" | "skills">;
+type CardProps = {
+	info: ContentInfo;
+};
+
+export const BookmarkCard = ({ info }: CardProps) => {
 	return (
 		<article className="flex w-full">
 			<figure>
@@ -12,7 +19,7 @@ export const BookmarkCard = () => {
 					height={150}
 				/>
 			</figure>
-			<BookmarkCardContents className="flex-1" />
+			<BookmarkCardContents className="flex-1" info={info} />
 		</article>
 	);
 };

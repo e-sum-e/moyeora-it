@@ -1,24 +1,32 @@
 import { Title } from '@/components/atoms/title';
 import { Badge } from '@/components/atoms/badge';
 import { Progress } from '@/components/ui/progress';
+import { ContentInfo } from '@/components/organisms/bookmark-card';
+import { getPosition } from '@/types/enums';
 
 type BookmarkCardContentsProps = {
 	className?: string;
+	info: ContentInfo;
 };
 
 export const BookmarkCardContents = ({
 	className,
+	info,
 }: BookmarkCardContentsProps) => {
 	return (
+		info && (
 		<section className={`${className} flex flex-col justify-between`}>
 			<div className="flex justify-between">
 				<div className="flex flex-col gap-2">
 					<header>
-						<Title />
+						<Title title={info.title} />
 					</header>
 					<div className="flex flex-row gap-2">
-						<Badge text="날짜" className="bg-gray-200 text-gray-500" />
-						<Badge text="시간" className="bg-gray-900 text-gray-100" />
+						{/* TODO: 날짜 형식 util 윤아님이 만드시면 적용 */}
+						<Badge text={info.deadline.toLocaleDateString()} className="bg-gray-200 text-gray-500" />
+						{info.position.map((position) => (
+							<Badge text={getPosition(position)} className="bg-gray-900 text-gray-100" key={position} />
+						))	}
 					</div>
 				</div>
 				{/* TODO: 찜하기 버튼 여기 추가 하면 됩니다.  */}
@@ -36,6 +44,7 @@ export const BookmarkCardContents = ({
 					</div>
 				</div>
 			</footer>
-		</section>
+			</section>
+		)
 	);
 };
