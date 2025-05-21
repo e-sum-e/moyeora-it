@@ -1,12 +1,10 @@
 import { useCallback, useEffect, useRef } from 'react';
 
-// 더블클릭 방지 - 디바운스 사용
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const useDebounce = <T extends (...args: any[]) => any>(
+export const useDebounce = <T extends (...args: Parameters<T>) => void>(
   callback: T,
   delay: number,
 ): ((...args: Parameters<T>) => void) => {
-  const timerRef = useRef<NodeJS.Timeout>(null);
+  const timerRef = useRef<number | null>(null);
 
   useEffect(() => {
     return () => {
@@ -22,7 +20,7 @@ export const useDebounce = <T extends (...args: any[]) => any>(
         clearTimeout(timerRef.current);
       }
 
-      timerRef.current = setTimeout(() => {
+      timerRef.current = window.setTimeout(() => {
         callback(...args);
       }, delay);
     },
