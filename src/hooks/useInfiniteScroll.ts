@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { FetchNextPageOptions } from '@tanstack/react-query';
 import { useInView, IntersectionOptions } from 'react-intersection-observer';
 
 export const useInfiniteScroll = ({
@@ -7,8 +8,7 @@ export const useInfiniteScroll = ({
   options,
   isFetchingNextPage,
 }: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  fetchNextPage: (...args: any[]) => void;
+  fetchNextPage: (options?: FetchNextPageOptions) => void;
   hasNext: boolean;
   options: IntersectionOptions;
   isFetchingNextPage: boolean;
