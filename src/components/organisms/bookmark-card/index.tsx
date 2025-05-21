@@ -2,8 +2,10 @@ import { BookmarkCardContents } from '@/components/molecules/bookmark-card-conte
 import { CardImage } from '@/components/molecules/card-image';
 import { Group } from '@/types';
 
-
-export type ContentInfo = Pick<Group, "title" | "deadline" | "maxParticipants" | "position" | "skills">;
+export type ContentInfo = Pick<
+	Group,
+	'title' | 'deadline' | 'maxParticipants' | 'position' | 'skills'
+>;
 type CardProps = {
 	info: ContentInfo;
 };

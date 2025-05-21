@@ -1,8 +1,10 @@
 'use client';
-import React from 'react';
-import Link from 'next/link';
+
 import { Avatar } from '../../atoms/avatar';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import React from 'react';
+
 export const Header = () => {
 	const router = useRouter();
 	const menuItems = [

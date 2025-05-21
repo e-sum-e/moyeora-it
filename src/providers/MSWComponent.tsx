@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { initMocks } from '@/mocks';
+import { useEffect, useState } from 'react';
 
 export const MSWComponent = ({ children }: { children: React.ReactNode }) => {
 	const [mswReady, setMswReady] = useState(false);

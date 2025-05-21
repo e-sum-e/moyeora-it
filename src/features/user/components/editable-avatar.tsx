@@ -1,10 +1,10 @@
 'use client';
 
+import { Avatar } from '@/components/atoms/avatar';
+import { Button } from '@/components/ui/button';
+import { validateImageFile } from '@/features/user/utils/isValidImageFile';
 import { useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { Button } from '@/components/ui/button';
-import { Avatar } from '@/components/atoms/avatar';
-import { validateImageFile } from '@/features/user/utils/isValidImageFile';
 
 type EditableAvatarProps = {
 	imageSrc: string;

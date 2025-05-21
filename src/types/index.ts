@@ -1,5 +1,5 @@
 //전역 파일 타입 정리
-import { Position, Skill } from "./enums";
+import { Position, Skill } from './enums';
 
 export type User = {
 	id: string;
@@ -10,15 +10,15 @@ export type User = {
 
 export type Group = {
 	id: number;
-  title: string;
-  deadline: Date;
-  startDate: Date; // 모임의 시작일
-  endDate: Date; // 모임의 종료일
-  maxParticipants: number;
-  description: string;
-  position: Position[];
-  skills : Skill[];
-  createdAt: Date;
-  isBookmark: boolean;
-  autoAllow: boolean;
-}
+	title: string;
+	deadline: Date;
+	startDate: Date; // 모임의 시작일
+	endDate: Date; // 모임의 종료일
+	maxParticipants: number;
+	description: string;
+	position: Position[];
+	skills: Skill[];
+	createdAt: Date;
+	isBookmark: boolean;
+	autoAllow: boolean;
+};

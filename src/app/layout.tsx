@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Header } from '@/components/organisms/header';
-import { Toaster } from 'sonner';
 import { MSWComponent } from '@/providers/MSWComponent';
+import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
 	title: '모여라-IT',

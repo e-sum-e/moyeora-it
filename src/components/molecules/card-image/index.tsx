@@ -1,5 +1,5 @@
-import { Thumbnail } from '../../atoms/thumbnail';
 import { Badge } from '../../atoms/badge';
+import { Thumbnail } from '../../atoms/thumbnail';
 
 type CardImageProps = {
 	imageSrc: string;
