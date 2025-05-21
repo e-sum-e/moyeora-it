@@ -33,6 +33,7 @@ export const UserProfile = () => {
 			<div className="flex flex-col gap-y-1">
 				<span>{user.nickname}</span>
 				<span>{user.email}</span>
+				<span>{user.position}</span>
 				<div className="flex items-center gap-x-2">
 					<span>별점 : {user.rate}</span>
 					<Badge text="뱃지" className="bg-emerald-50 text-emerald-500" />
