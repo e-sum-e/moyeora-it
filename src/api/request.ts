@@ -37,7 +37,7 @@ export const request = {
     return response.json();
   },
 
-  patch: async (url: string, id: string, body: object) => {
+  patch: async (url: string, body: object, id?: string) => {
     const response = await fetch(`${baseUrl}/${url}/${id}`, {
       method: 'PATCH',
       headers: {
@@ -52,7 +52,7 @@ export const request = {
     return response.json();
   },
 
-  delete: async (url: string, id: string) => {
+  delete: async (url: string, id?: string) => {
     const response = await fetch(`${baseUrl}/${url}/${id}`, {
       method: 'DELETE',
     });
