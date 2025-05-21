@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useRef, useState } from "react";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { Avatar } from "@/components/atoms/avatar";
-import { isValidImageFile } from "@/features/user/utils/isValidImageFile";
+import { Avatar } from '@/components/atoms/avatar';
+import { Button } from '@/components/ui/button';
+import { validateImageFile } from '@/features/user/utils/isValidImageFile';
+import { useRef, useState } from 'react';
+import { toast } from 'sonner';
 
 type EditableAvatarProps = {
   imageSrc: string;
@@ -32,37 +32,40 @@ export const EditableAvatar = ({ imageSrc, fallback }: EditableAvatarProps) => {
    */
   const fileChangeHandler: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const file = e.target.files?.[0];
-    if (file && isValidImageFile(file)) {
-      setCurrentImageSrc(URL.createObjectURL(file));
-    } else {
-      toast.error("유효하지 않은 이미지 파일입니다.");
+    if (file) {
+      const { isValid, errorMessage } = validateImageFile(file);
+      if (isValid) {
+        setCurrentImageSrc(URL.createObjectURL(file));
+      } else {
+        toast.error(errorMessage);
+      }
     }
     if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+      fileInputRef.current.value = '';
     }
   };
 
   return (
-    <div className={"relative"}>
+    <div className={'relative'}>
       <Avatar
         imageSrc={currentImageSrc}
         fallback={fallback}
-        className={"size-16"}
+        className={'size-16'}
         onClick={() => fileInputRef.current?.click()}
       />
       <input
         ref={fileInputRef}
-        type={"file"}
-        accept={"image/*"}
+        type={'file'}
+        accept={'image/*'}
         onChange={fileChangeHandler}
-        className={"absolute inset-0 w-full h-full hidden"}
+        className={'absolute inset-0 w-full h-full hidden'}
         multiple={false}
       />
       <Button
         variant="outline"
         onClick={() => {
           setCurrentImageSrc(
-            "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI="
+            'https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=',
           );
         }}
       >
