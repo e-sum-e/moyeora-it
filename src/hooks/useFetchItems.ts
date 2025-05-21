@@ -68,7 +68,7 @@ const fetchItems: QueryFunction<Response, QueryKey, number> = async ({ pageParam
   return data;
 };
 
-const useFetchItems = ({ type, params }: { type: string; params: QueryParams }) => {
+export const useFetchItems = ({ type, params }: { type: string; params: QueryParams }) => {
   return useSuspenseInfiniteQuery({
     queryKey: ['items', type, params],
     queryFn: fetchItems,

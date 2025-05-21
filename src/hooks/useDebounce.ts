@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef } from 'react';
 
 // 더블클릭 방지 - 디바운스 사용
-const useDebounce = <T extends (...args: any[]) => any>(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const useDebounce = <T extends (...args: any[]) => any>(
   callback: T,
   delay: number,
 ): ((...args: Parameters<T>) => void) => {
