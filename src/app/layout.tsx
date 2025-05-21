@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Header } from '@/components/organisms/header';
 import { MSWComponent } from '@/providers/MSWComponent';
+import { ReactQueryProvider } from '@/providers/ReactQueryProvider';
 import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
@@ -19,7 +20,7 @@ export default function RootLayout({
       <body>
         <MSWComponent>
           <Header />
-          {children}
+          <ReactQueryProvider>{children}</ReactQueryProvider>
           <Toaster />
         </MSWComponent>
       </body>
