@@ -1,24 +1,24 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
 // TODO: 예시로 넣어둔 Position, Skill
 export type Position =
-  | "PM"
-  | "PL"
-  | "AA"
-  | "TA"
-  | "DA"
-  | "QA"
-  | "FE"
-  | "BE"
-  | "FS";
+  | 'PM'
+  | 'PL'
+  | 'AA'
+  | 'TA'
+  | 'DA'
+  | 'QA'
+  | 'FE'
+  | 'BE'
+  | 'FS';
 export type Skill =
-  | "JAVA"
-  | "JavaScript"
-  | "HTML/CSS"
-  | "React"
-  | "Vue.js"
-  | "Kotlin"
-  | "Spring";
+  | 'JAVA'
+  | 'JavaScript'
+  | 'HTML/CSS'
+  | 'React'
+  | 'Vue.js'
+  | 'Kotlin'
+  | 'Spring';
 
 export type User = {
   userId: string;

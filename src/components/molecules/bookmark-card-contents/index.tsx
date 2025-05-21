@@ -1,15 +1,17 @@
-import { Title } from "@/components/atoms/title";
-import { Badge } from "@/components/atoms/badge";
-import { Progress } from "@/components/ui/progress";
+import { Badge } from '@/components/atoms/badge';
+import { Title } from '@/components/atoms/title';
+import { Progress } from '@/components/ui/progress';
 
 type BookmarkCardContentsProps = {
   className?: string;
-}
+};
 
-export const BookmarkCardContents = ({ className }: BookmarkCardContentsProps) => {
+export const BookmarkCardContents = ({
+  className,
+}: BookmarkCardContentsProps) => {
   return (
     <section className={`${className} flex flex-col justify-between`}>
-      <div  className="flex justify-between">
+      <div className="flex justify-between">
         <div className="flex flex-col gap-2">
           <header>
             <Title />
@@ -27,7 +29,7 @@ export const BookmarkCardContents = ({ className }: BookmarkCardContentsProps) =
           <p>
             <span>인원수</span>
             <span>개설 여부</span>
-            </p>
+          </p>
           <div className="flex flex-row gap-2">
             <Progress value={50} />
             <span>완료여부</span>
@@ -35,5 +37,5 @@ export const BookmarkCardContents = ({ className }: BookmarkCardContentsProps) =
         </div>
       </footer>
     </section>
-  )
-}
+  );
+};
