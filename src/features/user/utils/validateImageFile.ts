@@ -23,7 +23,6 @@ export const validateImageFile = (
   }
 
   const fileSize = file.size;
-
   if (fileSize > maxFileSize) {
     return {
       isValid: false,
@@ -32,6 +31,5 @@ export const validateImageFile = (
       }MB를 초과할 수 없어요.`,
     };
   }
-
   return { isValid: true };
 };
