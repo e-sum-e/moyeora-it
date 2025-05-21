@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feature-*
+      - fix
 
 concurrency:
   group: auto-pr-${{ github.ref_name }}
