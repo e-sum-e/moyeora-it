@@ -15,18 +15,19 @@ export type WriteForm = {
   deadline: Date;
   startDate: Date;
   endDate: Date;
+};
 
 export type Group = {
-	id: number;
-	title: string;
-	deadline: Date;
-	startDate: Date; // 모임의 시작일
-	endDate: Date; // 모임의 종료일
-	maxParticipants: number;
-	description: string;
-	position: Position[];
-	skills: Skill[];
-	createdAt: Date;
-	isBookmark: boolean;
-	autoAllow: boolean;
+  id: number;
+  title: string;
+  deadline: Date;
+  startDate: Date; // 모임의 시작일
+  endDate: Date; // 모임의 종료일
+  maxParticipants: number;
+  description: string;
+  position: Position[];
+  skills: Skill[];
+  createdAt: Date;
+  isBookmark: boolean;
+  autoAllow: boolean;
 };
