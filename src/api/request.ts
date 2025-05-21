@@ -19,16 +19,14 @@ export const request = {
 
   post: async (
     url: string,
+    headers: HeadersInit,
     body: BodyInit,
     id?: string,
-    isJson = true, // json,form-data의 header가 다르게 가므로 확인 필요
   ) => {
-    const headers = isJson ? { 'Content-Type': 'application/json' } : undefined;
-
     const response = await fetch(`${baseUrl}/${url}${id ? `/${id}` : ''}`, {
       method: 'POST',
       headers,
-      body: isJson ? JSON.stringify(body) : body,
+      body,
     });
 
     if (!response.ok) {
