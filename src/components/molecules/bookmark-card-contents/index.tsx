@@ -1,4 +1,5 @@
 import { Badge } from '@/components/atoms/badge';
+import { BookmarkButton } from '@/components/atoms/bookmark-button';
 import { Title } from '@/components/atoms/title';
 import { Progress } from '@/components/ui/progress';
 
@@ -21,8 +22,7 @@ export const BookmarkCardContents = ({
             <Badge text="시간" className="bg-gray-900 text-gray-100" />
           </div>
         </div>
-        {/* TODO: 찜하기 버튼 여기 추가 하면 됩니다.  */}
-        <span>찜!</span>
+        <BookmarkButton id={1} isBookmark={false} />
       </div>
       <footer>
         <div className="flex flex-col gap-2">
