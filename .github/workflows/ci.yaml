@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feature-*
+      - fix
 
 concurrency:
   group: auto-pr-${{ github.ref_name }}
@@ -31,6 +32,9 @@ jobs:
 
       - name: Run Lint
         run: yarn lint
+        
+      - name: Run Format
+        run: npx prettier --write .
 
       - name: Create Pull Request
         if: success()
