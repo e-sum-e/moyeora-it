@@ -4,22 +4,19 @@ import { useInView, IntersectionOptions } from 'react-intersection-observer';
 
 export const useInfiniteScroll = ({
   fetchNextPage,
-  hasNext,
   options,
-  isFetchingNextPage,
 }: {
   fetchNextPage: (options?: FetchNextPageOptions) => void;
-  hasNext: boolean;
-  options: IntersectionOptions;
-  isFetchingNextPage: boolean;
+  options?: IntersectionOptions;
 }) => {
   const { ref, inView } = useInView({ ...options });
-
+  console.log(inView);
+  
   useEffect(() => {
-    if (inView && hasNext && !isFetchingNextPage) {
+    if (inView) {
       fetchNextPage();
     }
-  }, [inView, hasNext, isFetchingNextPage, fetchNextPage]);
+  }, [inView]);
 
   return { ref };
 };
