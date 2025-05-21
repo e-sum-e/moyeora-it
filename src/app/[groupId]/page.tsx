@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useInfiniteScroll } from '@/hooks/use-infinite-scroll';
-import { useRef } from 'react';
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import { useRef } from "react";
 
 export default function GroupDetailPage() {
   const target = useRef<HTMLDivElement>(null);
   const { items: replies } = useInfiniteScroll({
-    queryKey: ['test'],
+    queryKey: ["test"],
     target,
-    requestUrl: '/api/comments',
+    requestUrl: "/api/comments",
   });
 
   return (

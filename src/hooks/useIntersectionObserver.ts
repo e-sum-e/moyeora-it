@@ -1,11 +1,11 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
-export default function useIntersectionObserver(callback: () => void) {
+export const useIntersectionObserver = (callback: () => void) => {
   const observer = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
     // 클라이언트 환경에서만 IntersectionObserver 생성
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       observer.current = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
@@ -14,7 +14,7 @@ export default function useIntersectionObserver(callback: () => void) {
             }
           });
         },
-        { threshold: 1 },
+        { threshold: 1 }
       );
     }
 
@@ -36,4 +36,4 @@ export default function useIntersectionObserver(callback: () => void) {
   };
 
   return [observe, unobserve] as const;
-}
+};

@@ -1,6 +1,6 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { useEffect, useMemo } from 'react';
-import useIntersectionObserver from './use-intersection-observer';
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useEffect, useMemo } from "react";
 
 /** 임시 데이터 */
 const MOCK_DATA = Array.from({ length: 100 }, (_, i) => i);
@@ -9,7 +9,7 @@ const MOCK_DATA = Array.from({ length: 100 }, (_, i) => i);
 const fetchData = async (
   requestUrl: string,
   cursor: number,
-  size: number = 10,
+  size: number = 10
 ) => {
   const nextCursor = cursor + size;
 
@@ -25,7 +25,7 @@ const fetchData = async (
 const fetchPage: (
   requestUrl: string,
   prevCursor: number,
-  size?: number,
+  size?: number
 ) => Promise<{
   hasNext: boolean;
   cursor: number;
