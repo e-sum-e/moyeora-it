@@ -1,4 +1,4 @@
-import { BookmarkCard } from "@/components/organisms/bookmark-card";
+import { BookmarkCard } from '@/components/organisms/bookmark-card';
 
 export default function Bookmark() {
   return (

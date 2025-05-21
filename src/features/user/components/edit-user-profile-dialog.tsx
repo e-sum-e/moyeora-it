@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -10,8 +10,8 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogClose,
-} from "@/components/ui/dialog";
-import { EditableAvatar } from "@/features/user/components/editable-avatar";
+} from '@/components/ui/dialog';
+import { EditableAvatar } from '@/features/user/components/editable-avatar';
 
 /**
  * 프로필 수정 모달 컴포넌트
@@ -36,12 +36,9 @@ export const EditUserProfileDialog = () => {
             프로필 이미지와 닉네임을 수정할 수 있습니다.
           </DialogDescription>
         </DialogHeader>
-        <div className={"flex flex-col gap-y-4"}>
-          <EditableAvatar
-            imageSrc={""}
-            fallback={"닉네임"}
-          />
-          <input type={"text"} placeholder={"새로운 닉네임을 입력해주세요."} />
+        <div className={'flex flex-col gap-y-4'}>
+          <EditableAvatar imageSrc={''} fallback={'닉네임'} />
+          <input type={'text'} placeholder={'새로운 닉네임을 입력해주세요.'} />
         </div>
         <DialogFooter>
           <DialogClose asChild>

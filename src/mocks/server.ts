@@ -1,4 +1,4 @@
-import { setupServer } from 'msw/node'
-import { groupsHandlers } from './handler/groups'
+import { groupsHandlers } from './handler/groups';
+import { setupServer } from 'msw/node';
 
-export const server = setupServer(...groupsHandlers)
+export const server = setupServer(...groupsHandlers);
