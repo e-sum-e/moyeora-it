@@ -31,3 +31,9 @@ export type Group = {
   isBookmark: boolean;
   autoAllow: boolean;
 };
+
+export type ReplyWriter = {
+  userId: string;
+  nickname: string;
+  profileImage: string;
+};
