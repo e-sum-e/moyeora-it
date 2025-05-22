@@ -10,7 +10,7 @@ export default function Page() {
       <div className="flex flex-col">
         <Link href="/register">회원가입</Link>
         <Link href="/find-email">이메일 찾기</Link>
-        <Link href="/reset-password">비밀번호 찾기</Link>
+        <Link href="/find-password">비밀번호 찾기</Link>
       </div>
     </div>
   );
