@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { FetchNextPageOptions } from '@tanstack/react-query';
 import { useInView, IntersectionOptions } from 'react-intersection-observer';
 
-export const useInfiniteScroll = ({
+export const useFetchInView = ({
   fetchNextPage,
   options,
 }: {
