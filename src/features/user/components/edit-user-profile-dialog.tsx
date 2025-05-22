@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -11,7 +12,7 @@ import {
   DialogTrigger,
   DialogClose,
 } from '@/components/ui/dialog';
-import { EditableAvatar } from '@/features/user/components/editable-avatar';
+import { EditUserProfileForm } from '@/features/user/components/edit-user-profile-form/edit-user-profile-form';
 
 /**
  * 프로필 수정 모달 컴포넌트
@@ -20,12 +21,14 @@ import { EditableAvatar } from '@/features/user/components/editable-avatar';
  */
 
 export const EditUserProfileDialog = () => {
-  const editButtonClickHandler = () => {
-    // TODO: 프로필 수정 로직 구현
-  };
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const closeDialog = () => {
+    setIsDialogOpen(false);
+  }
 
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
         <Button variant="outline">프로필 수정</Button>
       </DialogTrigger>
@@ -37,19 +40,8 @@ export const EditUserProfileDialog = () => {
           </DialogDescription>
         </DialogHeader>
         <div className={'flex flex-col gap-y-4'}>
-          <EditableAvatar imageSrc={''} fallback={'닉네임'} />
-          <input type={'text'} placeholder={'새로운 닉네임을 입력해주세요.'} />
+          <EditUserProfileForm closeDialog={closeDialog} />
         </div>
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button variant="outline">취소</Button>
-          </DialogClose>
-          <DialogClose asChild>
-            <Button type="button" onClick={editButtonClickHandler}>
-              수정
-            </Button>
-          </DialogClose>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
