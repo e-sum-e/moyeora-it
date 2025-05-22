@@ -5,6 +5,7 @@ import { MSWComponent } from '@/providers/MSWComponent';
 import { Toaster } from 'sonner';
 import { WebSocketProvider } from '@/providers/WSProvider';
 import { ReactQueryProvider } from '@/providers/ReactQueryProvider';
+import AuthProvider from '@/providers/AuthProvider';
 
 export const metadata: Metadata = {
   title: '모여라-IT',
@@ -20,13 +21,12 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <MSWComponent>
-        <ReactQueryProvider>
-          <Header />
-            <WebSocketProvider>
-              {children}
-            </WebSocketProvider>
+          <ReactQueryProvider>
+            <Header />
+            <WebSocketProvider>{children}</WebSocketProvider>
           </ReactQueryProvider>
           <Toaster />
+          <AuthProvider />
         </MSWComponent>
       </body>
     </html>
