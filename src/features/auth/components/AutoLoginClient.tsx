@@ -7,7 +7,7 @@ type AuthClientProviderProps = {
   hasToken: boolean;
 };
 
-const AuthClientProvider = ({ hasToken }: AuthClientProviderProps) => {
+const AutoLoginClient = ({ hasToken }: AuthClientProviderProps) => {
   // const login = useAuthStore(s => s.login);
 
   // 재접속시 무조건 한번만 실행되야함!! 0번도 안되고 2번도 안됨
@@ -29,4 +29,4 @@ const AuthClientProvider = ({ hasToken }: AuthClientProviderProps) => {
   return <></>;
 };
 
-export default AuthClientProvider;
+export default AutoLoginClient;
