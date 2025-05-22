@@ -10,7 +10,6 @@ export const useInfiniteScroll = ({
   options?: IntersectionOptions;
 }) => {
   const { ref, inView } = useInView({ ...options });
-  console.log(inView);
   
   useEffect(() => {
     if (inView) {
