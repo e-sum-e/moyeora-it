@@ -1,5 +1,5 @@
 //전역 파일 타입 정리
-import { Position, Skill } from './enums';
+import { eNotification, Position, Skill } from './enums';
 
 export type User = {
   id: string;
@@ -31,3 +31,13 @@ export type Group = {
   isBookmark: boolean;
   autoAllow: boolean;
 };
+
+ 
+export type Notification = {
+	id: number;
+	message: string | null; // 추후 채팅의 경우 가장 간략한 채팅메세지 전달용 현재는 빈값으로 리턴
+  isRead: boolean; // 읽음 여부 default: false
+  createdAt: Date; // 알람 생성날짜
+  type: eNotification;
+  url: string | null; // 연결되는 url -> NotificationType에 따라 필요한 부분 다름
+}
