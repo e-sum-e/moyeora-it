@@ -13,7 +13,7 @@ const formSchema = z.object({
   }),
 });
 
-const FindEmailForm = () => {
+const FindPassword = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -21,18 +21,19 @@ const FindEmailForm = () => {
     },
   });
 
-  // find-email인 경우
-  const [isExisted, setIsExisted] = useState(false);
   const [isNotExisted, setIsNotExisted] = useState(false);
+
+  // reset-password일 경우
+  const [isSuccessEmailSend, setIsSuccessEmailSend] = useState(false);
 
   // 이메일 찾기
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values);
     try {
-      // find-email인 경우
-      // TODO: 이메일 찾기 로직 작성 /find-email
-      setIsExisted(true);
-      console.log('이메일찾기');
+      // reset-password일 경우
+      // TODO: 비밀번호 찾기 로직 작성 /find-email
+      setIsSuccessEmailSend(true);
+      console.log('비찾');
     } catch (e) {
       // TODO: 이메일 찾기 실패시 에러코드 맞춰서 설정해주기
       setIsNotExisted(true);
@@ -51,22 +52,21 @@ const FindEmailForm = () => {
           placeholder="myemail@mail.com"
         />
 
-        {/* 성공시 로그인페이지로 갈지 비밀번호 찾기로 갈지 물어보기 */}
-        {isExisted && (
+        {/* 이메일 전송시 로그인페이지로 가기*/}
+        {isSuccessEmailSend && (
           <div className="flex flex-col">
-            <p className="text-blue-900">해당 이메일이 존재합니다!</p>
+            <p className="text-blue-900">이메일을 확인해주세요!</p>
             <Link href="/login">로그인하러 가기</Link>
-            <Link href="/find-password">비밀번호 찾기</Link>
           </div>
         )}
 
         {isNotExisted && (
           <p className="text-red-600">해당 이메일이 존재하지 않습니다</p>
         )}
-        <Button>이메일 찾기</Button>
+        <Button>비밀번호 찾기</Button>
       </form>
     </Form>
   );
 };
 
-export default FindEmailForm;
+export default FindPassword;
