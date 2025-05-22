@@ -1,3 +1,4 @@
+import { AddRereplyButton } from '@/components/atoms/reply/add-rereply-button';
 import { ReplyContent } from '@/components/atoms/reply/reply-content';
 import { ReplyHeader } from '@/components/molecules/reply/reply-header';
 import { ReplyThread } from '@/components/molecules/reply/reply-thread';
@@ -19,6 +20,7 @@ export const Reply = ({ content, writer, createdAt, replyId }: ReplyProps) => {
       <ReplyHeader writer={writer} createdAt={createdAt} replyId={replyId} />
       <ReplyContent content={content} />
       <ReplyThread replyId={replyId} />
+      <AddRereplyButton />
     </article>
   );
 };
