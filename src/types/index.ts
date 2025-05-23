@@ -16,6 +16,7 @@ export type WriteForm = {
   startDate: Date;
   endDate: Date;
   description: string;
+  autoAllow: boolean;
 };
 
 export type Group = {
