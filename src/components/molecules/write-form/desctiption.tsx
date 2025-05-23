@@ -13,9 +13,9 @@ import OrderedList from '@tiptap/extension-ordered-list';
 import TaskItem from '@tiptap/extension-task-item';
 import TaskList from '@tiptap/extension-task-list';
 import Typography from '@tiptap/extension-typography';
-
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import { emojiRules } from './emojiRules';
 
 const tiptapStyleExtensions = [
   Heading.configure({
@@ -65,6 +65,10 @@ const tiptapStyleExtensions = [
     HTMLAttributes: {
       class: 'bg-red',
     },
+  }),
+  EmojiReplacer.configure({
+    ruleConfigs: emojiRules,
+    shouldUseExtraReplacementSpace: false,
   }),
 ];
 
