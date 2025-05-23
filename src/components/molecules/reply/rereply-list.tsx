@@ -7,6 +7,7 @@ type RereplyListProps = {
 
 export const RereplyList = ({ parentReplyId }: RereplyListProps) => {
   //  parentReplyId를 이용해서 데이터 GET 요청
+  console.log(parentReplyId);
   const rereplies = [
     {
       replyId: 11,

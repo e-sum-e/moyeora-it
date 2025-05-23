@@ -1,8 +1,9 @@
-import type { Metadata } from 'next';
-import './globals.css';
 import { Header } from '@/components/organisms/header';
+import { server } from '@/mocks/server';
 import { MSWComponent } from '@/providers/MSWComponent';
+import type { Metadata } from 'next';
 import { Toaster } from 'sonner';
+import './globals.css';
 
 export const metadata: Metadata = {
   title: '모여라-IT',
@@ -14,6 +15,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  server.listen();
+
   return (
     <html lang="en">
       <body>
