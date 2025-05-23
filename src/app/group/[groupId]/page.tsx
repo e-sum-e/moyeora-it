@@ -2,20 +2,22 @@
 
 import { ReplyForm } from '@/components/atoms/reply/reply-form';
 import { ReplyItem } from '@/components/organisms/reply-item';
+import { useFetchInView } from '@/hooks/useFetchInView';
+import { useFetchItems } from '@/hooks/useFetchItems';
+import { Reply } from '@/types';
 
 export default function GroupDetailPage() {
-  const allReplies = [
-    {
-      replyId: 1,
-      content: `댓글 `,
-      writer: {
-        userId: `1`,
-        nickname: `abc`,
-        profileImage: null,
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useFetchItems<Reply>({
+      url: `/api/groups/1/replies`,
+      queryParams: {
+        size: 10,
       },
-      createdAt: '2025-05-23',
-    },
-  ];
+    });
+  const { ref } = useFetchInView({
+    fetchNextPage,
+  });
+  const allReplies = data.pages.flatMap((page) => page.items);
 
   return (
     <div>
@@ -34,6 +36,9 @@ export default function GroupDetailPage() {
               />
             ))}
           </ul>
+          {hasNextPage && !isFetchingNextPage && (
+            <div ref={ref} className="h-2 -translate-y-100 bg-red-500" />
+          )}
         </div>
       </section>
     </div>

@@ -1,13 +1,9 @@
 'use client';
 
 import { Avatar } from '@/components/atoms/avatar';
-import { User } from '@/stores/useAuthStore';
+import { Reply } from '@/types';
 
-type ReplyHeaderProps = {
-  writer: Pick<User, 'userId' | 'nickname' | 'profileImage'>;
-  createdAt: string;
-  replyId: number;
-};
+type ReplyHeaderProps = Omit<Reply, 'content'>;
 
 export const ReplyHeader = ({
   writer,
