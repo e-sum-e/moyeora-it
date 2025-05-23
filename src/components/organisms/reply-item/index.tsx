@@ -2,16 +2,9 @@ import { AddRereplyButton } from '@/components/atoms/reply/add-rereply-button';
 import { ReplyContent } from '@/components/atoms/reply/reply-content';
 import { ReplyHeader } from '@/components/molecules/reply/reply-header';
 import { ReplyThread } from '@/components/molecules/reply/reply-thread';
-import { User } from '@/stores/useAuthStore';
+import { Reply } from '@/types';
 
-type ReplyProps = {
-  content: string;
-  writer: Pick<User, 'userId' | 'nickname' | 'profileImage'>;
-  createdAt: string;
-  replyId: number;
-};
-
-export const Reply = ({ content, writer, createdAt, replyId }: ReplyProps) => {
+export const ReplyItem = ({ content, writer, createdAt, replyId }: Reply) => {
   return (
     <article id={`reply-${replyId}`} className="space-y-2">
       <ReplyHeader writer={writer} createdAt={createdAt} replyId={replyId} />

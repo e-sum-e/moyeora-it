@@ -1,23 +1,21 @@
-import { request } from '@/api/request';
+'use client';
+
 import { ReplyForm } from '@/components/atoms/reply/reply-form';
-import { Reply } from '@/components/organisms/reply';
+import { ReplyItem } from '@/components/organisms/reply-item';
 
-type GroupDetailPage = {
-  params: Promise<{ groupId?: string }>;
-};
-
-export default async function GroupDetailPage({ params }: GroupDetailPage) {
-  const groupId = (await params).groupId;
-
-  if (groupId === undefined) return null;
-
-  try {
-    const data = await request.get(`/api/groups/${groupId}`);
-    console.log(data);
-  } catch (err) {
-    console.log(err);
-    return null;
-  }
+export default function GroupDetailPage() {
+  const allReplies = [
+    {
+      replyId: 1,
+      content: `댓글 `,
+      writer: {
+        userId: `1`,
+        nickname: `abc`,
+        profileImage: null,
+      },
+      createdAt: '2025-05-23',
+    },
+  ];
 
   return (
     <div>
@@ -25,17 +23,17 @@ export default async function GroupDetailPage({ params }: GroupDetailPage) {
       <section className="w-4/5 mx-auto flex flex-col gap-10">
         <ReplyForm />
         <div>
-          {/* 댓글 리스트*/}
-          <Reply
-            writer={{
-              nickname: '작성자',
-              profileImage: '',
-              userId: 'a1',
-            }}
-            content="댓글입니다."
-            createdAt="2025.05.21"
-            replyId={1}
-          />
+          <ul>
+            {allReplies.map(({ replyId, writer, content, createdAt }) => (
+              <ReplyItem
+                key={replyId}
+                writer={writer}
+                content={content}
+                createdAt={createdAt}
+                replyId={replyId}
+              />
+            ))}
+          </ul>
         </div>
       </section>
     </div>
