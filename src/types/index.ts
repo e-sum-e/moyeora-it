@@ -1,5 +1,5 @@
 //전역 파일 타입 정리
-import { eNotification, Position, Skill } from './enums';
+import { eNotification, Position, Skill, SkillName } from './enums';
 
 export type User = {
   id: string;
@@ -23,6 +23,7 @@ export type WriteForm = {
   description: string;
   autoAllow: boolean;
   type: GroupType;
+  skills: SkillName[];
 };
 
 export type Group = {
