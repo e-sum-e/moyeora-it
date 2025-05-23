@@ -92,4 +92,12 @@ export const groupsHandlers = [
       },
     });
   }),
+  http.post('http://localhost:4000/api/register', () => {
+    return new HttpResponse(null, {
+      headers: new Headers([
+        ['Set-Cookie', 'accessToken=myAccess'],
+        ['Set-Cookie', 'refreshToken=myRefresh'],
+      ]),
+    });
+  }),
 ];

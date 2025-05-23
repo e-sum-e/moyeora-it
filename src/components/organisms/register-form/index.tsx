@@ -5,6 +5,7 @@ import { InputTextField } from '@/components/molecules/input-text-field';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { useState } from 'react';
+import useAuthStore from '@/stores/useAuthStore';
 
 // 회원가입에 쓰이는 이메일과 비밀번호 유효성
 const registerFormSchema = z
@@ -44,16 +45,25 @@ const RegisterForm = () => {
     },
   });
 
-  // const login = useAuthStore(s => s.login)
+  const login = useAuthStore((s) => s.login);
 
   // 회원가입
   const onRegisterSubmit = async (
     values: z.infer<typeof registerFormSchema>,
   ) => {
-    console.log(values);
     try {
       // TODO: 회원가입 로직 작성 /register
-      // TODO: 회원가입 성공 후 회원정보 불러오기 login(user)
+      // 에러처리 별도로 해줘야 할 수도 있음
+      await fetch('http://localhost:4000/api/register', {
+        method: 'POST',
+        body: JSON.stringify(values),
+      });
+
+      // TODO: 회원가입 성공 후(쿠키 바로 설정) 회원정보 불러오기 프로필 설정 login(user)
+      const response = await fetch('http://localhost:4000/api/me');
+      const { user } = await response.json();
+
+      login(user);
     } catch (e) {
       // TODO: 회원가입 실패시 에러코드 맞춰서 설정해주기
       setIsRegisterFailed(true);
