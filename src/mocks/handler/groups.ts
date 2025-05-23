@@ -41,7 +41,7 @@ export const groupsHandlers = [
           profileImage: 'https://github.com/shadcn.png',
         },
         isApplicant: false,
-        members: [
+        participants: [
           {
             id: 'abcd123',
             name: '팀원1',

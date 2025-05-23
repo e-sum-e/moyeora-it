@@ -1,25 +1,23 @@
+'use client';
+
 import { ReplyForm } from '@/components/atoms/reply/reply-form';
-import { Reply } from '@/components/organisms/reply';
+import { ReplyItem } from '@/components/organisms/reply-item';
+import { useFetchInView } from '@/hooks/useFetchInView';
+import { useFetchItems } from '@/hooks/useFetchItems';
+import { Reply } from '@/types';
 
-type GroupDetailPage = {
-  params: Promise<{ groupId?: string }>;
-};
-
-export default async function GroupDetailPage({ params }: GroupDetailPage) {
-  const groupId = (await params).groupId;
-
-  if (groupId === undefined) return null;
-
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/groups/${groupId}`,
-    );
-    const data = await res.json();
-    console.log(data);
-  } catch (err) {
-    console.log(err);
-    return null;
-  }
+export default function GroupDetailPage() {
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useFetchItems<Reply>({
+      url: `/api/groups/1/replies`,
+      queryParams: {
+        size: 10,
+      },
+    });
+  const { ref } = useFetchInView({
+    fetchNextPage,
+  });
+  const allReplies = data.pages.flatMap((page) => page.items);
 
   return (
     <div>
@@ -27,17 +25,20 @@ export default async function GroupDetailPage({ params }: GroupDetailPage) {
       <section className="w-4/5 mx-auto flex flex-col gap-10">
         <ReplyForm />
         <div>
-          {/* 댓글 리스트*/}
-          <Reply
-            writer={{
-              name: '작성자',
-              profileImage: '',
-              id: 'a1',
-            }}
-            content="댓글입니다."
-            createdAt="2025.05.21"
-            replyId={1}
-          />
+          <ul>
+            {allReplies.map(({ replyId, writer, content, createdAt }) => (
+              <ReplyItem
+                key={replyId}
+                writer={writer}
+                content={content}
+                createdAt={createdAt}
+                replyId={replyId}
+              />
+            ))}
+          </ul>
+          {hasNextPage && !isFetchingNextPage && (
+            <div ref={ref} className="h-2 -translate-y-100 bg-red-500" />
+          )}
         </div>
       </section>
     </div>

@@ -2,10 +2,12 @@
 import { eNotification, Position, Skill } from './enums';
 
 export type User = {
-  id: string;
-  name: string;
+  userId: string;
   email: string;
-  profileImage: string;
+  nickname: string | null;
+  profileImage: string | null;
+  position: Position | null;
+  skills: Skill[] | null;
 };
 
 export enum GroupType {
@@ -48,4 +50,11 @@ export type Notification = {
   createdAt: Date; // 알람 생성날짜
   type: eNotification;
   url: string | null; // 연결되는 url -> NotificationType에 따라 필요한 부분 다름
+};
+
+export type Reply = {
+  replyId: number;
+  content: string;
+  writer: Pick<User, 'userId' | 'nickname' | 'profileImage'>;
+  createdAt: string;
 };
