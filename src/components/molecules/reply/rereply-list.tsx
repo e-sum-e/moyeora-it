@@ -11,25 +11,25 @@ export const RereplyList = ({ parentReplyId }: RereplyListProps) => {
   const rereplies = [
     {
       replyId: 11,
-      writer: { id: '1', profileImage: '', name: 'abc' },
+      writer: { userId: '1', profileImage: '', nickname: 'abc' },
       createdAt: '2025.05.22',
       content: '대댓글1',
     },
     {
       replyId: 12,
-      writer: { id: '2', profileImage: '', name: 'abc' },
+      writer: { userId: '2', profileImage: '', nickname: 'abc' },
       createdAt: '2025.05.22',
       content: '대댓글2',
     },
     {
       replyId: 13,
-      writer: { id: '3', profileImage: '', name: 'abc' },
+      writer: { userId: '3', profileImage: '', nickname: 'abc' },
       createdAt: '2025.05.22',
       content: '대댓글3',
     },
     {
       replyId: 14,
-      writer: { id: '4', profileImage: '', name: 'abc' },
+      writer: { userId: '4', profileImage: '', nickname: 'abc' },
       createdAt: '2025.05.22',
       content: '대댓글4',
     },

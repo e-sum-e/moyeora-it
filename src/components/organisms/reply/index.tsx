@@ -2,11 +2,11 @@ import { AddRereplyButton } from '@/components/atoms/reply/add-rereply-button';
 import { ReplyContent } from '@/components/atoms/reply/reply-content';
 import { ReplyHeader } from '@/components/molecules/reply/reply-header';
 import { ReplyThread } from '@/components/molecules/reply/reply-thread';
-import { User } from '@/types';
+import { User } from '@/stores/useAuthStore';
 
 type ReplyProps = {
   content: string;
-  writer: Omit<User, 'email'>;
+  writer: Pick<User, 'userId' | 'nickname' | 'profileImage'>;
   createdAt: string;
   replyId: number;
 };

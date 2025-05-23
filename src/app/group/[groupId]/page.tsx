@@ -1,3 +1,4 @@
+import { request } from '@/api/request';
 import { ReplyForm } from '@/components/atoms/reply/reply-form';
 import { Reply } from '@/components/organisms/reply';
 
@@ -11,10 +12,7 @@ export default async function GroupDetailPage({ params }: GroupDetailPage) {
   if (groupId === undefined) return null;
 
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/groups/${groupId}`,
-    );
-    const data = await res.json();
+    const data = await request.get(`/api/groups/${groupId}`);
     console.log(data);
   } catch (err) {
     console.log(err);
@@ -30,9 +28,9 @@ export default async function GroupDetailPage({ params }: GroupDetailPage) {
           {/* 댓글 리스트*/}
           <Reply
             writer={{
-              name: '작성자',
+              nickname: '작성자',
               profileImage: '',
-              id: 'a1',
+              userId: 'a1',
             }}
             content="댓글입니다."
             createdAt="2025.05.21"
