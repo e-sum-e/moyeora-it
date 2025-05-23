@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import useAuthStore from '@/stores/useAuthStore';
+import { useRouter } from 'next/navigation';
 
 const positions = Object.keys(Position).filter((k) => isNaN(Number(k))) as [
   string,
@@ -45,15 +46,30 @@ const RegisterOptionalForm = () => {
     },
   });
 
-  const user = useAuthStore((s) => s.user);
+  const router = useRouter();
+
+  const login = useAuthStore((s) => s.login);
 
   // 옵션 설정
   const onOptionalSubmit = async (
     values: z.infer<typeof optionalFormSchema>,
   ) => {
-    console.log(values, user);
     try {
       //  TODO: 프로필 옵션 설정
+      await fetch('http://localhost:4000/api/me', {
+        method: 'POST',
+        body: JSON.stringify(values),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      // 바뀐 프로필 다시 불러와서 설정
+      const response = await fetch('http://localhost:4000/api/me');
+      const { user } = await response.json();
+
+      login(user);
+      router.push('/');
     } catch (e) {
       // TODO: 프로필 에러 설정 //
       console.log(e);

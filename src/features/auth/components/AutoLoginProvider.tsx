@@ -6,8 +6,8 @@ import AutoLoginClient from '@/features/auth/components/AutoLoginClient';
 // TODO: 쿠키 이름은 변경될 수 있습니다
 const AutoLoginProvider = async () => {
   const cookieStore = await cookies();
-  const accessToken = cookieStore.get('accessToken');
-  const refreshToken = cookieStore.get('refreshToken');
+  const accessToken = cookieStore.get(process.env.ACCESS_TOKEN as string);
+  const refreshToken = cookieStore.get(process.env.REFRESH_TOKEN as string);
 
   const hasToken = !!(accessToken && refreshToken);
 
