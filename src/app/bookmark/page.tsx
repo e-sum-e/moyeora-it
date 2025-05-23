@@ -66,8 +66,10 @@ export default function BookmarkPage() {
           <div className="flex flex-col gap-4">
           {isError && <div>에러가 발생했습니다.</div>}
           {isLoading && <div>로딩 중...</div>}
-          {items.map((item: ContentInfo) => (
-              <BookmarkCard  key={item.id} info={item} />
+          {items.map((item: ContentInfo, index: number) => (
+            <div key={item.id} ref={index === items.length - 1 ? ref : undefined}>
+              <BookmarkCard info={item} />
+            </div>
           ))}
           </div>
         </Tab>
