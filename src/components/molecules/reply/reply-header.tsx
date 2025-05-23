@@ -1,10 +1,10 @@
 'use client';
 
 import { Avatar } from '@/components/atoms/avatar';
-import { ReplyWriter } from '@/types';
+import { User } from '@/types';
 
 type ReplyHeaderProps = {
-  writer: ReplyWriter;
+  writer: Omit<User, 'email'>;
   createdAt: string;
   replyId: number;
 };
@@ -14,7 +14,7 @@ export const ReplyHeader = ({
   createdAt,
   replyId,
 }: ReplyHeaderProps) => {
-  const isWriter = true; // writer.userId === user.userId
+  const isWriter = true; // writer.id === user.id
 
   const editButtonClickHandler = () => {
     console.log(replyId, '수정');
@@ -29,12 +29,12 @@ export const ReplyHeader = ({
       <div className="flex gap-3 items-center">
         <Avatar
           imageSrc={writer.profileImage}
-          fallback={writer.nickname[0]}
+          fallback={writer.name[0]}
           className="w-10 h-10 cursor-pointer"
           onClick={() => {}}
         />
         <div className="flex flex-col">
-          <div>{writer.nickname}</div>
+          <div>{writer.name}</div>
           <div>{createdAt}</div>
         </div>
       </div>

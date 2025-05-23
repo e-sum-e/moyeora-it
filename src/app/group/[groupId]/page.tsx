@@ -30,9 +30,9 @@ export default async function GroupDetailPage({ params }: GroupDetailPage) {
           {/* 댓글 리스트*/}
           <Reply
             writer={{
-              nickname: '작성자',
+              name: '작성자',
               profileImage: '',
-              userId: 'a1',
+              id: 'a1',
             }}
             content="댓글입니다."
             createdAt="2025.05.21"
