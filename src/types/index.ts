@@ -3,7 +3,7 @@ import { eNotification, Position, Skill } from './enums';
 
 export type User = {
   id: string;
-  name: string;
+  nickname: string;
   email: string;
   profileImage: string;
 };
@@ -24,6 +24,7 @@ export type Group = {
   startDate: Date; // 모임의 시작일
   endDate: Date; // 모임의 종료일
   maxParticipants: number;
+  participants:Pick<User, "id" | "nickname" | "profileImage">[];
   description: string;
   position: Position[];
   skills: Skill[];
@@ -41,3 +42,6 @@ export type Notification = {
   type: eNotification;
   url: string | null; // 연결되는 url -> NotificationType에 따라 필요한 부분 다름
 }
+
+
+export type GroupType = 'all' | 'study' | 'project' | 'bookmark';

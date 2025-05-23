@@ -5,21 +5,56 @@ export const groupsHandlers = [
     const url = new URL(request.url);
     const cursor = Number(url.searchParams.get('cursor')) || 0;
     const size = Number(url.searchParams.get('size')) || 10;
+    const type = url.searchParams.get('type') || 'all';
 
-    const items = Array.from({ length: size }, (_, index) => ({
-      id: cursor + index + 1,
-      title: `스터디${cursor + index + 1}`,
-      deadline: '2025-05-24',
+
+
+    const titles = [
+      '프론트엔드 스터디 모집합니다',
+      '알고리즘 마스터하기',
+      '토이 프로젝트 팀원 구해요',
+      'Next.js 프로젝트 같이 하실 분',
+      'CS 스터디원 모집',
+      'React 심화 스터디',
+      '백엔드 개발자 모여라',
+      'UI/UX 프로젝트 팀원 구함',
+      'Spring Boot 스터디',
+      'DevOps 기초부터 실무까지'
+    ];
+
+    let items = Array.from({ length: size }, (_, index) => ({
+      id: Math.floor(Math.random() * 1000000) + 1,
+      title: titles[(cursor + index) % titles.length],
+      deadline: '2025-05-22',
       startDate: '2025-05-20',
       endDate: '2025-05-24',
       maxParticipants: 10,
+      participants: [],
       description: '스터디1 설명',
       position: [1, 3],
       skills: [1, 2],
       createdAt: '2025-05-20',
       type: 'study',
       autoAllow: true,
+      isBookmark: false,
     }));
+
+    console.log('type', type);
+
+    if (type.includes('study')) {
+      items = items.filter((item) => item.type === 'study');
+    }
+
+    if (type.includes('project')) {
+      items = items.filter((item) => item.type === 'project');
+    }
+
+    if (type.includes('bookmark')) {
+      items = items.map((item) => ({
+        ...item,
+        isBookmark: true,
+      }));
+    }
 
     return HttpResponse.json({
       items,
