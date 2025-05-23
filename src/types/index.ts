@@ -2,10 +2,12 @@
 import { eNotification, Position, Skill } from './enums';
 
 export type User = {
-  id: string;
-  name: string;
+  userId: string;
   email: string;
-  profileImage: string;
+  nickname: string | null;
+  profileImage: string | null;
+  position: Position | null;
+  skills: Skill[] | null;
 };
 
 /** 모임 만들기 폼에 사용되는 데이터들의 타입 */
@@ -32,12 +34,11 @@ export type Group = {
   autoAllow: boolean;
 };
 
- 
 export type Notification = {
-	id: number;
-	message: string | null; // 추후 채팅의 경우 가장 간략한 채팅메세지 전달용 현재는 빈값으로 리턴
+  id: number;
+  message: string | null; // 추후 채팅의 경우 가장 간략한 채팅메세지 전달용 현재는 빈값으로 리턴
   isRead: boolean; // 읽음 여부 default: false
   createdAt: Date; // 알람 생성날짜
   type: eNotification;
   url: string | null; // 연결되는 url -> NotificationType에 따라 필요한 부분 다름
-}
+};

@@ -1,33 +1,5 @@
 import { create } from 'zustand';
-
-// TODO: 예시로 넣어둔 Position, Skill
-export type Position =
-  | 'PM'
-  | 'PL'
-  | 'AA'
-  | 'TA'
-  | 'DA'
-  | 'QA'
-  | 'FE'
-  | 'BE'
-  | 'FS';
-export type Skill =
-  | 'JAVA'
-  | 'JavaScript'
-  | 'HTML/CSS'
-  | 'React'
-  | 'Vue.js'
-  | 'Kotlin'
-  | 'Spring';
-
-export type User = {
-  userId: string;
-  email: string;
-  nickname: string | null;
-  profileImage: string | null;
-  position: Position | null;
-  skills: Skill[] | null;
-};
+import { User } from '@/types';
 
 export type UserStore = {
   user: User | null;
