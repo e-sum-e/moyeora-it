@@ -1,13 +1,11 @@
 import { http, HttpResponse } from 'msw';
 
 export const groupsHandlers = [
-  http.get('http://localhost:4000/api/groups', ({ request }) => {
+  http.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/groups`, ({ request }) => {
     const url = new URL(request.url);
     const cursor = Number(url.searchParams.get('cursor')) || 0;
     const size = Number(url.searchParams.get('size')) || 10;
     const type = url.searchParams.get('type') || 'all';
-
-
 
     const titles = [
       '프론트엔드 스터디 모집합니다',
@@ -62,4 +60,55 @@ export const groupsHandlers = [
       cursor: cursor + size,
     });
   }),
+  http.get(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/groups/:groupId`,
+    () => {
+      return HttpResponse.json({
+        title: '스터디1',
+        deadline: '2025-05-24',
+        startDate: '2025-05-20',
+        endDate: '2025-05-24',
+        maxParticipants: 10,
+        description: '스터디1 설명',
+        position: [1, 3],
+        skills: [1, 2],
+        createdAt: '2025-05-20',
+        type: 'study',
+        autoAllow: true,
+        host: {
+          id: 'abcd123',
+          name: '사용자1',
+          profileImage: 'https://github.com/shadcn.png',
+        },
+        isApplicant: false,
+        members: [
+          {
+            id: 'abcd123',
+            name: '팀원1',
+            profileImage: 'https://github.com/shadcn.png',
+          },
+          {
+            id: 'abcd123',
+            name: '팀원1',
+            profileImage: 'https://github.com/shadcn.png',
+          },
+          {
+            id: 'abcd123',
+            name: '팀원1',
+            profileImage: 'https://github.com/shadcn.png',
+          },
+          {
+            id: 'abcd123',
+            name: '팀원1',
+            profileImage: 'https://github.com/shadcn.png',
+          },
+          {
+            id: 'abcd123',
+            name: '팀원1',
+            profileImage: 'https://github.com/shadcn.png',
+          },
+        ],
+      });
+    },
+  ),
 ];
