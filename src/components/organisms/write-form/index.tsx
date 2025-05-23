@@ -43,7 +43,7 @@ const formSchema = z
       .string()
       .min(20, { message: '내용을 좀 더 자세하게 적어주세요.' }),
     autoAllow: z.boolean(),
-    type: z.enum([GroupType.Study, GroupType.Project]),
+    type: z.enum([GroupType.STUDY, GroupType.PROJECT]),
   })
   .refine((data) => isAfter(data.startDate, addDays(data.deadline, 0)), {
     message: '모임 시작일은 모집 마감일로부터 1일 이후여야 합니다.',
@@ -77,7 +77,7 @@ export const WriteForm = () => {
       maxParticipants: 2,
       description: '',
       autoAllow: false,
-      type: GroupType.Study,
+      type: GroupType.STUDY,
     },
   });
 

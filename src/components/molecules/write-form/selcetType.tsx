@@ -32,11 +32,11 @@ export const SelectType = ({ form }: TitleProps) => {
                 className="flex gap-4"
               >
                 <div>
-                  <RadioGroupItem value={GroupType.Study} id="study" />
+                  <RadioGroupItem value={GroupType.STUDY} id="study" />
                   <Label htmlFor="study">스터디</Label>
                 </div>
                 <div>
-                  <RadioGroupItem value={GroupType.Project} id="project" />
+                  <RadioGroupItem value={GroupType.PROJECT} id="project" />
                   <Label htmlFor="project">프로젝트</Label>
                 </div>
               </RadioGroup>

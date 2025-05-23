@@ -9,8 +9,8 @@ export type User = {
 };
 
 export enum GroupType {
-  Study = 'study',
-  Project = 'project',
+  STUDY = 'study',
+  PROJECT = 'project',
 }
 
 /** 모임 만들기 폼에 사용되는 데이터들의 타입 */
