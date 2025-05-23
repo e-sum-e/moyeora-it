@@ -17,7 +17,7 @@ allSkillKeys.forEach((skill) => {
 
 export const getSkillBadge = (name: string, isDefault = true) => {
   return (
-    <div className="flex flex-row border border-gray-800 rounded-md">
+    <div className="skill-badge flex flex-row border border-gray-800 rounded-md">
       {isDefault && (
         <Image src={skillLogoMap[name]} alt="logo" width={24} height={24} />
       )}
