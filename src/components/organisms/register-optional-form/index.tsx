@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import useAuthStore from '@/stores/useAuthStore';
+import { useRouter } from 'next/navigation';
 
 const positions = Object.keys(Position).filter((k) => isNaN(Number(k))) as [
   string,
@@ -45,6 +46,8 @@ const RegisterOptionalForm = () => {
     },
   });
 
+  const router = useRouter();
+
   const login = useAuthStore((s) => s.login);
 
   // 옵션 설정
@@ -66,6 +69,7 @@ const RegisterOptionalForm = () => {
       const { user } = await response.json();
 
       login(user);
+      router.push('/');
     } catch (e) {
       // TODO: 프로필 에러 설정 //
       console.log(e);
