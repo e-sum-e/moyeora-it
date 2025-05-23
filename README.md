@@ -43,3 +43,10 @@ yarn dev
 **기술 스택, 사용 기술**
 
 - 사용한 기술과 라이브러리
+
+## 환경 변수
+.env 파일 설정해두셔야합니다. 
+
+```
+NEXT_PUBLIC_API_BASE_URL=base api server
+```

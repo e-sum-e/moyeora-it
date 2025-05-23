@@ -1,9 +1,11 @@
+import type { Metadata } from 'next';
+import './globals.css';
 import { Header } from '@/components/organisms/header';
 import { server } from '@/mocks/server';
 import { MSWComponent } from '@/providers/MSWComponent';
-import type { Metadata } from 'next';
 import { Toaster } from 'sonner';
-import './globals.css';
+import { WebSocketProvider } from '@/providers/WSProvider';
+import { ReactQueryProvider } from '@/providers/ReactQueryProvider';
 
 export const metadata: Metadata = {
   title: '모여라-IT',
@@ -21,8 +23,12 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <MSWComponent>
+        <ReactQueryProvider>
           <Header />
-          {children}
+            <WebSocketProvider>
+              {children}
+            </WebSocketProvider>
+          </ReactQueryProvider>
           <Toaster />
         </MSWComponent>
       </body>
