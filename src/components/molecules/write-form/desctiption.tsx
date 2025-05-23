@@ -23,6 +23,7 @@ import TaskList from '@tiptap/extension-task-list';
 import Typography from '@tiptap/extension-typography';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import { useEffect } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { emojiRules } from './emojiRules';
 
@@ -102,7 +103,20 @@ export const Description = ({ form }: DescriptionProps) => {
       },
     },
   });
-  editor?.on('update', () => form.setValue('description', editor.getHTML()));
+
+  useEffect(() => {
+    if (!editor) return;
+
+    /** useForm으로 만든 form의 상태 업데이트. 렌더링과는 무관한 로직으로 useEffect에서 관리 */
+    const descriptionStateUpdate = () =>
+      editor.on('update', () => form.setValue('description', editor.getHTML()));
+
+    descriptionStateUpdate();
+
+    return () => {
+      editor.off('update', descriptionStateUpdate);
+    };
+  }, [editor, form]);
 
   return (
     <FormField
