@@ -8,6 +8,11 @@ export type User = {
   profileImage: string;
 };
 
+export enum GroupType {
+  Study = 'study',
+  Project = 'project',
+}
+
 /** 모임 만들기 폼에 사용되는 데이터들의 타입 */
 export type WriteForm = {
   title: string;
@@ -17,6 +22,7 @@ export type WriteForm = {
   endDate: Date;
   description: string;
   autoAllow: boolean;
+  type: GroupType;
 };
 
 export type Group = {
@@ -32,6 +38,7 @@ export type Group = {
   createdAt: Date;
   isBookmark: boolean;
   autoAllow: boolean;
+  type: GroupType;
 };
 
  

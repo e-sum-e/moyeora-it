@@ -5,10 +5,12 @@ import { DeadlineCalendar } from '@/components/molecules/write-form/deadlineCale
 import { Description } from '@/components/molecules/write-form/desctiption';
 import { EndDateCalendar } from '@/components/molecules/write-form/endDateCalendar';
 import { MaxParticipants } from '@/components/molecules/write-form/maxParticipants';
+import { SelectType } from '@/components/molecules/write-form/selcetType';
 import { StartDateCalendar } from '@/components/molecules/write-form/startDateCalendar';
 import { Title } from '@/components/molecules/write-form/title';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
+import { GroupType } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { addDays, isAfter } from 'date-fns';
 import { useMemo, useState } from 'react';
@@ -41,6 +43,7 @@ const formSchema = z
       .string()
       .min(20, { message: '내용을 좀 더 자세하게 적어주세요.' }),
     autoAllow: z.boolean(),
+    type: z.enum([GroupType.Study, GroupType.Project]),
   })
   .refine((data) => isAfter(data.startDate, addDays(data.deadline, 0)), {
     message: '모임 시작일은 모집 마감일로부터 1일 이후여야 합니다.',
@@ -74,6 +77,7 @@ export const WriteForm = () => {
       maxParticipants: 2,
       description: '',
       autoAllow: false,
+      type: GroupType.Study,
     },
   });
 
@@ -85,6 +89,7 @@ export const WriteForm = () => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(formSubmit)}>
         <Title form={form} />
+        <SelectType form={form} />
         <DeadlineCalendar
           form={form}
           isDeadlineCalendarOpen={isDeadlineCalendarOpen}
