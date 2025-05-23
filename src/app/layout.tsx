@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Header } from '@/components/organisms/header';
+import { server } from '@/mocks/server';
 import { MSWComponent } from '@/providers/MSWComponent';
 import { Toaster } from 'sonner';
 import { WebSocketProvider } from '@/providers/WSProvider';
@@ -16,6 +17,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  server.listen();
+
   return (
     <html lang="en">
       <body>
