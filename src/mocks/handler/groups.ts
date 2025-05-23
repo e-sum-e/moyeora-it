@@ -1,4 +1,5 @@
 import { http, HttpResponse } from 'msw';
+import { User } from '@/types';
 
 export const groupsHandlers = [
   http.get('http://localhost:4000/api/groups', () => {
