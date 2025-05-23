@@ -8,6 +8,7 @@ type AuthClientProviderProps = {
   hasToken: boolean;
 };
 
+// localStorage와 서버가 불일치 할 수도 있어서 재접속시 프로필 1회 업데이트
 const AutoLoginClient = ({ hasToken }: AuthClientProviderProps) => {
   const login = useAuthStore((s) => s.login);
 
