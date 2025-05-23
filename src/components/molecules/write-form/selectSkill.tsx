@@ -6,7 +6,8 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { WriteForm } from '@/types';
-import { Skill } from '@/types/enums';
+import { SkillName } from '@/types/enums';
+import { useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { getSkillBadge } from '../../../utils/getSkillBadge';
 
@@ -15,28 +16,50 @@ type TitleProps = {
 };
 
 export const SelectSkill = ({ form }: TitleProps) => {
-  /**  숫자 enum Skill의 키 이름으로 이미지 주소와 매칭 시키기 */
-  const allSkillKeys = Object.keys(Skill).filter((key) => isNaN(Number(key)));
+  const allSkillNames = Object.values(SkillName);
+  const [selectedSkills, setSelectedSkills] = useState<SkillName[]>([]);
 
-  const skillLogoMap: { [key: string]: string } = {};
+  const skillClickHandler = (skill: SkillName) => {
+    const isSelected = selectedSkills.find(
+      (selectedSkill) => selectedSkill === skill,
+    );
 
-  allSkillKeys.forEach((skill) => {
-    skillLogoMap[skill] = `/logos/${skill.replace(/[^a-zA-Z0-9]/g, '')}.png`;
-  });
+    // toggle. 지금 선택한 스킬이 이미 선택되어 있었다면 제외돼야 함
+    if (isSelected) {
+      const nextSelectedSkills = selectedSkills.filter(
+        (selectedSkill) => selectedSkill !== skill,
+      );
 
+      setSelectedSkills(nextSelectedSkills);
+      form.setValue('skills', nextSelectedSkills);
+    } else {
+      const nextSelectedSkills = [...selectedSkills, skill];
+
+      setSelectedSkills(nextSelectedSkills);
+      form.setValue('skills', nextSelectedSkills);
+    }
+  };
+  console.log(selectedSkills);
   return (
     <>
       <FormField
         control={form.control}
-        name="title"
+        name="skills"
         render={({}) => (
           <FormItem>
             <FormLabel>사용 기술</FormLabel>
             <FormControl>
               <ul>
-                {allSkillKeys.map((skill) => (
-                  <li key={skill}>
-                    <button type="button">{getSkillBadge(skill)}</button>
+                {allSkillNames.map((skill) => (
+                  <li key={skill} className="w-[fit-content]">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        skillClickHandler(skill);
+                      }}
+                    >
+                      {getSkillBadge(skill)}
+                    </button>
                   </li>
                 ))}
               </ul>
