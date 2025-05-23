@@ -1,60 +1,68 @@
 'use client';
 
-import { Avatar } from '../../atoms/avatar';
+// import useAuthStore from '@/stores/useAuthStore';
+import {Notification} from '@/components/molecules/notification';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useRef } from 'react';
 
 export const Header = () => {
-  const router = useRouter();
+  // const user = useAuthStore((state) => state.user);
+  const user = {
+    id: '1',
+    name: '홍길동',
+    email: 'test@test.com',
+    profileImage: 'https://github.com/shadcn.png',
+  }
+  
+  
   const menuItems = [
     {
       label: '모여라-IT',
       href: '/',
-      needLogin: false,
     },
     {
       label: 'Bookmark',
       href: '/bookmark',
-      needLogin: false,
     },
+  ];
+
+  const loggedInMenuItems = [
     {
       label: 'MyPage',
       href: '/mypage',
-      needLogin: true,
-    },
-    {
-      label: 'Login',
-      href: '/login',
-      needLogin: false,
     },
     {
       label: 'Notification',
       href: '/notification',
-      needLogin: true,
     },
   ];
-  const isLoggedIn = true; //TODO: 로그인 여부 확인 -> 전역에서 상태관리
 
-  const filteredMenuItems = menuItems.filter(
-    (item) => !item.needLogin || (item.needLogin && isLoggedIn),
-  );
+  const loggedOutMenuItems = [
+    {
+      label: 'Login',
+      href: '/login',
+    },
+  ];
+
+  const isLoggedIn = useRef(user ? true : false);
+  
+  const displayMenuItems = [
+    ...menuItems,
+    ...(isLoggedIn.current ? loggedInMenuItems : loggedOutMenuItems),
+  ];
 
   return (
     <header>
       <nav>
         <ul className="flex gap-4 w-full justify-between">
-          {filteredMenuItems.map((item) => (
+          {displayMenuItems.map((item) => (
             <li key={item.href}>
-              {isLoggedIn && item.label === 'Notification' ? (
-                <Avatar
-                  imageSrc="https://github.com/shadcn.png"
-                  fallback="user이름"
-                  className="w-8 h-8 cursor-pointer"
-                  onClick={() => {
-                    router.push('/');
-                  }}
-                />
+              {item.href === '/' ? (
+                <h1>
+                  <Link href={item.href}>{item.label}</Link>
+                </h1>
+              ) : isLoggedIn.current && item.label === 'Notification' ? (
+                 <Notification />
               ) : (
                 <Link href={item.href}>{item.label}</Link>
               )}

@@ -2,24 +2,20 @@ import { useEffect } from 'react';
 import { FetchNextPageOptions } from '@tanstack/react-query';
 import { useInView, IntersectionOptions } from 'react-intersection-observer';
 
-export const useInfiniteScroll = ({
+export const useFetchInView = ({
   fetchNextPage,
-  hasNext,
   options,
-  isFetchingNextPage,
 }: {
   fetchNextPage: (options?: FetchNextPageOptions) => void;
-  hasNext: boolean;
-  options: IntersectionOptions;
-  isFetchingNextPage: boolean;
+  options?: IntersectionOptions;
 }) => {
   const { ref, inView } = useInView({ ...options });
-
+  
   useEffect(() => {
-    if (inView && hasNext && !isFetchingNextPage) {
+    if (inView) {
       fetchNextPage();
     }
-  }, [inView, hasNext, isFetchingNextPage, fetchNextPage]);
+  }, [inView]);
 
   return { ref };
 };

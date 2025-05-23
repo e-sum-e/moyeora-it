@@ -2,7 +2,7 @@
 
 import { Avatar } from '@/components/atoms/avatar';
 import { Button } from '@/components/ui/button';
-import { validateImageFile } from '@/features/user/utils/isValidImageFile';
+import { validateImageFile } from '@/features/user/utils/validateImageFile';
 import { useRef, useState } from 'react';
 import { toast } from 'sonner';
 
