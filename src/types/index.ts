@@ -15,6 +15,7 @@ export type WriteForm = {
   deadline: Date;
   startDate: Date;
   endDate: Date;
+  description: string;
 };
 
 export type Group = {

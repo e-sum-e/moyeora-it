@@ -1,5 +1,13 @@
 'use client';
 
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { WriteForm } from '@/types';
 import { EmojiReplacer } from '@tiptap-extend/emoji-replacer';
 import Blockquote from '@tiptap/extension-blockquote';
 import BulletList from '@tiptap/extension-bullet-list';
@@ -15,6 +23,7 @@ import TaskList from '@tiptap/extension-task-list';
 import Typography from '@tiptap/extension-typography';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import { UseFormReturn } from 'react-hook-form';
 import { emojiRules } from './emojiRules';
 
 const tiptapStyleExtensions = [
@@ -72,7 +81,11 @@ const tiptapStyleExtensions = [
   }),
 ];
 
-export const Description = () => {
+type DescriptionProps = {
+  form: UseFormReturn<WriteForm>;
+};
+
+export const Description = ({ form }: DescriptionProps) => {
   const editor = useEditor({
     editable: true,
     extensions: [
@@ -91,8 +104,18 @@ export const Description = () => {
   });
 
   return (
-    <>
-      <EditorContent editor={editor} />
-    </>
+    <FormField
+      control={form.control}
+      name="description"
+      render={() => (
+        <FormItem>
+          <FormLabel>내용</FormLabel>
+          <FormControl>
+            <EditorContent editor={editor} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
   );
 };
