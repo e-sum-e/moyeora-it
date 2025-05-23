@@ -1,5 +1,6 @@
 'use client';
 
+import { AutoAllow } from '@/components/molecules/write-form/autoAllow';
 import { DeadlineCalendar } from '@/components/molecules/write-form/deadlineCalendar';
 import { Description } from '@/components/molecules/write-form/desctiption';
 import { EndDateCalendar } from '@/components/molecules/write-form/endDateCalendar';
@@ -38,7 +39,7 @@ const formSchema = z
     endDate: z.date(),
     description: z
       .string()
-      .min(10, { message: '내용을 좀 더 자세하게 적어주세요.' }),
+      .min(20, { message: '내용을 좀 더 자세하게 적어주세요.' }),
   })
   .refine((data) => isAfter(data.startDate, addDays(data.deadline, 1)), {
     message: '모임 시작일은 모집 마감일로부터 1일 이후여야 합니다.',
@@ -91,6 +92,7 @@ export const WriteForm = () => {
           validDeadline={validDeadline}
         />
         <MaxParticipants form={form} />
+        <AutoAllow form={form} />
         <StartDateCalendar
           form={form}
           isStartDateCalendarOpen={isStartDateCalendarOpen}

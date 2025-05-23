@@ -102,6 +102,7 @@ export const Description = ({ form }: DescriptionProps) => {
       },
     },
   });
+  editor?.on('update', () => form.setValue('description', editor.getHTML()));
 
   return (
     <FormField
