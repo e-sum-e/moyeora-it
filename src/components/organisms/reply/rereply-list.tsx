@@ -13,7 +13,7 @@ type RereplyListProps = {
 export const RereplyList = ({ parentReplyId }: RereplyListProps) => {
   const { groupId } = useParams();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useFetchItems<Reply>({
+    useFetchItems<Reply & { parentId: number }>({
       url: `/api/groups/${groupId}/replies/${parentReplyId}`,
       queryParams: {
         size: 10,

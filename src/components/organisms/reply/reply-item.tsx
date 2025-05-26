@@ -1,7 +1,7 @@
 'use client';
 
-import { AddRereplyButton } from '@/components/atoms/reply/add-rereply-button';
 import { ReplyContent } from '@/components/molecules/reply/reply-content';
+import { RereplyFormToggle } from '@/components/molecules/reply/rereply-form-toggle';
 import { RereplyList } from '@/components/organisms/reply/rereply-list';
 import { Reply } from '@/types';
 import { useState } from 'react';
@@ -14,7 +14,7 @@ export const ReplyItem = ({ content, writer, createdAt, replyId }: Reply) => {
   };
 
   return (
-    <li id={`reply-${replyId}`} className="space-y-2">
+    <li className="space-y-2">
       <ReplyContent
         content={content}
         writer={writer}
@@ -24,13 +24,16 @@ export const ReplyItem = ({ content, writer, createdAt, replyId }: Reply) => {
       <div className="p-2 rounded">
         <div className="flex justify-between mb-2">
           <div>대댓글</div>
-          <button onClick={rereplyToggleButtonClickHandler}>
+          <button
+            onClick={rereplyToggleButtonClickHandler}
+            data-role="rereply-toggle"
+          >
             {isOpen ? '접기' : '펼치기'}
           </button>
         </div>
         {isOpen && <RereplyList parentReplyId={replyId} />}
       </div>
-      <AddRereplyButton />
+      <RereplyFormToggle parentReplyId={replyId} />
     </li>
   );
 };

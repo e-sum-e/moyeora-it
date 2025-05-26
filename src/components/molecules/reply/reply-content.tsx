@@ -23,7 +23,7 @@ export const ReplyContent = ({
   };
 
   return (
-    <div>
+    <div id={`reply-${replyId}`}>
       <header className="flex justify-between items-start">
         <ReplyMeta writer={writer} createdAt={createdAt} />
         {isWriter && (
