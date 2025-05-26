@@ -13,6 +13,7 @@ import { Title } from '@/components/molecules/write-form/title';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { DEFAULT_SKILL_NAMES, GroupType } from '@/types';
+import { Skill } from '@/types/enums';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { addDays, isAfter } from 'date-fns';
 import { useRouter } from 'next/navigation';
@@ -94,13 +95,16 @@ export const WriteForm = () => {
   });
 
   const formSubmit = async (values: z.infer<typeof formSchema>) => {
-    const valueCreatedAt = { ...values, createdAt: new Date() };
+    const skills = values.skills.map(
+      (skill) => Skill[skill as keyof typeof Skill],
+    ); // server에 보낼때 enum의 인덱스로 보내기로 했으므로 string을 enum의 인덱스로 변환
 
+    const valueWithCreatedAt = { ...values, skills, createdAt: new Date() };
     try {
       const result = await request.post(
         '/api/group',
         { 'Content-Type': 'application/json' },
-        JSON.stringify(valueCreatedAt),
+        JSON.stringify(valueWithCreatedAt),
       );
 
       if (result.success) {
