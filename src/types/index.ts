@@ -13,19 +13,6 @@ export enum GroupType {
   PROJECT = 'project',
 }
 
-/** 모임 만들기 폼에 사용되는 데이터들의 타입 */
-export type WriteForm = {
-  title: string;
-  maxParticipants: number;
-  deadline: Date;
-  startDate: Date;
-  endDate: Date;
-  description: string;
-  autoAllow: boolean;
-  type: GroupType;
-  skills: SkillName[];
-};
-
 /** 제공해주는 기본 skill의 이름들. enum Skill과 동기화되어야 함 */
 export const DEFAULT_SKILL_NAMES = [
   'JAVA',
@@ -40,6 +27,37 @@ export const DEFAULT_SKILL_NAMES = [
 export type DefaultSkillName = (typeof DEFAULT_SKILL_NAMES)[number];
 /** 유저가 입력한 skill도 사용하기 위해 만든 타입. UI용 */
 export type SkillName = DefaultSkillName | string;
+
+/** 제공해주는 기본 position의 이름들. enum Position과 동기화되어야 함 */
+export const DEFAULT_POSITION_NAMES = [
+  'PM',
+  'PL',
+  'AA',
+  'TA',
+  'DA',
+  'QA',
+  'FE',
+  'BE',
+  'FS',
+] as const;
+/** 제공해주는 기본 position의 이름들의 타입. UI용 */
+export type DefaultPositionName = (typeof DEFAULT_POSITION_NAMES)[number];
+/** 유저가 입력한 skill도 사용하기 위해 만든 타입. UI용 */
+export type PositionName = DefaultPositionName | string;
+
+/** 모임 만들기 폼에 사용되는 데이터들의 타입 */
+export type WriteForm = {
+  title: string;
+  maxParticipants: number;
+  deadline: Date;
+  startDate: Date;
+  endDate: Date;
+  description: string;
+  autoAllow: boolean;
+  type: GroupType;
+  skills: SkillName[];
+  positions: PositionName[];
+};
 
 export type Group = {
   id: number;
