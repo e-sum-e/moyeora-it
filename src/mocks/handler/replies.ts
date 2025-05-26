@@ -128,7 +128,7 @@ export const repliesHandlers = [
       const { content } = body;
 
       const parentId = Number(params.replyId);
-      const newId = REREPLY_LIST.length + 1;
+      const newId = REREPLY_LIST.length + 1 + 10000;
       const newRereplyData = {
         replyId: newId,
         parentId,
