@@ -94,11 +94,13 @@ export const WriteForm = () => {
   });
 
   const formSubmit = async (values: z.infer<typeof formSchema>) => {
+    const valueCreatedAt = { ...values, createdAt: new Date() };
+
     try {
       const result = await request.post(
         '/api/group',
         { 'Content-Type': 'application/json' },
-        JSON.stringify(values),
+        JSON.stringify(valueCreatedAt),
       );
 
       if (result.success) {
