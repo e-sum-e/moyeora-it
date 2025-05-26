@@ -6,8 +6,8 @@ export type User = {
   nickname: string | null;
   email: string;
   profileImage: string | null;
-  position: Position;
-  skills: Skill[];
+  position: Position | null;
+  skills: Skill[] | null;
   isFollowing: boolean;
   isFollower: boolean;
   rate: number;
