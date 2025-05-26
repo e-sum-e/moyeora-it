@@ -1,5 +1,6 @@
 'use client';
 
+import { request } from '@/api/request';
 import { AutoAllow } from '@/components/molecules/write-form/autoAllow';
 import { DeadlineCalendar } from '@/components/molecules/write-form/deadlineCalendar';
 import { EndDateCalendar } from '@/components/molecules/write-form/endDateCalendar';
@@ -14,6 +15,7 @@ import { Form } from '@/components/ui/form';
 import { DEFAULT_SKILL_NAMES, GroupType } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { addDays, isAfter } from 'date-fns';
+import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -68,6 +70,7 @@ export const WriteForm = () => {
   const [isStartDateCalendarOpen, setIsStartDateCalendarOpen] = useState(false);
   const [isEndDateCalendarOpen, setIsEndDateCalendarOpen] = useState(false);
   const [validDeadline, setValidDeadline] = useState(addDays(new Date(), 7));
+  const router = useRouter();
 
   const validStartDate = useMemo(
     () => addDays(validDeadline, 1),
@@ -90,8 +93,24 @@ export const WriteForm = () => {
     },
   });
 
-  const formSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+  const formSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      const result = await request.post(
+        '/api/group',
+        { 'Content-Type': 'application/json' },
+        JSON.stringify(values),
+      );
+
+      if (result.success) {
+        router.push('/');
+      } else {
+        // 에러 임시 처리
+        console.log('Group create error : ', result.code);
+      }
+    } catch (error) {
+      // 에러 임시 처리
+      console.log('Group create error: ', error);
+    }
   };
 
   return (
