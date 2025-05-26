@@ -1,13 +1,60 @@
-export const ReplyForm = () => {
+'use client';
+
+import { request } from '@/api/request';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useParams } from 'next/navigation';
+import { useState } from 'react';
+
+type ReplyFormProps = {
+  onSuccess: (id: number) => void;
+  parentReplyId?: number;
+};
+
+export const ReplyForm = ({ onSuccess, parentReplyId }: ReplyFormProps) => {
+  const { groupId } = useParams();
+  const [replyContent, setReplyContent] = useState<string>('');
+
+  const endpoint =
+    parentReplyId === undefined
+      ? `/api/groups/${groupId}/replies`
+      : `/api/groups/${groupId}/replies/${parentReplyId}`;
+
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: (content: string) =>
+      request.post(
+        endpoint,
+        { 'Content-Type': 'application/json' },
+        JSON.stringify({ content }),
+      ),
+    onSuccess: (data) => {
+      // 목록 무효화 후, 작성한 댓글로 이동
+      queryClient.invalidateQueries({
+        queryKey: ['items', endpoint],
+      });
+      onSuccess(data.replyId);
+      setReplyContent('');
+    },
+  });
+
+  const submitReplyButtonClickHandler = async () => {
+    if (!replyContent.trim()) return;
+    mutate(replyContent);
+  };
+
   return (
     <div className="space-y-2">
       <textarea
         placeholder="댓글을 입력하세요."
         className="w-full p-2 border rounded h-20 resize-none"
+        value={replyContent}
+        onChange={(e) => setReplyContent(e.target.value)}
       />
       <button
         type="submit"
         className="bg-blue-500 text-white px-3 py-1 rounded"
+        onClick={submitReplyButtonClickHandler}
       >
         등록
       </button>
