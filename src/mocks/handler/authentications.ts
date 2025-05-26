@@ -38,4 +38,14 @@ export const authenticationsHandlers = [
       success: true,
     });
   }),
+  http.post('http://localhost:4000/api/find-email', () => {
+    return HttpResponse.json({
+      success: true,
+    });
+  }),
+  http.post('http://localhost:4000/api/find-password', () => {
+    return HttpResponse.json({
+      success: true,
+    });
+  }),
 ];
