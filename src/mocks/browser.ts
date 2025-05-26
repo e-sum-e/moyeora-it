@@ -1,6 +1,9 @@
 import { setupWorker } from 'msw/browser';
 import { groupsHandlers } from './handler/groups';
 import { notificationsHandlers } from './handler/notifications';
-
-export const worker = setupWorker(...groupsHandlers, ...notificationsHandlers);
-  
+import { followingsHandlers } from './handler/followings';
+export const worker = setupWorker(
+  ...groupsHandlers,
+  ...notificationsHandlers,
+  ...followingsHandlers,
+);
