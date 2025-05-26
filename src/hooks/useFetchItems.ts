@@ -13,7 +13,7 @@ export const useFetchItems = <T>({
     cursor: number | null;
     hasNext: boolean;
   }>({
-    queryKey: ['items', url, queryParams],
+    queryKey: ['items', url, queryParams ?? {}],
     queryFn: ({ pageParam }) =>
       request.get(url, {
         ...queryParams,
