@@ -3,10 +3,10 @@ import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
 
 export const useFetchItems = <T>({
   url,
-  queryParams,
+  queryParams = {},
 }: {
   url: string;
-  queryParams: Record<string, string | number>;
+  queryParams?: Record<string, string | number>;
 }) => {
   return useSuspenseInfiniteQuery<{
     items: T[];
