@@ -1,6 +1,6 @@
 export const ReplyForm = () => {
   return (
-    <form className="space-y-2">
+    <div className="space-y-2">
       <textarea
         placeholder="댓글을 입력하세요."
         className="w-full p-2 border rounded h-20 resize-none"
@@ -11,6 +11,6 @@ export const ReplyForm = () => {
       >
         등록
       </button>
-    </form>
+    </div>
   );
 };
