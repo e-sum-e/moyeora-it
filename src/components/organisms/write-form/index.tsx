@@ -1,12 +1,16 @@
 'use client';
 
+import { AutoAllow } from '@/components/molecules/write-form/autoAllow';
 import { DeadlineCalendar } from '@/components/molecules/write-form/deadlineCalendar';
+import { Description } from '@/components/molecules/write-form/desctiption';
 import { EndDateCalendar } from '@/components/molecules/write-form/endDateCalendar';
 import { MaxParticipants } from '@/components/molecules/write-form/maxParticipants';
+import { SelectType } from '@/components/molecules/write-form/selcetType';
 import { StartDateCalendar } from '@/components/molecules/write-form/startDateCalendar';
 import { Title } from '@/components/molecules/write-form/title';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
+import { GroupType } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { addDays, isAfter } from 'date-fns';
 import { useMemo, useState } from 'react';
@@ -35,8 +39,13 @@ const formSchema = z
     }),
     startDate: z.date(),
     endDate: z.date(),
+    description: z
+      .string()
+      .min(20, { message: '내용을 좀 더 자세하게 적어주세요.' }),
+    autoAllow: z.boolean(),
+    type: z.enum([GroupType.STUDY, GroupType.PROJECT]),
   })
-  .refine((data) => isAfter(data.startDate, addDays(data.deadline, 1)), {
+  .refine((data) => isAfter(data.startDate, addDays(data.deadline, 0)), {
     message: '모임 시작일은 모집 마감일로부터 1일 이후여야 합니다.',
     path: ['startDate'],
   })
@@ -65,7 +74,10 @@ export const WriteForm = () => {
     reValidateMode: 'onSubmit', // submit 시에만 유효성 검사
     defaultValues: {
       title: '',
-      maxParticipants: 1,
+      maxParticipants: 2,
+      description: '',
+      autoAllow: false,
+      type: GroupType.STUDY,
     },
   });
 
@@ -77,6 +89,7 @@ export const WriteForm = () => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(formSubmit)}>
         <Title form={form} />
+        <SelectType form={form} />
         <DeadlineCalendar
           form={form}
           isDeadlineCalendarOpen={isDeadlineCalendarOpen}
@@ -86,6 +99,7 @@ export const WriteForm = () => {
           validDeadline={validDeadline}
         />
         <MaxParticipants form={form} />
+        <AutoAllow form={form} />
         <StartDateCalendar
           form={form}
           isStartDateCalendarOpen={isStartDateCalendarOpen}
@@ -100,6 +114,7 @@ export const WriteForm = () => {
           closeEndDateCalendar={() => setIsEndDateCalendarOpen(false)}
           validEndDate={validEndDate}
         />
+        <Description form={form} />
         <Button type="button">취소하기</Button>
         <Button type="submit">등록하기</Button>
       </form>
