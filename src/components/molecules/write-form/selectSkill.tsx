@@ -5,8 +5,8 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { WriteForm } from '@/types';
-import { SkillName } from '@/types/enums';
+import { DEFAULT_SKILL_NAMES, WriteForm } from '@/types';
+import { SkillName } from '@/types/index';
 import { useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { getSkillBadge } from '../../../utils/getSkillBadge';
@@ -16,7 +16,6 @@ type TitleProps = {
 };
 
 export const SelectSkill = ({ form }: TitleProps) => {
-  const allSkillNames = Object.values(SkillName);
   const [selectedSkills, setSelectedSkills] = useState<SkillName[]>([]);
 
   const skillClickHandler = (skill: SkillName) => {
@@ -50,7 +49,7 @@ export const SelectSkill = ({ form }: TitleProps) => {
             <FormLabel>사용 기술</FormLabel>
             <FormControl>
               <ul className="flex gap-2">
-                {allSkillNames.map((skill) => (
+                {DEFAULT_SKILL_NAMES.map((skill) => (
                   <li
                     key={skill}
                     className={

@@ -1,5 +1,5 @@
 //전역 파일 타입 정리
-import { eNotification, Position, Skill, SkillName } from './enums';
+import { eNotification, Position, Skill } from './enums';
 
 export type User = {
   id: string;
@@ -25,6 +25,21 @@ export type WriteForm = {
   type: GroupType;
   skills: SkillName[];
 };
+
+/** 제공해주는 기본 skill의 이름들. enum Skill과 동기화되어야 함 */
+export const DEFAULT_SKILL_NAMES = [
+  'JAVA',
+  'JavaScript',
+  'HTML/CSS',
+  'React',
+  'Vue.js',
+  'Kotlin',
+  'Spring',
+] as const;
+/** 제공해주는 기본 skill의 이름들의 타입. UI용 */
+export type DefaultSkillName = (typeof DEFAULT_SKILL_NAMES)[number];
+/** 유저가 입력한 skill도 사용하기 위해 만든 타입. UI용 */
+export type SkillName = DefaultSkillName | string;
 
 export type Group = {
   id: number;

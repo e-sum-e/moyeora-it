@@ -11,8 +11,7 @@ import { Description } from '@/components/molecules/write-form/tiptap/desctiptio
 import { Title } from '@/components/molecules/write-form/title';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
-import { GroupType } from '@/types';
-import { SkillName } from '@/types/enums';
+import { DEFAULT_SKILL_NAMES, GroupType } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { addDays, isAfter } from 'date-fns';
 import { useMemo, useState } from 'react';
@@ -47,9 +46,13 @@ const formSchema = z
     autoAllow: z.boolean(),
     type: z.enum([GroupType.STUDY, GroupType.PROJECT]),
     skills: z
-      .nativeEnum(SkillName)
-      .array()
-      .min(1, { message: '사용기술을 한가지 이상 선택해주세요.' }),
+      .array(
+        z.union([
+          z.enum(DEFAULT_SKILL_NAMES), // 미리 정해진 skill과
+          z.string(), // 유저가 입력한 커스텀 skill을 합친 union 타입 형태로 유효성 검사
+        ]),
+      )
+      .min(1, { message: '사용 기술을 한가지 이상 선택해주세요.' }),
   })
   .refine((data) => isAfter(data.startDate, addDays(data.deadline, 0)), {
     message: '모임 시작일은 모집 마감일로부터 1일 이후여야 합니다.',

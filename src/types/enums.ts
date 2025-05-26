@@ -20,17 +20,6 @@ export enum Skill {
   'Spring',
 }
 
-/** UI에서 보여주기 위한 skill의 이름 */
-export enum SkillName {
-  'JAVA' = 'JAVA',
-  'JAVASCRIPT' = 'JavaScript',
-  'HTML/CSS' = 'HTML/CSS',
-  'REACT' = 'React',
-  'VUEJS' = 'Vue.js',
-  'KOTLIN' = 'Kotlin',
-  'SPRING' = 'Spring',
-}
-
 /** 알림 타입 */
 export enum eNotification {
   GROUP_HAS_PARTICIPANT, // 내가 작성한 글에 참여자 생김 -> 신청 수락 페이지
