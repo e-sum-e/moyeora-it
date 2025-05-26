@@ -2,11 +2,21 @@
 import { eNotification, Position, Skill } from './enums';
 
 export type User = {
-  id: string;
-  name: string;
+  userId: string;
+  nickname: string | null;
   email: string;
-  profileImage: string;
+  profileImage: string | null;
+  position: Position;
+  skills: Skill[];
+  isFollowing: boolean;
+  isFollower: boolean;
+  rate: number;
 };
+
+export enum GroupType {
+  STUDY = 'study',
+  PROJECT = 'project',
+}
 
 /** 모임 만들기 폼에 사용되는 데이터들의 타입 */
 export type WriteForm = {
@@ -15,6 +25,9 @@ export type WriteForm = {
   deadline: Date;
   startDate: Date;
   endDate: Date;
+  description: string;
+  autoAllow: boolean;
+  type: GroupType;
 };
 
 export type Group = {
@@ -30,6 +43,7 @@ export type Group = {
   createdAt: Date;
   isBookmark: boolean;
   autoAllow: boolean;
+  type: GroupType;
 };
 
 export type Notification = {
