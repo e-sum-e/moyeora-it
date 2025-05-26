@@ -48,7 +48,7 @@ const RegisterOptionalForm = () => {
 
   const router = useRouter();
 
-  const login = useAuthStore((s) => s.login);
+  const setUser = useAuthStore((s) => s.setUser);
 
   // 옵션 설정
   const onOptionalSubmit = async (
@@ -68,7 +68,7 @@ const RegisterOptionalForm = () => {
       const response = await fetch('http://localhost:4000/api/me');
       const { user } = await response.json();
 
-      login(user);
+      setUser(user);
       router.push('/');
     } catch (e) {
       // TODO: 프로필 에러 설정 //

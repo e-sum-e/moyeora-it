@@ -10,7 +10,7 @@ type AuthClientProviderProps = {
 
 // localStorage와 서버가 불일치 할 수도 있어서 재접속시 프로필 1회 업데이트
 const AutoLoginClient = ({ hasToken }: AuthClientProviderProps) => {
-  const login = useAuthStore((s) => s.login);
+  const setUser = useAuthStore((s) => s.setUser);
 
   // 재접속시 무조건 한번만 실행되야함!! 0번도 안되고 2번도 안됨
   useEffect(() => {
@@ -20,7 +20,7 @@ const AutoLoginClient = ({ hasToken }: AuthClientProviderProps) => {
         const response = await fetch('http://localhost:4000/api/me');
         const { user } = await response.json();
 
-        login(user as User);
+        setUser(user as User);
       } catch (e) {
         console.log(e);
       }

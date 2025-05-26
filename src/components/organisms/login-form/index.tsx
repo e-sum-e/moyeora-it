@@ -25,7 +25,7 @@ const LoginForm = () => {
     },
   });
   const [isLoginFailed, setIsLoginFailed] = useState(false);
-  const login = useAuthStore((s) => s.login);
+  const setUser = useAuthStore((s) => s.setUser);
   const router = useRouter();
 
   // 로그인
@@ -44,7 +44,7 @@ const LoginForm = () => {
       const response = await fetch('http://localhost:4000/api/me');
       const { user } = await response.json();
 
-      login(user as User);
+      setUser(user as User);
       router.push('/');
     } catch (e) {
       // TODO: 로그인 실패시 에러코드 맞춰서 설정해주기

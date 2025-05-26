@@ -45,7 +45,7 @@ const RegisterForm = () => {
     },
   });
 
-  const login = useAuthStore((s) => s.login);
+  const setUser = useAuthStore((s) => s.setUser);
 
   // 회원가입
   const onRegisterSubmit = async (
@@ -59,11 +59,11 @@ const RegisterForm = () => {
         body: JSON.stringify(values),
       });
 
-      // TODO: 회원가입 성공 후(쿠키 바로 설정) 회원정보 불러오기 프로필 설정 login(user)
+      // TODO: 회원가입 성공 후(즉시 로그인, 쿠키 바로 설정) 회원정보 불러오기 프로필 설정 setUser(user)
       const response = await fetch('http://localhost:4000/api/me');
       const { user } = await response.json();
 
-      login(user);
+      setUser(user);
     } catch (e) {
       // TODO: 회원가입 실패시 에러코드 맞춰서 설정해주기
       setIsRegisterFailed(true);
