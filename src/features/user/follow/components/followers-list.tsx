@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { useFetchItems } from '@/hooks/useFetchItems';
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { useDebounce } from '@/hooks/useDebounce';
@@ -10,12 +10,14 @@ import { Button } from '@/components/ui/button';
 import { SearchInput } from '@/components/molecules/search-input/search-input';
 
 export const FollowersList = () => {
-  const isCurrentUser = true;
+  const { id } = useParams();
+  const userId = '1';
+  const isCurrentUser = id === userId;
 
   const searchParams = useSearchParams();
 
   const { data, fetchNextPage, hasNextPage } = useFetchItems({
-    url: '/users/followers',
+    url: '/api/users/followings',
     ...(searchParams.size !== 0 && {
       queryParams: Object.fromEntries(searchParams.entries()),
     }),
