@@ -49,4 +49,6 @@ yarn dev
 
 ```
 NEXT_PUBLIC_API_BASE_URL=base api server
+ACCESS_TOKEN=access token name
+REFRESH_TOKEN=refresh token name
 ```
