@@ -3,11 +3,14 @@ import { eNotification, Position, Skill } from './enums';
 
 export type User = {
   userId: string;
-  email: string;
   nickname: string | null;
+  email: string;
   profileImage: string | null;
-  position: Position | null;
-  skills: Skill[] | null;
+  position: Position;
+  skills: Skill[];
+  isFollowing: boolean;
+  isFollower: boolean;
+  rate: number;
 };
 
 export enum GroupType {
