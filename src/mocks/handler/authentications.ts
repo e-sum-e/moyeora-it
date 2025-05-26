@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw';
 import { User } from '@/types';
 
-export const groupsHandlers = [
+export const authenticationsHandlers = [
   http.post('http://localhost:4000/api/login', () => {
     return new HttpResponse(null, {
       headers: new Headers([
