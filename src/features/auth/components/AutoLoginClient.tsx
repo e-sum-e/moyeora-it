@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { User } from '@/types';
 import useAuthStore from '@/stores/useAuthStore';
+import { request } from '@/api/request';
 
 type AuthClientProviderProps = {
   hasToken: boolean;
@@ -18,9 +19,7 @@ const AutoLoginClient = ({ hasToken }: AuthClientProviderProps) => {
     const getProfile = async () => {
       try {
         // TODO: 회원정보 불러오기 /me
-        const response = await fetch('http://localhost:4000/api/me');
-        const { user } = await response.json();
-
+        const { user } = await request.get('/me');
         setUser(user as User);
       } catch (e) {
         console.log(e);
