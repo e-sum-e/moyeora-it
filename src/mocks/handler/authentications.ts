@@ -3,7 +3,7 @@ import { User } from '@/types';
 
 export const authenticationsHandlers = [
   http.post('http://localhost:4000/api/login', () => {
-    return new HttpResponse(null, {
+    return new HttpResponse(JSON.stringify({ success: true }), {
       headers: new Headers([
         ['Set-Cookie', 'accessToken=myAccess'],
         ['Set-Cookie', 'refreshToken=myRefresh'],
@@ -11,7 +11,7 @@ export const authenticationsHandlers = [
     });
   }),
   http.post('http://localhost:4000/api/register', () => {
-    return new HttpResponse(null, {
+    return new HttpResponse(JSON.stringify({ success: true }), {
       headers: new Headers([
         ['Set-Cookie', 'accessToken=myAccess'],
         ['Set-Cookie', 'refreshToken=myRefresh'],
