@@ -39,7 +39,7 @@ export const ReplyList = () => {
       // 찾을 수 없으면 제일 아래로
       bottomRef.current?.scrollIntoView({
         behavior: 'instant',
-        block: 'start',
+        block: 'end',
       });
     }
   }, [data, newReplyId]);
