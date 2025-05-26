@@ -1,6 +1,6 @@
 import { request } from '@/api/request';
 import { groupsHandlers } from '@/mocks/handler/groups';
-import { GroupType, WriteForm } from '@/types';
+import { GroupType, WriteFormWithCreatedAt } from '@/types';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 
@@ -14,7 +14,7 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 describe('write form 테스트', () => {
-  const tempBody: WriteForm = {
+  const tempBody: WriteFormWithCreatedAt = {
     title: '스터디 만들기',
     maxParticipants: 10,
     deadline: new Date(2024, 5, 26),
@@ -25,6 +25,7 @@ describe('write form 테스트', () => {
     autoAllow: false,
     type: GroupType.STUDY,
     skills: ['Typescript', 'Next.js'],
+    createdAt: new Date(2024.05, 26),
   };
 
   test('group이 정상적으로 생성되었을 시 { success: true }를 받는다', async () => {
