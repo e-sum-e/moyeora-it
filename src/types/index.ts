@@ -89,3 +89,10 @@ export type Notification = {
   type: eNotification;
   url: string | null; // 연결되는 url -> NotificationType에 따라 필요한 부분 다름
 };
+
+export type Reply = {
+  replyId: number;
+  content: string;
+  writer: Pick<User, 'userId' | 'nickname' | 'profileImage'>;
+  createdAt: string;
+};
