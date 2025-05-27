@@ -60,4 +60,5 @@ export type Reply = {
   content: string;
   writer: Pick<User, 'userId' | 'nickname' | 'profileImage'>;
   createdAt: string;
+  isDeleted?: boolean;
 };
