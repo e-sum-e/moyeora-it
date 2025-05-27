@@ -47,7 +47,8 @@ const LoginForm = () => {
       const { user } = await request.get('/me');
       setUser(user as User);
 
-      router.push('/');
+      const prevPathname = localStorage.getItem('login-trigger-path') || '/';
+      router.push(prevPathname);
     } catch (e) {
       // TODO: 로그인 실패시 에러코드 맞춰서 설정해주기
       setIsLoginFailed(true);

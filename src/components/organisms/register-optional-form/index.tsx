@@ -71,7 +71,9 @@ const RegisterOptionalForm = () => {
       // 바뀐 프로필 다시 불러와서 설정
       const { user } = await request.get('/me');
       setUser(user as User);
-      router.push('/');
+
+      const prevPathname = localStorage.getItem('login-trigger-path') || '/';
+      router.push(prevPathname);
     } catch (e) {
       // TODO: 프로필 에러 설정 //
       console.log(e);
