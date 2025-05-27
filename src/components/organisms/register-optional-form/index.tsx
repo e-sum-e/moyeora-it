@@ -1,3 +1,5 @@
+'use client';
+
 import { InputTextField } from '@/components/molecules/input-text-field';
 import { FormRadioGroupField } from '@/components/molecules/input-radiogroup-field';
 import { FormCheckboxGroupField } from '@/components/molecules/input-checkbox-field';

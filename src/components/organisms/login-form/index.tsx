@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { Form } from '@/components/ui/form';
 import { InputTextField } from '@/components/molecules/input-text-field';
