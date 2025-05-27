@@ -32,7 +32,7 @@ const AutoLoginClientManager = ({ hasToken }: AuthClientProviderProps) => {
     }
   }, []);
 
-  return <></>;
+  return null;
 };
 
 export default AutoLoginClientManager;
