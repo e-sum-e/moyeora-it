@@ -18,7 +18,7 @@ export const ReplyThread = ({ replyId }: { replyId: number }) => {
   const { groupId } = useParams();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useFetchItems<Reply & { parentId: number }>({
-      url: `/api/groups/${groupId}/replies/${replyId}`,
+      url: `/groups/${groupId}/replies/${replyId}`,
       queryParams: {
         size: 10,
       },

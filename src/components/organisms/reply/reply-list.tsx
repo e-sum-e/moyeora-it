@@ -12,7 +12,7 @@ export const ReplyList = () => {
   const { groupId } = useParams();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useFetchItems<Reply>({
-      url: `/api/groups/${groupId}/replies`,
+      url: `/groups/${groupId}/replies`,
       queryParams: {
         size: 10,
       },
@@ -28,7 +28,6 @@ export const ReplyList = () => {
 
   // 스크롤 이동
   useEffect(() => {
-    console.log('data changed');
     if (!newReplyId) return;
 
     const element = document.getElementById(`reply-${newReplyId}`);

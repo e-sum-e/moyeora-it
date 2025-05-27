@@ -16,8 +16,8 @@ export const ReplyForm = ({ onSuccess, parentReplyId }: ReplyFormProps) => {
 
   const endpoint =
     parentReplyId === undefined
-      ? `/api/groups/${groupId}/replies`
-      : `/api/groups/${groupId}/replies/${parentReplyId}`;
+      ? `/groups/${groupId}/replies`
+      : `/groups/${groupId}/replies/${parentReplyId}`;
 
   const queryClient = useQueryClient();
 

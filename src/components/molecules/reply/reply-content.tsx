@@ -22,7 +22,7 @@ export const ReplyContent = ({
   const [content, setContent] = useState<string>(initalContent);
 
   const isWriter = true; // writer.userId === user.userId
-  const queryKeyEndpoint = `/api/groups/${groupId}/replies${
+  const queryKeyEndpoint = `/groups/${groupId}/replies${
     parentId !== undefined ? `/${parentId}` : ''
   }`;
 
@@ -31,7 +31,7 @@ export const ReplyContent = ({
   const { mutate: updateReply } = useMutation({
     mutationFn: async (enteredContent: string) =>
       request.patch(
-        `/api/groups/${groupId}/replies`,
+        `/groups/${groupId}/replies`,
         {
           content: enteredContent,
         },
@@ -46,7 +46,7 @@ export const ReplyContent = ({
 
   const { mutate: deleteReply } = useMutation({
     mutationFn: async () =>
-      request.delete(`/api/groups/${groupId}/replies`, replyId.toString()),
+      request.delete(`/groups/${groupId}/replies`, replyId.toString()),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['items', queryKeyEndpoint],
