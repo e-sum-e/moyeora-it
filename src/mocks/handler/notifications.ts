@@ -3,7 +3,7 @@ import { http, HttpResponse } from 'msw';
 
 const NOTIFICATIONS = [
   {
-    id: 1,
+    id: 9999,
     message: '알림 메시지1',
     isRead: false,
     createdAt: '2025-05-20',
@@ -11,7 +11,7 @@ const NOTIFICATIONS = [
     url: 'http://localhost:3000/groups/1',
   },
   {
-    id: 2,
+    id: 9998,
     message: '알림 메시지2',
     isRead: true,
     createdAt: '2025-05-20',
