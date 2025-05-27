@@ -23,5 +23,6 @@ export const useFetchItems = <T>({
     getNextPageParam(lastPage) {
       return lastPage.hasNext ? lastPage.cursor : null;
     },
+    staleTime: 0,
   });
 };
