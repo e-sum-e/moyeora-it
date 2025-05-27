@@ -11,11 +11,11 @@ import { useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { getSkillBadge } from '../../../utils/getSkillBadge';
 
-type TitleProps = {
+type SelectSkillProps = {
   form: UseFormReturn<WriteForm>;
 };
 
-export const SelectSkill = ({ form }: TitleProps) => {
+export const SelectSkill = ({ form }: SelectSkillProps) => {
   const [selectedSkills, setSelectedSkills] = useState<SkillName[]>([]);
 
   const skillClickHandler = (skill: SkillName) => {
@@ -38,7 +38,6 @@ export const SelectSkill = ({ form }: TitleProps) => {
       form.setValue('skills', nextSelectedSkills);
     }
   };
-  console.log(selectedSkills);
   return (
     <>
       <FormField
