@@ -10,7 +10,7 @@ type AuthClientProviderProps = {
 };
 
 // localStorage와 서버가 불일치 할 수도 있어서 재접속시 프로필 1회 업데이트
-const AutoLoginClient = ({ hasToken }: AuthClientProviderProps) => {
+const AutoLoginClientManager = ({ hasToken }: AuthClientProviderProps) => {
   const setUser = useAuthStore((s) => s.setUser);
   const clearUser = useAuthStore((s) => s.clearUser);
 
@@ -35,4 +35,4 @@ const AutoLoginClient = ({ hasToken }: AuthClientProviderProps) => {
   return <></>;
 };
 
-export default AutoLoginClient;
+export default AutoLoginClientManager;
