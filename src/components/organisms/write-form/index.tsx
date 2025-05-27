@@ -2,15 +2,21 @@
 
 import { AutoAllow } from '@/components/molecules/write-form/autoAllow';
 import { DeadlineCalendar } from '@/components/molecules/write-form/deadlineCalendar';
-import { Description } from '@/components/molecules/write-form/desctiption';
 import { EndDateCalendar } from '@/components/molecules/write-form/endDateCalendar';
 import { MaxParticipants } from '@/components/molecules/write-form/maxParticipants';
 import { SelectType } from '@/components/molecules/write-form/selcetType';
+import { SelectPosition } from '@/components/molecules/write-form/selectPosition';
+import { SelectSkill } from '@/components/molecules/write-form/selectSkill';
 import { StartDateCalendar } from '@/components/molecules/write-form/startDateCalendar';
+import { Description } from '@/components/molecules/write-form/tiptap/desctiption';
 import { Title } from '@/components/molecules/write-form/title';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
-import { GroupType } from '@/types';
+import {
+  DEFAULT_POSITION_NAMES,
+  DEFAULT_SKILL_NAMES,
+  GroupType,
+} from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { addDays, isAfter } from 'date-fns';
 import { useMemo, useState } from 'react';
@@ -44,6 +50,22 @@ const formSchema = z
       .min(20, { message: '내용을 좀 더 자세하게 적어주세요.' }),
     autoAllow: z.boolean(),
     type: z.enum([GroupType.STUDY, GroupType.PROJECT]),
+    skills: z
+      .array(
+        z.union([
+          z.enum(DEFAULT_SKILL_NAMES), // 미리 정해진 skill과
+          z.string(), // 유저가 입력한 커스텀 skill을 합친 union 타입 형태로 유효성 검사
+        ]),
+      )
+      .min(1, { message: '사용 기술을 한가지 이상 선택해주세요.' }),
+    positions: z
+      .array(
+        z.union([
+          z.enum(DEFAULT_POSITION_NAMES), // 미리 정해진 position과
+          z.string(), // 유저가 입력한 커스텀 skill을 합친 union 타입 형태로 유효성 검사
+        ]),
+      )
+      .min(1, { message: '사용 기술을 한가지 이상 선택해주세요.' }),
   })
   .refine((data) => isAfter(data.startDate, addDays(data.deadline, 0)), {
     message: '모임 시작일은 모집 마감일로부터 1일 이후여야 합니다.',
@@ -115,6 +137,8 @@ export const WriteForm = () => {
           validEndDate={validEndDate}
         />
         <Description form={form} />
+        <SelectSkill form={form} />
+        <SelectPosition form={form} />
         <Button type="button">취소하기</Button>
         <Button type="submit">등록하기</Button>
       </form>
