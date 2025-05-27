@@ -8,4 +8,5 @@ export const Title = ({ title }: TitleProps) => {
 			<h3>{title}</h3>
 		</div>
 	);
+
 };
