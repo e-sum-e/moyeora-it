@@ -5,7 +5,7 @@ import {
 } from '@tanstack/react-query';
 import { request } from '@/api/request';
 import { Suspense } from 'react';
-import { GroupFilter } from '@/features/user/group/group-filter';
+import { GroupFilter } from '@/components/molecules/group-filter/group-filter';
 
 type GroupsPageProps = {
   searchParams: Promise<{
