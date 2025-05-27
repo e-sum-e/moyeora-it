@@ -1,55 +1,47 @@
 'use client';
 
-// import useAuthStore from '@/stores/useAuthStore';
+import useAuthStore from '@/stores/useAuthStore';
 import {Notification} from '@/components/molecules/notification';
 import Link from 'next/link';
-import React, { useRef } from 'react';
+import React, { useMemo } from 'react';
+
+const menuItems = [
+  {
+    label: '모여라-IT',
+    href: '/',
+  },
+  {
+    label: 'Bookmark',
+    href: '/bookmark',
+  },
+];
+
+const loggedInMenuItems = [
+  {
+    label: 'MyPage',
+    href: '/mypage',
+  },
+  {
+    label: 'Notification',
+    href: '/notification',
+  },
+];
+
+const loggedOutMenuItems = [
+  {
+    label: 'Login',
+    href: '/login',
+  },
+];
 
 export const Header = () => {
-  // const user = useAuthStore((state) => state.user);
-  const user = {
-    id: '1',
-    name: '홍길동',
-    email: 'test@test.com',
-    profileImage: 'https://github.com/shadcn.png',
-  }
+  const user = useAuthStore((state) => state.user);
+  const isLoggedIn = useMemo(() => Boolean(user), [user]);
   
-  
-  const menuItems = [
-    {
-      label: '모여라-IT',
-      href: '/',
-    },
-    {
-      label: 'Bookmark',
-      href: '/bookmark',
-    },
-  ];
-
-  const loggedInMenuItems = [
-    {
-      label: 'MyPage',
-      href: '/mypage',
-    },
-    {
-      label: 'Notification',
-      href: '/notification',
-    },
-  ];
-
-  const loggedOutMenuItems = [
-    {
-      label: 'Login',
-      href: '/login',
-    },
-  ];
-
-  const isLoggedIn = useRef(user ? true : false);
-  
-  const displayMenuItems = [
+  const displayMenuItems = useMemo(() => [
     ...menuItems,
-    ...(isLoggedIn.current ? loggedInMenuItems : loggedOutMenuItems),
-  ];
+    ...(isLoggedIn ? loggedInMenuItems : loggedOutMenuItems),
+  ], [isLoggedIn]);
 
   return (
     <header>
@@ -61,7 +53,7 @@ export const Header = () => {
                 <h1>
                   <Link href={item.href}>{item.label}</Link>
                 </h1>
-              ) : isLoggedIn.current && item.label === 'Notification' ? (
+              ) : isLoggedIn && item.label === 'Notification' ? (
                  <Notification />
               ) : (
                 <Link href={item.href}>{item.label}</Link>
