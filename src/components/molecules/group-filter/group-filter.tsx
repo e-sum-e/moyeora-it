@@ -14,7 +14,7 @@ import { SearchInput } from '@/components/molecules/search-input/search-input';
 
 /**
  * 모임 목록 필터 컴포넌트
- * 
+ *
  * 사용자의 참가/모집 중인 모임 목록을 필터링한다.
  *
  * @returns 모임 목록 필터 컴포넌트
@@ -25,7 +25,7 @@ export const GroupFilter = () => {
 
   const searchParams = useSearchParams();
 
-  const type = searchParams.get('type') ?? 'project';
+  const type = searchParams.get('type') ?? 'study';
   const sort = searchParams.get('sort');
   const status = searchParams.get('status') ?? 'RECRUITING';
 
@@ -34,7 +34,7 @@ export const GroupFilter = () => {
    *
    * 만약, 매개변수로 전달된 필터 키가 쿼리 스트링에 존재하고, 값이 매개변수로 전달된 필터 값과 동일하다면, 종료한다.
    * 만약, 매개변수로 전달된 필터 값이 'PARTICIPATING'이라면, sort 쿼리 파라미터를 삭제한다.
-   * 
+   *
    * @param key 필터 키
    * @param value 필터 값
    */
@@ -53,7 +53,7 @@ export const GroupFilter = () => {
    *
    * 만약, sort 쿼리 파라미터가 이미 존재하고, 값이 매개변수로 전달된 정렬 값과 동일하다면, 종료한다.
    * 그 외, sort 쿼리 파라미터의 값을 매개변수로 전달된 정렬 값으로 설정한다.
-   * 
+   *
    * @param value 정렬 값
    */
   const sortSelectChangeHandler = (value: string) => {
@@ -70,12 +70,12 @@ export const GroupFilter = () => {
         <ul className="flex gap-x-2">
           {[
             {
-              label: '프로젝트',
-              value: 'project',
-            },
-            {
               label: '스터디',
               value: 'study',
+            },
+            {
+              label: '프로젝트',
+              value: 'project',
             },
           ].map((item) => (
             <li key={item.value}>
