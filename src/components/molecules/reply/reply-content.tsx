@@ -6,6 +6,7 @@ import { Reply } from '@/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 type ReplyContentProps = Reply & { parentId?: number };
 
@@ -42,6 +43,10 @@ export const ReplyContent = ({
         queryKey: ['items', queryKeyEndpoint],
       });
     },
+    onError: () => {
+      toast.error('댓글 수정에 실패하였습니다.');
+      setContent(initalContent);
+    },
   });
 
   const { mutate: deleteReply } = useMutation({
@@ -51,6 +56,9 @@ export const ReplyContent = ({
       queryClient.invalidateQueries({
         queryKey: ['items', queryKeyEndpoint],
       });
+    },
+    onError: () => {
+      toast.error('댓글 삭제에 실패하였습니다.');
     },
   });
 
@@ -66,6 +74,7 @@ export const ReplyContent = ({
   };
 
   const deleteButtonClickHandler = () => {
+    setIsEditing(false);
     deleteReply();
   };
 
