@@ -5,6 +5,10 @@ import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
+import useAuthStore from '@/stores/useAuthStore';
+import { request } from '@/api/request';
+import { User } from '@/types';
 
 const formSchema = z.object({
   email: z.string().nonempty({ message: '이메일을 입력해주세요' }).email({
@@ -22,14 +26,26 @@ const LoginForm = () => {
     },
   });
   const [isLoginFailed, setIsLoginFailed] = useState(false);
-  // const login = useAuthStore((s) => s.login);
+  const setUser = useAuthStore((s) => s.setUser);
+  const router = useRouter();
 
   // 로그인
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
     try {
       // TODO: 로그인 로직 작성 /login
+      await request.post(
+        '/login',
+        {
+          'Content-Type': 'application/json',
+        },
+        JSON.stringify(values),
+      );
+
       // TODO: 로그인 성공 후 회원정보 불러오기 /me
+      const { user } = await request.get('/me');
+      setUser(user as User);
+
+      router.push('/');
     } catch (e) {
       // TODO: 로그인 실패시 에러코드 맞춰서 설정해주기
       setIsLoginFailed(true);

@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw';
 
 export const groupsHandlers = [
-  http.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/groups`, () => {
+  http.get('http://localhost:4000/api/groups', () => {
     return HttpResponse.json({
       items: [
         {
