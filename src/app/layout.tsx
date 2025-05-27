@@ -1,5 +1,5 @@
 import { Header } from '@/components/organisms/header';
-import AutoLoginProvider from '@/features/auth/components/AutoLoginProvider';
+import AutoLoginManager from '@/features/auth/components/AutoLoginManager';
 import { server } from '@/mocks/server';
 import { MSWComponent } from '@/providers/MSWComponent';
 import { ReactQueryProvider } from '@/providers/ReactQueryProvider';
@@ -29,7 +29,7 @@ export default function RootLayout({
             <>{children}</>
           </ReactQueryProvider>
           <Toaster />
-          <AutoLoginProvider />
+          <AutoLoginManager />
         </MSWComponent>
       </body>
     </html>
