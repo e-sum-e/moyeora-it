@@ -21,9 +21,9 @@ export default async function FollowingsPage({
   const queryClient = new QueryClient();
 
   await queryClient.fetchInfiniteQuery({
-    queryKey: ['items', '/users/followings', queryParams],
+    queryKey: ['items', '/api/users/followings', queryParams],
     queryFn({ pageParam }) {
-      return request.get('/users/followings', {
+      return request.get('/api/users/followings', {
         ...queryParams,
         cursor: pageParam,
       });

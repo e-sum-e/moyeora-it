@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw';
 
 export const groupsHandlers = [
-  http.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/groups`, () => {
+  http.get('http://localhost:4000/api/groups', () => {
     return HttpResponse.json({
       items: [
         {
@@ -18,6 +18,11 @@ export const groupsHandlers = [
           autoAllow: true,
         },
       ],
+    });
+  }),
+  http.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group`, () => {
+    return HttpResponse.json({
+      success: true,
     });
   }),
   http.get(
@@ -41,7 +46,7 @@ export const groupsHandlers = [
           profileImage: 'https://github.com/shadcn.png',
         },
         isApplicant: false,
-        members: [
+        participants: [
           {
             id: 'abcd123',
             name: '팀원1',
