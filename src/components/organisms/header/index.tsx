@@ -1,9 +1,11 @@
 'use client';
 
 // import useAuthStore from '@/stores/useAuthStore';
-import {Notification} from '@/components/molecules/notification';
+import { NotificationBadge } from '@/components/molecules/notification-badge';
 import Link from 'next/link';
 import React, { useRef } from 'react';
+import useNotificationStore from '@/stores/useNotificationStore';
+import { NotificationList } from '@/components/molecules/notification-list';
 
 export const Header = () => {
   // const user = useAuthStore((state) => state.user);
@@ -50,6 +52,9 @@ export const Header = () => {
     ...menuItems,
     ...(isLoggedIn.current ? loggedInMenuItems : loggedOutMenuItems),
   ];
+  
+
+  const { hasUnreadNotification } = useNotificationStore();
 
   return (
     <header>
@@ -62,7 +67,10 @@ export const Header = () => {
                   <Link href={item.href}>{item.label}</Link>
                 </h1>
               ) : isLoggedIn.current && item.label === 'Notification' ? (
-                 <Notification />
+                <div className='relative'>
+                  <NotificationList />
+                  {hasUnreadNotification && <NotificationBadge />}
+                </div>
               ) : (
                 <Link href={item.href}>{item.label}</Link>
               )}
