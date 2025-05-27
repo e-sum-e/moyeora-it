@@ -12,6 +12,7 @@ export type NotificationActions = {
   setNotifications: (notifications: Notification[]) => void;
   setReadNotifications: (id: number) => void;
   setHasUnreadNotification: (value: boolean) => void;
+  clearAllNotifications: () => Promise<void>;
 }
 
 type NotificationStore = NotificationState & NotificationActions;
@@ -41,10 +42,13 @@ const useNotificationStore = create<NotificationStore>((set) => ({
   setHasUnreadNotification: (status: boolean) => set(() => ({
     hasUnreadNotification: status,
   })),
-  clearAllNotifications: () => set(() => ({
-    notifications: [],
-    hasUnreadNotification: false,
-  })),
+  clearAllNotifications: async () => {
+    await fetch('/api/notifications', { method: 'DELETE' });
+    set(() => ({
+      notifications: [],
+      hasUnreadNotification: false,
+    }));
+  },
 	init: () => set(() => ({
       notifications: [],
       hasUnreadNotification: false,

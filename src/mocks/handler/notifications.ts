@@ -1,7 +1,7 @@
 import { eNotification } from '@/types/enums';
 import { http, HttpResponse } from 'msw';
 
-const NOTIFICATIONS = [
+export const NOTIFICATIONS = [
   {
     id: 9999,
     message: '알림 메시지1',
