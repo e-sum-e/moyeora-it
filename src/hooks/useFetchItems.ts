@@ -1,19 +1,23 @@
-import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import { request } from '@/api/request';
+import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
 
-export const useFetchItems = ({
+export const useFetchItems = <T>({
   url,
-  queryParams,
+  queryParams = {},
 }: {
   url: string;
   queryParams?: Record<string, string | number>;
 }) => {
-  return useSuspenseInfiniteQuery({
+  return useSuspenseInfiniteQuery<{
+    items: T[];
+    cursor: number | null;
+    hasNext: boolean;
+  }>({
     queryKey: ['items', url, queryParams ?? {}],
     queryFn: ({ pageParam }) =>
       request.get(url, {
         ...queryParams,
-        cursor: pageParam,
+        cursor: pageParam as number | string,
       }),
     initialPageParam: 0,
     getNextPageParam(lastPage) {
