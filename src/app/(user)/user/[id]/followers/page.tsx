@@ -5,25 +5,25 @@ import {
 } from '@tanstack/react-query';
 import { request } from '@/api/request';
 import { Suspense } from 'react';
-import { FollowingList } from '@/features/user/follow/components/following-list';
+import { FollowersList } from '@/features/user/follow/components/followers-list';
 
-type FollowingsPageProps = {
+type FollowersPageProps = {
   searchParams: Promise<{
     q: string;
   }>;
 };
 
-export default async function FollowingsPage({
+export default async function FollowersPage({
   searchParams,
-}: FollowingsPageProps) {
+}: FollowersPageProps) {
   const queryParams = await searchParams;
 
   const queryClient = new QueryClient();
 
   await queryClient.fetchInfiniteQuery({
-    queryKey: ['items', '/users/followings', queryParams],
+    queryKey: ['items', '/api/users/followings', queryParams],
     queryFn({ pageParam }) {
-      return request.get('/users/followings', {
+      return request.get('/api/users/followings', {
         ...queryParams,
         cursor: pageParam,
       });
@@ -34,9 +34,9 @@ export default async function FollowingsPage({
   return (
     <>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <h1>팔로잉</h1>
+        <h1>팔로워</h1>
         <Suspense fallback={<div>Loading...</div>}>
-          <FollowingList />
+          <FollowersList />
         </Suspense>
       </HydrationBoundary>
     </>
