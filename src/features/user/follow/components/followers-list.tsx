@@ -9,30 +9,31 @@ import { Avatar } from '@/components/atoms/avatar';
 import { Button } from '@/components/ui/button';
 import { SearchInput } from '@/components/molecules/search-input/search-input';
 
-export const FollowingList = () => {
+export const FollowersList = () => {
   const { id } = useParams();
   const userId = '1';
   const isCurrentUser = id === userId;
 
   const searchParams = useSearchParams();
-  const search = searchParams.get('search');
 
   const { data, fetchNextPage, hasNextPage } = useFetchItems({
     url: '/api/users/followings',
-    ...(search && { queryParams: { search } }),
+    ...(searchParams.size !== 0 && {
+      queryParams: Object.fromEntries(searchParams.entries()),
+    }),
   });
 
   const { ref } = useFetchInView({
     fetchNextPage,
   });
 
-  const followingList = data?.pages.flatMap((page) => page.items);
+  const followersList = data?.pages.flatMap((page) => page.items);
 
   const followButtonClickHandler = useDebounce((userId: string) => {
     console.log(userId);
   }, 500);
 
-  const unfollowButtonClickHandler = useDebounce((userId: string) => {
+  const cancelFollowButtonClickHandler = useDebounce((userId: string) => {
     console.log(userId);
   }, 500);
 
@@ -42,19 +43,19 @@ export const FollowingList = () => {
         <SearchInput placeholder="닉네임으로 검색해보세요." />
       </div>
       <ul>
-        {followingList?.map((following) => (
-          <li key={following.userId}>
-            <Link href={`/user/${following.userId}`}>
+        {followersList?.map((follower) => (
+          <li key={follower.userId}>
+            <Link href={`/user/${follower.userId}`}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-x-2">
                   <Avatar
-                    imageSrc={following.profileImage ?? ''}
-                    fallback={following.nickname?.slice(0, 2) ?? ''}
+                    imageSrc={follower.profileImage ?? ''}
+                    fallback={follower.nickname?.slice(0, 2) ?? ''}
                     className="size-16"
                   />
                   <div className="flex flex-col">
-                    <span>{following.nickname}</span>
-                    <span>{following.email}</span>
+                    <span>{follower.nickname}</span>
+                    <span>{follower.email}</span>
                   </div>
                 </div>
                 {isCurrentUser ? (
@@ -63,18 +64,18 @@ export const FollowingList = () => {
                     size="sm"
                     onClick={(e) => {
                       e.preventDefault();
-                      unfollowButtonClickHandler(following.userId);
+                      cancelFollowButtonClickHandler(follower.userId);
                     }}
                   >
-                    언팔로우
+                    삭제
                   </Button>
-                ) : following.isFollowing ? (
+                ) : follower.isFollowing ? (
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={(e) => {
                       e.preventDefault();
-                      unfollowButtonClickHandler(following.userId);
+                      cancelFollowButtonClickHandler(follower.userId);
                     }}
                   >
                     팔로잉
@@ -85,7 +86,7 @@ export const FollowingList = () => {
                     size="sm"
                     onClick={(e) => {
                       e.preventDefault();
-                      followButtonClickHandler(following.userId);
+                      followButtonClickHandler(follower.userId);
                     }}
                   >
                     팔로우
