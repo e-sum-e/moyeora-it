@@ -20,6 +20,11 @@ export const groupsHandlers = [
       ],
     });
   }),
+  http.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group`, () => {
+    return HttpResponse.json({
+      success: true,
+    });
+  }),
   http.get(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/groups/:groupId`,
     () => {
