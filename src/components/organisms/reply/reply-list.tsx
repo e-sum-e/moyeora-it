@@ -28,6 +28,7 @@ export const ReplyList = () => {
 
   // 스크롤 이동
   useEffect(() => {
+    console.log('data changed');
     if (!newReplyId) return;
 
     const element = document.getElementById(`reply-${newReplyId}`);
@@ -53,15 +54,18 @@ export const ReplyList = () => {
       <ReplyForm onSuccess={replyFormSuccessHandler} />
       <div>
         <ul>
-          {allReplies.map(({ replyId, writer, content, createdAt }) => (
-            <ReplyItem
-              key={replyId}
-              writer={writer}
-              content={content}
-              createdAt={createdAt}
-              replyId={replyId}
-            />
-          ))}
+          {allReplies.map(
+            ({ replyId, writer, content, createdAt, isDeleted }) => (
+              <ReplyItem
+                key={replyId + content.slice(0, 3)}
+                writer={writer}
+                content={content}
+                createdAt={createdAt}
+                replyId={replyId}
+                isDeleted={isDeleted}
+              />
+            ),
+          )}
         </ul>
         <div ref={bottomRef} id="reply-list-bottom" />
         {hasNextPage && !isFetchingNextPage && (
