@@ -3,7 +3,7 @@
 import { Avatar } from '@/components/atoms/avatar';
 
 import { UserSummary } from '@/types';
-import { getDisplayNickname } from '@/utils/fallback';
+import { getDisplayNickname, getDisplayProfileImage } from '@/utils/fallback';
 import { useRouter } from 'next/navigation';
 
 export const ParticipantCard = ({
@@ -17,11 +17,11 @@ export const ParticipantCard = ({
   return (
     <div className="flex gap-3 boder-2 ">
       <Avatar
-        imageSrc={profileImage ?? ''}
+        imageSrc={getDisplayProfileImage(profileImage)}
         fallback={getDisplayNickname(nickname, email)}
         onClick={() => router.push(`users/${userId}`)}
       />
-      <div>{nickname}</div>
+      <div>{getDisplayNickname(nickname, email)}</div>
     </div>
   );
 };
