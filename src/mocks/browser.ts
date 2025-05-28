@@ -4,6 +4,7 @@ import { notificationsHandlers } from './handler/notifications';
 import { followingsHandlers } from './handler/followings';
 import { authenticationsHandlers } from './handler/authentications';
 import { repliesHandlers } from './handler/replies';
+import { ratingHandlers } from './handler/rating';
 
 
 export const worker = setupWorker(
@@ -12,4 +13,5 @@ export const worker = setupWorker(
   ...followingsHandlers,
   ...authenticationsHandlers,
   ...repliesHandlers,
+  ...ratingHandlers,
 );
