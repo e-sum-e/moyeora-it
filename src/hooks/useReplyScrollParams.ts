@@ -24,7 +24,7 @@ export const useReplyScrollParams = (type: 'reply' | 'rereply') => {
     typeof parentIdParam === 'string' ? Number(parentIdParam) : null;
 
   if (type === 'reply') {
-    return { targetId: targetParentId ?? targetReplyId };
+    return { targetParentId: null, targetId: targetParentId ?? targetReplyId };
   }
 
   return {
