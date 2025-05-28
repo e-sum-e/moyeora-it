@@ -1,51 +1,19 @@
-import { Avatar } from '@/components/atoms/avatar';
-import { Badge } from '@/components/atoms/badge';
+'use client';
+
+import { useParams } from 'next/navigation';
+import useAuthStore from '@/stores/useAuthStore';
+import { CurrentUserProfile } from '@/features/user/components/current-user-profile';
+import { OtherUserProfile } from '@/features/user/components/other-user-profile';
 
 /**
  * 유저 프로필 컴포넌트
  *
- * 유저 상세 정보를 보여준다.
- *
- * @returns 유저 프로필 컴포넌트
+ * 만약 현재 로그인한 사용자의 id와 id 세그먼트 값이 같다면, CurrentUserProfile 컴포넌트를 반환한다.
+ * 그렇지 않으면, OtherUserProfile 컴포넌트를 반환한다.
  */
-
 export const UserProfile = () => {
-	// TODO: 전역 스토어에서 유저 정보 가져오기
-	// const user = useAuthStore(state => state.user)
+  const { id } = useParams();
+  const user = useAuthStore((state) => state.user);
 
-	const user = {
-		userId: 'a',
-		email: 'test@test.com',
-		nickname: '테스트닉네임',
-		profileImage: 'https://github.com/shadcn.png',
-		position: 'FE',
-		skills: ['React', 'TypeScript', 'Next.js'],
-		rate: 4.5,
-	};
-
-	return (
-		<div>
-			<Avatar
-				className="size-36"
-				imageSrc={user.profileImage}
-				fallback="테스트"
-			/>
-			<div className="flex flex-col gap-y-1">
-				<span>{user.nickname}</span>
-				<span>{user.email}</span>
-				<span>{user.position}</span>
-				<div className="flex items-center gap-x-2">
-					<span>별점 : {user.rate}</span>
-					<Badge text="뱃지" className="bg-emerald-50 text-emerald-500" />
-				</div>
-				<ul>
-					{user.skills.map((skill) => (
-						<li key={skill}>
-							<Badge text={skill} className="bg-gray-100 text-gray-800" />
-						</li>
-					))}
-				</ul>
-			</div>
-		</div>
-	);
+  return user?.userId === id ? <CurrentUserProfile /> : <OtherUserProfile />;
 };
