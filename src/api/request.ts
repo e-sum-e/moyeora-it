@@ -21,7 +21,8 @@ export const request = {
     const response = await fetch(`${baseUrl}${endpoint}${queryString}`);
 
     if (!response.ok) {
-      throw new Error('Unexpected Error');
+      //TODO: 에러 타입에 따른 다른 처리
+      throw new Error(response.statusText); // 에러 메시지 전달
     }
     return response.json();
   },
@@ -39,7 +40,7 @@ export const request = {
     });
 
     if (!response.ok) {
-      throw new Error('Unexpected Error');
+      throw new Error(response.statusText);
     }
     return response.json();
   },
@@ -54,7 +55,7 @@ export const request = {
     });
 
     if (!response.ok) {
-      throw new Error('Unexpected Error');
+      throw new Error(response.statusText);
     }
     return response.json();
   },
@@ -65,7 +66,7 @@ export const request = {
     });
 
     if (!response.ok) {
-      throw new Error('Unexpected Error');
+      throw new Error(response.statusText);
     }
     return response.json();
   },
