@@ -9,21 +9,25 @@ import { FollowingList } from '@/features/user/follow/components/following-list'
 
 type FollowingsPageProps = {
   searchParams: Promise<{
-    search: string | undefined;
+    q: string;
   }>;
 };
 
 export default async function FollowingsPage({
   searchParams,
 }: FollowingsPageProps) {
-  const { search } = await searchParams;
-  console.log(search);
+  const queryParams = await searchParams;
 
   const queryClient = new QueryClient();
 
   await queryClient.fetchInfiniteQuery({
-    queryKey: ['items', '/users/followings'],
-    queryFn: () => request.get('/users/followings'),
+    queryKey: ['items', '/users/followings', queryParams],
+    queryFn({ pageParam }) {
+      return request.get('/users/followings', {
+        ...queryParams,
+        cursor: pageParam,
+      });
+    },
     initialPageParam: 0,
   });
 

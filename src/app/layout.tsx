@@ -1,17 +1,17 @@
-import type { Metadata } from 'next';
-import './globals.css';
 import { Header } from '@/components/organisms/header';
+import AutoLoginProvider from '@/features/auth/components/AutoLoginProvider';
 import { server } from '@/mocks/server';
 import { MSWComponent } from '@/providers/MSWComponent';
-import { Toaster } from 'sonner';
-import { WebSocketProvider } from '@/providers/WSProvider';
 import { ReactQueryProvider } from '@/providers/ReactQueryProvider';
-import AutoLoginProvider from '@/features/auth/components/AutoLoginProvider';
+import type { Metadata } from 'next';
+import { Toaster } from 'sonner';
+import './globals.css';
 
 export const metadata: Metadata = {
   title: '모여라-IT',
   description: '개발자들의 스터디, 사이트 프로젝트 모집 플랫폼',
 };
+
 
 export default function RootLayout({
   children,
@@ -26,7 +26,8 @@ export default function RootLayout({
         <MSWComponent>
           <ReactQueryProvider>
             <Header />
-            <WebSocketProvider>{children}</WebSocketProvider>
+            {/* <WebSocketProvider>{children}</WebSocketProvider> */}
+            <>{children}</>
           </ReactQueryProvider>
           <Toaster />
           <AutoLoginProvider />

@@ -6,6 +6,7 @@ import { Form } from '@/components/ui/form';
 import { InputTextField } from '@/components/molecules/input-text-field';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { request } from '@/api/request';
 
 const formSchema = z.object({
   email: z.string().nonempty({ message: '이메일을 입력해주세요' }).email({
@@ -32,8 +33,21 @@ const FindPassword = () => {
     try {
       // reset-password일 경우
       // TODO: 비밀번호 찾기 로직 작성 /find-email
-      setIsSuccessEmailSend(true);
-      console.log('비찾');
+      const { success } = await request.post(
+        '/find-password',
+        {
+          'Content-Type': 'application/json',
+        },
+        JSON.stringify(values),
+      );
+
+      if (success) {
+        setIsSuccessEmailSend(true);
+        setIsNotExisted(false);
+      } else {
+        setIsSuccessEmailSend(false);
+        setIsNotExisted(true);
+      }
     } catch (e) {
       // TODO: 이메일 찾기 실패시 에러코드 맞춰서 설정해주기
       setIsNotExisted(true);
