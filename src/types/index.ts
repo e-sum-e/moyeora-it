@@ -84,6 +84,10 @@ export type Group = {
   type: GroupType;
 };
 
+export type GroupSort = 'createdAt' | 'deadline';
+
+export type Order = 'asc' | 'desc';
+
 export type Notification = {
   id: number;
   message: string | null; // 추후 채팅의 경우 가장 간략한 채팅메세지 전달용 현재는 빈값으로 리턴

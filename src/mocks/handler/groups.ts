@@ -1,4 +1,4 @@
-import { Group } from '@/types';
+import { Group, GroupSort, Order } from '@/types';
 import { Position, Skill } from '@/types/enums';
 import {
   getRandomItem,
@@ -33,6 +33,9 @@ export const groupsHandlers = [
 
       const positionParam = url.searchParams.get('position');
       const positionNumber = positionParam ? Number(positionParam) : null;
+
+      const sortParam = url.searchParams.get('sort') as GroupSort | null;
+      const orderParam = url.searchParams.get('order') as Order | null;
 
       const items: Group[] = Array.from({ length: 20 }, (_, index) => {
         const offset = index * 2;
@@ -99,8 +102,19 @@ export const groupsHandlers = [
             )
           : skillFiltered;
 
+      const sortedItems = [...positionFiltered].sort((a, b) => {
+        if (!sortParam) return 0;
+
+        const aDate = new Date(a[sortParam]);
+        const bDate = new Date(b[sortParam]);
+
+        if (orderParam === 'asc') return aDate.getTime() - bDate.getTime();
+        if (orderParam === 'desc') return bDate.getTime() - aDate.getTime();
+        return 0;
+      });
+
       return HttpResponse.json({
-        items: positionFiltered,
+        items: sortedItems,
       });
     },
   ),
