@@ -116,7 +116,7 @@ export const WriteForm = () => {
     const valueWithCreatedAt = { ...values, skills, createdAt: new Date() };
     try {
       const result = await request.post(
-        '/api/group',
+        '/group',
         { 'Content-Type': 'application/json' },
         JSON.stringify(valueWithCreatedAt),
       );
