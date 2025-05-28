@@ -5,6 +5,7 @@ import { followingsHandlers } from './handler/followings';
 import { authenticationsHandlers } from './handler/authentications';
 import { repliesHandlers } from './handler/replies';
 import { userHandlers } from './handler/user';
+import { ratingHandlers } from './handler/rating';  
 
 export const server = setupServer(
   ...groupsHandlers,
@@ -13,4 +14,5 @@ export const server = setupServer(
   ...authenticationsHandlers,
   ...repliesHandlers,
   ...userHandlers,
+  ...ratingHandlers,
 );
