@@ -9,9 +9,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { User } from '@/types';
 import { PlusIcon } from 'lucide-react';
 
-export const ParticipantListModal = () => {
+type ParticipantListModalProps = {
+  participants: Pick<User, 'userId' | 'nickname' | 'profileImage'>[];
+};
+
+export const ParticipantListModal = ({
+  participants,
+}: ParticipantListModalProps) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -25,8 +32,8 @@ export const ParticipantListModal = () => {
         </DialogHeader>
         <div className="overflow-y-auto max-h-[60vh] px-4 py-2">
           <div className="grid gap-4">
-            {Array.from({ length: 36 }).map((_, i) => (
-              <ParticipantCard key={i} />
+            {participants.map((participant, i) => (
+              <ParticipantCard key={i} {...participant} />
             ))}
           </div>
         </div>

@@ -73,7 +73,7 @@ export type Group = {
   startDate: Date; // 모임의 시작일
   endDate: Date; // 모임의 종료일
   maxParticipants: number;
-  participants:Pick<User, "id" | "nickname" | "profileImage">[];
+  participants: Pick<User, 'userId' | 'nickname' | 'profileImage'>[];
   description: string;
   position: Position[];
   skills: Skill[];

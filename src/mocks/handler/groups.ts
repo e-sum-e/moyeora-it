@@ -17,7 +17,7 @@ export const groupsHandlers = [
       '백엔드 개발자 모여라',
       'UI/UX 프로젝트 팀원 구함',
       'Spring Boot 스터디',
-      'DevOps 기초부터 실무까지'
+      'DevOps 기초부터 실무까지',
     ];
 
     let items = Array.from({ length: size }, (_, index) => ({
@@ -65,55 +65,52 @@ export const groupsHandlers = [
       success: true,
     });
   }),
-  http.get(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/groups/:groupId`,
-    () => {
-      return HttpResponse.json({
-        title: '스터디1',
-        deadline: '2025-05-24',
-        startDate: '2025-05-20',
-        endDate: '2025-05-24',
-        maxParticipants: 10,
-        description: '스터디1 설명',
-        position: [1, 3],
-        skills: [1, 2],
-        createdAt: '2025-05-20',
-        type: 'study',
-        autoAllow: true,
-        host: {
-          id: 'abcd123',
-          name: '사용자1',
+  http.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/groups/:groupId`, () => {
+    return HttpResponse.json({
+      title: '스터디1',
+      deadline: '2025-05-24',
+      startDate: '2025-05-20',
+      endDate: '2025-05-24',
+      maxParticipants: 10,
+      description: '스터디1 설명',
+      position: [1, 3],
+      skills: [1, 2],
+      createdAt: '2025-05-20',
+      type: 'study',
+      autoAllow: true,
+      host: {
+        userId: 'abcd123',
+        nickname: '사용자1',
+        profileImage: 'https://github.com/shadcn.png',
+      },
+      isApplicant: false,
+      participants: [
+        {
+          userId: 'abcd1',
+          nickname: '팀원1',
+          profileImage: null,
+        },
+        {
+          userId: 'abcd12',
+          nickname: '팀원2',
           profileImage: 'https://github.com/shadcn.png',
         },
-        isApplicant: false,
-        participants: [
-          {
-            id: 'abcd123',
-            name: '팀원1',
-            profileImage: 'https://github.com/shadcn.png',
-          },
-          {
-            id: 'abcd123',
-            name: '팀원1',
-            profileImage: 'https://github.com/shadcn.png',
-          },
-          {
-            id: 'abcd123',
-            name: '팀원1',
-            profileImage: 'https://github.com/shadcn.png',
-          },
-          {
-            id: 'abcd123',
-            name: '팀원1',
-            profileImage: 'https://github.com/shadcn.png',
-          },
-          {
-            id: 'abcd123',
-            name: '팀원1',
-            profileImage: 'https://github.com/shadcn.png',
-          },
-        ],
-      });
-    },
-  ),
+        {
+          userId: 'abcd123',
+          nickname: '팀원3',
+          profileImage: 'https://github.com/shadcn.png',
+        },
+        {
+          userId: 'abcd1234',
+          nickname: '팀원4',
+          profileImage: 'https://github.com/shadcn.png',
+        },
+        {
+          userId: 'abcd1235',
+          nickname: '팀원5',
+          profileImage: 'https://github.com/shadcn.png',
+        },
+      ],
+    });
+  }),
 ];
