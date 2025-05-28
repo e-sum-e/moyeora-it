@@ -11,15 +11,19 @@ import { useEffect, useRef, useState } from 'react';
 
 export const ReplyList = () => {
   const { groupId } = useParams();
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useFetchItems<Reply>({
       url: `/groups/${groupId}/replies`,
       queryParams: {
         size: 10,
       },
+      options: {
+        staleTime: 0,
+      },
     });
   const { ref } = useFetchInView({
     fetchNextPage,
+    isLoading,
   });
 
   const allReplies = data.pages.flatMap((page) => page.items);

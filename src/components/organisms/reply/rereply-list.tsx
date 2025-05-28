@@ -20,16 +20,20 @@ export const RereplyList = ({
 }: RereplyListProps) => {
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const { groupId } = useParams();
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useFetchItems<Reply & { parentId: number }>({
       url: `/groups/${groupId}/replies/${parentReplyId}`,
       queryParams: {
         size: 10,
       },
+      options: {
+        staleTime: 0,
+      },
     });
 
   const { ref } = useFetchInView({
     fetchNextPage,
+    isLoading,
   });
 
   // 스크롤 이동
