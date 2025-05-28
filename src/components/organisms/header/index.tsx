@@ -1,10 +1,9 @@
 'use client';
 
 // import useAuthStore from '@/stores/useAuthStore';
-import {Notification} from '@/components/molecules/notification';
 import Link from 'next/link';
 import React, { useRef } from 'react';
-
+import { NotificationList } from '@/components/molecules/notification-list';
 export const Header = () => {
   // const user = useAuthStore((state) => state.user);
   const user = {
@@ -62,7 +61,7 @@ export const Header = () => {
                   <Link href={item.href}>{item.label}</Link>
                 </h1>
               ) : isLoggedIn.current && item.label === 'Notification' ? (
-                 <Notification />
+                 <NotificationList />
               ) : (
                 <Link href={item.href}>{item.label}</Link>
               )}
