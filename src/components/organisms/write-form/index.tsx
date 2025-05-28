@@ -13,13 +13,12 @@ import { Description } from '@/components/molecules/write-form/tiptap/desctiptio
 import { Title } from '@/components/molecules/write-form/title';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
-import { DEFAULT_SKILL_NAMES, GroupType } from '@/types';
-import { Skill } from '@/types/enums';
 import {
   DEFAULT_POSITION_NAMES,
   DEFAULT_SKILL_NAMES,
   GroupType,
 } from '@/types';
+import { Skill } from '@/types/enums';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { addDays, isAfter } from 'date-fns';
