@@ -14,7 +14,7 @@ export const GroupList = () => {
   const { data } = useFetchItems<Group>({
     url: '/api/groups',
     queryParams: {
-      skills: Skill[selectedSkill as keyof typeof Skill] ?? '',
+      skill: Skill[selectedSkill as keyof typeof Skill] ?? '',
       position: Position[selectedPosition as keyof typeof Position] ?? '',
     },
   });

@@ -27,9 +27,9 @@ export const groupsHandlers = [
   http.get(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/groups`,
     ({ request }) => {
-      const url = new URL(request.url);
-      const skillParam = url.searchParams.get('skills');
-      const skillNumber = skillParam ? Number(skillParam) : null;
+      const url = new URL(request.url); // 요청 url에서 parameter를 뽑아내기 위해 url 전체가 필요
+      const skillParam = url.searchParams.get('skill');
+      const skillNumber = skillParam ? Number(skillParam) : null; // skillParam이 있을 경우 서버에 enum 숫자 값으로 보내기 위해 숫자로 변환
 
       const positionParam = url.searchParams.get('position');
       const positionNumber = positionParam ? Number(positionParam) : null;
