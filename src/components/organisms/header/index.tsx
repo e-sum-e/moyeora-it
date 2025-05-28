@@ -28,7 +28,7 @@ export const Header = () => {
   const loggedInMenuItems = [
     {
       label: 'MyPage',
-      href: '/mypage',
+      href: `/users/${user.id}`,
     },
     {
       label: 'Notification',
