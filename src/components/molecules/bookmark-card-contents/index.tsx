@@ -4,6 +4,7 @@ import { Title } from '@/components/atoms/title';
 import { ContentInfo } from '@/components/organisms/bookmark-card';
 import { Progress } from '@/components/ui/progress';
 import { getPosition } from '@/types/enums';
+import { getYearMonthDayWithDot } from '@/utils/dateUtils';
 
 type BookmarkCardContentsProps = {
 	className?: string;
@@ -14,6 +15,8 @@ export const BookmarkCardContents = ({
 	className,
 	info,
 }: BookmarkCardContentsProps) => {
+
+	const isCompleted = info.participants.length === info.maxParticipants;
 	return (
 		info && (
 			<section className={`${className} flex flex-col justify-between`}>
@@ -23,9 +26,8 @@ export const BookmarkCardContents = ({
 							<Title title={info.title} />
 						</header>
 						<div className="flex flex-row gap-2">
-							{/* TODO: 날짜 형식 util 윤아님이 만드시면 적용 */}
 							<Badge
-								text={info.deadline.toLocaleDateString()}
+								text={getYearMonthDayWithDot(info.deadline)}
 								className="bg-gray-200 text-gray-500"
 							/>
 							{info.position.map((position) => (
@@ -42,12 +44,11 @@ export const BookmarkCardContents = ({
 				<footer>
 					<div className="flex flex-col gap-2">
 						<p>
-							<span>인원수</span>
-							<span>개설 여부</span>
+							<span>{info.participants.length}/{info.maxParticipants}</span>
 						</p>
 						<div className="flex flex-row gap-2">
 							<Progress value={50} />
-							<span>완료여부</span>
+							<span>{isCompleted ? '완료' : '모집중'}</span>
 						</div>
 					</div>
 				</footer>
