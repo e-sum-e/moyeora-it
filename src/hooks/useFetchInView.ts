@@ -5,17 +5,19 @@ import { IntersectionOptions, useInView } from 'react-intersection-observer';
 export const useFetchInView = ({
   fetchNextPage,
   options,
+  isLoading
 }: {
   fetchNextPage: (options?: FetchNextPageOptions) => void;
   options?: IntersectionOptions;
+  isLoading: boolean;
 }) => {
   const { ref, inView } = useInView({ ...options });
 
   useEffect(() => {
-    if (inView) {
+    if (inView && !isLoading) {
       fetchNextPage();
     }
-  }, [inView]);
+  }, [inView, isLoading]);
 
   return { ref };
 };

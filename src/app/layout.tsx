@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   description: '개발자들의 스터디, 사이트 프로젝트 모집 플랫폼',
 };
 
+
 export default function RootLayout({
   children,
 }: Readonly<{
