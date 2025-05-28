@@ -4,6 +4,7 @@ import { ReplyForm } from '@/components/molecules/reply/reply-form';
 import { ReplyItem } from '@/components/organisms/reply/reply-item';
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
+import { useReplyScrollParams } from '@/hooks/useReplyScrollParams';
 import { Reply } from '@/types';
 import { useParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -23,29 +24,30 @@ export const ReplyList = () => {
 
   const allReplies = data.pages.flatMap((page) => page.items);
 
-  const [newReplyId, setNewReplyId] = useState<number | null>(null);
+  const { targetId } = useReplyScrollParams('reply');
+  const [targetReplyId, setTargetReplyId] = useState<number | null>(targetId);
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
   // 스크롤 이동
   useEffect(() => {
-    if (!newReplyId) return;
+    if (targetReplyId) {
+      const element = document.getElementById(`reply-${targetReplyId}`);
 
-    const element = document.getElementById(`reply-${newReplyId}`);
-
-    if (element) {
-      element.scrollIntoView({ behavior: 'instant', block: 'center' });
-      setNewReplyId(null);
-    } else {
-      // 찾을 수 없으면 제일 아래로
-      bottomRef.current?.scrollIntoView({
-        behavior: 'instant',
-        block: 'end',
-      });
+      if (element) {
+        element.scrollIntoView({ behavior: 'instant', block: 'center' });
+        setTargetReplyId(null);
+      } else {
+        // 찾을 수 없으면 제일 아래로
+        bottomRef.current?.scrollIntoView({
+          behavior: 'instant',
+          block: 'end',
+        });
+      }
     }
-  }, [data, newReplyId]);
+  }, [data, targetReplyId]);
 
   const replyFormSuccessHandler = (id: number) => {
-    setNewReplyId(id);
+    setTargetReplyId(id);
   };
 
   return (

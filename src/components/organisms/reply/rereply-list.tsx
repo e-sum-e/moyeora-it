@@ -9,14 +9,14 @@ import { useEffect, useRef } from 'react';
 
 type RereplyListProps = {
   parentReplyId: number;
-  newReplyId: number | null;
-  setNewReplyId: (id: number | null) => void;
+  targetReplyId: number | null;
+  setTargetReplyId: (id: number | null) => void;
 };
 
 export const RereplyList = ({
-  newReplyId,
+  targetReplyId,
   parentReplyId,
-  setNewReplyId,
+  setTargetReplyId,
 }: RereplyListProps) => {
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const { groupId } = useParams();
@@ -34,21 +34,23 @@ export const RereplyList = ({
 
   // 스크롤 이동
   useEffect(() => {
-    if (newReplyId) {
-      const element = document.getElementById(`reply-${newReplyId}`);
+    if (targetReplyId === null) return;
 
-      if (element) {
-        element.scrollIntoView({ behavior: 'instant', block: 'center' });
-        setNewReplyId(null);
-      } else {
-        // 찾을 수 없으면 제일 아래로
-        bottomRef.current?.scrollIntoView({
-          behavior: 'instant',
-          block: 'end',
-        });
-      }
+    const element = document.getElementById(`reply-${targetReplyId}`);
+
+    if (element) {
+      element.scrollIntoView({ behavior: 'instant', block: 'center' });
+      setTargetReplyId(null);
+    } else {
+      // 찾을 수 없으면 제일 아래로
+      bottomRef.current?.scrollIntoView({
+        behavior: 'instant',
+        block: 'end',
+      });
     }
-  }, [data, newReplyId, setNewReplyId]);
+
+    if (!hasNextPage) setTargetReplyId(null);
+  }, [data, targetReplyId, setTargetReplyId, hasNextPage]);
 
   const rereplies = data.pages.flatMap((page) => page.items);
 

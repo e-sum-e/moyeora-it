@@ -18,7 +18,7 @@ export const ReplyItem = ({
         replyId={replyId}
         isDeleted={isDeleted}
       />
-      <ReplyThread replyId={replyId} />
+      <ReplyThread parentReplyId={replyId} />
     </li>
   );
 };

@@ -16,7 +16,7 @@ export const ReplyContent = ({
   writer,
   createdAt,
   parentId,
-  isDeleted = false,
+  isDeleted = false, // 삭제된 댓글인지 여부
 }: ReplyContentProps) => {
   const { groupId } = useParams();
   const [isEditing, setIsEditing] = useState<boolean>(false);
