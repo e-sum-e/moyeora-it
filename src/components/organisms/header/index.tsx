@@ -15,17 +15,6 @@ const menuItems = [
     },
   ];
 
-  const loggedInMenuItems = [
-    {
-      label: 'MyPage',
-      href: `/users/${user.id}`,
-    },
-    {
-      label: 'Notification',
-      href: '/notification',
-    },
-  ];
-
 const loggedOutMenuItems = [
   {
     label: 'Login',
@@ -37,6 +26,17 @@ export const Header = () => {
   const user = useAuthStore((state) => state.user);
   const isLoggedIn = Boolean(user);
   
+  const loggedInMenuItems = [
+    {
+      label: 'MyPage',
+      href: `/users/${user?.userId}`,
+    },
+    {
+      label: 'Notification',
+      href: '/notification',
+    },
+  ];
+
   const displayMenuItems = [
     ...menuItems,
     ...(isLoggedIn ? loggedInMenuItems : loggedOutMenuItems),
