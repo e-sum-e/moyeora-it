@@ -1,6 +1,17 @@
 import { http, HttpResponse } from 'msw';
 
 export const groupsHandlers = [
+  http.post('http://localhost:4000/api/groups/:groupId/join', async ({ params, request }) => {
+    const { groupId } = params;
+    const body = await request.json() as {
+      userId: string;
+      status: 'approve' | 'deny';
+    };
+    console.log(groupId, body);
+
+    return HttpResponse.json({}, { status: 200 });
+  }),
+
   http.get('http://localhost:4000/api/groups', () => {
     return HttpResponse.json({
       items: [
