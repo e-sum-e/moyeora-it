@@ -1,5 +1,18 @@
 import { http, HttpResponse } from 'msw';
 import { User } from '@/types';
+import { Position, Skill } from '@/types/enums';
+
+let user: User = {
+  userId: 'my-id',
+  email: 'me@example.com',
+  nickname: 'fistname',
+  position: null,
+  skills: null,
+  profileImage: null,
+  isFollower: false,
+  isFollowing: true,
+  rate: 4,
+};
 
 export const authenticationsHandlers = [
   http.post('http://localhost:4000/api/login', () => {
@@ -20,20 +33,23 @@ export const authenticationsHandlers = [
   }),
   http.get('http://localhost:4000/api/me', () => {
     return HttpResponse.json<{ user: User }>({
-      user: {
-        userId: 'my-id',
-        email: 'me@example.com',
-        nickname: null,
-        position: null,
-        skills: null,
-        profileImage: null,
-        isFollower: false,
-        isFollowing: true,
-        rate: 4,
-      },
+      user,
     });
   }),
-  http.post('http://localhost:4000/api/me', () => {
+  http.post('http://localhost:4000/api/me', async ({ request }) => {
+    const body = (await request.json()) as {
+      nickname: string;
+      position: Position;
+      skills: Skill[];
+    };
+
+    user = {
+      ...user,
+      nickname: body.nickname,
+      position: body.position,
+      skills: body.skills,
+    };
+
     return HttpResponse.json({
       success: true,
     });
