@@ -7,7 +7,7 @@ import { useFetchItems } from '@/hooks/useFetchItems';
 import { Group, GroupSort, Order, PositionName, SkillName } from '@/types';
 import { Position, Skill } from '@/types/enums';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export const GroupList = () => {
   const [selectedSkill, setSelectedSkill] = useState<SkillName>('');
@@ -52,6 +52,24 @@ export const GroupList = () => {
     setSelectedOrder(currentOrder);
     updateQuery('order', currentOrder);
   };
+
+  useEffect(() => {
+    const skill = searchParams.get('skill') as SkillName;
+    const position = searchParams.get('position') as PositionName;
+    const sort = searchParams.get('sort') as GroupSort;
+    const order = searchParams.get('order') as Order;
+
+    if (skill) setSelectedSkill(skill);
+    if (position) setSelectedPosition(position);
+    if (sort) setSelecteSort(sort);
+    if (order) setSelectedOrder(order);
+
+    /**
+     * 초기 1회만 실행하도록 deps는 빈배열로 둠
+     * - searchParams를 deps에 추가할 시 router.push()로 인해 url이 변경되면 searchParams가 또 변경되어 useEffect()가 실행되는데 다른 searchParams를 선택할 경우 코드 흐름이 꼬일 수 있음
+     *  */
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <>
