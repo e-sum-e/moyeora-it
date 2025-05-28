@@ -16,6 +16,7 @@ export type User = {
 export enum GroupType {
   STUDY = 'study',
   PROJECT = 'project',
+  ALL = 'all',
 }
 
 export type WriteFormWithCreatedAt = WriteForm & { createdAt: Date };
@@ -72,6 +73,7 @@ export type Group = {
   startDate: Date; // 모임의 시작일
   endDate: Date; // 모임의 종료일
   maxParticipants: number;
+  participants:Pick<User, "id" | "nickname" | "profileImage">[];
   description: string;
   position: Position[];
   skills: Skill[];

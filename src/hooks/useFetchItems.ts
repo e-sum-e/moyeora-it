@@ -1,20 +1,25 @@
+import { useSuspenseInfiniteQuery, UseSuspenseInfiniteQueryOptions, InfiniteData } from '@tanstack/react-query';
 import { request } from '@/api/request';
-import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
+
+
+type Page<T> = {
+  items: T[];
+  hasNext: boolean;
+  cursor: number | null;
+};
 
 export const useFetchItems = <T>({
   url,
   queryParams = {},
+  options = {},
 }: {
   url: string;
   queryParams?: Record<string, string | number>;
+  options?: Partial<UseSuspenseInfiniteQueryOptions<Page<T>, Error, InfiniteData<Page<T>>>>;
 }) => {
-  return useSuspenseInfiniteQuery<{
-    items: T[];
-    cursor: number | null;
-    hasNext: boolean;
-  }>({
+  return useSuspenseInfiniteQuery<Page<T>, Error, InfiniteData<Page<T>>>({
     queryKey: ['items', url, queryParams ?? {}],
-    queryFn: ({ pageParam }) =>
+    queryFn: async ({ pageParam }): Promise<Page<T>> =>
       request.get(url, {
         ...queryParams,
         cursor: pageParam as number | string,
@@ -23,6 +28,6 @@ export const useFetchItems = <T>({
     getNextPageParam(lastPage) {
       return lastPage.hasNext ? lastPage.cursor : null;
     },
-    staleTime: 0,
+    ...options,
   });
 };
