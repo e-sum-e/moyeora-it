@@ -25,6 +25,7 @@ describe('write form 테스트', () => {
     autoAllow: false,
     type: GroupType.STUDY,
     skills: ['Typescript', 'Next.js'],
+    positions: ['FE'],
     createdAt: new Date(2024.05, 26),
   };
 
@@ -59,7 +60,7 @@ describe('write form 테스트', () => {
 
   test('group 생성 시 서버 에러가 발생한 경우 Unexpected Error를 받는다', async () => {
     server.use(
-      http.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}//group`, () => {
+      http.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/group`, () => {
         return HttpResponse.json(
           { message: 'Bad Request' },
           { status: 400 }, // 400 상태코드 -> response.ok === false
