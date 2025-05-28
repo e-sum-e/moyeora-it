@@ -74,6 +74,8 @@ const RegisterOptionalForm = () => {
 
       const prevPathname = localStorage.getItem('login-trigger-path') || '/';
       router.push(prevPathname);
+
+      localStorage.removeItem('login-trigger-path');
     } catch (e) {
       // TODO: 프로필 에러 설정 //
       console.log(e);

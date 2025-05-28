@@ -49,6 +49,8 @@ const LoginForm = () => {
 
       const prevPathname = localStorage.getItem('login-trigger-path') || '/';
       router.push(prevPathname);
+
+      localStorage.removeItem('login-trigger-path');
     } catch (e) {
       // TODO: 로그인 실패시 에러코드 맞춰서 설정해주기
       setIsLoginFailed(true);
