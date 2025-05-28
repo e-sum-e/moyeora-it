@@ -4,11 +4,13 @@ import { notificationsHandlers } from './handler/notifications';
 import { followingsHandlers } from './handler/followings';
 import { authenticationsHandlers } from './handler/authentications';
 import { repliesHandlers } from './handler/replies';
+import { userHandlers } from './handler/user';
 
 export const server = setupServer(
   ...groupsHandlers,
   ...notificationsHandlers,
   ...followingsHandlers,
   ...authenticationsHandlers,
-  ...repliesHandlers
+  ...repliesHandlers,
+  ...userHandlers,
 );
