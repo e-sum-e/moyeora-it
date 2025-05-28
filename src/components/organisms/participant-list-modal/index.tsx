@@ -9,11 +9,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { User } from '@/types';
+import { UserSummary } from '@/types';
 import { PlusIcon } from 'lucide-react';
 
 type ParticipantListModalProps = {
-  participants: Pick<User, 'userId' | 'nickname' | 'profileImage'>[];
+  participants: UserSummary[];
 };
 
 export const ParticipantListModal = ({

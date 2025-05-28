@@ -1,14 +1,14 @@
 import { request } from '@/api/request';
 import { ParticipantListModal } from '@/components/organisms/participant-list-modal';
 import { ReplyList } from '@/components/organisms/reply/reply-list';
-import { Group, User } from '@/types';
+import { Group, UserSummary } from '@/types';
 
 type GroupDetailPageProps = {
   params: Promise<{ groupId: string }>;
 };
 
 type GroupDetail = Group & {
-  host: Pick<User, 'userId' | 'nickname' | 'profileImage'>;
+  host: UserSummary;
   isApplicant: boolean;
 };
 

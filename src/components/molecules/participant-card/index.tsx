@@ -2,16 +2,14 @@
 
 import { Avatar } from '@/components/atoms/avatar';
 
-import { User } from '@/types';
+import { UserSummary } from '@/types';
 import { useRouter } from 'next/navigation';
-
-type ParticipantCardProps = Pick<User, 'userId' | 'nickname' | 'profileImage'>;
 
 export const ParticipantCard = ({
   userId,
   nickname,
   profileImage,
-}: ParticipantCardProps) => {
+}: UserSummary) => {
   const router = useRouter();
 
   return (
