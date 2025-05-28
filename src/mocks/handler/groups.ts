@@ -17,8 +17,6 @@ export const groupsHandlers = [
     const size = Number(url.searchParams.get('size')) || 10;
 
     const baseDate = new Date(2025, 4, 26);
-    const positionKeysLength = positionKeys.length;
-    const skillKeysLength = skillKeys.length;
 
     const items: Group[] = Array.from({ length: size }, (_, index) => {
       const offset = (cursor + index) * 2; // 그룹마다 날짜 차이를 두기 위한 오프셋
@@ -43,6 +41,19 @@ export const groupsHandlers = [
       // type 랜덤하게 정하기
       const type = getRandomItem(groupTypeValues);
 
+      // 2~30중에 랜덤값 만들기
+      const maxParticipants = Math.floor(Math.random() * (30 - 2 + 1)) + 2;
+
+      // 0~maxParticipants 중에 랜덤값 만들기
+      const participants = Array.from(
+        { length: Math.floor(Math.random() * maxParticipants) },
+        () => ({
+          userId: '1',
+          nickname: '모여라잇유저',
+          profileImage: null,
+        }),
+      );
+
       const titles = [
         '프론트엔드 스터디 모집합니다',
         '알고리즘 마스터하기',
@@ -59,16 +70,14 @@ export const groupsHandlers = [
       let item = {
         id: Math.floor(Math.random() * 1000000) + 1,
         title: titles[(cursor + index) % titles.length],
-        deadline: '2025-05-22',
-        startDate: '2025-05-20',
-        endDate: '2025-05-24',
         maxParticipants: 10,
-        participants: [],
+        participants,
         description: `<h2 class="text-xl font-bold capitalize">스터디 ${
           index + 1
         }을 모집합니다</h2><p>모두 즐겁게 공부해요!</p>`,
         position: positions,
         skills: skills,
+
         autoAllow: true,
         isBookmark: false,
         createdAt,
