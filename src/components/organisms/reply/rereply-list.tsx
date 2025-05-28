@@ -56,6 +56,7 @@ export const RereplyList = ({
     if (!hasNextPage) setTargetReplyId(null);
   }, [data, targetReplyId, setTargetReplyId, hasNextPage]);
 
+
   const rereplies = data.pages.flatMap((page) => page.items);
 
   return (
