@@ -13,38 +13,32 @@ import { http, HttpResponse } from 'msw';
 export const groupsHandlers = [
   http.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/groups`, ({ request }) => {
     const url = new URL(request.url);
-    const cursor = Number(url.searchParams.get('cursor')) || 0;
-    const size = Number(url.searchParams.get('size')) || 10;
+    const skillParam = url.searchParams.get('skills');
+    const skillNumber = skillParam ? Number(skillParam) : null;
 
-    const baseDate = new Date(2025, 4, 26);
+    const items: Group[] = Array.from({ length: 20 }, (_, index) => {
+      const offset = index * 2;
 
-    const items: Group[] = Array.from({ length: size }, (_, index) => {
-      const offset = (cursor + index) * 2; // 그룹마다 날짜 차이를 두기 위한 오프셋
-
+      const baseDate = new Date(2025, 4, 26);
       const createdAt = addDays(baseDate, offset);
       const deadline = addDays(baseDate, offset + 1);
       const startDate = addDays(baseDate, offset + 5);
       const endDate = addDays(baseDate, offset + 10);
 
-      // position 랜덤하게 정하기
       const positions = getRandomItems(
         positionKeys,
         Math.floor(Math.random() * 3) + 1,
       ).map((key) => Position[key]);
 
-      // skill 랜덤하게 정하기
       const skills = getRandomItems(
         skillKeys,
         Math.floor(Math.random() * 3) + 1,
       ).map((key) => Skill[key]);
 
-      // type 랜덤하게 정하기
       const type = getRandomItem(groupTypeValues);
 
-      // 2~30중에 랜덤값 만들기
       const maxParticipants = Math.floor(Math.random() * (30 - 2 + 1)) + 2;
 
-      // 0~maxParticipants 중에 랜덤값 만들기
       const participants = Array.from(
         { length: Math.floor(Math.random() * maxParticipants) },
         () => ({
@@ -54,30 +48,16 @@ export const groupsHandlers = [
         }),
       );
 
-      const titles = [
-        '프론트엔드 스터디 모집합니다',
-        '알고리즘 마스터하기',
-        '토이 프로젝트 팀원 구해요',
-        'Next.js 프로젝트 같이 하실 분',
-        'CS 스터디원 모집',
-        'React 심화 스터디',
-        '백엔드 개발자 모여라',
-        'UI/UX 프로젝트 팀원 구함',
-        'Spring Boot 스터디',
-        'DevOps 기초부터 실무까지',
-      ];
-
-      let item = {
-        id: Math.floor(Math.random() * 1000000) + 1,
-        title: titles[(cursor + index) % titles.length],
-        maxParticipants: 10,
-        participants,
+      return {
+        id: index + 1,
+        title: `${type} ${index + 1}`,
         description: `<h2 class="text-xl font-bold capitalize">스터디 ${
           index + 1
         }을 모집합니다</h2><p>모두 즐겁게 공부해요!</p>`,
         position: positions,
         skills: skills,
-
+        participants,
+        maxParticipants,
         autoAllow: true,
         isBookmark: false,
         createdAt,
@@ -86,29 +66,15 @@ export const groupsHandlers = [
         endDate,
         type,
       };
+    });
 
-      if (type.includes('study') && item.type !== 'study') {
-        return null;
-      }
-
-      if (type.includes('project') && item.type !== 'project') {
-        return null;
-      }
-
-      if (type.includes('bookmark')) {
-        item = {
-          ...item,
-          isBookmark: true,
-        };
-      }
-
-      return item;
-    }).filter(Boolean) as Group[];
+    const filteredItems =
+      skillNumber !== null
+        ? items.filter((item) => item.skills.includes(skillNumber))
+        : items;
 
     return HttpResponse.json({
-      items,
-      hasNext: cursor + size < 100,
-      cursor: cursor + size,
+      items: filteredItems,
     });
   }),
 
@@ -117,6 +83,7 @@ export const groupsHandlers = [
       success: true,
     });
   }),
+
   http.get(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/groups/:groupId`,
     () => {

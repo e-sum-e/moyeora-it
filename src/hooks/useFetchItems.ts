@@ -1,6 +1,9 @@
-import { useSuspenseInfiniteQuery, UseSuspenseInfiniteQueryOptions, InfiniteData } from '@tanstack/react-query';
 import { request } from '@/api/request';
-
+import {
+  InfiniteData,
+  useSuspenseInfiniteQuery,
+  UseSuspenseInfiniteQueryOptions,
+} from '@tanstack/react-query';
 
 type Page<T> = {
   items: T[];
@@ -15,7 +18,9 @@ export const useFetchItems = <T>({
 }: {
   url: string;
   queryParams?: Record<string, string | number>;
-  options?: Partial<UseSuspenseInfiniteQueryOptions<Page<T>, Error, InfiniteData<Page<T>>>>;
+  options?: Partial<
+    UseSuspenseInfiniteQueryOptions<Page<T>, Error, InfiniteData<Page<T>>>
+  >;
 }) => {
   return useSuspenseInfiniteQuery<Page<T>, Error, InfiniteData<Page<T>>>({
     queryKey: ['items', url, queryParams ?? {}],
