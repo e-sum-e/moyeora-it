@@ -86,7 +86,13 @@ export const GroupList = () => {
         selectSort={selectSort}
         selectOrder={selectOrder}
       />
-      <GroupCard groups={data.pages.flatMap((page) => page.items)} />
+      <ul>
+        {data.pages
+          .flatMap((page) => page.items)
+          .map((item) => (
+            <GroupCard key={item.id} item={item} />
+          ))}
+      </ul>
     </>
   );
 };
