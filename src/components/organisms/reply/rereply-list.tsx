@@ -5,16 +5,24 @@ import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
 import { Reply } from '@/types';
 import { useParams } from 'next/navigation';
+import { useEffect, useRef } from 'react';
 
 type RereplyListProps = {
   parentReplyId: number;
+  newReplyId: number | null;
+  setNewReplyId: (id: number | null) => void;
 };
 
-export const RereplyList = ({ parentReplyId }: RereplyListProps) => {
+export const RereplyList = ({
+  newReplyId,
+  parentReplyId,
+  setNewReplyId,
+}: RereplyListProps) => {
+  const bottomRef = useRef<HTMLDivElement | null>(null);
   const { groupId } = useParams();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useFetchItems<Reply & { parentId: number }>({
-      url: `/api/groups/${groupId}/replies/${parentReplyId}`,
+      url: `/groups/${groupId}/replies/${parentReplyId}`,
       queryParams: {
         size: 10,
       },
@@ -25,22 +33,36 @@ export const RereplyList = ({ parentReplyId }: RereplyListProps) => {
     isLoading,
   });
 
-  const allRereplies = data.pages.flatMap((page) => page.items);
+  // 스크롤 이동
+  useEffect(() => {
+    if (newReplyId) {
+      const element = document.getElementById(`reply-${newReplyId}`);
+
+      if (element) {
+        element.scrollIntoView({ behavior: 'instant', block: 'center' });
+        setNewReplyId(null);
+      } else {
+        // 찾을 수 없으면 제일 아래로
+        bottomRef.current?.scrollIntoView({
+          behavior: 'instant',
+          block: 'end',
+        });
+      }
+    }
+  }, [data, newReplyId, setNewReplyId]);
+
+  const rereplies = data.pages.flatMap((page) => page.items);
 
   return (
     <div>
       <ul className="flex flex-col gap-5">
-        {allRereplies.map((rereply) => (
+        {rereplies.map((rereply) => (
           <li key={rereply.replyId}>
-            <ReplyContent
-              content={rereply.content}
-              writer={rereply.writer}
-              createdAt={rereply.createdAt}
-              replyId={rereply.replyId}
-            />
+            <ReplyContent {...rereply} />
           </li>
         ))}
       </ul>
+      <div ref={bottomRef} />
       {hasNextPage && !isFetchingNextPage && (
         <div ref={ref} className="h-2 -translate-y-50 bg-transparent" />
       )}

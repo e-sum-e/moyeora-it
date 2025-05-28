@@ -77,6 +77,7 @@ export type Group = {
   deadline: Date;
   startDate: Date; // 모임의 시작일
   endDate: Date; // 모임의 종료일
+  participants: Pick<User, 'userId' | 'nickname' | 'profileImage'>[];
   maxParticipants: number;
   participants: UserSummary[];
   description: string;
@@ -87,6 +88,10 @@ export type Group = {
   autoAllow: boolean;
   type: GroupType;
 };
+
+export type GroupSort = 'createdAt' | 'deadline';
+
+export type Order = 'asc' | 'desc';
 
 export type Notification = {
   id: number;
@@ -102,4 +107,5 @@ export type Reply = {
   content: string;
   writer: UserSummary;
   createdAt: string;
+  isDeleted?: boolean;
 };

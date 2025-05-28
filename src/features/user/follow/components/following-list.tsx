@@ -1,13 +1,14 @@
 'use client';
 
+import { Avatar } from '@/components/atoms/avatar';
+import { SearchInput } from '@/components/molecules/search-input/search-input';
+import { Button } from '@/components/ui/button';
+import { useDebounce } from '@/hooks/useDebounce';
+import { useFetchInView } from '@/hooks/useFetchInView';
+import { useFetchItems } from '@/hooks/useFetchItems';
+import { User } from '@/types';
 import Link from 'next/link';
 import { useParams, useSearchParams } from 'next/navigation';
-import { useFetchItems } from '@/hooks/useFetchItems';
-import { useFetchInView } from '@/hooks/useFetchInView';
-import { useDebounce } from '@/hooks/useDebounce';
-import { Avatar } from '@/components/atoms/avatar';
-import { Button } from '@/components/ui/button';
-import { SearchInput } from '@/components/molecules/search-input/search-input';
 
 export const FollowingList = () => {
   const { id } = useParams();
@@ -17,7 +18,7 @@ export const FollowingList = () => {
   const searchParams = useSearchParams();
   const search = searchParams.get('search');
 
-  const { data, fetchNextPage, hasNextPage } = useFetchItems({
+  const { data, fetchNextPage, hasNextPage } = useFetchItems<User>({
     url: '/api/users/followings',
     ...(search && { queryParams: { search } }),
   });
