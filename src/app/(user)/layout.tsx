@@ -1,5 +1,4 @@
 import { UserProfile } from '@/features/user/components/user-profile';
-import { EditUserProfileDialog } from '@/features/user/components/edit-user-profile-dialog';
 import { UserPageTabs } from '@/features/user/components/user-page-tabs';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -23,7 +22,6 @@ export default async function UserPageLayout({
   return (
     <>
       <UserProfile />
-      <EditUserProfileDialog />
       <UserPageTabs />
       <main>{children}</main>
     </>
