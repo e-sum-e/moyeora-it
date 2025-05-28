@@ -1,51 +1,41 @@
 // In Next.js, this file would be called: app/providers.tsx
 'use client';
 
-// Since QueryClientProvider relies on useContext under the hood, we have to put 'use client' on top
 import {
-	isServer,
-	QueryClient,
-	QueryClientProvider,
+  isServer,
+  QueryClient,
+  QueryClientProvider,
 } from '@tanstack/react-query';
 
 function makeQueryClient() {
-	return new QueryClient({
-		defaultOptions: {
-			queries: {
-				// With SSR, we usually want to set some default staleTime
-				// above 0 to avoid refetching immediately on the client
-				staleTime: 60 * 1000,
-			},
-		},
-	});
+  return new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 60 * 1000, // 기본 캐싱 시간(1분)
+      },
+    },
+  });
 }
 
 let browserQueryClient: QueryClient | undefined = undefined;
 
 function getQueryClient() {
-	if (isServer) {
-		// Server: always make a new query client
-		return makeQueryClient();
-	} else {
-		// Browser: make a new query client if we don't already have one
-		// This is very important, so we don't re-make a new client if React
-		// suspends during the initial render. This may not be needed if we
-		// have a suspense boundary BELOW the creation of the query client
-		if (!browserQueryClient) browserQueryClient = makeQueryClient();
-		return browserQueryClient;
-	}
+  if (isServer) {
+    return makeQueryClient(); // 서버에서 실행 중인 경우 새 클라이언트를 반환
+  } else {
+    if (!browserQueryClient) browserQueryClient = makeQueryClient(); // 브라우저에서 클라이언트가 없는 경우 새 클라이언트를 생성
+    return browserQueryClient; // 기존 브라우저 클라이언트를 반환
+  }
 }
 
-export default function Providers({ children }: { children: React.ReactNode }) {
-	// NOTE: Avoid useState when initializing the query client if you don't
-	//       have a suspense boundary between this and the code that may
-	//       suspend because React will throw away the client on the initial
-	//       render if it suspends and there is no boundary
-	const queryClient = getQueryClient();
+export function ReactQueryProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const queryClient = getQueryClient();
 
-	return (
-		<QueryClientProvider client={queryClient}>
-			{children}
-		</QueryClientProvider>
-	);
+  return (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
 }

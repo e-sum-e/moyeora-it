@@ -1,13 +1,16 @@
-const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL; //환경변수로 분리 
+const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL; //환경변수로 분리
 
 /**
  * get, post, patch, delete 요청을 처리하는 객체
  * @param endpoint: api 엔드포인트
  * @param queryParams: 쿼리 파라미터
- * @returns 
+ * @returns
  */
 export const request = {
-  get: async (endpoint: string, queryParams?: Record<string, string | number>) => {
+  get: async (
+    endpoint: string,
+    queryParams?: Record<string, string | number>,
+  ) => {
     const queryString = queryParams
       ? '?' +
         Object.entries(queryParams)

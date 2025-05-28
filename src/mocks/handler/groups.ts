@@ -60,6 +60,11 @@ export const groupsHandlers = [
       cursor: cursor + size,
     });
   }),
+  http.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group`, () => {
+    return HttpResponse.json({
+      success: true,
+    });
+  }),
   http.get(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/groups/:groupId`,
     () => {
@@ -81,7 +86,7 @@ export const groupsHandlers = [
           profileImage: 'https://github.com/shadcn.png',
         },
         isApplicant: false,
-        members: [
+        participants: [
           {
             id: 'abcd123',
             name: '팀원1',

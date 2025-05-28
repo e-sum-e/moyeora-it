@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
 import { FetchNextPageOptions } from '@tanstack/react-query';
-import { useInView, IntersectionOptions } from 'react-intersection-observer';
+import { useEffect } from 'react';
+import { IntersectionOptions, useInView } from 'react-intersection-observer';
 
 export const useFetchInView = ({
   fetchNextPage,
@@ -12,7 +12,7 @@ export const useFetchInView = ({
   isLoading: boolean;
 }) => {
   const { ref, inView } = useInView({ ...options });
-  
+
   useEffect(() => {
     if (inView && !isLoading) {
       fetchNextPage();
