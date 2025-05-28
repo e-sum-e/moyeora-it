@@ -3,55 +3,55 @@ import { Notification } from '@/types';
 
 export type NotificationState = {
   notifications: Notification[];
-  hasUnreadNotification: boolean;
-}
+  unreadCount: number;
+  }
 
 export type NotificationActions = {
 	init: () => void;
   addNotification: (notification: Notification) => void;
   setNotifications: (notifications: Notification[]) => void;
-  setReadNotifications: (id: number) => void;
-  setHasUnreadNotification: (value: boolean) => void;
+  setReadNotification: (id: number) => void;
+  setUnreadCount: (count: number) => void;
   clearAllNotifications: () => Promise<void>;
 }
 
 type NotificationStore = NotificationState & NotificationActions;
 
-const useNotificationStore = create<NotificationStore>((set) => ({
+const useNotificationStore = create<NotificationStore>((set, get) => ({
 	notifications: [],
-	hasUnreadNotification: false,
-	addNotification: (notification: Notification) => set((state) => {
-		// 이미 같은 ID의 알림이 있는지 확인
-		const exists = state.notifications.some(n => n.id === notification.id);
-		if (exists) return state;  // 이미 존재하면 상태 변경 없음
-		
-		return {
-			notifications: [notification, ...state.notifications],
-			hasUnreadNotification: true,
-		};
-	}),
+	unreadCount: 0,
+	addNotification: (notification: Notification) => {
+    const { notifications } = get();
+    const exists = notifications.some(n => n.id === notification.id); // 이미 같은 ID의 알림이 있는지 확인
+    if (exists) return; // 이미 존재하면 상태 변경 없음
+    set((state) => ({
+      notifications: [notification, ...state.notifications],
+      unreadCount: state.unreadCount + 1,
+    }));
+	},
   setNotifications: (notifications: Notification[]) => set(() => ({
     notifications,
   })),
-  setReadNotifications: (id: number) => set((state) => ({
+  setReadNotification: (id: number) => set((state) => ({
+    unreadCount: state.unreadCount - 1,
     notifications: state.notifications.map((notification: Notification) => ({
       ...notification,
       isRead: notification.id === id ? true : notification.isRead,
     })),
   })),
-  setHasUnreadNotification: (status: boolean) => set(() => ({
-    hasUnreadNotification: status,
+  setUnreadCount: (count: number) => set(() => ({
+    unreadCount: count,
   })),
   clearAllNotifications: async () => {
     await fetch('/api/notifications', { method: 'DELETE' });
     set(() => ({
       notifications: [],
-      hasUnreadNotification: false,
+      unreadCount: 0,
     }));
   },
 	init: () => set(() => ({
       notifications: [],
-      hasUnreadNotification: false,
+      unreadCount: 0,
     })),
 }));
 

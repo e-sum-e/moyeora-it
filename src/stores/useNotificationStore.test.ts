@@ -21,13 +21,29 @@ describe('useNotificationStore 테스트', () => {
         createdAt: new Date(n.createdAt),
         url: n.url ?? null 
       })),
-      hasUnreadNotification: true,
+      unreadCount: 1,
     });
 
     await useNotificationStore.getState().clearAllNotifications();
 
-    const { notifications, hasUnreadNotification } = useNotificationStore.getState();
+    const { notifications, unreadCount } = useNotificationStore.getState();
     expect(notifications).toEqual([]);
-    expect(hasUnreadNotification).toBe(false);
+    expect(unreadCount).toBe(0);
+  });
+
+  it('읽음 처리 후 안 읽은 알림 개수 감소', () => {
+    useNotificationStore.setState({
+      notifications: NOTIFICATIONS.map(n => ({ 
+        ...n, 
+        createdAt: new Date(n.createdAt),
+        url: n.url ?? null 
+      })),
+      unreadCount: 1,
+    });
+
+    useNotificationStore.getState().setReadNotification(NOTIFICATIONS[0].id);
+
+    const { unreadCount } = useNotificationStore.getState();
+    expect(unreadCount).toBe(0);
   });
 });

@@ -33,4 +33,10 @@ export const notificationsHandlers = [
       items: filteredNotifications,
     });
   }),
+  http.get('http://localhost:4000/api/notifications/unread-count', () => {
+    return HttpResponse.json({
+      unreadCount: 1
+    });
+  }),
+  
 ];

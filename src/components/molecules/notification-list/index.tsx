@@ -7,10 +7,16 @@ import { Notification as NotificationType } from '@/types/index';
 import useNotificationStore from '@/stores/useNotificationStore';
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
+import useAuthStore from '@/stores/useAuthStore';
+import { NotificationBadge } from '../notification-badge';
+import { useQuery } from '@tanstack/react-query';
+import { request } from '@/api/request';
 
 export const NotificationList = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { notifications, setNotifications, setHasUnreadNotification } = useNotificationStore();
+
+  const { notifications, setNotifications, setUnreadCount, unreadCount } = useNotificationStore();
+  const user = useAuthStore((state) => state.user);
 
   // 전체 알림 목록 조회
   const { data, fetchNextPage, hasNextPage } = useFetchItems<NotificationType>({
@@ -18,13 +24,16 @@ export const NotificationList = () => {
   });
 
   // 안 읽은 알림 목록 조회
-  const { data: unreadData } = useFetchItems<NotificationType>({
-    url: '/notifications',
-    queryParams: { isRead: 'false' },
+  const { data: unreadData, isLoading: isUnreadLoading } = useQuery<{ unreadCount: number }>({
+    queryKey: ['unread-count'],
+    queryFn: async () => {
+      return await request.get('/notifications/unread-count');
+    }
   });
 
   const {ref} = useFetchInView({
-    fetchNextPage
+    fetchNextPage,
+    isLoading: isUnreadLoading,
   });
   
   // 전체 알림 목록 저장
@@ -32,29 +41,30 @@ export const NotificationList = () => {
     if (!data) return;
     const notificationList = data?.pages.flatMap((page) => page.items);
     setNotifications(notificationList);
-    const hasUnread = data.pages.some(page => page.items.length > 0);
-    setHasUnreadNotification(hasUnread);
-  }, [data, setHasUnreadNotification, setNotifications]);
+  }, [data, setNotifications]);
 
-  // 안 읽은 알림 여부 확인
+  // 안 읽은 알림 개수 저장
   useEffect(() => {
     if (!unreadData) return;
-    const hasUnread = unreadData.pages.some(page => page.items.length > 0);
-    setHasUnreadNotification(hasUnread);
-  }, [unreadData, setHasUnreadNotification]);
+    setUnreadCount(unreadData.unreadCount);
+  }, [unreadData, setUnreadCount]);
 
   const onOpenChange = (open: boolean) => {
     setIsOpen(open);
   };
 
+  if(!user) return null;
+
   return (
     <Popover open={isOpen} onOpenChange={onOpenChange}>
       <PopoverTrigger>
         <Avatar
-          imageSrc="https://github.com/shadcn.png"
-          fallback="user이름"
+          imageSrc={user.profileImage ?? ''} //TODO 프로필 이미지 없는 경우 기본 이미지 설정 필요
+          fallback={user.email.split('@')[0]}
           className="w-8 h-8 cursor-pointer"
         />
+        {unreadCount}
+       {unreadCount > 0 && <NotificationBadge /> }
       </PopoverTrigger>
       <PopoverContent className="p-0">
         <h4>Notification</h4>
