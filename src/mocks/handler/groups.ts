@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw';
 
 export const groupsHandlers = [
-  http.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/groups`, ({ request }) => {
+  http.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/groups`, ({ request }) => {
     const url = new URL(request.url);
     const cursor = Number(url.searchParams.get('cursor')) || 0;
     const size = Number(url.searchParams.get('size')) || 10;

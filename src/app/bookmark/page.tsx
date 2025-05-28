@@ -7,10 +7,11 @@ import { Tab, TabType } from '@/components/molecules/tab';
 import { GroupType } from '@/types';
 import { useFetchInView } from '@/hooks/useFetchInView';
 export default function BookmarkPage() {
+
   const tabList: TabType[] = [
-    { value: 'all', label: '모든 그룹' },
-    { value: 'study', label: '스터디'},
-    { value: 'project', label: '프로젝트' },
+    { value: GroupType.ALL, label: '모든 그룹' },
+    { value: GroupType.STUDY, label: '스터디'},
+    { value: GroupType.PROJECT, label: '프로젝트' },
   ];
 
   // 쿼리 파라미터는 state로 관리
@@ -25,7 +26,7 @@ export default function BookmarkPage() {
     isLoading,
     isError,
     fetchNextPage,
-  } = useFetchItems({ 
+  } = useFetchItems<ContentInfo>({ 
     url: '/groups', 
     queryParams,
     options: { //TODO: 캐시 전략 좀 더 고민필요

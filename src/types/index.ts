@@ -16,6 +16,7 @@ export type User = {
 export enum GroupType {
   STUDY = 'study',
   PROJECT = 'project',
+  ALL = 'all',
 }
 
 export type WriteFormWithCreatedAt = WriteForm & { createdAt: Date };
