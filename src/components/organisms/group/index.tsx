@@ -19,7 +19,13 @@ export const GroupList = () => {
 
   const updateQuery = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set(key, value);
+
+    if (value === '') {
+      params.delete(key); // 전체를 선택할 경우 value가 "" 이고 params에서 삭제한다.
+    } else {
+      params.set(key, value);
+    }
+
     router.push(`?${params.toString()}`);
   };
 
