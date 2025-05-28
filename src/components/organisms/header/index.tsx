@@ -1,20 +1,10 @@
 'use client';
 
-// import useAuthStore from '@/stores/useAuthStore';
+import useAuthStore from '@/stores/useAuthStore';
 import Link from 'next/link';
-import React, { useRef } from 'react';
 import { NotificationList } from '@/components/molecules/notification-list';
-export const Header = () => {
-  // const user = useAuthStore((state) => state.user);
-  const user = {
-    id: '1',
-    name: '홍길동',
-    email: 'test@test.com',
-    profileImage: 'https://github.com/shadcn.png',
-  }
   
-  
-  const menuItems = [
+const menuItems = [
     {
       label: '모여라-IT',
       href: '/',
@@ -25,29 +15,31 @@ export const Header = () => {
     },
   ];
 
-  const loggedInMenuItems = [
-    {
-      label: 'MyPage',
-      href: '/mypage',
-    },
-    {
-      label: 'Notification',
-      href: '/notification',
-    },
-  ];
+const loggedInMenuItems = [
+  {
+    label: 'MyPage',
+    href: '/mypage',
+  },
+  {
+    label: 'Notification',
+    href: '/notification',
+  },
+];
 
-  const loggedOutMenuItems = [
-    {
-      label: 'Login',
-      href: '/login',
-    },
-  ];
+const loggedOutMenuItems = [
+  {
+    label: 'Login',
+    href: '/login',
+  },
+];
 
-  const isLoggedIn = useRef(user ? true : false);
+export const Header = () => {
+  const user = useAuthStore((state) => state.user);
+  const isLoggedIn = Boolean(user);
   
   const displayMenuItems = [
     ...menuItems,
-    ...(isLoggedIn.current ? loggedInMenuItems : loggedOutMenuItems),
+    ...(isLoggedIn ? loggedInMenuItems : loggedOutMenuItems),
   ];
 
   return (
@@ -60,7 +52,7 @@ export const Header = () => {
                 <h1>
                   <Link href={item.href}>{item.label}</Link>
                 </h1>
-              ) : isLoggedIn.current && item.label === 'Notification' ? (
+              ) : isLoggedIn && item.label === 'Notification' ? (
                  <NotificationList />
               ) : (
                 <Link href={item.href}>{item.label}</Link>
