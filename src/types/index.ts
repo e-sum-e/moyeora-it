@@ -13,7 +13,10 @@ export type User = {
   rate: number;
 };
 
-export type UserSummary = Pick<User, 'userId' | 'nickname' | 'profileImage'>;
+export type UserSummary = Pick<
+  User,
+  'userId' | 'nickname' | 'profileImage' | 'email'
+>;
 
 export enum GroupType {
   STUDY = 'study',

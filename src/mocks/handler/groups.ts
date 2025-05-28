@@ -89,26 +89,31 @@ export const groupsHandlers = [
           userId: 'abcd1',
           nickname: '팀원1',
           profileImage: null,
+          email: 'member1@gmail.com',
         },
         {
           userId: 'abcd12',
-          nickname: '팀원2',
+          nickname: null,
           profileImage: 'https://github.com/shadcn.png',
+          email: 'member2@gmail.com',
         },
         {
           userId: 'abcd123',
           nickname: '팀원3',
           profileImage: 'https://github.com/shadcn.png',
+          email: 'member3@gmail.com',
         },
         {
           userId: 'abcd1234',
           nickname: '팀원4',
           profileImage: 'https://github.com/shadcn.png',
+          email: 'member4@gmail.com',
         },
         {
           userId: 'abcd1235',
-          nickname: '팀원5',
+          nickname: null,
           profileImage: 'https://github.com/shadcn.png',
+          email: 'member5@naver.com',
         },
       ],
     });

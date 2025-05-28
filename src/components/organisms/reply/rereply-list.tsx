@@ -12,7 +12,7 @@ type RereplyListProps = {
 
 export const RereplyList = ({ parentReplyId }: RereplyListProps) => {
   const { groupId } = useParams();
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useFetchItems<Reply & { parentId: number }>({
       url: `/api/groups/${groupId}/replies/${parentReplyId}`,
       queryParams: {
@@ -22,6 +22,7 @@ export const RereplyList = ({ parentReplyId }: RereplyListProps) => {
 
   const { ref } = useFetchInView({
     fetchNextPage,
+    isLoading,
   });
 
   const allRereplies = data.pages.flatMap((page) => page.items);

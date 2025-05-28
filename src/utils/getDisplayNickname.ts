@@ -4,6 +4,6 @@
  * @param email
  * @returns 화면 표시용 사용자 닉네임
  */
-export const getDisplayNickname = (nickname: string, email: string) => {
+export const getDisplayNickname = (nickname: string | null, email: string) => {
   return nickname || email.split('@')[0];
 };
