@@ -3,7 +3,7 @@
 import { Avatar } from '@/components/atoms/avatar';
 
 import { UserSummary } from '@/types';
-import { getDisplayNickname } from '@/utils/getDisplayNickname';
+import { getDisplayNickname } from '@/utils/fallback';
 import { useRouter } from 'next/navigation';
 
 export const ParticipantCard = ({

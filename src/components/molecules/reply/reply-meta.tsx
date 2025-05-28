@@ -2,7 +2,7 @@
 
 import { Avatar } from '@/components/atoms/avatar';
 import { Reply } from '@/types';
-import { getDisplayNickname } from '@/utils/getDisplayNickname';
+import { getDisplayNickname } from '@/utils/fallback';
 
 type ReplyMetaProps = Pick<Reply, 'writer' | 'createdAt'>;
 
