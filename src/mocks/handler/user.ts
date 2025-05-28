@@ -49,7 +49,6 @@ export const userHandlers = [
   http.patch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/:id`,
     async ({ params, request }) => {
-      console.log(params.id);
       const body = await request.formData();
       const nickname = body.get('nickname') as string;
       const position = JSON.parse(body.get('position') as string) as Position;
@@ -60,11 +59,16 @@ export const userHandlers = [
         ? 'https://github.com/shadcn.png'
         : 'https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=';
 
-      return HttpResponse.json({
+      return HttpResponse.json<User>({
+        userId: params.id as string,
         nickname,
         position,
         skills,
         profileImage: imgSrc,
+        email: 'me@example.com',
+        isFollowing: false,
+        isFollower: false,
+        rate: 4.5,
       });
     },
   ),
