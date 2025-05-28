@@ -6,9 +6,8 @@ import { redirect } from 'next/navigation';
 
 const checkAuth = async () => {
   const cookieStore = await cookies();
-  const accessToken = cookieStore.get('accessToken');
-  const refreshToken = cookieStore.get('refreshToken');
-
+  const accessToken = cookieStore.get(process.env.ACCESS_TOKEN!);
+  const refreshToken = cookieStore.get(process.env.REFRESH_TOKEN!);
   if (!accessToken || !refreshToken) {
     redirect('/login');
   }
