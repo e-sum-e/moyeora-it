@@ -8,6 +8,7 @@ const REPLY_LIST: Reply[] = Array.from({ length: 33 }, (_, i) => ({
     userId: `w${i + 1}`,
     nickname: `w${i + 1}`,
     profileImage: null,
+    email: `w${i + 1}@gmail.com`,
   },
   createdAt: '2025-05-23',
   isDeleted: false,
@@ -23,6 +24,7 @@ const REREPLY_LIST: (Reply & { parentId: number })[] = Array.from(
       userId: `q${i + 1}`,
       nickname: `q${i + 1}`,
       profileImage: null,
+      email: `q${i + 1}@gmail.com`,
     },
     createdAt: '2025-05-23',
   }),
@@ -108,8 +110,9 @@ export const repliesHandlers = [
         content,
         writer: {
           userId: `w${newId}`,
-          nickname: `w${newId}`,
+          nickname: null,
           profileImage: null,
+          email: `w${newId}@gmail.com`,
         },
         createdAt: '2025-05-23',
       };
@@ -135,9 +138,10 @@ export const repliesHandlers = [
         parentId,
         content,
         writer: {
-          userId: `w${newId}`,
-          nickname: `w${newId}`,
+          userId: `n${newId}`,
+          nickname: `n${newId}`,
           profileImage: null,
+          email: `n${newId}@gmail.com`,
         },
         createdAt: '2025-05-23',
       };
