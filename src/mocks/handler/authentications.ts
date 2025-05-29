@@ -18,16 +18,16 @@ export const authenticationsHandlers = [
   http.post('http://localhost:4000/api/login', () => {
     return new HttpResponse(JSON.stringify({ success: true }), {
       headers: new Headers([
-        ['Set-Cookie', 'accessToken=myAccess'],
-        ['Set-Cookie', 'refreshToken=myRefresh'],
+        ['Set-Cookie', 'accessToken=myAccess; Path=/'],
+        ['Set-Cookie', 'refreshToken=myRefresh; Path=/'],
       ]),
     });
   }),
   http.post('http://localhost:4000/api/register', () => {
     return new HttpResponse(JSON.stringify({ success: true }), {
       headers: new Headers([
-        ['Set-Cookie', 'accessToken=myAccess'],
-        ['Set-Cookie', 'refreshToken=myRefresh'],
+        ['Set-Cookie', 'accessToken=myAccess; Path=/'],
+        ['Set-Cookie', 'refreshToken=myRefresh; Path=/'],
       ]),
     });
   }),
