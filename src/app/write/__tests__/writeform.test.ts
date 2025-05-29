@@ -25,12 +25,13 @@ describe('write form 테스트', () => {
     autoAllow: false,
     type: GroupType.STUDY,
     skills: ['Typescript', 'Next.js'],
+    positions: ['FE'],
     createdAt: new Date(2024.05, 26),
   };
 
   test('group이 정상적으로 생성되었을 시 { success: true }를 받는다', async () => {
     const result = await request.post(
-      '/api/group',
+      '/group',
       { 'Content-Type': 'application/json' },
       JSON.stringify(tempBody),
     );
@@ -40,7 +41,7 @@ describe('write form 테스트', () => {
 
   test('group 생성 시 응답은 왔지만 에러가 발생한 경우 { success: false, code: 400 }를 받는다', async () => {
     server.use(
-      http.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group`, () => {
+      http.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/group`, () => {
         return HttpResponse.json(
           { success: false, code: 400 },
           { status: 200 },
@@ -49,7 +50,7 @@ describe('write form 테스트', () => {
     );
 
     const result = await request.post(
-      '/api/group',
+      '/group',
       { 'Content-Type': 'application/json' },
       JSON.stringify(tempBody),
     );
@@ -59,7 +60,7 @@ describe('write form 테스트', () => {
 
   test('group 생성 시 서버 에러가 발생한 경우 Unexpected Error를 받는다', async () => {
     server.use(
-      http.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group`, () => {
+      http.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/group`, () => {
         return HttpResponse.json(
           { message: 'Bad Request' },
           { status: 400 }, // 400 상태코드 -> response.ok === false
@@ -68,7 +69,7 @@ describe('write form 테스트', () => {
     );
 
     const result = request.post(
-      '/api/group',
+      '/group',
       { 'Content-Type': 'application/json' },
       JSON.stringify(tempBody),
     );
