@@ -1,8 +1,8 @@
 'use client';
 
-import { ComponentProps, useEffect, useRef } from 'react';
-import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { Input } from '@/components/ui/input';
+import { useSearchParams } from 'next/navigation';
+import { ComponentProps, useEffect, useState } from 'react';
 
 /**
  * 사용자 이름, 모임 명을 검색하기 위한 컴포넌트
@@ -10,27 +10,32 @@ import { Input } from '@/components/ui/input';
  * @param props 기본 input 요소의 props
  * @returns 검색 인풋 컴포넌트
  */
-export const SearchInput = (props: ComponentProps<'input'>) => {
-  const router = useRouter();
 
-  const pathname = usePathname();
+type SearchInputProps = {
+  setSearchKeyword: (searchKeyword: string) => void;
+  selectSearchKeyword: (searchKeyword: string) => void;
+} & ComponentProps<'input'>;
 
+export const SearchInput = ({
+  setSearchKeyword,
+  selectSearchKeyword,
+  ...props
+}: SearchInputProps) => {
+  const [value, setValue] = useState('');
   const searchParams = useSearchParams();
 
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  // q 쿼리 파라미터가 변경되면, 인풋 요소의 값을 변경한다.
   useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.value = searchParams.get('q') ?? '';
+    const searchKeyword = searchParams.get('search');
+
+    if (searchKeyword) {
+      setSearchKeyword(searchKeyword);
     }
-  }, [searchParams]);
+    // 초기 1회만 실행하도록 deps는 빈배열로 둠
+    // eslint-disable-next-line
+  }, []);
 
   /**
-   * 엔터 키가 눌리면, 쿼리 파라미터가 변경된 페이지로 이동한다.
-   * 
-   * 인풋 요소의 값이 빈 문자열인 경우, q 쿼리 파라미터를 삭제한다.
-   * 인풋 요소의 값이 빈 문자열이 아닌 경우, q 쿼리 파라미터 값을 변경한다.
+   * 엔터 키가 눌리면, 입력값으로 검색되며 쿼리 파라미터가 변경된다(updateQuery)
    *
    * @param e keyDown 이벤트
    */
@@ -38,18 +43,16 @@ export const SearchInput = (props: ComponentProps<'input'>) => {
     if (e.nativeEvent.isComposing) return;
 
     if (e.key === 'Enter') {
-      if (inputRef.current) {
-        const queryParams = new URLSearchParams(searchParams);
-        const q = inputRef.current.value;
-        if (q) {
-          queryParams.set('q', q);
-        } else {
-          queryParams.delete('q');
-        }
-        router.push(`${pathname}?${queryParams.toString()}`);
-      }
+      selectSearchKeyword(value);
     }
   };
 
-  return <Input {...props} onKeyDown={keyDownHandler} ref={inputRef} />;
+  return (
+    <Input
+      {...props}
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+      onKeyDown={keyDownHandler}
+    />
+  );
 };
