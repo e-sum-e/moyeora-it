@@ -4,6 +4,7 @@ import { Filter } from '@/components/molecules/group/filter';
 import { GroupCard } from '@/components/molecules/group/group-card';
 import { SortOrder } from '@/components/molecules/group/sort-order';
 import { TypeTab } from '@/components/molecules/group/type-tab';
+import { SearchInput } from '@/components/molecules/search-input/search-input';
 import { useFetchItems } from '@/hooks/useFetchItems';
 import {
   Group,
@@ -23,6 +24,7 @@ export const GroupList = () => {
   const [selectedPosition, setSelectedPosition] = useState<PositionName>('');
   const [selectedSort, setSelecteSort] = useState<GroupSort>('createdAt');
   const [selectedOrder, setSelectedOrder] = useState<Order>('desc');
+  const [searchKeyword, setSearchKeyword] = useState('');
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -39,13 +41,14 @@ export const GroupList = () => {
   };
 
   const { data } = useFetchItems<Group>({
-    url: '/api/groups',
+    url: '/groups',
     queryParams: {
       type: selectedType !== 'all' ? selectedType : '',
       skill: Skill[selectedSkill as keyof typeof Skill] ?? '',
       position: Position[selectedPosition as keyof typeof Position] ?? '',
       sort: selectedSort,
       order: selectedOrder,
+      search: searchKeyword,
     },
   });
 
@@ -72,6 +75,11 @@ export const GroupList = () => {
   const selectOrder = (currentOrder: Order) => {
     setSelectedOrder(currentOrder);
     updateQuery('order', currentOrder);
+  };
+
+  const selectSearchKeyword = (currentSearchKeyword: string) => {
+    setSearchKeyword(currentSearchKeyword);
+    updateQuery('search', currentSearchKeyword);
   };
 
   useEffect(() => {
@@ -101,6 +109,10 @@ export const GroupList = () => {
         selectedOrder={selectedOrder}
         selectSort={selectSort}
         selectOrder={selectOrder}
+      />
+      <SearchInput
+        setSearchKeyword={setSearchKeyword}
+        selectSearchKeyword={selectSearchKeyword}
       />
       <ul>
         {data.pages
