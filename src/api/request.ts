@@ -49,12 +49,15 @@ export const request = {
     return response.json();
   },
 
-  patch: async (endpoint: string, body: object, id?: string) => {
+  patch: async (
+    endpoint: string,
+    headers: HeadersInit,
+    body: object,
+    id?: string,
+  ) => {
     const response = await fetch(`${baseUrl}${endpoint}${id ? `/${id}` : ''}`, {
       method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify(body),
     });
 
