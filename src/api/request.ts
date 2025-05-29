@@ -9,12 +9,17 @@ const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL; //환경변수로 분리
 export const request = {
   get: async (
     endpoint: string,
-    queryParams?: Record<string, string | number>,
+    queryParams?: Record<string, string | number | Array<string | number>>,
   ) => {
     const queryString = queryParams
       ? '?' +
         Object.entries(queryParams)
-          .map(([key, value]) => `${key}=${value}`)
+          .map(([key, value]) => {
+            if (Array.isArray(value)) {
+              return `${key}=${value.join(',')}`;
+            }
+            return `${key}=${value}`;
+          })
           .join('&')
       : ''; // ?sort=deadline&order=asc
 
