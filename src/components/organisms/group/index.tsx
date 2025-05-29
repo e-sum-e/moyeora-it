@@ -3,13 +3,22 @@
 import { Filter } from '@/components/molecules/group/filter';
 import { GroupCard } from '@/components/molecules/group/group-card';
 import { SortOrder } from '@/components/molecules/group/sort-order';
+import { TypeTab } from '@/components/molecules/group/type-tab';
 import { useFetchItems } from '@/hooks/useFetchItems';
-import { Group, GroupSort, Order, PositionName, SkillName } from '@/types';
+import {
+  Group,
+  GroupSort,
+  GroupType,
+  Order,
+  PositionName,
+  SkillName,
+} from '@/types';
 import { Position, Skill } from '@/types/enums';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export const GroupList = () => {
+  const [selectedType, setSelectedType] = useState<GroupType>(GroupType.ALL);
   const [selectedSkill, setSelectedSkill] = useState<SkillName>('');
   const [selectedPosition, setSelectedPosition] = useState<PositionName>('');
   const [selectedSort, setSelecteSort] = useState<GroupSort>('createdAt');
@@ -32,12 +41,18 @@ export const GroupList = () => {
   const { data } = useFetchItems<Group>({
     url: '/api/groups',
     queryParams: {
+      type: selectedType,
       skill: Skill[selectedSkill as keyof typeof Skill] ?? '',
       position: Position[selectedPosition as keyof typeof Position] ?? '',
       sort: selectedSort,
       order: selectedOrder,
     },
   });
+
+  const selectType = (currentType: GroupType) => {
+    setSelectedType(currentType);
+    updateQuery('type', currentType);
+  };
 
   const selectSkill = (currentSkill: SkillName) => {
     setSelectedSkill(currentSkill);
@@ -79,6 +94,7 @@ export const GroupList = () => {
 
   return (
     <>
+      <TypeTab selectedType={selectedType} selectType={selectType} />
       <Filter selectSkill={selectSkill} selectPosition={selectPosition} />
       <SortOrder
         selectedSort={selectedSort}
