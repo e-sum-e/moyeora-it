@@ -75,7 +75,6 @@ const RegisterForm = () => {
       // TODO: 회원가입 실패시 에러코드 맞춰서 설정해주기
       setIsRegisterFailed(true);
       console.log(e);
-    } finally {
       setDisabled(false);
     }
   };

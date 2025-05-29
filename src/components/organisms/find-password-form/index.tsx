@@ -55,7 +55,6 @@ const FindPassword = () => {
       // TODO: 이메일 찾기 실패시 에러코드 맞춰서 설정해주기
       setIsNotExisted(true);
       console.log(e);
-    } finally {
       setDisabled(false);
     }
   };
