@@ -1,10 +1,27 @@
+import { request } from '@/api/request';
+import { ParticipantListModal } from '@/components/organisms/participant-list-modal';
 import { ReplyList } from '@/components/organisms/reply/reply-list';
+import { Group, UserSummary } from '@/types';
 
-export default function GroupDetailPage() {
+type GroupDetailPageProps = {
+  params: Promise<{ groupId: string }>;
+};
+
+type GroupDetail = Group & {
+  host: UserSummary;
+  isApplicant: boolean;
+};
+
+export default async function GroupDetailPage({
+  params,
+}: GroupDetailPageProps) {
+  const groupId = (await params).groupId;
+  const data = (await request.get(`/groups/${groupId}`)) as GroupDetail;
+  const participants = data.participants;
+
   return (
     <div>
-      <div>{/* 모임 기본 정보 */}</div>
-      <div>{/* 마크다운으로 된 설명문 */}</div>
+      <ParticipantListModal participants={participants} />
       <ReplyList />
     </div>
   );

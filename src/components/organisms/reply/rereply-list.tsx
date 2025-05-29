@@ -1,54 +1,46 @@
 'use client';
 
-import { ReplyContent } from '@/components/molecules/reply/reply-content';
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
+import { useReplyScrollIntoView } from '@/hooks/useReplyScrollIntoView';
 import { Reply } from '@/types';
 import { useParams } from 'next/navigation';
-import { useEffect, useRef } from 'react';
+import { RereplyItem } from './rereply-item';
 
 type RereplyListProps = {
   parentReplyId: number;
-  newReplyId: number | null;
-  setNewReplyId: (id: number | null) => void;
+  targetReplyId: number | null;
+  setTargetReplyId: (id: number | null) => void;
 };
 
 export const RereplyList = ({
-  newReplyId,
+  targetReplyId,
   parentReplyId,
-  setNewReplyId,
+  setTargetReplyId,
 }: RereplyListProps) => {
-  const bottomRef = useRef<HTMLDivElement | null>(null);
   const { groupId } = useParams();
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useFetchItems<Reply & { parentId: number }>({
       url: `/groups/${groupId}/replies/${parentReplyId}`,
       queryParams: {
         size: 10,
       },
+      options: {
+        staleTime: 0,
+      },
     });
 
   const { ref } = useFetchInView({
     fetchNextPage,
+    isLoading,
   });
 
-  // 스크롤 이동
-  useEffect(() => {
-    if (newReplyId) {
-      const element = document.getElementById(`reply-${newReplyId}`);
-
-      if (element) {
-        element.scrollIntoView({ behavior: 'instant', block: 'center' });
-        setNewReplyId(null);
-      } else {
-        // 찾을 수 없으면 제일 아래로
-        bottomRef.current?.scrollIntoView({
-          behavior: 'instant',
-          block: 'end',
-        });
-      }
-    }
-  }, [data, newReplyId, setNewReplyId]);
+  const { itemRefs: rereplyRefs, bottomRef } = useReplyScrollIntoView({
+    data,
+    targetReplyId,
+    setTargetReplyId,
+    hasNextPage,
+  });
 
   const rereplies = data.pages.flatMap((page) => page.items);
 
@@ -56,9 +48,13 @@ export const RereplyList = ({
     <div>
       <ul className="flex flex-col gap-5">
         {rereplies.map((rereply) => (
-          <li key={rereply.replyId}>
-            <ReplyContent {...rereply} />
-          </li>
+          <RereplyItem
+            key={rereply.replyId}
+            ref={(el) => {
+              rereplyRefs.current[rereply.replyId] = el;
+            }}
+            {...rereply}
+          />
         ))}
       </ul>
       <div ref={bottomRef} />

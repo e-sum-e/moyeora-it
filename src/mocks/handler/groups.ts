@@ -118,43 +118,64 @@ export const groupsHandlers = [
       });
     },
   ),
-
   http.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group`, () => {
     return HttpResponse.json({
       success: true,
     });
   }),
-
-  http.get(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/groups/:groupId`,
-    () => {
-      return HttpResponse.json({
-        title: '스터디1',
-        deadline: '2025-05-24',
-        startDate: '2025-05-20',
-        endDate: '2025-05-24',
-        maxParticipants: 10,
-        description: '스터디1 설명',
-        position: [1, 3],
-        skills: [1, 2],
-        createdAt: '2025-05-20',
-        type: 'study',
-        autoAllow: true,
-        host: {
-          id: 'abcd123',
-          name: '사용자1',
-          profileImage: 'https://github.com/shadcn.png',
+  http.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/groups/:groupId`, () => {
+    return HttpResponse.json({
+      title: '스터디1',
+      deadline: '2025-05-24',
+      startDate: '2025-05-20',
+      endDate: '2025-05-24',
+      maxParticipants: 10,
+      description: '스터디1 설명',
+      position: [1, 3],
+      skills: [1, 2],
+      createdAt: '2025-05-20',
+      type: 'study',
+      autoAllow: true,
+      host: {
+        userId: 'abcd123',
+        nickname: '사용자1',
+        profileImage: 'https://github.com/shadcn.png',
+        email: "qwerty@gmail.com",
+      },
+      isApplicant: false,
+      participants: [
+        {
+          userId: 'abcd1',
+          nickname: '팀원1',
+          profileImage: null,
+          email: 'member1@gmail.com',
         },
-        isApplicant: false,
-        participants: [
-          {
-            id: 'abcd123',
-            name: '팀원1',
-            profileImage: 'https://github.com/shadcn.png',
-          },
-          // 반복된 팀원 정보...
-        ],
-      });
-    },
-  ),
+        {
+          userId: 'abcd12',
+          nickname: null,
+          profileImage: 'https://github.com/shadcn.png',
+          email: 'member2@gmail.com',
+        },
+        {
+          userId: 'abcd123',
+          nickname: '팀원3',
+          profileImage: 'https://github.com/shadcn.png',
+          email: 'member3@gmail.com',
+        },
+        {
+          userId: 'abcd1234',
+          nickname: '팀원4',
+          profileImage: 'https://github.com/shadcn.png',
+          email: 'member4@gmail.com',
+        },
+        {
+          userId: 'abcd1235',
+          nickname: null,
+          profileImage: 'https://github.com/shadcn.png',
+          email: 'member5@naver.com',
+        },
+      ],
+    });
+  }),
 ];
+

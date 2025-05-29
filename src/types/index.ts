@@ -13,6 +13,11 @@ export type User = {
   rate: number;
 };
 
+export type UserSummary = Pick<
+  User,
+  'userId' | 'nickname' | 'profileImage' | 'email'
+>;
+
 export enum GroupType {
   STUDY = 'study',
   PROJECT = 'project',
@@ -74,7 +79,7 @@ export type Group = {
   endDate: Date; // 모임의 종료일
   participants: Pick<User, 'userId' | 'nickname' | 'profileImage'>[];
   maxParticipants: number;
-  participants:Pick<User, "id" | "nickname" | "profileImage">[];
+  participants: UserSummary[];
   description: string;
   position: Position[];
   skills: Skill[];
@@ -100,7 +105,7 @@ export type Notification = {
 export type Reply = {
   replyId: number;
   content: string;
-  writer: Pick<User, 'userId' | 'nickname' | 'profileImage'>;
+  writer: UserSummary;
   createdAt: string;
-  isDeleted?: boolean;
+  isDeleted?: boolean; // 삭제된 댓글인지 여부
 };
