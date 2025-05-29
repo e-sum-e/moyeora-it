@@ -28,6 +28,9 @@ export const groupsHandlers = [
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/groups`,
     ({ request }) => {
       const url = new URL(request.url); // 요청 url에서 parameter를 뽑아내기 위해 url 전체가 필요
+
+      const typeParam = url.searchParams.get('type');
+
       const skillParam = url.searchParams.get('skill');
       const skillNumber = skillParam ? Number(skillParam) : null; // skillParam이 있을 경우 서버에 enum 숫자 값으로 보내기 위해 숫자로 변환
 
@@ -90,10 +93,15 @@ export const groupsHandlers = [
         };
       });
 
+      const typeFiltered =
+        typeParam && typeParam !== ''
+          ? items.filter((item) => item.type === typeParam)
+          : items;
+
       const skillFiltered =
         skillNumber !== null
-          ? items.filter((item) => item.skills.includes(skillNumber))
-          : items;
+          ? typeFiltered.filter((item) => item.skills.includes(skillNumber))
+          : typeFiltered;
 
       const positionFiltered =
         positionNumber !== null
