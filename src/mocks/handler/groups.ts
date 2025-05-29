@@ -56,7 +56,7 @@ export const groupsHandlers = [
           Math.floor(Math.random() * 3) + 1,
         ).map((key) => Skill[key]);
 
-        const type = getRandomItem(groupTypeValues);
+        const type = getRandomItem(groupTypeValues.slice(0, 2)); // 만들어진 그룹은 study | project이다
 
         const maxParticipants = Math.floor(Math.random() * (30 - 2 + 1)) + 2;
 
