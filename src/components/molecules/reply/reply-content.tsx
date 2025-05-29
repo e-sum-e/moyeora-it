@@ -29,11 +29,11 @@ export const ReplyContent = ({
   const { mutate: updateReply } = useMutation({
     mutationFn: async (enteredContent: string) =>
       request.patch(
-        `/groups/${groupId}/replies`,
+        `/groups/${groupId}/replies/${replyId.toString()}`,
+        { 'Content-Type': 'application/json' },
         {
           content: enteredContent,
         },
-        replyId.toString(),
       ),
     onSuccess: () => {
       setIsEditing(false);
@@ -45,7 +45,7 @@ export const ReplyContent = ({
 
   const { mutate: deleteReply } = useMutation({
     mutationFn: async () =>
-      request.delete(`/groups/${groupId}/replies`, replyId.toString()),
+      request.delete(`/groups/${groupId}/replies/${replyId.toString()}`),
     onSuccess: () => {
       // 서버에서 삭제 요청이 성공하면 UI에서도 반영
       onDelete?.();
