@@ -31,13 +31,8 @@ export const request = {
     return response.json();
   },
 
-  post: async (
-    endpoint: string,
-    headers: HeadersInit,
-    body: BodyInit,
-    id?: string,
-  ) => {
-    const response = await fetch(`${baseUrl}${endpoint}${id ? `/${id}` : ''}`, {
+  post: async (endpoint: string, headers: HeadersInit, body: BodyInit) => {
+    const response = await fetch(`${baseUrl}${endpoint}`, {
       method: 'POST',
       headers,
       body,
@@ -49,13 +44,8 @@ export const request = {
     return response.json();
   },
 
-  patch: async (
-    endpoint: string,
-    headers: HeadersInit,
-    body: object,
-    id?: string,
-  ) => {
-    const response = await fetch(`${baseUrl}${endpoint}${id ? `/${id}` : ''}`, {
+  patch: async (endpoint: string, headers: HeadersInit, body: object) => {
+    const response = await fetch(`${baseUrl}${endpoint}`, {
       method: 'PATCH',
       headers,
       body: JSON.stringify(body),
@@ -67,8 +57,8 @@ export const request = {
     return response.json();
   },
 
-  delete: async (endpoint: string, id?: string) => {
-    const response = await fetch(`${baseUrl}${endpoint}${id ? `/${id}` : ''}`, {
+  delete: async (endpoint: string) => {
+    const response = await fetch(`${baseUrl}${endpoint}`, {
       method: 'DELETE',
     });
 
