@@ -50,7 +50,7 @@ export const request = {
   },
 
   patch: async (endpoint: string, body: object, id?: string) => {
-    const response = await fetch(`${baseUrl}${endpoint}/${id}`, {
+    const response = await fetch(`${baseUrl}${endpoint}${id ? `/${id}` : ''}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ export const request = {
   },
 
   delete: async (endpoint: string, id?: string) => {
-    const response = await fetch(`${baseUrl}${endpoint}/${id}`, {
+    const response = await fetch(`${baseUrl}${endpoint}${id ? `/${id}` : ''}`, {
       method: 'DELETE',
     });
 
