@@ -16,7 +16,7 @@ import {
 } from '@/types';
 import { Position, Skill } from '@/types/enums';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 export const GroupList = () => {
   const searchParams = useSearchParams();
@@ -47,7 +47,6 @@ export const GroupList = () => {
   const [selectedOrder, setSelectedOrder] = useState<Order>(
     initialParams.order,
   );
-  const [searchKeyword, setSearchKeyword] = useState(initialParams.search);
 
   const router = useRouter();
 
@@ -71,7 +70,7 @@ export const GroupList = () => {
       position: Position[selectedPosition as keyof typeof Position] ?? '',
       sort: selectedSort,
       order: selectedOrder,
-      search: searchKeyword,
+      search: searchParams.get('search') ?? '',
     },
   });
 
@@ -100,29 +99,6 @@ export const GroupList = () => {
     updateQuery('order', currentOrder);
   };
 
-  const selectSearchKeyword = (currentSearchKeyword: string) => {
-    setSearchKeyword(currentSearchKeyword);
-    updateQuery('search', currentSearchKeyword);
-  };
-
-  useEffect(() => {
-    const skill = searchParams.get('skill') as SkillName;
-    const position = searchParams.get('position') as PositionName;
-    const sort = searchParams.get('sort') as GroupSort;
-    const order = searchParams.get('order') as Order;
-
-    if (skill) setSelectedSkill(skill);
-    if (position) setSelectedPosition(position);
-    if (sort) setSelecteSort(sort);
-    if (order) setSelectedOrder(order);
-
-    /**
-     * 초기 1회만 실행하도록 deps는 빈배열로 둠
-     * - searchParams를 deps에 추가할 시 router.push()로 인해 url이 변경되면 searchParams가 또 변경되어 useEffect()가 실행되는데 다른 searchParams를 선택할 경우 코드 흐름이 꼬일 수 있음
-     *  */
-    // eslint-disable-next-line
-  }, []);
-
   return (
     <>
       <TypeTab selectedType={selectedType} selectType={selectType} />
@@ -133,10 +109,7 @@ export const GroupList = () => {
         selectSort={selectSort}
         selectOrder={selectOrder}
       />
-      <SearchInput
-        setSearchKeyword={setSearchKeyword}
-        selectSearchKeyword={selectSearchKeyword}
-      />
+      <SearchInput />
       <ul>
         {data.pages
           .flatMap((page) => page.items)
