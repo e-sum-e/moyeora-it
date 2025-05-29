@@ -2,9 +2,9 @@
 
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
+import { useReplyScrollIntoView } from '@/hooks/useReplyScrollIntoView';
 import { Reply } from '@/types';
 import { useParams } from 'next/navigation';
-import { useEffect, useRef } from 'react';
 import { RereplyItem } from './rereply-item';
 
 type RereplyListProps = {
@@ -18,8 +18,6 @@ export const RereplyList = ({
   parentReplyId,
   setTargetReplyId,
 }: RereplyListProps) => {
-  const rereplyRefs = useRef<Record<number, HTMLLIElement | null>>({});
-  const bottomRef = useRef<HTMLDivElement | null>(null);
   const { groupId } = useParams();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useFetchItems<Reply & { parentId: number }>({
@@ -37,28 +35,12 @@ export const RereplyList = ({
     isLoading,
   });
 
-  // 스크롤 이동
-  useEffect(() => {
-    if (targetReplyId === null) return;
-
-    const targetElement = rereplyRefs.current[targetReplyId];
-
-    if (targetElement) {
-      targetElement.scrollIntoView({
-        behavior: 'instant',
-        block: 'center',
-      });
-      setTargetReplyId(null);
-    } else {
-      // 찾을 수 없으면 제일 아래로
-      bottomRef.current?.scrollIntoView({
-        behavior: 'instant',
-        block: 'end',
-      });
-    }
-
-    if (!hasNextPage) setTargetReplyId(null);
-  }, [data, targetReplyId, setTargetReplyId, hasNextPage]);
+  const { itemRefs: rereplyRefs, bottomRef } = useReplyScrollIntoView({
+    data,
+    targetReplyId,
+    setTargetReplyId,
+    hasNextPage,
+  });
 
   const rereplies = data.pages.flatMap((page) => page.items);
 
