@@ -1,18 +1,14 @@
-'use client';
-
 import { ReplyContent } from '@/components/molecules/reply/reply-content';
-import { RereplyFormToggle } from '@/components/molecules/reply/rereply-form-toggle';
-import { RereplyList } from '@/components/organisms/reply/rereply-list';
 import { Reply } from '@/types';
-import { useState } from 'react';
+import { ReplyThread } from './reply-thread';
 
-export const ReplyItem = ({ content, writer, createdAt, replyId }: Reply) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-
-  const rereplyToggleButtonClickHandler = () => {
-    setIsOpen((prev) => !prev);
-  };
-
+export const ReplyItem = ({
+  content,
+  writer,
+  createdAt,
+  replyId,
+  isDeleted,
+}: Reply) => {
   return (
     <li className="space-y-2">
       <ReplyContent
@@ -20,20 +16,9 @@ export const ReplyItem = ({ content, writer, createdAt, replyId }: Reply) => {
         writer={writer}
         createdAt={createdAt}
         replyId={replyId}
+        isDeleted={isDeleted}
       />
-      <div className="p-2 rounded">
-        <div className="flex justify-between mb-2">
-          <div>대댓글</div>
-          <button
-            onClick={rereplyToggleButtonClickHandler}
-            data-role="rereply-toggle"
-          >
-            {isOpen ? '접기' : '펼치기'}
-          </button>
-        </div>
-        {isOpen && <RereplyList parentReplyId={replyId} />}
-      </div>
-      <RereplyFormToggle parentReplyId={replyId} />
+      <ReplyThread replyId={replyId} />
     </li>
   );
 };

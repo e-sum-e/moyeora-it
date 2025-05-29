@@ -12,7 +12,7 @@ export const ReplyList = () => {
   const { groupId } = useParams();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useFetchItems<Reply>({
-      url: `/api/groups/${groupId}/replies`,
+      url: `/groups/${groupId}/replies`,
       queryParams: {
         size: 10,
       },
@@ -39,7 +39,7 @@ export const ReplyList = () => {
       // 찾을 수 없으면 제일 아래로
       bottomRef.current?.scrollIntoView({
         behavior: 'instant',
-        block: 'start',
+        block: 'end',
       });
     }
   }, [data, newReplyId]);
@@ -53,15 +53,18 @@ export const ReplyList = () => {
       <ReplyForm onSuccess={replyFormSuccessHandler} />
       <div>
         <ul>
-          {allReplies.map(({ replyId, writer, content, createdAt }) => (
-            <ReplyItem
-              key={replyId}
-              writer={writer}
-              content={content}
-              createdAt={createdAt}
-              replyId={replyId}
-            />
-          ))}
+          {allReplies.map(
+            ({ replyId, writer, content, createdAt, isDeleted }) => (
+              <ReplyItem
+                key={replyId + content.slice(0, 3)}
+                writer={writer}
+                content={content}
+                createdAt={createdAt}
+                replyId={replyId}
+                isDeleted={isDeleted}
+              />
+            ),
+          )}
         </ul>
         <div ref={bottomRef} id="reply-list-bottom" />
         {hasNextPage && !isFetchingNextPage && (
