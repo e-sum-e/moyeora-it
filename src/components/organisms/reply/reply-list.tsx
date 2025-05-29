@@ -31,22 +31,26 @@ export const ReplyList = () => {
   const { targetId } = useReplyScrollParams('reply');
   const [targetReplyId, setTargetReplyId] = useState<number | null>(targetId);
   const bottomRef = useRef<HTMLDivElement | null>(null);
+  const replyRefs = useRef<Record<number, HTMLLIElement | null>>({});
 
   // 스크롤 이동
   useEffect(() => {
-    if (targetReplyId) {
-      const element = document.getElementById(`reply-${targetReplyId}`);
+    if (targetReplyId === null) return;
 
-      if (element) {
-        element.scrollIntoView({ behavior: 'instant', block: 'center' });
-        setTargetReplyId(null);
-      } else {
-        // 찾을 수 없으면 제일 아래로
-        bottomRef.current?.scrollIntoView({
-          behavior: 'instant',
-          block: 'end',
-        });
-      }
+    const targetElement = replyRefs.current[targetReplyId];
+
+    if (targetElement) {
+      targetElement.scrollIntoView({
+        behavior: 'instant',
+        block: 'center',
+      });
+      setTargetReplyId(null);
+    } else {
+      // 찾을 수 없으면 제일 아래로
+      bottomRef.current?.scrollIntoView({
+        behavior: 'instant',
+        block: 'end',
+      });
     }
   }, [data, targetReplyId]);
 
@@ -59,18 +63,17 @@ export const ReplyList = () => {
       <ReplyForm onSuccess={replyFormSuccessHandler} />
       <div>
         <ul>
-          {allReplies.map(
-            ({ replyId, writer, content, createdAt, isDeleted }) => (
-              <ReplyItem
-                key={replyId + content.slice(0, 3)}
-                writer={writer}
-                content={content}
-                createdAt={createdAt}
-                replyId={replyId}
-                isDeleted={isDeleted}
-              />
-            ),
-          )}
+          {allReplies.map((reply) => (
+            <li
+              key={reply.replyId}
+              ref={(el) => {
+                replyRefs.current[reply.replyId] = el;
+              }}
+              className="space-y-2"
+            >
+              <ReplyItem {...reply} />
+            </li>
+          ))}
         </ul>
         <div ref={bottomRef} id="reply-list-bottom" />
         {hasNextPage && !isFetchingNextPage && (

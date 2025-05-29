@@ -79,7 +79,7 @@ export const ReplyContent = ({
   };
 
   return (
-    <div id={`reply-${replyId}`}>
+    <div>
       <header className="flex justify-between items-start">
         <ReplyMeta writer={writer} createdAt={createdAt} />
         {isWriter && !isDeleted && (

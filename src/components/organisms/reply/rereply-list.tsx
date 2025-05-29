@@ -18,6 +18,7 @@ export const RereplyList = ({
   parentReplyId,
   setTargetReplyId,
 }: RereplyListProps) => {
+  const rereplyRefs = useRef<Record<number, HTMLLIElement | null>>({});
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const { groupId } = useParams();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
@@ -40,10 +41,13 @@ export const RereplyList = ({
   useEffect(() => {
     if (targetReplyId === null) return;
 
-    const element = document.getElementById(`reply-${targetReplyId}`);
+    const targetElement = rereplyRefs.current[targetReplyId];
 
-    if (element) {
-      element.scrollIntoView({ behavior: 'instant', block: 'center' });
+    if (targetElement) {
+      targetElement.scrollIntoView({
+        behavior: 'instant',
+        block: 'center',
+      });
       setTargetReplyId(null);
     } else {
       // 찾을 수 없으면 제일 아래로
@@ -56,14 +60,18 @@ export const RereplyList = ({
     if (!hasNextPage) setTargetReplyId(null);
   }, [data, targetReplyId, setTargetReplyId, hasNextPage]);
 
-
   const rereplies = data.pages.flatMap((page) => page.items);
 
   return (
     <div>
       <ul className="flex flex-col gap-5">
         {rereplies.map((rereply) => (
-          <li key={rereply.replyId}>
+          <li
+            key={rereply.replyId}
+            ref={(el) => {
+              rereplyRefs.current[rereply.replyId] = el;
+            }}
+          >
             <ReplyContent {...rereply} />
           </li>
         ))}
