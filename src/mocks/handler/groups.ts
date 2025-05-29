@@ -66,6 +66,7 @@ export const groupsHandlers = [
             userId: '1',
             nickname: '모여라잇유저',
             profileImage: null,
+            email: 'user@gmail.com',
           }),
         );
 
@@ -130,7 +131,8 @@ export const groupsHandlers = [
       startDate: '2025-05-20',
       endDate: '2025-05-24',
       maxParticipants: 10,
-      description: '스터디1 설명',
+      description:
+        '<h1 class="text-xl font-bold capitalize text-green-700" levels="2">Next.js 스터디</h1><ul class="list-disc ml-2"><li><p>온라인으로 진행</p></li><li><p>오후 7시</p></li></ul><p></p><p>—완료—</p><h2 class="text-xl font-bold capitalize" levels="2"></h2>',
       position: [1, 3],
       skills: [1, 2],
       createdAt: '2025-05-20',
@@ -140,7 +142,7 @@ export const groupsHandlers = [
         userId: 'abcd123',
         nickname: '사용자1',
         profileImage: 'https://github.com/shadcn.png',
-        email: "qwerty@gmail.com",
+        email: 'qwerty@gmail.com',
       },
       isApplicant: false,
       participants: [
@@ -178,4 +180,3 @@ export const groupsHandlers = [
     });
   }),
 ];
-
