@@ -5,7 +5,7 @@ import { Position, Skill } from '@/types/enums';
 let user: User = {
   userId: 'my-id',
   email: 'me@example.com',
-  nickname: 'fistname',
+  nickname: null,
   position: null,
   skills: null,
   profileImage: null,
@@ -62,6 +62,20 @@ export const authenticationsHandlers = [
   http.post('http://localhost:4000/api/find-password', () => {
     return HttpResponse.json({
       success: true,
+    });
+  }),
+  http.post('http://localhost:4000/api/logout', () => {
+    return new HttpResponse(JSON.stringify({ success: true }), {
+      headers: new Headers([
+        [
+          'Set-Cookie',
+          'accessToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
+        ],
+        [
+          'Set-Cookie',
+          'refreshToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
+        ],
+      ]),
     });
   }),
 ];
