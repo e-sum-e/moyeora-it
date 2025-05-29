@@ -66,10 +66,10 @@ export const ReplyList = () => {
           {allReplies.map((reply) => (
             <li
               key={reply.replyId}
+              className="space-y-2"
               ref={(el) => {
                 replyRefs.current[reply.replyId] = el;
               }}
-              className="space-y-2"
             >
               <ReplyItem {...reply} />
             </li>

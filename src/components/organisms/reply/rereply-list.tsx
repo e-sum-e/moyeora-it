@@ -1,11 +1,11 @@
 'use client';
 
-import { ReplyContent } from '@/components/molecules/reply/reply-content';
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
 import { Reply } from '@/types';
 import { useParams } from 'next/navigation';
 import { useEffect, useRef } from 'react';
+import { RereplyItem } from './rereply-item';
 
 type RereplyListProps = {
   parentReplyId: number;
@@ -66,14 +66,13 @@ export const RereplyList = ({
     <div>
       <ul className="flex flex-col gap-5">
         {rereplies.map((rereply) => (
-          <li
+          <RereplyItem
             key={rereply.replyId}
             ref={(el) => {
               rereplyRefs.current[rereply.replyId] = el;
             }}
-          >
-            <ReplyContent {...rereply} />
-          </li>
+            {...rereply}
+          />
         ))}
       </ul>
       <div ref={bottomRef} />
