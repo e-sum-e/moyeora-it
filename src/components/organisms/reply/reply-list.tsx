@@ -45,7 +45,7 @@ export const ReplyList = () => {
   const replies = data.pages.flatMap((page) => page.items);
 
   return (
-    <section className="w-4/5 mx-auto flex flex-col gap-10">
+    <section>
       <ReplyForm onSuccess={replyFormSuccessHandler} />
       <div>
         <ul>
