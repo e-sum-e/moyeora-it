@@ -16,36 +16,25 @@ import {
 } from '@/types';
 import { Position, Skill } from '@/types/enums';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 export const GroupList = () => {
   const searchParams = useSearchParams();
 
-  const initialParams = useMemo(() => {
-    return {
-      type: (searchParams.get('type') ?? 'all') as GroupType,
-      skill: (searchParams.get('skill') ?? '') as SkillName,
-      position: (searchParams.get('position') ?? '') as PositionName,
-      sort: (searchParams.get('sort') ?? 'createdAt') as GroupSort,
-      order: (searchParams.get('order') ?? 'desc') as Order,
-      search: (searchParams.get('search') ?? '') as string,
-    };
-  }, [searchParams]);
-
   const [selectedType, setSelectedType] = useState<GroupType>(
-    initialParams.type,
+    (searchParams.get('type') ?? 'all') as GroupType,
   );
   const [selectedSkill, setSelectedSkill] = useState<SkillName>(
-    initialParams.skill,
+    (searchParams.get('skill') ?? '') as SkillName,
   );
   const [selectedPosition, setSelectedPosition] = useState<PositionName>(
-    initialParams.position,
+    (searchParams.get('position') ?? '') as PositionName,
   );
   const [selectedSort, setSelecteSort] = useState<GroupSort>(
-    initialParams.sort,
+    (searchParams.get('sort') ?? 'createdAt') as GroupSort,
   );
   const [selectedOrder, setSelectedOrder] = useState<Order>(
-    initialParams.order,
+    (searchParams.get('order') ?? 'desc') as Order,
   );
 
   const router = useRouter();
