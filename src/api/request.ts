@@ -9,12 +9,17 @@ const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL; //환경변수로 분리
 export const request = {
   get: async (
     endpoint: string,
-    queryParams?: Record<string, string | number>,
+    queryParams?: Record<string, string | number | Array<string | number>>,
   ) => {
     const queryString = queryParams
       ? '?' +
         Object.entries(queryParams)
-          .map(([key, value]) => `${key}=${value}`)
+          .map(([key, value]) => {
+            if (Array.isArray(value)) {
+              return `${key}=${value.join(',')}`;
+            }
+            return `${key}=${value}`;
+          })
           .join('&')
       : ''; // ?sort=deadline&order=asc
 
@@ -26,13 +31,8 @@ export const request = {
     return response.json();
   },
 
-  post: async (
-    endpoint: string,
-    headers: HeadersInit,
-    body: BodyInit,
-    id?: string,
-  ) => {
-    const response = await fetch(`${baseUrl}${endpoint}${id ? `/${id}` : ''}`, {
+  post: async (endpoint: string, headers: HeadersInit, body: BodyInit) => {
+    const response = await fetch(`${baseUrl}${endpoint}`, {
       method: 'POST',
       headers,
       body,
@@ -44,12 +44,10 @@ export const request = {
     return response.json();
   },
 
-  patch: async (endpoint: string, body: object, id?: string) => {
-    const response = await fetch(`${baseUrl}${endpoint}/${id}`, {
+  patch: async (endpoint: string, headers: HeadersInit, body: object) => {
+    const response = await fetch(`${baseUrl}${endpoint}`, {
       method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify(body),
     });
 
@@ -59,8 +57,8 @@ export const request = {
     return response.json();
   },
 
-  delete: async (endpoint: string, id?: string) => {
-    const response = await fetch(`${baseUrl}${endpoint}/${id}`, {
+  delete: async (endpoint: string) => {
+    const response = await fetch(`${baseUrl}${endpoint}`, {
       method: 'DELETE',
     });
 
