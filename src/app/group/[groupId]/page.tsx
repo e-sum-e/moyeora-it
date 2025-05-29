@@ -1,4 +1,5 @@
 import { request } from '@/api/request';
+import { GroupDescription } from '@/components/atoms/group-description';
 import { ParticipantListModal } from '@/components/organisms/participant-list-modal';
 import { ReplyList } from '@/components/organisms/reply/reply-list';
 import { Group, UserSummary } from '@/types';
@@ -17,10 +18,11 @@ export default async function GroupDetailPage({
 }: GroupDetailPageProps) {
   const groupId = (await params).groupId;
   const data = (await request.get(`/groups/${groupId}`)) as GroupDetail;
-  const participants = data.participants;
+  const { participants, description } = data;
 
   return (
     <div>
+      <GroupDescription description={description} />
       <ParticipantListModal participants={participants} />
       <ReplyList />
     </div>
