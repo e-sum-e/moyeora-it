@@ -17,6 +17,7 @@ const formSchema = z.object({
 });
 
 const FindEmailForm = () => {
+  const [disabled, setDisabled] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -31,6 +32,7 @@ const FindEmailForm = () => {
   // 이메일 찾기
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      setDisabled(true);
       // find-email인 경우
       // TODO: 이메일 찾기 로직 작성 /find-email
       const { success } = await request.post(
@@ -52,6 +54,8 @@ const FindEmailForm = () => {
       // TODO: 이메일 찾기 실패시 에러코드 맞춰서 설정해주기
       setIsNotExisted(true);
       console.log(e);
+    } finally {
+      setDisabled(false);
     }
   };
 
@@ -78,7 +82,7 @@ const FindEmailForm = () => {
         {isNotExisted && (
           <p className="text-red-600">해당 이메일이 존재하지 않습니다</p>
         )}
-        <Button>이메일 찾기</Button>
+        <Button disabled={disabled}>이메일 찾기</Button>
       </form>
     </Form>
   );

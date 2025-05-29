@@ -38,6 +38,7 @@ const registerFormSchema = z
   });
 
 const RegisterForm = () => {
+  const [disabled, setDisabled] = useState(false);
   const [isRegisterFailed, setIsRegisterFailed] = useState(false);
 
   const registerForm = useForm<z.infer<typeof registerFormSchema>>({
@@ -56,6 +57,7 @@ const RegisterForm = () => {
     values: z.infer<typeof registerFormSchema>,
   ) => {
     try {
+      setDisabled(true);
       // TODO: 회원가입 로직 작성 /register
       // 에러처리 별도로 해줘야 할 수도 있음
       await request.post(
@@ -73,6 +75,8 @@ const RegisterForm = () => {
       // TODO: 회원가입 실패시 에러코드 맞춰서 설정해주기
       setIsRegisterFailed(true);
       console.log(e);
+    } finally {
+      setDisabled(false);
     }
   };
 
@@ -109,7 +113,9 @@ const RegisterForm = () => {
         {isRegisterFailed && (
           <p className="text-red-600">회원가입에 실패했습니다</p>
         )}
-        <Button type="submit">회원가입</Button>
+        <Button disabled={disabled} type="submit">
+          회원가입
+        </Button>
       </form>
     </Form>
   );

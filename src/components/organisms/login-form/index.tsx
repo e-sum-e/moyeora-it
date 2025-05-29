@@ -20,6 +20,7 @@ const formSchema = z.object({
 });
 
 const LoginForm = () => {
+  const [disabled, setDisabled] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -34,6 +35,7 @@ const LoginForm = () => {
   // 로그인
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      setDisabled(true);
       // TODO: 로그인 로직 작성 /login
       await request.post(
         '/login',
@@ -55,6 +57,8 @@ const LoginForm = () => {
       // TODO: 로그인 실패시 에러코드 맞춰서 설정해주기
       setIsLoginFailed(true);
       console.log(e);
+    } finally {
+      setDisabled(false);
     }
   };
 
@@ -77,7 +81,7 @@ const LoginForm = () => {
         />
 
         {isLoginFailed && <p className="text-red-600">로그인에 실패했습니다</p>}
-        <Button>로그인</Button>
+        <Button disabled={disabled}>로그인</Button>
       </form>
     </Form>
   );

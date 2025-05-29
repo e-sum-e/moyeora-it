@@ -13,6 +13,7 @@ import useAuthStore from '@/stores/useAuthStore';
 import { useRouter } from 'next/navigation';
 import { request } from '@/api/request';
 import { User } from '@/types';
+import { useState } from 'react';
 
 const positions = Object.keys(Position).filter((k) => isNaN(Number(k))) as [
   string,
@@ -41,6 +42,7 @@ const optionalFormSchema = z.object({
 });
 
 const RegisterOptionalForm = () => {
+  const [disabled, setDisabled] = useState(false);
   const optionalForm = useForm<z.infer<typeof optionalFormSchema>>({
     resolver: zodResolver(optionalFormSchema),
     defaultValues: {
@@ -59,6 +61,7 @@ const RegisterOptionalForm = () => {
     values: z.infer<typeof optionalFormSchema>,
   ) => {
     try {
+      setDisabled(true);
       //  TODO: 프로필 옵션 설정
       await request.post(
         '/me',
@@ -79,6 +82,8 @@ const RegisterOptionalForm = () => {
     } catch (e) {
       // TODO: 프로필 에러 설정 //
       console.log(e);
+    } finally {
+      setDisabled(false);
     }
   };
   return (
@@ -108,7 +113,7 @@ const RegisterOptionalForm = () => {
           label="기술 스택"
           options={skills}
         />
-        <Button>프로필 설정하기</Button>
+        <Button disabled={disabled}>프로필 설정하기</Button>
       </form>
     </Form>
   );
