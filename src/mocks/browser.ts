@@ -5,7 +5,7 @@ import { followingsHandlers } from './handler/followings';
 import { authenticationsHandlers } from './handler/authentications';
 import { repliesHandlers } from './handler/replies';
 import { ratingHandlers } from './handler/rating';
-
+import { userHandlers } from './handler/user';
 
 export const worker = setupWorker(
   ...groupsHandlers,
@@ -14,4 +14,5 @@ export const worker = setupWorker(
   ...authenticationsHandlers,
   ...repliesHandlers,
   ...ratingHandlers,
+  ...userHandlers,
 );

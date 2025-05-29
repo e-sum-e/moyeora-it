@@ -9,12 +9,12 @@ export const NotificationItem = ({
   notification: Notification;
   onClose?: () => void;
 }) => {
-  const { setReadNotifications } = useNotificationStore();
+  const { setReadNotification } = useNotificationStore();
   const router = useRouter();
 
   const handleClick = () => {
     // 읽음 처리
-    setReadNotifications(notification.id);
+    setReadNotification(notification.id);
     
     // URL이 있는 경우 해당 페이지로 이동
     if (notification.url) {

@@ -6,15 +6,18 @@ import { ReplyForm } from './reply-form';
 
 type RereplyFormToggleProps = {
   parentReplyId: number;
+  onSuccess: (newReplyId: number) => void;
 };
 
 export const RereplyFormToggle = ({
   parentReplyId,
+  onSuccess,
 }: RereplyFormToggleProps) => {
   const [isWriting, setIsWriting] = useState<boolean>(false);
 
-  const rereplyFormSuccessHandler = () => {
+  const rereplyFormSuccessHandler = (newReplyId: number) => {
     setIsWriting(false);
+    onSuccess(newReplyId);
   };
 
   return isWriting ? (
