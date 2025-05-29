@@ -107,5 +107,5 @@ export type Reply = {
   content: string;
   writer: UserSummary;
   createdAt: string;
-  isDeleted?: boolean;
+  isDeleted?: boolean; // 삭제된 댓글인지 여부
 };

@@ -12,9 +12,10 @@ export default function Page() {
       {/* 회원가입 전 로그인이 되지 않은 상태의 경우 회원가입 폼을 출력 */}
       {!user && <RegisterForm />}
 
-      {/* 회원가입 후 로그인상태에서 출력,, 이메일은 있지만 아직 닉네임은 설정이 안됨 */}
+      {/* 회원가입 후 로그인상태에서 출력, 이메일은 있지만 아직 닉네임은 설정이 안됨 */}
       {user && <RegisterOptionalForm />}
-      <Link href="/login">로그인으로 돌아가기</Link>
+      {/* 회원가입 후 로그인 된 상태에선 혼란 방지용 겸 가급적 프로필 설정 */}
+      {!user && <Link href="/login">로그인으로 돌아가기</Link>}
     </div>
   );
 }

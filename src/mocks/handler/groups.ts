@@ -118,13 +118,12 @@ export const groupsHandlers = [
       });
     },
   ),
-
   http.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group`, () => {
     return HttpResponse.json({
       success: true,
     });
   }),
-    http.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/groups/:groupId`, () => {
+  http.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/groups/:groupId`, () => {
     return HttpResponse.json({
       title: '스터디1',
       deadline: '2025-05-24',
@@ -141,6 +140,7 @@ export const groupsHandlers = [
         userId: 'abcd123',
         nickname: '사용자1',
         profileImage: 'https://github.com/shadcn.png',
+        email: "qwerty@gmail.com",
       },
       isApplicant: false,
       participants: [

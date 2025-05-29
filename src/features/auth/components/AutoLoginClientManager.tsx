@@ -29,6 +29,8 @@ const AutoLoginClientManager = ({ hasToken }: AuthClientProviderProps) => {
 
     if (hasToken) {
       getProfile();
+    } else {
+      clearUser();
     }
   }, []);
 

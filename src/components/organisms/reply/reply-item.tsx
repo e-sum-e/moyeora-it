@@ -10,7 +10,7 @@ export const ReplyItem = ({
   isDeleted,
 }: Reply) => {
   return (
-    <li className="space-y-2">
+    <>
       <ReplyContent
         content={content}
         writer={writer}
@@ -18,7 +18,7 @@ export const ReplyItem = ({
         replyId={replyId}
         isDeleted={isDeleted}
       />
-      <ReplyThread replyId={replyId} />
-    </li>
+      <ReplyThread parentReplyId={replyId} />
+    </>
   );
 };
