@@ -12,6 +12,7 @@ export const GroupCard = ({ item }: GroupCardProps) => {
   return (
     <li className="border-1 border-y-teal-500 rounded-md">
       <div>
+        <div>{item.type}</div>
         <h3>{item.title}</h3>
       </div>
       <div>
