@@ -18,9 +18,14 @@ export const GroupList = () => {
 
   const updateQuery = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
+    const prevValue = params.get(key);
 
     if (value === '' || value === 'all') {
-      params.delete(key); // 전체를 선택할 경우 value가 "" 이고 params에서 삭제한다.
+      // 전체를 선택할 경우 value가 "" 이고 params에서 삭제한다
+      params.delete(key);
+    } else if (prevValue === value) {
+      // 이전에 선택한 값을 다시 선택했다면 삭제한다
+      params.delete(key);
     } else {
       params.set(key, value);
     }
