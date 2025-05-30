@@ -16,19 +16,26 @@ export const GroupList = () => {
 
   const router = useRouter();
 
-  const updateQuery = (key: string, value: string) => {
+  /**
+   * router.push를 수행하는 함수
+   * @param queries 여러 query key를 한번에 업데이트 할 수 있기 때문에 인자를 Record 타입으로 받는다
+   */
+  const updateQuery = (queries: Record<string, string>) => {
     const params = new URLSearchParams(searchParams.toString());
-    const prevValue = params.get(key);
 
-    if (value === '' || value === 'all') {
-      // 전체를 선택할 경우 value가 "" 이고 params에서 삭제한다
-      params.delete(key);
-    } else if (prevValue === value) {
-      // 이전에 선택한 값을 다시 선택했다면 삭제한다
-      params.delete(key);
-    } else {
-      params.set(key, value);
-    }
+    Object.entries(queries).forEach(([key, value]) => {
+      const prevValue = params.get(key);
+
+      if (value === '' || value === 'all') {
+        // 전체를 선택한 경우 params에서 삭제
+        params.delete(key);
+      } else if (prevValue === value) {
+        // 이미 선택한 필터를 다시 선택한 경우 params에서 삭제
+        params.delete(key);
+      } else {
+        params.set(key, value);
+      }
+    });
 
     router.push(`?${params.toString()}`);
   };

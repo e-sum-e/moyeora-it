@@ -12,7 +12,7 @@ import { PopoverContent } from '@radix-ui/react-popover';
 import { useSearchParams } from 'next/navigation';
 
 type FilterProps = {
-  updateQuery: (key: string, value: string) => void;
+  updateQuery: (queries: Record<string, string>) => void;
 };
 
 export const Filter = ({ updateQuery }: FilterProps) => {
@@ -21,11 +21,11 @@ export const Filter = ({ updateQuery }: FilterProps) => {
   const selectedPositions = searchParams.get('position')?.split(',');
 
   const skillSelectHandler = (skill: SkillName) => {
-    updateQuery('skill', skill);
+    updateQuery({ skill: skill });
   };
 
   const positionSelectHandler = (position: PositionName) => {
-    updateQuery('position', position);
+    updateQuery({ position: position });
   };
 
   return (

@@ -7,7 +7,7 @@ import { PopoverContent, PopoverTrigger } from '@radix-ui/react-popover';
 import { useSearchParams } from 'next/navigation';
 
 type OrderProps = {
-  updateQuery: (key: string, value: string) => void;
+  updateQuery: (queries: Record<string, string>) => void;
 };
 
 export const SortOrder = ({ updateQuery }: OrderProps) => {
@@ -34,8 +34,10 @@ export const SortOrder = ({ updateQuery }: OrderProps) => {
   };
 
   const orderSelectHandler = (option: { sort: GroupSort; order: Order }) => {
-    updateQuery('sort', option.sort);
-    updateQuery('order', option.order);
+    console.log(option.sort);
+    console.log(option.order);
+
+    updateQuery({ sort: option.sort, order: option.order });
   };
 
   return (

@@ -2,7 +2,7 @@ import { GroupType } from '@/types';
 import { useSearchParams } from 'next/navigation';
 
 type TypeTabProps = {
-  updateQuery: (key: string, value: string) => void;
+  updateQuery: (queries: Record<string, string>) => void;
 };
 
 export const TypeTab = ({ updateQuery }: TypeTabProps) => {
@@ -17,7 +17,7 @@ export const TypeTab = ({ updateQuery }: TypeTabProps) => {
   ];
 
   const typeSelectHandler = (type: GroupType) => {
-    updateQuery('type', type);
+    updateQuery({ type: type });
   };
 
   return (
