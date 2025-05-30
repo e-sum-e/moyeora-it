@@ -1,19 +1,22 @@
 'use client';
 
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
 import { Avatar } from '@/components/atoms/avatar';
 import { SearchInput } from '@/components/molecules/search-input/search-input';
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
 import { User } from '@/types';
 import { ToggleFollowButton } from '@/features/user/follow/components/toggle-follow-button';
+import { request } from '@/api/request';
 
 export const FollowingList = () => {
   const searchParams = useSearchParams();
+  const { id } = useParams();
 
   const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<User>({
-    url: '/users/followings',
+    url: `/users/${id}/followings`,
     ...(searchParams.size !== 0 && {
       queryParams: Object.fromEntries(searchParams.entries()),
     }),
@@ -21,6 +24,15 @@ export const FollowingList = () => {
       refetchOnMount: true,
       staleTime: 0,
     },
+  });
+
+  const { data: { count: followingCount } = {} } = useQuery({
+    queryKey: ['user', id, 'followings count'],
+    queryFn() {
+      return request.get(`/users/${id}/followings/count`);
+    },
+    staleTime: 0,
+    refetchOnMount: true,
   });
 
   const { ref } = useFetchInView({
@@ -36,6 +48,7 @@ export const FollowingList = () => {
         <SearchInput placeholder="닉네임으로 검색해보세요." />
       </div>
       <ul>
+        <h1>팔로잉 {followingCount ?? null}</h1>
         {followingList?.map((following) => (
           <li key={following.userId}>
             <Link href={`/users/${following.userId}`}>

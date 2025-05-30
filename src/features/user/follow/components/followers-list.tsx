@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useParams, useSearchParams } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
 import { useFetchItems } from '@/hooks/useFetchItems';
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { Avatar } from '@/components/atoms/avatar';
@@ -10,6 +11,7 @@ import { ToggleFollowButton } from '@/features/user/follow/components/toggle-fol
 import useAuthStore from '@/stores/useAuthStore';
 import { User } from '@/types/index';
 import { RemoveFollowerButton } from '@/features/user/follow/components/remove-follower-button';
+import { request } from '@/api/request';
 
 export const FollowersList = () => {
   const { id } = useParams();
@@ -19,7 +21,7 @@ export const FollowersList = () => {
   const searchParams = useSearchParams();
 
   const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<User>({
-    url: '/users/followers',
+    url: `/users/${id}/followers`,
     ...(searchParams.size !== 0 && {
       queryParams: Object.fromEntries(searchParams.entries()),
     }),
@@ -27,6 +29,15 @@ export const FollowersList = () => {
       refetchOnMount: true,
       staleTime: 0,
     },
+  });
+
+  const { data: { count: followersCount } = {} } = useQuery({
+    queryKey: ['user', id, 'followers count'],
+    queryFn() {
+      return request.get(`/users/${id}/followers/count`);
+    },
+    staleTime: 0,
+    refetchOnMount: true,
   });
 
   const { ref } = useFetchInView({
@@ -42,6 +53,7 @@ export const FollowersList = () => {
         <SearchInput placeholder="닉네임으로 검색해보세요." />
       </div>
       <ul>
+        <h1>팔로워 {followersCount ?? null}</h1>
         {followersList.map((follower) => (
           <li key={follower.userId}>
             <Link href={`/users/${follower.userId}`}>
