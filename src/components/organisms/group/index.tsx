@@ -5,6 +5,7 @@ import { GroupCard } from '@/components/molecules/group/group-card';
 import { SortOrder } from '@/components/molecules/group/sort-order';
 import { TypeTab } from '@/components/molecules/group/type-tab';
 import { SearchInput } from '@/components/molecules/search-input/search-input';
+import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
 import { Group } from '@/types';
 import { Position, Skill } from '@/types/enums';
@@ -13,7 +14,6 @@ import { useMemo } from 'react';
 
 export const GroupList = () => {
   const searchParams = useSearchParams();
-
   const router = useRouter();
 
   /**
@@ -53,9 +53,17 @@ export const GroupList = () => {
     };
   }, [searchParams]);
 
-  const { data } = useFetchItems<Group>({
+  const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<Group>({
     url: '/groups',
-    queryParams,
+    queryParams: { ...queryParams, size: 10 },
+  });
+
+  const { ref } = useFetchInView({
+    fetchNextPage,
+    isLoading,
+    options: {
+      rootMargin: '50px',
+    },
   });
 
   return (
@@ -71,6 +79,7 @@ export const GroupList = () => {
             <GroupCard key={item.id} item={item} />
           ))}
       </ul>
+      {hasNextPage && <div ref={ref}></div>}
     </>
   );
 };
