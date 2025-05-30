@@ -23,6 +23,63 @@ const titles = [
   '데이터 사이언스 클럽',
 ];
 
+const GROUP_LIST = [
+  {
+    title: '스터디1',
+    deadline: '2025-05-24',
+    startDate: '2025-05-20',
+    endDate: '2025-05-24',
+    maxParticipants: 10,
+    description:
+      '<h1 class="text-xl font-bold capitalize text-green-700" levels="2">Next.js 스터디</h1><ul class="list-disc ml-2"><li><p>온라인으로 진행</p></li><li><p>오후 7시</p></li></ul><p></p><p>—완료—</p><h2 class="text-xl font-bold capitalize" levels="2"></h2>',
+    position: [1, 3],
+    skills: [1, 2],
+    createdAt: '2025-05-20',
+    type: 'study',
+    autoAllow: true,
+    host: {
+      userId: 'abcd123',
+      nickname: '사용자1',
+      profileImage: 'https://github.com/shadcn.png',
+      email: 'qwerty@gmail.com',
+    },
+    isApplicant: false,
+    isBookmark: false,
+    participants: [
+      {
+        userId: 'abcd1',
+        nickname: '팀원1',
+        profileImage: null,
+        email: 'member1@gmail.com',
+      },
+      {
+        userId: 'abcd12',
+        nickname: null,
+        profileImage: 'https://github.com/shadcn.png',
+        email: 'member2@gmail.com',
+      },
+      {
+        userId: 'abcd123',
+        nickname: '팀원3',
+        profileImage: 'https://github.com/shadcn.png',
+        email: 'member3@gmail.com',
+      },
+      {
+        userId: 'abcd1234',
+        nickname: '팀원4',
+        profileImage: 'https://github.com/shadcn.png',
+        email: 'member4@gmail.com',
+      },
+      {
+        userId: 'abcd1235',
+        nickname: null,
+        profileImage: 'https://github.com/shadcn.png',
+        email: 'member5@naver.com',
+      },
+    ],
+  },
+];
+
 export const groupsHandlers = [
   http.get(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/groups`,
@@ -124,58 +181,24 @@ export const groupsHandlers = [
     });
   }),
   http.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/groups/:groupId`, () => {
-    return HttpResponse.json({
-      title: '스터디1',
-      deadline: '2025-05-24',
-      startDate: '2025-05-20',
-      endDate: '2025-05-24',
-      maxParticipants: 10,
-      description: '스터디1 설명',
-      position: [1, 3],
-      skills: [1, 2],
-      createdAt: '2025-05-20',
-      type: 'study',
-      autoAllow: true,
-      host: {
-        userId: 'abcd123',
-        nickname: '사용자1',
-        profileImage: 'https://github.com/shadcn.png',
-        email: "qwerty@gmail.com",
-      },
-      isApplicant: false,
-      participants: [
-        {
-          userId: 'abcd1',
-          nickname: '팀원1',
-          profileImage: null,
-          email: 'member1@gmail.com',
-        },
-        {
-          userId: 'abcd12',
-          nickname: null,
-          profileImage: 'https://github.com/shadcn.png',
-          email: 'member2@gmail.com',
-        },
-        {
-          userId: 'abcd123',
-          nickname: '팀원3',
-          profileImage: 'https://github.com/shadcn.png',
-          email: 'member3@gmail.com',
-        },
-        {
-          userId: 'abcd1234',
-          nickname: '팀원4',
-          profileImage: 'https://github.com/shadcn.png',
-          email: 'member4@gmail.com',
-        },
-        {
-          userId: 'abcd1235',
-          nickname: null,
-          profileImage: 'https://github.com/shadcn.png',
-          email: 'member5@naver.com',
-        },
-      ],
-    });
+    return HttpResponse.json(GROUP_LIST[0]);
   }),
-];
+  http.patch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/bookmark`,
+    async ({ request }) => {
+      const body = (await request.json()) as {
+        groupId: number;
+        isBookmark: boolean;
+      };
+      const { groupId, isBookmark } = body;
 
+      GROUP_LIST[0].isBookmark = isBookmark;
+
+      if (groupId === 2) {
+        return HttpResponse.json({}, { status: 400 });
+      }
+
+      return HttpResponse.json({});
+    },
+  ),
+];
