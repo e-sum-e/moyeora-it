@@ -1,5 +1,6 @@
 import { request } from '@/api/request';
 import { GroupDescription } from '@/components/atoms/group-description';
+import { GroupDetaiilCard } from '@/components/organisms/group-detail-card';
 import { ParticipantListModal } from '@/components/organisms/participant-list-modal';
 import { ReplyList } from '@/components/organisms/reply/reply-list';
 import { Group, UserSummary } from '@/types';
@@ -22,6 +23,7 @@ export default async function GroupDetailPage({
 
   return (
     <div>
+      <GroupDetaiilCard info={data} />
       <GroupDescription description={description} />
       <ParticipantListModal participants={participants} />
       <ReplyList />
