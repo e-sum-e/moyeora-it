@@ -13,6 +13,7 @@ import useAuthStore from '@/stores/useAuthStore';
 import { useRouter } from 'next/navigation';
 import { request } from '@/api/request';
 import { User } from '@/types';
+import { useState } from 'react';
 
 const positions = Object.keys(Position).filter((k) => isNaN(Number(k))) as [
   string,
@@ -34,6 +35,7 @@ const optionalFormSchema = z.object({
 });
 
 const RegisterOptionalForm = () => {
+  const [disabled, setDisabled] = useState(false);
   const setUser = useAuthStore((s) => s.setUser);
   // 이 컴포넌트는 user가 존재할 때만 렌더링되므로, useAuthStore에서 user를 가져올 때는 !를 사용해도 됩니다.
   const currentUser = useAuthStore((s) => s.user)!;
@@ -54,6 +56,7 @@ const RegisterOptionalForm = () => {
     values: z.infer<typeof optionalFormSchema>,
   ) => {
     try {
+      setDisabled(true);
       //  TODO: 프로필 옵션 설정
       const newValues: z.infer<typeof optionalFormSchema> = {
         ...values,
@@ -79,6 +82,7 @@ const RegisterOptionalForm = () => {
     } catch (e) {
       // TODO: 프로필 에러 설정 //
       console.log(e);
+      setDisabled(false);
     }
   };
   return (
@@ -108,7 +112,7 @@ const RegisterOptionalForm = () => {
           label="기술 스택"
           options={skills}
         />
-        <Button>프로필 설정하기</Button>
+        <Button disabled={disabled}>프로필 설정하기</Button>
       </form>
     </Form>
   );
