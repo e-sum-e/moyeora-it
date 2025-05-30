@@ -3,7 +3,11 @@
 import { Button } from '@/components/ui/button';
 import { Popover } from '@/components/ui/popover';
 import { GroupSort, Order } from '@/types';
-import { PopoverContent, PopoverTrigger } from '@radix-ui/react-popover';
+import {
+  PopoverClose,
+  PopoverContent,
+  PopoverTrigger,
+} from '@radix-ui/react-popover';
 import { useSearchParams } from 'next/navigation';
 
 type OrderProps = {
@@ -34,6 +38,22 @@ export const SortOrder = ({ updateQueryParams }: OrderProps) => {
   };
 
   const orderSelectHandler = (option: { sort: GroupSort; order: Order }) => {
+    if (selectedSort === option.sort && selectedOrder === option.order) {
+      // 이미 선택된 정렬 옵션과 현재 선택한 정렬 옵션이 같을 경우 아무 동작하지 않음
+      return;
+    }
+
+    // 이미 선택된 sort나 order가 현재 선택한 sort나 order와 같을 경우 updateQueryParams에서 제외하여 토글되지 않게 한다
+    if (selectedSort === option.sort) {
+      updateQueryParams({ order: option.order });
+      return;
+    }
+    if (selectedOrder === option.order) {
+      updateQueryParams({ sort: option.sort });
+      return;
+    }
+
+    // 이미 선택된 정렬 옵션과 아예 다른 경우 updateQueryParams에서 모두 업데이트 한다
     updateQueryParams({ sort: option.sort, order: option.order });
   };
 
@@ -44,13 +64,12 @@ export const SortOrder = ({ updateQueryParams }: OrderProps) => {
       </PopoverTrigger>
       <PopoverContent className="flex flex-col">
         {orderOptions.map((option) => (
-          <Button
+          <PopoverClose
             key={option.name}
-            variant="outline"
             onClick={() => orderSelectHandler(option.value)}
           >
             {option.name}
-          </Button>
+          </PopoverClose>
         ))}
       </PopoverContent>
     </Popover>
