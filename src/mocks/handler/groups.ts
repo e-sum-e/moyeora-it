@@ -1,6 +1,109 @@
 import { http, HttpResponse } from 'msw';
 
 export const groupsHandlers = [
+  http.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/groups`, ({ request }) => {
+    const url = new URL(request.url); // 요청 url에서 parameter를 뽑아내기 위해 url 전체가 필요
+
+    const typeParam = url.searchParams.get('type');
+
+    const skillParam = url.searchParams.get('skill');
+    const skillNumber = skillParam ? Number(skillParam) : null; // skillParam이 있을 경우 서버에 enum 숫자 값으로 보내기 위해 숫자로 변환
+
+    const positionParam = url.searchParams.get('position');
+    const positionNumber = positionParam ? Number(positionParam) : null;
+    const searchKeyword = url.searchParams.get('search')?.toLowerCase() ?? '';
+    const sortParam = url.searchParams.get('sort') as GroupSort | null;
+    const orderParam = url.searchParams.get('order') as Order | null;
+
+    const items: Group[] = Array.from({ length: 20 }, (_, index) => {
+      const offset = index * 2;
+
+      const baseDate = new Date(2025, 4, 26);
+      const createdAt = addDays(baseDate, offset);
+      const deadline = addDays(baseDate, offset + 1);
+      const startDate = addDays(baseDate, offset + 5);
+      const endDate = addDays(baseDate, offset + 10);
+
+      const positions = getRandomItems(
+        positionKeys,
+        Math.floor(Math.random() * 3) + 1,
+      ).map((key) => Position[key]);
+
+      const skills = getRandomItems(
+        skillKeys,
+        Math.floor(Math.random() * 3) + 1,
+      ).map((key) => Skill[key]);
+
+      const type = getRandomItem(groupTypeValues.slice(0, 2)); // 만들어진 그룹은 study | project이다
+
+      const maxParticipants = Math.floor(Math.random() * (30 - 2 + 1)) + 2;
+
+      const participants = Array.from(
+        { length: Math.floor(Math.random() * maxParticipants) },
+        () => ({
+          userId: '1',
+          nickname: '모여라잇유저',
+          profileImage: null,
+        }),
+      );
+
+      // 배열에서 순서대로 타이틀 가져오기
+      const title = titles[index % titles.length];
+
+      return {
+        id: index + 1,
+        title,
+        description: `<h2 class="text-xl font-bold capitalize">${title} 모집합니다</h2><p>모두 즐겁게 공부해요!</p>`,
+        position: positions,
+        skills: skills,
+        participants,
+        maxParticipants,
+        autoAllow: true,
+        isBookmark: false,
+        createdAt,
+        deadline,
+        startDate,
+        endDate,
+        type,
+      };
+    });
+
+    const typeFiltered =
+      typeParam && typeParam !== ''
+        ? items.filter((item) => item.type === typeParam)
+        : items;
+
+    const skillFiltered =
+      skillNumber !== null
+        ? typeFiltered.filter((item) => item.skills.includes(skillNumber))
+        : typeFiltered;
+
+    const positionFiltered =
+      positionNumber !== null
+        ? skillFiltered.filter((item) => item.position.includes(positionNumber))
+        : skillFiltered;
+
+    const searchFiltered = searchKeyword
+      ? positionFiltered.filter((item) =>
+          item.title.toLowerCase().includes(decodeURIComponent(searchKeyword)),
+        )
+      : positionFiltered;
+
+    const sortedItems = [...searchFiltered].sort((a, b) => {
+      if (!sortParam) return 0;
+
+      const aDate = new Date(a[sortParam]);
+      const bDate = new Date(b[sortParam]);
+
+      if (orderParam === 'asc') return aDate.getTime() - bDate.getTime();
+      if (orderParam === 'desc') return bDate.getTime() - aDate.getTime();
+      return 0;
+    });
+
+    return HttpResponse.json({
+      items: sortedItems,
+    });
+  }),
   http.post(
     'http://localhost:4000/api/groups/:groupId/join',
     async ({ params, request }) => {

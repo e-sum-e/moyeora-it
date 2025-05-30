@@ -53,7 +53,7 @@ const formSchema = z
       .string()
       .min(20, { message: '내용을 좀 더 자세하게 적어주세요.' }),
     autoAllow: z.boolean(),
-    type: z.enum([GroupType.STUDY, GroupType.PROJECT]),
+    type: z.enum([GroupType.STUDY, GroupType.PROJECT, GroupType.ALL]),
     skills: z
       .array(
         z.union([
