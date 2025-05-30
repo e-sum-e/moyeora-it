@@ -21,7 +21,7 @@ const registerFormSchema = z
       .string()
       .nonempty({ message: '비밀번호를 입력해주세요' })
       .regex(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).{8,}$/, {
-        message: '영어 대/소문자, 숫자, 특수문자를 혼합하여 8자리 이상',
+        message: '영어, 숫자, 특수문자를 혼합하여 8자리 이상',
       }),
     passwordConfirm: z.string().nonempty({
       message: '비밀번호를 다시 입력해주세요',
