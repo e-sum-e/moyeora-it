@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import useAuthStore from '@/stores/useAuthStore';
 import { request } from '@/api/request';
 import { User } from '@/types';
+import { toast } from 'sonner';
 
 const formSchema = z.object({
   email: z.string().nonempty({ message: '이메일을 입력해주세요' }).email({
@@ -51,6 +52,10 @@ const LoginForm = () => {
 
       const prevPathname = localStorage.getItem('login-trigger-path') || '/';
       router.push(prevPathname);
+
+      toast.success('로그인 성공', {
+        description: '로그인했습니다!',
+      });
 
       localStorage.removeItem('login-trigger-path');
     } catch (e) {

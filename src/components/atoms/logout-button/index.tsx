@@ -5,6 +5,7 @@ import { request } from '@/api/request';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 const LogoutButton = () => {
   const { user, clearUser } = useAuthStore();
@@ -23,6 +24,9 @@ const LogoutButton = () => {
     onSuccess: () => {
       clearUser();
       router.push('/login');
+      toast.success('로그아웃 성공', {
+        description: '안전하게 로그아웃 했습니다!',
+      });
     },
     onError: (error) => {
       // 로그아웃 실패처리
@@ -36,6 +40,7 @@ const LogoutButton = () => {
 
   const onClick = async () => {
     if (isPending) return;
+
     mutate();
   };
 

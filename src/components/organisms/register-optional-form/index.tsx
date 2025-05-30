@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import { request } from '@/api/request';
 import { User } from '@/types';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 const positions = Object.keys(Position).filter((k) => isNaN(Number(k))) as [
   string,
@@ -77,6 +78,10 @@ const RegisterOptionalForm = () => {
 
       const prevPathname = localStorage.getItem('login-trigger-path') || '/';
       router.push(prevPathname);
+
+      toast.success('회원가입 성공', {
+        description: '어서오세요!',
+      });
 
       localStorage.removeItem('login-trigger-path');
     } catch (e) {
