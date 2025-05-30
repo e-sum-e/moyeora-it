@@ -8,22 +8,27 @@ import { Suspense } from 'react';
 import { FollowersList } from '@/features/user/follow/components/followers-list';
 
 type FollowersPageProps = {
+  params: Promise<{
+    id: string;
+  }>;
   searchParams: Promise<{
     q: string;
   }>;
 };
 
 export default async function FollowersPage({
+  params,
   searchParams,
 }: FollowersPageProps) {
   const queryParams = await searchParams;
+  const { id } = await params;
 
   const queryClient = new QueryClient();
 
   await queryClient.fetchInfiniteQuery({
-    queryKey: ['items', '/users/followers', queryParams],
+    queryKey: ['items', `/users/${id}/followers`, queryParams],
     queryFn({ pageParam }) {
-      return request.get('/users/followers', {
+      return request.get(`/users/${id}/followers`, {
         ...queryParams,
         cursor: pageParam,
       });
@@ -34,7 +39,6 @@ export default async function FollowersPage({
   return (
     <>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <h1>팔로워</h1>
         <Suspense fallback={<div>Loading...</div>}>
           <FollowersList />
         </Suspense>
