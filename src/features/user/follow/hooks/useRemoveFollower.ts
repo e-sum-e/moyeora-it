@@ -1,9 +1,13 @@
+'use client';
+
+import { useParams } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { request } from '@/api/request';
 import { toast } from 'sonner';
 
 export const useRemoveFollower = ({ userId }: { userId: string }) => {
   const queryClient = useQueryClient();
+  const { id } = useParams();
 
   return useMutation({
     mutationFn() {
@@ -21,9 +25,14 @@ export const useRemoveFollower = ({ userId }: { userId: string }) => {
       });
     },
     onSettled() {
-      return queryClient.invalidateQueries({
-        queryKey: ['items', '/users/followers'],
-      });
+      return Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ['items', `/users/${id}/followers`],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ['user', id, 'followers count'],
+        }),
+      ]);
     },
   });
 };
