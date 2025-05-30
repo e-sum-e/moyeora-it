@@ -1,5 +1,3 @@
-'use client';
-
 import { Avatar } from '@/components/atoms/avatar';
 import { Badge } from '@/components/atoms/badge';
 import { BookmarkButton } from '@/components/atoms/bookmark-button';
