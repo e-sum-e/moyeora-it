@@ -7,7 +7,7 @@ import { Badge } from '@/components/atoms/badge';
 import { getSkill } from '@/types/enums';
 import { User } from '@/types';
 import { request } from '@/api/request';
-import { Button } from '@/components/ui/button';
+import { ToggleFollowButton } from '@/features/user/follow/components/toggle-follow-button';
 
 /**
  * 현재 로그인 한 유저가 아닌 다른 유저의 프로필 컴포넌트
@@ -64,12 +64,11 @@ export const OtherUserProfile = () => {
         </div>
       </div>
       <div>
-        <Button
-          variant={`${user.isFollowing ? 'outline' : 'default'}`}
-          type="button"
-        >
-          {user.isFollowing ? '팔로잉' : '팔로우'}
-        </Button>
+        <ToggleFollowButton
+          userId={user.userId}
+          isFollowing={user.isFollowing}
+          usedIn="profile"
+        />
       </div>
     </>
   );
