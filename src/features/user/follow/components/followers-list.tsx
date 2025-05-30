@@ -4,38 +4,37 @@ import Link from 'next/link';
 import { useParams, useSearchParams } from 'next/navigation';
 import { useFetchItems } from '@/hooks/useFetchItems';
 import { useFetchInView } from '@/hooks/useFetchInView';
-import { useDebounce } from '@/hooks/useDebounce';
 import { Avatar } from '@/components/atoms/avatar';
-import { Button } from '@/components/ui/button';
 import { SearchInput } from '@/components/molecules/search-input/search-input';
+import { ToggleFollowButton } from '@/features/user/follow/components/toggle-follow-button';
+import useAuthStore from '@/stores/useAuthStore';
+import { User } from '@/types/index';
+import { RemoveFollowerButton } from '@/features/user/follow/components/remove-follower-button';
 
 export const FollowersList = () => {
   const { id } = useParams();
-  const userId = '1';
-  const isCurrentUser = id === userId;
+  const user = useAuthStore((state) => state.user);
+  const isCurrentUser = id === user?.userId;
 
   const searchParams = useSearchParams();
 
-  const { data, fetchNextPage, hasNextPage } = useFetchItems({
-    url: '/api/users/followings',
+  const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<User>({
+    url: '/users/followers',
     ...(searchParams.size !== 0 && {
       queryParams: Object.fromEntries(searchParams.entries()),
     }),
+    options: {
+      refetchOnMount: true,
+      staleTime: 0,
+    },
   });
 
   const { ref } = useFetchInView({
     fetchNextPage,
+    isLoading,
   });
 
-  const followersList = data?.pages.flatMap((page) => page.items);
-
-  const followButtonClickHandler = useDebounce((userId: string) => {
-    console.log(userId);
-  }, 500);
-
-  const cancelFollowButtonClickHandler = useDebounce((userId: string) => {
-    console.log(userId);
-  }, 500);
+  const followersList = data.pages.flatMap((page) => page.items).flat();
 
   return (
     <>
@@ -43,9 +42,9 @@ export const FollowersList = () => {
         <SearchInput placeholder="닉네임으로 검색해보세요." />
       </div>
       <ul>
-        {followersList?.map((follower) => (
+        {followersList.map((follower) => (
           <li key={follower.userId}>
-            <Link href={`/user/${follower.userId}`}>
+            <Link href={`/users/${follower.userId}`}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-x-2">
                   <Avatar
@@ -58,39 +57,15 @@ export const FollowersList = () => {
                     <span>{follower.email}</span>
                   </div>
                 </div>
-                {isCurrentUser ? (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      cancelFollowButtonClickHandler(follower.userId);
-                    }}
-                  >
-                    삭제
-                  </Button>
-                ) : follower.isFollowing ? (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      cancelFollowButtonClickHandler(follower.userId);
-                    }}
-                  >
-                    팔로잉
-                  </Button>
-                ) : (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      followButtonClickHandler(follower.userId);
-                    }}
-                  >
-                    팔로우
-                  </Button>
+                {isCurrentUser && (
+                  <RemoveFollowerButton userId={follower.userId} />
+                )}
+                {!isCurrentUser && (
+                  <ToggleFollowButton
+                    userId={follower.userId}
+                    isFollowing={follower.isFollowing}
+                    usedIn="followers"
+                  />
                 )}
               </div>
             </Link>
