@@ -7,7 +7,6 @@ import { getDisplayNickname, getDisplayProfileImage } from '@/utils/fallback';
 type ReplyMetaProps = Pick<Reply, 'writer' | 'createdAt'>;
 
 export const ReplyMeta = ({ writer, createdAt }: ReplyMetaProps) => {
-  console.log(getDisplayNickname(writer.nickname, writer.email));
   return (
     <div className="flex gap-3 items-center">
       <Avatar

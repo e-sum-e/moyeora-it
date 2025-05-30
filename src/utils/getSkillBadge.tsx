@@ -1,5 +1,3 @@
-'use client';
-
 import { Badge } from '@/components/atoms/badge';
 import { Skill } from '@/types/enums';
 import Image from 'next/image';
