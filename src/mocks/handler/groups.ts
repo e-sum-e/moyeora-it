@@ -80,7 +80,7 @@ export const groupsHandlers = [
     });
   }),
   http.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/groups/:groupId`, () => {
-    return HttpResponse.json({
+    return HttpResponse.json(  {
       title: '스터디1',
       deadline: '2025-05-24',
       startDate: '2025-05-20',
@@ -94,37 +94,43 @@ export const groupsHandlers = [
       type: 'study',
       autoAllow: true,
       host: {
-        id: 'abcd123',
-        name: '사용자1',
+        userId: 'abcd123',
+        nickname: '사용자1',
         profileImage: 'https://github.com/shadcn.png',
-        email: 'qwerty@gmail.com',v
+        email: 'qwerty@gmail.com',
       },
       isApplicant: false,
+      isBookmark: false,
       participants: [
         {
-          id: 'abcd123',
-          name: '팀원1',
-          profileImage: 'https://github.com/shadcn.png',
+          userId: 'abcd1',
+          nickname: '팀원1',
+          profileImage: null,
+          email: 'member1@gmail.com',
         },
         {
-          id: 'abcd123',
-          name: '팀원1',
+          userId: 'abcd12',
+          nickname: null,
           profileImage: 'https://github.com/shadcn.png',
+          email: 'member2@gmail.com',
         },
         {
-          id: 'abcd123',
-          name: '팀원1',
+          userId: 'abcd123',
+          nickname: '팀원3',
           profileImage: 'https://github.com/shadcn.png',
+          email: 'member3@gmail.com',
         },
         {
-          id: 'abcd123',
-          name: '팀원1',
+          userId: 'abcd1234',
+          nickname: '팀원4',
           profileImage: 'https://github.com/shadcn.png',
+          email: 'member4@gmail.com',
         },
         {
-          id: 'abcd123',
-          name: '팀원1',
+          userId: 'abcd1235',
+          nickname: null,
           profileImage: 'https://github.com/shadcn.png',
+          email: 'member5@naver.com',
         },
       ],
     });
