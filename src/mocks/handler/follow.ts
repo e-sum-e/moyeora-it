@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw';
 import { User } from '@/types';
 
-export const followingsHandlers = [
+export const followHandlers = [
   http.get('http://localhost:4000/api/users/followings', ({ request }) => {
     const url = new URL(request.url);
     const searchParams = new URLSearchParams(url.search);
