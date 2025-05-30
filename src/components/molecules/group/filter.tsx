@@ -12,20 +12,20 @@ import { PopoverContent } from '@radix-ui/react-popover';
 import { useSearchParams } from 'next/navigation';
 
 type FilterProps = {
-  updateQuery: (queries: Record<string, string>) => void;
+  updateQueryParams: (queries: Record<string, string>) => void;
 };
 
-export const Filter = ({ updateQuery }: FilterProps) => {
+export const Filter = ({ updateQueryParams }: FilterProps) => {
   const searchParams = useSearchParams();
   const selectedSkills = searchParams.get('skill')?.split(',');
   const selectedPositions = searchParams.get('position')?.split(',');
 
   const skillSelectHandler = (skill: SkillName) => {
-    updateQuery({ skill: skill });
+    updateQueryParams({ skill: skill });
   };
 
   const positionSelectHandler = (position: PositionName) => {
-    updateQuery({ position: position });
+    updateQueryParams({ position: position });
   };
 
   return (

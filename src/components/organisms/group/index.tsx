@@ -20,7 +20,7 @@ export const GroupList = () => {
    * router.push를 수행하는 함수
    * @param queries 여러 query key를 한번에 업데이트 할 수 있기 때문에 인자를 Record 타입으로 받는다
    */
-  const updateQuery = (queries: Record<string, string>) => {
+  const updateQueryParams = (queries: Record<string, string>) => {
     const params = new URLSearchParams(searchParams.toString());
 
     Object.entries(queries).forEach(([key, value]) => {
@@ -60,9 +60,9 @@ export const GroupList = () => {
 
   return (
     <>
-      <TypeTab updateQuery={updateQuery} />
-      <Filter updateQuery={updateQuery} />
-      <SortOrder updateQuery={updateQuery} />
+      <TypeTab updateQueryParams={updateQueryParams} />
+      <Filter updateQueryParams={updateQueryParams} />
+      <SortOrder updateQueryParams={updateQueryParams} />
       <SearchInput />
       <ul>
         {data.pages
