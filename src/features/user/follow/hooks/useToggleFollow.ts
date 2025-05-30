@@ -1,12 +1,13 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { request } from '@/api/request';
 import { toast } from 'sonner';
+import { useParams } from 'next/navigation';
 
 /**
  * 팔로우, 언팔로우 기능을 위한 커스텀 훅
  *
  * useId prop를 추가한 이유는 이 커스텀 훅을 호출한 버튼이 사용된 위치에 따라 무효화할 쿼리 키를 다르게 설정하기 위함
- * 
+ *
  * @param userId: 팔로우, 언팔로우 대상 유저 ID
  * @param isFollowing: 팔로우 상태
  * @param usedIn: 해당 커스텀 훅을 호출한 버튼이 사용된 위치 (프로필, 팔로잉 목록, 팔로워 목록)
@@ -21,6 +22,7 @@ export const useToggleFollow = ({
   isFollowing: boolean;
   usedIn: string;
 }) => {
+  const { id } = useParams();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -40,10 +42,19 @@ export const useToggleFollow = ({
       });
     },
     onSettled() {
-      return queryClient.invalidateQueries({
-        queryKey:
-          usedIn === 'profile' ? ['user'] : ['items', `/users/${usedIn}`],
-      });
+      if (usedIn === 'profile')
+        return queryClient.invalidateQueries({
+          queryKey: ['user', id],
+          exact: true,
+        });
+      return Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ['user', id, `${usedIn} count`],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ['items', `/users/${id}/${usedIn}`],
+        }),
+      ]);
     },
   });
 };
