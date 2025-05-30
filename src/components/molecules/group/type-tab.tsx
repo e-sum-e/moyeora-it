@@ -2,13 +2,13 @@ import { GroupType } from '@/types';
 import { useSearchParams } from 'next/navigation';
 
 type TypeTabProps = {
-  selectedType: GroupType;
-  selectType: (type: GroupType) => void;
+  updateQuery: (key: string, value: string) => void;
 };
 
-export const TypeTab = ({ selectedType, selectType }: TypeTabProps) => {
+export const TypeTab = ({ updateQuery }: TypeTabProps) => {
   const searchParams = useSearchParams();
-  console.log(searchParams, selectedType);
+
+  const selectedType = searchParams.get('type') ?? 'all';
 
   const typeOptions: { name: string; value: GroupType }[] = [
     { name: '전체', value: GroupType.ALL },
@@ -17,7 +17,7 @@ export const TypeTab = ({ selectedType, selectType }: TypeTabProps) => {
   ];
 
   const typeSelectHandler = (type: GroupType) => {
-    selectType(type);
+    updateQuery('type', type);
   };
 
   return (

@@ -11,17 +11,16 @@ import {
 import { PopoverContent } from '@radix-ui/react-popover';
 
 type FilterProps = {
-  selectSkill: (skill: SkillName) => void;
-  selectPosition: (skill: PositionName) => void;
+  updateQuery: (key: string, value: string) => void;
 };
 
-export const Filter = ({ selectSkill, selectPosition }: FilterProps) => {
+export const Filter = ({ updateQuery }: FilterProps) => {
   const skillSelectHandler = (skill: SkillName) => {
-    selectSkill(skill);
+    updateQuery('skill', skill);
   };
 
   const positionSelectHandler = (position: PositionName) => {
-    selectPosition(position);
+    updateQuery('position', position);
   };
 
   return (

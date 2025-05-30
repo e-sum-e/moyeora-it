@@ -4,20 +4,17 @@ import { Button } from '@/components/ui/button';
 import { Popover } from '@/components/ui/popover';
 import { GroupSort, Order } from '@/types';
 import { PopoverContent, PopoverTrigger } from '@radix-ui/react-popover';
+import { useSearchParams } from 'next/navigation';
 
 type OrderProps = {
-  selectedSort: GroupSort;
-  selectedOrder: Order;
-  selectSort: (order: GroupSort) => void;
-  selectOrder: (order: Order) => void;
+  updateQuery: (key: string, value: string) => void;
 };
 
-export const SortOrder = ({
-  selectedSort,
-  selectedOrder,
-  selectSort,
-  selectOrder,
-}: OrderProps) => {
+export const SortOrder = ({ updateQuery }: OrderProps) => {
+  const searchParams = useSearchParams();
+  const selectedSort = searchParams.get('sort');
+  const selectedOrder = searchParams.get('order');
+
   const orderOptions: {
     name: string;
     value: { sort: GroupSort; order: Order };
@@ -37,8 +34,8 @@ export const SortOrder = ({
   };
 
   const orderSelectHandler = (option: { sort: GroupSort; order: Order }) => {
-    selectSort(option.sort);
-    selectOrder(option.order);
+    updateQuery('sort', option.sort);
+    updateQuery('order', option.order);
   };
 
   return (
