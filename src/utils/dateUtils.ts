@@ -44,3 +44,24 @@ export const formatRelativeTime = (utcTime: string): string => {
 
   return format(date, 'yyyy년 M월 d일');
 };
+
+/**
+ * UTC 문자열을 "0000년 0월 0일 오전/오후 0:00" 형식으로 반환하는 합수
+ *
+ * 예: '2025-06-01T02:10:00Z' → '2025년 6월 1일 오전 11:10'
+ *
+ * @param utcTime - UTC ISO 문자열 (예: '2025-05-27T08:00:00Z')
+ * @returns 한국어 포맷의 날짜 및 시간 문자열
+ */
+export const formatDateTime = (utcTime: string): string => {
+  const date = new Date(utcTime);
+
+  return new Intl.DateTimeFormat('ko-KR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  }).format(date);
+};
