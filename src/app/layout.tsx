@@ -5,6 +5,7 @@ import { ReactQueryProvider } from '@/providers/ReactQueryProvider';
 import type { Metadata } from 'next';
 import { Toaster } from 'sonner';
 import './globals.css';
+import { Header } from '@/components/organisms/header';
 
 export const metadata: Metadata = {
   title: '모여라-IT',
@@ -23,7 +24,7 @@ export default function RootLayout({
       <body>
         <MSWComponent>
           <ReactQueryProvider>
-            {/*<Header />*/}
+            <Header />
             {/* <WebSocketProvider>{children}</WebSocketProvider> */}
             <>{children}</>
           </ReactQueryProvider>
