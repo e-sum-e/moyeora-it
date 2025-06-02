@@ -36,24 +36,26 @@ export const OtherUserProfile = () => {
   // 유저가 존재하지 않으면, 404 Not Found 페이지로 이동한다.
   if (!user) notFound();
 
+  const { nickname, email, profileImage, position, skills, rate, isFollowing} = user;
+
   return (
     <>
       <div>
         <Avatar
           className="size-36"
-          imageSrc={getDisplayProfileImage(user.profileImage)}
-          fallback={getDisplayNickname(user.nickname, user.email)}
+          imageSrc={getDisplayProfileImage(profileImage)}
+          fallback={getDisplayNickname(nickname, email)}
         />
         <div className="flex flex-col gap-y-1">
-          <span>{getDisplayNickname(user.nickname, user.email)}</span>
-          <span>{user.email}</span>
-          <span>{user.position && getPosition(user.position)}</span>
+          <span>{getDisplayNickname(nickname, email)}</span>
+          <span>{email}</span>
+          <span>{position && getPosition(position)}</span>
           <div className="flex items-center gap-x-2">
-            <span>별점 : {user.rate}</span>
+            <span>별점 : {rate}</span>
             <Badge text="뱃지" className="bg-emerald-50 text-emerald-500" />
           </div>
           <ul>
-            {user.skills?.map((skill) => (
+            {skills?.map((skill) => (
               <li key={skill}>
                 <Badge
                   text={getSkill(skill)}
