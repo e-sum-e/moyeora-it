@@ -12,7 +12,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import useAuthStore from '@/stores/useAuthStore';
 import { useRouter } from 'next/navigation';
 import { request } from '@/api/request';
-import { User } from '@/types';
+import { UserInfoResponse } from '@/types/response';
+import { useState } from 'react';
 
 const positions = Object.keys(Position).filter((k) => isNaN(Number(k))) as [
   string,
@@ -47,6 +48,8 @@ const RegisterOptionalForm = () => {
     },
   });
 
+  const [disabled, setDisabled] = useState(false);
+
   const router = useRouter();
 
   // 옵션 설정
@@ -54,23 +57,35 @@ const RegisterOptionalForm = () => {
     values: z.infer<typeof optionalFormSchema>,
   ) => {
     try {
-      //  TODO: 프로필 옵션 설정
+      setDisabled(true);
+      // 프로필 옵션 설정
       const newValues: z.infer<typeof optionalFormSchema> = {
         ...values,
         nickname: values.nickname || currentUser.email, // 닉네임이 비어있으면 이메일로 설정
       };
 
-      await request.post(
-        '/me',
-        {
-          'Content-Type': 'application/json',
-        },
-        JSON.stringify(newValues),
-      );
+      // request는 json 형태인데 api는 form-data로 받아서 별도의 fetch로 요청합니다.
+      const formData = new FormData();
+      formData.append('nickname', newValues.nickname);
+      formData.append('position', newValues.position);
+
+      if (newValues.skills.length > 0) {
+        formData.append('skills', newValues.skills.join(','));
+      }
+
+      await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/user/edit`, {
+        method: 'PATCH',
+        body: formData,
+        credentials: 'include',
+      });
 
       // 바뀐 프로필 다시 불러와서 설정
-      const { user } = await request.get('/me');
-      setUser(user as User);
+      const responseBody: UserInfoResponse = await request.get('/v1/user/info');
+
+      setUser({
+        ...responseBody.items.items,
+        userId: responseBody.items.items.id.toString(),
+      });
 
       const prevPathname = localStorage.getItem('login-trigger-path') || '/';
       router.push(prevPathname);
@@ -79,6 +94,7 @@ const RegisterOptionalForm = () => {
     } catch (e) {
       // TODO: 프로필 에러 설정 //
       console.log(e);
+      setDisabled(false);
     }
   };
   return (
@@ -108,7 +124,7 @@ const RegisterOptionalForm = () => {
           label="기술 스택"
           options={skills}
         />
-        <Button>프로필 설정하기</Button>
+        <Button disabled={disabled}>프로필 설정하기</Button>
       </form>
     </Form>
   );

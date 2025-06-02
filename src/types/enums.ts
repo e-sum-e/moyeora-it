@@ -11,11 +11,11 @@ export enum Position {
 }
 
 export enum Skill {
-  'JAVA',
+  'Java',
   'JavaScript',
-  'HTML/CSS',
-  'React',
-  'Vue.js',
+  'HTML_CSS',
+  'REACT',
+  'Vue',
   'Kotlin',
   'Spring',
 }

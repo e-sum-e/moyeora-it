@@ -18,7 +18,7 @@ export const userHandlers = [
         nickname: '테스트닉네임',
         profileImage: 'https://github.com/shadcn.png',
         position: Position.FE,
-        skills: [Skill.JAVA, Skill.JavaScript, Skill.Spring],
+        skills: [Skill.Java, Skill.JavaScript, Skill.Spring],
         rate: 4.5,
         isFollowing: false,
         isFollower: false,
