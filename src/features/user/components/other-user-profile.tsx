@@ -36,7 +36,16 @@ export const OtherUserProfile = () => {
   // 유저가 존재하지 않으면, 404 Not Found 페이지로 이동한다.
   if (!user) notFound();
 
-  const { nickname, email, profileImage, position, skills, rate, isFollowing} = user;
+  const {
+    nickname,
+    email,
+    profileImage,
+    position,
+    skills,
+    rate,
+    isFollowing,
+    userId,
+  } = user;
 
   return (
     <>
@@ -68,8 +77,8 @@ export const OtherUserProfile = () => {
       </div>
       <div>
         <ToggleFollowButton
-          userId={user.userId}
-          isFollowing={user.isFollowing}
+          userId={userId}
+          isFollowing={isFollowing}
           usedIn="profile"
         />
       </div>
