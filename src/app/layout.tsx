@@ -1,8 +1,12 @@
+import AutoLoginManager from '@/features/auth/components/AutoLoginManager';
+import { server } from '@/mocks/server';
+import { MSWComponent } from '@/providers/MSWComponent';
+import { ReactQueryProvider } from '@/providers/ReactQueryProvider';
+import { WebSocketProvider } from '@/providers/WSProvider';
 import type { Metadata } from 'next';
+import { Toaster } from 'sonner';
 import './globals.css';
 import { Header } from '@/components/organisms/header';
-import { MSWComponent } from '@/providers/MSWComponent';
-import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
   title: '모여라-IT',
@@ -14,13 +18,18 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  server.listen();
+
   return (
     <html lang="en">
       <body>
         <MSWComponent>
-          <Header />
-          {children}
+          <ReactQueryProvider>
+            <Header />
+            <WebSocketProvider>{children}</WebSocketProvider>
+          </ReactQueryProvider>
           <Toaster />
+          <AutoLoginManager />
         </MSWComponent>
       </body>
     </html>

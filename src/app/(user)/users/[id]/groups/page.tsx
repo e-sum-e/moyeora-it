@@ -1,0 +1,54 @@
+import {
+  QueryClient,
+  HydrationBoundary,
+  dehydrate,
+} from '@tanstack/react-query';
+import { request } from '@/api/request';
+import { Suspense } from 'react';
+import { GroupFilter } from '@/components/molecules/group-filter/group-filter';
+import { GroupList } from '@/features/user/group/components/group-list';
+
+type GroupsPageProps = {
+  searchParams: Promise<{
+    search: string;
+    type: string;
+    status: string;
+    sort: string;
+  }>;
+};
+
+export default async function GroupsPage({ searchParams }: GroupsPageProps) {
+  const queryClient = new QueryClient();
+
+  const { search, type, status, sort } = await searchParams;
+
+  const queryParams = {
+    type: type ?? 'project',
+    status: status ?? 'RECRUITING',
+    sort: sort ?? 'deadline',
+    ...(search && { search }),
+  };
+
+  await queryClient.fetchInfiniteQuery({
+    queryKey: ['items', '/user/groups', queryParams],
+    queryFn({ pageParam }) {
+      return request.get('/user/groups', {
+        ...queryParams,
+        cursor: pageParam,
+        size: 10,
+      });
+    },
+    initialPageParam: 0,
+  });
+
+  return (
+    <div>
+      <GroupFilter />
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <Suspense fallback={<div>Loading...</div>}>
+          <GroupList />
+        </Suspense>
+      </HydrationBoundary>
+    </div>
+  );
+}
