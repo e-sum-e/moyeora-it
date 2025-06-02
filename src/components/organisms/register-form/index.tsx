@@ -9,7 +9,7 @@ import { Form } from '@/components/ui/form';
 import { useState } from 'react';
 import useAuthStore from '@/stores/useAuthStore';
 import { request } from '@/api/request';
-import { User } from '@/types';
+import { UserInfoResponse } from '@/types/response';
 
 // 회원가입에 쓰이는 이메일과 비밀번호 유효성
 const registerFormSchema = z
@@ -56,19 +56,34 @@ const RegisterForm = () => {
     values: z.infer<typeof registerFormSchema>,
   ) => {
     try {
-      // TODO: 회원가입 로직 작성 /register
+      // 회원가입 로직 작성 /user/signup
       // 에러처리 별도로 해줘야 할 수도 있음
       await request.post(
-        '/register',
+        '/user/signup',
+        {
+          'Content-Type': 'application/json',
+        },
+        JSON.stringify({
+          email: values.email,
+          password: values.password,
+        }),
+      );
+
+      await request.post(
+        '/user/login',
         {
           'Content-Type': 'application/json',
         },
         JSON.stringify(values),
       );
 
-      // TODO: 회원가입 성공 후(즉시 로그인, 쿠키 바로 설정) 회원정보 불러오기 프로필 설정 setUser(user)
-      const { user } = await request.get('/me');
-      setUser(user as User);
+      // 회원가입 성공 후(즉시 로그인, 쿠키 바로 설정) 회원정보 불러오기 프로필 설정 setUser(user)
+      const responseBody: UserInfoResponse = await request.get('/user/info');
+
+      setUser({
+        ...responseBody.items.items,
+        userId: responseBody.items.items.id.toString(),
+      });
     } catch (e) {
       // TODO: 회원가입 실패시 에러코드 맞춰서 설정해주기
       setIsRegisterFailed(true);
