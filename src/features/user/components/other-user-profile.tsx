@@ -26,7 +26,7 @@ export const OtherUserProfile = () => {
     isError,
   } = useQuery<User>({
     queryKey: ['user', id],
-    queryFn: () => request.get(`/user/${id}`),
+    queryFn: () => request.get(`/v1/user/${id}`),
     staleTime: 0,
   });
 

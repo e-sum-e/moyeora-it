@@ -31,7 +31,7 @@ export const WithdrawDialog = () => {
 
   const withdrawButtonClickHandler = async () => {
     try {
-      await request.delete('/user/delete');
+      await request.delete('/v1/user/delete');
       toast.success('회원 탈퇴 완료', {
         description: '회원 탈퇴가 완료되었습니다.',
       });
