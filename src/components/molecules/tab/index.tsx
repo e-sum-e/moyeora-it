@@ -2,7 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { GroupType } from '@/types';
 
 export type TabType = {
-  value: GroupType | ''; // 전체 선택은 ''로 표기하며, 타입 이름 없이 모든 그룹을 포함ㄴ
+  value: GroupType | ''; // 전체 선택은 ''로 표기하며, 타입 이름 없이 모든 그룹을 포함
   label: string;
 };
 
