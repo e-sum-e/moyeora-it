@@ -80,7 +80,7 @@ export const userHandlers = [
       const url = new URL(request.url);
       console.log(url);
 
-      const items: Group[] = Array.from({ length: 10 }, (_, index) => ({
+      const items: Group[] = Array.from({ length: 10 }, () => ({
         id: Math.floor(Math.random() * 1000000) + 1,
         title: '스터디1',
         deadline: new Date('2025-05-22'),
