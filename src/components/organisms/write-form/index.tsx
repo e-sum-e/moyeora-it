@@ -53,7 +53,7 @@ const formSchema = z
       .string()
       .min(20, { message: '내용을 좀 더 자세하게 적어주세요.' }),
     autoAllow: z.boolean(),
-    type: z.enum([GroupType.STUDY, GroupType.PROJECT]),
+    type: z.enum([GroupType.STUDY, GroupType.PROJECT, GroupType.ALL]),
     skills: z
       .array(
         z.union([
@@ -107,6 +107,10 @@ export const WriteForm = () => {
       type: GroupType.STUDY,
     },
   });
+
+  const cancelClickHandler = () => {
+    router.push('/');
+  };
 
   const formSubmit = async (values: z.infer<typeof formSchema>) => {
     const skills = values.skills.map(
@@ -165,7 +169,9 @@ export const WriteForm = () => {
         <Description form={form} />
         <SelectSkill form={form} />
         <SelectPosition form={form} />
-        <Button type="button">취소하기</Button>
+        <Button type="button" onClick={cancelClickHandler}>
+          취소하기
+        </Button>
         <Button type="submit">등록하기</Button>
       </form>
     </Form>

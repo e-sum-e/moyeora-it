@@ -38,7 +38,7 @@ export const BookmarkCardContents = ({
               ))}
             </div>
           </div>
-          <BookmarkButton id={1} isBookmark={false} />
+          <BookmarkButton groupId={1} isBookmark={false} />
         </div>
         <footer>
           <div className="flex flex-col gap-2">
