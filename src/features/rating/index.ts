@@ -1,7 +1,8 @@
-import { request } from "@/api/request";
+import { request } from '@/api/request';
 
 export const setRating = async (targetUserId: number, rate: number) => {
-  return await request.post('/rating',
+  return await request.post(
+    '/rating',
     {
       'Content-Type': 'application/json',
     },
@@ -14,9 +15,8 @@ export const setRating = async (targetUserId: number, rate: number) => {
 
 export const updateRating = async (ratingId: number, rate: number) => {
   return await request.patch(
-    '/ratings',
+    `/ratings/${String(ratingId)}`,
+    { 'Content-Type': 'application/json' },
     { rate },
-    String(ratingId)
   );
 };
-
