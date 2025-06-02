@@ -39,7 +39,6 @@ export const Header = () => {
     },
   ];
 
-  console.log('user', user)
   const displayMenuItems = [
     ...menuItems,
     ...(isLoggedIn ? loggedInMenuItems : loggedOutMenuItems),

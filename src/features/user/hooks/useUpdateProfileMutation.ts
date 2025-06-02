@@ -3,6 +3,7 @@ import useAuthStore from '@/stores/useAuthStore';
 import { Position, Skill } from '@/types/enums';
 import { toast } from 'sonner';
 import { User } from '@/types';
+import { request } from '@/api/request';
 
 /**
  * 프로필 수정 커스텀 훅
@@ -10,7 +11,7 @@ import { User } from '@/types';
  * @param userId 사용자 아이디
  * @returns 프로필 수정 커스텀 훅
  */
-export const useUpdateProfileMutation = ({ userId }: { userId: string }) => {
+export const useUpdateProfileMutation = ({ userId }: { userId: string | number }) => {
   const { setUser } = useAuthStore((state) => state);
 
   return useMutation({
@@ -28,11 +29,14 @@ export const useUpdateProfileMutation = ({ userId }: { userId: string }) => {
         formData.append('file', data.file);
       }
 
-      return fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/users/${userId}`,
+      //ISSUE: 500에러 날라와요
+      return request.patch(`/v1/user/edit`,
         {
-          method: 'PATCH',
-          body: formData,
+          'Content-Type': 'multipart/form-data',
+        },
+        formData,
+        {
+          credentials: 'include',
         },
       ).then((res) => res.json());
     },

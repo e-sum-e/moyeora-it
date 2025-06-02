@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 
 export const UserPageTabs = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
 
   return (
     <ul className="flex gap-4">

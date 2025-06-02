@@ -2,6 +2,7 @@ import { request } from '@/api/request';
 import { User } from '@/types';
 import { UserInfoResponse } from '@/types/response';
 
+// ISSUE: 스토어에 넣으면 좋을거 같아요 일단 제가 작업한거라 분리해뒀어요 
 export const fetchAndSetUser = async (
   setUser: (user: User) => void
 ): Promise<void> => {
@@ -11,6 +12,8 @@ export const fetchAndSetUser = async (
     });
     if(responseBody.status.success){
       setUser({
+        //@ts-expect-error
+        userId: responseBody.items.items.id,
         ...responseBody.items.items,
       });
     }else{
