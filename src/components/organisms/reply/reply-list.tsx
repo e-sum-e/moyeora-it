@@ -14,7 +14,7 @@ export const ReplyList = () => {
   const { groupId } = useParams();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useFetchItems<Reply>({
-      url: `/groups/${groupId}/replies`,
+      url: `/v2/groups/${groupId}/replies`,
       queryParams: {
         size: 10,
       },

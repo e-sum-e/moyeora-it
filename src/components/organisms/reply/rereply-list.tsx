@@ -21,7 +21,7 @@ export const RereplyList = ({
   const { groupId } = useParams();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useFetchItems<Reply & { parentId: number }>({
-      url: `/groups/${groupId}/replies/${parentReplyId}`,
+      url: `/v2/groups/${groupId}/replies/${parentReplyId}`,
       queryParams: {
         size: 10,
       },
