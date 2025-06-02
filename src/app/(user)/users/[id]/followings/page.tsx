@@ -31,6 +31,7 @@ export default async function FollowingsPage({
       return request.get(`/users/${id}/followings`, {
         ...queryParams,
         cursor: pageParam,
+        size: 10,
       });
     },
     initialPageParam: 0,
