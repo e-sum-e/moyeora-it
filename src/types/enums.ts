@@ -11,7 +11,7 @@ export enum Position {
 }
 
 export enum Skill {
-  'JAVA',
+  'Java',
   'JavaScript',
   'HTML/CSS',
   'React',
