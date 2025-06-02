@@ -8,24 +8,30 @@ import { Suspense } from 'react';
 import { FollowingList } from '@/features/user/follow/components/following-list';
 
 type FollowingsPageProps = {
+  params: Promise<{
+    id: string;
+  }>;
   searchParams: Promise<{
     q: string;
   }>;
 };
 
 export default async function FollowingsPage({
+  params,
   searchParams,
 }: FollowingsPageProps) {
   const queryParams = await searchParams;
+  const { id } = await params;
 
   const queryClient = new QueryClient();
 
   await queryClient.fetchInfiniteQuery({
-    queryKey: ['items', '/api/users/followings', queryParams],
+    queryKey: ['items', `/users/${id}/followings`, queryParams],
     queryFn({ pageParam }) {
-      return request.get('/api/users/followings', {
+      return request.get(`/users/${id}/followings`, {
         ...queryParams,
         cursor: pageParam,
+        size: 10,
       });
     },
     initialPageParam: 0,
@@ -34,7 +40,6 @@ export default async function FollowingsPage({
   return (
     <>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <h1>팔로잉</h1>
         <Suspense fallback={<div>Loading...</div>}>
           <FollowingList />
         </Suspense>
