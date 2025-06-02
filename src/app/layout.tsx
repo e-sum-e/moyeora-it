@@ -27,7 +27,6 @@ export default function RootLayout({
           <ReactQueryProvider>
             <Header />
             <WebSocketProvider>{children}</WebSocketProvider>
-            <>{children}</>
           </ReactQueryProvider>
           <Toaster />
           <AutoLoginManager />
