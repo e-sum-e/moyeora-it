@@ -4,7 +4,7 @@ import { Position, Skill } from '@/types/enums';
 
 export const userHandlers = [
   http.get(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/:id`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/:id`,
     ({ params }) => {
       const { id } = params;
 
