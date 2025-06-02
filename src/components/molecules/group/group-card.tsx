@@ -1,6 +1,6 @@
 import { Group } from '@/types';
 import { Skill } from '@/types/enums';
-import { getYearMonthDayWithDot } from '@/utils/dateUtils';
+import { formatYearMonthDayWithDot } from '@/utils/dateUtils';
 import { getSkillBadge } from '@/utils/getSkillBadge';
 
 type GroupCardProps = {
@@ -19,9 +19,9 @@ export const GroupCard = ({ item }: GroupCardProps) => {
         참가 현황 :{item.participants.length}/{item.maxParticipants}
       </div>
       <div>
-        <div>모집 종료 : {getYearMonthDayWithDot(item.deadline)}</div>
-        <div>모임 시작 : {getYearMonthDayWithDot(item.startDate)}</div>
-        <div>모임 종료 : {getYearMonthDayWithDot(item.endDate)}</div>
+        <div>모집 종료 : {formatYearMonthDayWithDot(item.deadline)}</div>
+        <div>모임 시작 : {formatYearMonthDayWithDot(item.startDate)}</div>
+        <div>모임 종료 : {formatYearMonthDayWithDot(item.endDate)}</div>
       </div>
       <div>
         <div>
