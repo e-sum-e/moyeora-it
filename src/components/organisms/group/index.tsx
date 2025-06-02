@@ -3,89 +3,67 @@
 import { Filter } from '@/components/molecules/group/filter';
 import { GroupCard } from '@/components/molecules/group/group-card';
 import { SortOrder } from '@/components/molecules/group/sort-order';
+import { TypeTab } from '@/components/molecules/group/type-tab';
+import { SearchInput } from '@/components/molecules/search-input/search-input';
 import { useFetchItems } from '@/hooks/useFetchItems';
-import { Group, GroupSort, Order, PositionName, SkillName } from '@/types';
+import { Group } from '@/types';
 import { Position, Skill } from '@/types/enums';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 
 export const GroupList = () => {
-  const [selectedSkill, setSelectedSkill] = useState<SkillName>('');
-  const [selectedPosition, setSelectedPosition] = useState<PositionName>('');
-  const [selectedSort, setSelecteSort] = useState<GroupSort>('createdAt');
-  const [selectedOrder, setSelectedOrder] = useState<Order>('desc');
   const searchParams = useSearchParams();
+
   const router = useRouter();
 
-  const updateQuery = (key: string, value: string) => {
+  /**
+   * router.push를 수행하는 함수
+   * @param queries 여러 query key를 한번에 업데이트 할 수 있기 때문에 인자를 Record 타입으로 받는다
+   */
+  const updateQueryParams = (queries: Record<string, string>) => {
     const params = new URLSearchParams(searchParams.toString());
 
-    if (value === '') {
-      params.delete(key); // 전체를 선택할 경우 value가 "" 이고 params에서 삭제한다.
-    } else {
-      params.set(key, value);
-    }
+    Object.entries(queries).forEach(([key, value]) => {
+      const prevValue = params.get(key);
+
+      if (value === '' || value === 'all') {
+        // 전체를 선택한 경우 params에서 삭제
+        params.delete(key);
+      } else if (prevValue === value) {
+        // 이미 선택한 필터를 다시 선택한 경우 params에서 삭제
+        params.delete(key);
+      } else {
+        params.set(key, value);
+      }
+    });
 
     router.push(`?${params.toString()}`);
   };
 
+  const queryParams = useMemo(() => {
+    // searchParams의 변화를 감지하고 실행되어야 useFetchItems의 queryParams에 다른 값을 넣어서 queryKey를 변경할 수 있음
+    return {
+      type: searchParams.get('type') ?? '',
+      skill: Skill[searchParams.get('skill') as keyof typeof Skill] ?? '',
+      position:
+        Position[searchParams.get('position') as keyof typeof Position] ?? '',
+      sort: searchParams.get('sort') ?? 'createdAt',
+      order: searchParams.get('order') ?? 'desc',
+      search: searchParams.get('search') ?? '',
+    };
+  }, [searchParams]);
+
   const { data } = useFetchItems<Group>({
-    url: '/api/groups',
-    queryParams: {
-      skill: Skill[selectedSkill as keyof typeof Skill] ?? '',
-      position: Position[selectedPosition as keyof typeof Position] ?? '',
-      sort: selectedSort,
-      order: selectedOrder,
-    },
+    url: '/groups',
+    queryParams,
   });
-
-  const selectSkill = (currentSkill: SkillName) => {
-    setSelectedSkill(currentSkill);
-    updateQuery('skill', currentSkill);
-  };
-
-  const selectPosition = (currentPosition: PositionName) => {
-    setSelectedPosition(currentPosition);
-    updateQuery('position', currentPosition);
-  };
-
-  const selectSort = (currentSort: GroupSort) => {
-    setSelecteSort(currentSort);
-    updateQuery('sort', currentSort);
-  };
-
-  const selectOrder = (currentOrder: Order) => {
-    setSelectedOrder(currentOrder);
-    updateQuery('order', currentOrder);
-  };
-
-  useEffect(() => {
-    const skill = searchParams.get('skill') as SkillName;
-    const position = searchParams.get('position') as PositionName;
-    const sort = searchParams.get('sort') as GroupSort;
-    const order = searchParams.get('order') as Order;
-
-    if (skill) setSelectedSkill(skill);
-    if (position) setSelectedPosition(position);
-    if (sort) setSelecteSort(sort);
-    if (order) setSelectedOrder(order);
-
-    /**
-     * 초기 1회만 실행하도록 deps는 빈배열로 둠
-     * - searchParams를 deps에 추가할 시 router.push()로 인해 url이 변경되면 searchParams가 또 변경되어 useEffect()가 실행되는데 다른 searchParams를 선택할 경우 코드 흐름이 꼬일 수 있음
-     *  */
-    // eslint-disable-next-line
-  }, []);
 
   return (
     <>
-      <Filter selectSkill={selectSkill} selectPosition={selectPosition} />
-      <SortOrder
-        selectedSort={selectedSort}
-        selectedOrder={selectedOrder}
-        selectSort={selectSort}
-        selectOrder={selectOrder}
-      />
+      <TypeTab updateQueryParams={updateQueryParams} />
+      <Filter updateQueryParams={updateQueryParams} />
+      <SortOrder updateQueryParams={updateQueryParams} />
+      <SearchInput />
       <ul>
         {data.pages
           .flatMap((page) => page.items)

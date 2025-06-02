@@ -5,7 +5,7 @@ import {
   UseSuspenseInfiniteQueryOptions,
 } from '@tanstack/react-query';
 
-type Page<T> = {
+export type Page<T> = {
   items: T[];
   hasNext: boolean;
   cursor: number | null;
