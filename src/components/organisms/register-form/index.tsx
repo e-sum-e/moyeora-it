@@ -49,6 +49,8 @@ const RegisterForm = () => {
     },
   });
 
+  const [disabled, setDisabled] = useState(false);
+
   const setUser = useAuthStore((s) => s.setUser);
 
   // 회원가입
@@ -56,6 +58,7 @@ const RegisterForm = () => {
     values: z.infer<typeof registerFormSchema>,
   ) => {
     try {
+      setDisabled(true);
       // 회원가입 로직 작성 /user/signup
       // 에러처리 별도로 해줘야 할 수도 있음
       await request.post(
@@ -88,6 +91,7 @@ const RegisterForm = () => {
       // TODO: 회원가입 실패시 에러코드 맞춰서 설정해주기
       setIsRegisterFailed(true);
       console.log(e);
+      setDisabled(false);
     }
   };
 
@@ -122,9 +126,9 @@ const RegisterForm = () => {
         />
 
         {isRegisterFailed && (
-          <p className="text-red-600">회원가입에 실패했습니다</p>
+          <p className="text-red-600">이미 존재하는 회원입니다</p>
         )}
-        <Button type="submit">회원가입</Button>
+        <Button disabled={disabled}>회원가입</Button>
       </form>
     </Form>
   );

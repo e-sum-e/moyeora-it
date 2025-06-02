@@ -1,4 +1,3 @@
-import { Header } from '@/components/organisms/header';
 import AutoLoginManager from '@/features/auth/components/AutoLoginManager';
 import { server } from '@/mocks/server';
 import { MSWComponent } from '@/providers/MSWComponent';
@@ -12,7 +11,6 @@ export const metadata: Metadata = {
   description: '개발자들의 스터디, 사이트 프로젝트 모집 플랫폼',
 };
 
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -25,7 +23,7 @@ export default function RootLayout({
       <body>
         <MSWComponent>
           <ReactQueryProvider>
-            <Header />
+            {/*<Header />*/}
             {/* <WebSocketProvider>{children}</WebSocketProvider> */}
             <>{children}</>
           </ReactQueryProvider>

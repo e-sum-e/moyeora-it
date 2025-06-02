@@ -24,6 +24,8 @@ const FindEmailForm = () => {
     },
   });
 
+  const [disabled, setDisabled] = useState(false);
+
   // find-email인 경우
   const [isExisted, setIsExisted] = useState(false);
   const [isNotExisted, setIsNotExisted] = useState(false);
@@ -31,17 +33,19 @@ const FindEmailForm = () => {
   // 이메일 찾기
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      setDisabled(true);
+
       // find-email인 경우
-      // TODO: 이메일 찾기 로직 작성 /find-email
+      // 중복이면 false, 중복이 아니면 true
       const { success } = await request.post(
-        '/v1/user/find-email',
+        '/v1/user/check-email',
         {
           'Content-Type': 'application/json',
         },
         JSON.stringify(values),
       );
 
-      if (success) {
+      if (!success) {
         setIsExisted(true);
         setIsNotExisted(false);
       } else {
@@ -52,6 +56,8 @@ const FindEmailForm = () => {
       // TODO: 이메일 찾기 실패시 에러코드 맞춰서 설정해주기
       setIsNotExisted(true);
       console.log(e);
+    } finally {
+      setDisabled(false);
     }
   };
 
@@ -78,7 +84,7 @@ const FindEmailForm = () => {
         {isNotExisted && (
           <p className="text-red-600">해당 이메일이 존재하지 않습니다</p>
         )}
-        <Button>이메일 찾기</Button>
+        <Button disabled={disabled}>이메일 찾기</Button>
       </form>
     </Form>
   );
