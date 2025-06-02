@@ -11,6 +11,7 @@ import useAuthStore from '@/stores/useAuthStore';
 import { NotificationBadge } from '../notification-badge';
 import { useQuery } from '@tanstack/react-query';
 import { request } from '@/api/request';
+import flattenPages from '@/utils/flattenPages';
 
 export const NotificationList = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,6 +23,7 @@ export const NotificationList = () => {
   const { data, fetchNextPage, hasNextPage } = useFetchItems<NotificationType>({
     url: '/notifications',
   });
+  
 
   // 안 읽은 알림 목록 조회
   const { data: unreadData, isLoading: isUnreadLoading } = useQuery<{ unreadCount: number }>({
@@ -39,7 +41,7 @@ export const NotificationList = () => {
   // 전체 알림 목록 저장
   useEffect(() => {
     if (!data) return;
-    const notificationList = data?.pages.flatMap((page) => page.items);
+    const notificationList = flattenPages(data.pages);
     setNotifications(notificationList);
   }, [data, setNotifications]);
 

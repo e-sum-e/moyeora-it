@@ -4,24 +4,19 @@ import { Filter } from '@/components/molecules/group/filter';
 import { GroupCard } from '@/components/molecules/group/group-card';
 import { SortOrder } from '@/components/molecules/group/sort-order';
 import { SearchInput } from '@/components/molecules/search-input/search-input';
-import { Tab, TabType } from '@/components/molecules/tab';
-import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
-import { Group, GroupType } from '@/types';
+import { Group } from '@/types';
 import { Position, Skill } from '@/types/enums';
+import flattenPages from '@/utils/flattenPages';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
+import { TypeTab } from '@/components/molecules/group/type-tab';
 
 type GroupListProps = {
   searchParams: Record<string, string | undefined>;
 };
 
 export const GroupList = ({ searchParams }: GroupListProps) => {
-  const tabList: TabType[] = [
-    { value: '', label: '모든 그룹' },
-    { value: GroupType.STUDY, label: '스터디' },
-    { value: GroupType.PROJECT, label: '프로젝트' },
-  ];
   const router = useRouter();
 
   /**
@@ -41,17 +36,17 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
     // 업데이트할 쿼리 적용
     Object.entries(queries).forEach(([key, value]) => {
       const prevValue = params.get(key);
-
       if (value === '' || value === 'all') {
         // 전체 선택 시 해당 key 삭제
         params.delete(key);
-      } else if (prevValue === value) {
-        // 이미 선택한 값이면 삭제
+      } else if (prevValue === value) { //ISSUE: tab의 상태랑 query의 상태가 동일해서 탭 두번클릭하면 초기화됨
+        // 이미 선택한 필터를 다시 선택한 경우 params에서 삭제
         params.delete(key);
       } else {
         params.set(key, value);
       }
     });
+    console.log(params.toString());
 
     router.push(`?${params.toString()}`);
   };
@@ -68,17 +63,9 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
     [searchParams],
   );
 
-  const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<Group>({
-    url: '/groups',
-    queryParams: { ...queryParams, size: 10 },
-  });
-
-  const { ref } = useFetchInView({
-    fetchNextPage,
-    isLoading,
-    options: {
-      rootMargin: '50px',
-    },
+  const { data } = useFetchItems<Group>({
+    url: '/v2/groups',
+    queryParams,
   });
 
   // useEffect(() => {
@@ -87,22 +74,15 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
 
   return (
     <>
-      <Tab
-        tabList={tabList}
-        onValueChange={(value) => updateQueryParams({ type: value })}
-      >
-        <Filter updateQueryParams={updateQueryParams} />
-        <SortOrder updateQueryParams={updateQueryParams} />
-        <SearchInput />
-        <ul>
-          {data.pages
-            .flatMap((page) => page.items)
-            .map((item) => (
-              <GroupCard key={item.id} item={item} />
-            ))}
-        </ul>
-      </Tab>
-      {hasNextPage && <div ref={ref}></div>}
+      <TypeTab updateQueryParams={updateQueryParams} />
+      <Filter updateQueryParams={updateQueryParams} />
+      <SortOrder updateQueryParams={updateQueryParams} />
+      <SearchInput />
+      <ul>
+      {flattenPages(data.pages).map(group => (
+        <GroupCard key={group.id} item={group} />
+        ))}
+      </ul>
     </>
   );
 };

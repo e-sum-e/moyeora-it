@@ -83,9 +83,11 @@ const RegisterForm = () => {
       // 회원가입 성공 후(즉시 로그인, 쿠키 바로 설정) 회원정보 불러오기 프로필 설정 setUser(user)
       const responseBody: UserInfoResponse = await request.get('/v1/user/info');
 
+      console.log(responseBody);
+
       setUser({
-        ...responseBody.items.items,
-        userId: responseBody.items.items.id.toString(),
+        ...responseBody.data,
+        userId: responseBody.userId || responseBody.data.userId.toString(), //TODO: 백엔드 response타입 수정 후 삭제
       });
     } catch (e) {
       // TODO: 회원가입 실패시 에러코드 맞춰서 설정해주기

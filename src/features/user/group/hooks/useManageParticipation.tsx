@@ -21,7 +21,7 @@ export const useManageParticipation = () => {
       status: 'approve' | 'deny';
     }) {
       return request.post(
-        `/api/groups/${groupId}/join`,
+        `/v2/groups/${groupId}/join`,
         {
           'Content-Type': 'application/json',
         },

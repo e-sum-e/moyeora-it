@@ -4,12 +4,7 @@ import {
   useSuspenseInfiniteQuery,
   UseSuspenseInfiniteQueryOptions,
 } from '@tanstack/react-query';
-
-export type Page<T> = {
-  items: T[];
-  hasNext: boolean;
-  cursor: number | null;
-};
+import { Page } from '@/utils/flattenPages';
 
 export const useFetchItems = <T>({
   url,

@@ -8,6 +8,7 @@ import {
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
 import { GroupType } from '@/types';
+import flattenPages from '@/utils/flattenPages';
 import { useState } from 'react';
 export default function BookmarkPage() {
   const tabList: TabType[] = [
@@ -23,17 +24,20 @@ export default function BookmarkPage() {
     type: 'bookmark',
   });
 
-  const { data, isLoading, isError, fetchNextPage } =
-    useFetchItems<ContentInfo>({
-      url: '/groups',
-      queryParams,
-      options: {
-        //TODO: 캐시 전략 좀 더 고민필요
-        staleTime: 1000 * 30, // 30초 동안 데이터를 fresh 상태로 유지
-        gcTime: 1000 * 60 * 30, // 30분 동안 캐시 유지
-        refetchOnWindowFocus: true,
-      },
-    });
+  const {
+    data,
+    isLoading,
+    isError,
+    fetchNextPage,
+  } = useFetchItems<ContentInfo>({ 
+    url: '/v2/groups', 
+    queryParams,
+    options: { //TODO: 캐시 전략 좀 더 고민필요
+      staleTime: 1000 * 30, // 30초 동안 데이터를 fresh 상태로 유지
+      gcTime: 1000 * 60 * 30, // 30분 동안 캐시 유지
+      refetchOnWindowFocus: true,
+    }
+  });
 
   const { ref } = useFetchInView({
     fetchNextPage,
@@ -44,7 +48,7 @@ export default function BookmarkPage() {
   });
 
   // 데이터 가공
-  const items = data ? data.pages.flatMap((page) => page.items) : [];
+  const items = flattenPages(data.pages) ;
 
   // 탭 변경 핸들러
   const handleValueChange = (value: GroupType) => {

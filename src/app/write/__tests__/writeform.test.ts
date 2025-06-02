@@ -31,7 +31,7 @@ describe('write form 테스트', () => {
 
   test('group이 정상적으로 생성되었을 시 { success: true }를 받는다', async () => {
     const result = await request.post(
-      '/group',
+      '/v2/groups',
       { 'Content-Type': 'application/json' },
       JSON.stringify(tempBody),
     );
@@ -50,7 +50,7 @@ describe('write form 테스트', () => {
     );
 
     const result = await request.post(
-      '/group',
+      '/v2/groups',
       { 'Content-Type': 'application/json' },
       JSON.stringify(tempBody),
     );
@@ -69,7 +69,7 @@ describe('write form 테스트', () => {
     );
 
     const result = request.post(
-      '/group',
+      '/v2/groups',
       { 'Content-Type': 'application/json' },
       JSON.stringify(tempBody),
     );
