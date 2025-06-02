@@ -13,7 +13,7 @@ const LogoutButton = () => {
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
       await request.post(
-        '/user/logout',
+        '/v1/user/logout',
         {
           'Content-Type': 'application/json',
         },

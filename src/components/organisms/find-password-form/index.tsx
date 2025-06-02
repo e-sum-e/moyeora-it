@@ -36,7 +36,7 @@ const FindPassword = () => {
       // reset-password일 경우
       // TODO: 비밀번호 찾기 로직 작성 /find-email
       const { success } = await request.post(
-        '/find-password',
+        '/v1/user/find-password',
         {
           'Content-Type': 'application/json',
         },

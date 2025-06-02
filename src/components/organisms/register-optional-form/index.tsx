@@ -69,14 +69,14 @@ const RegisterOptionalForm = () => {
         formData.append('skills', newValues.skills.join(','));
       }
 
-      await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/edit`, {
+      await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/user/edit`, {
         method: 'PATCH',
         body: formData,
         credentials: 'include',
       });
 
       // 바뀐 프로필 다시 불러와서 설정
-      const responseBody: UserInfoResponse = await request.get('/user/info');
+      const responseBody: UserInfoResponse = await request.get('/v1/user/info');
 
       setUser({
         ...responseBody.items.items,

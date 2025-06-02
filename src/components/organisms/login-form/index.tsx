@@ -36,7 +36,7 @@ const LoginForm = () => {
     try {
       // 로그인 로직 작성 /login
       await request.post(
-        '/user/login',
+        '/v1/user/login',
         {
           'Content-Type': 'application/json',
         },
@@ -44,7 +44,7 @@ const LoginForm = () => {
       );
 
       // 로그인 성공 후 회원정보 불러오기 /me
-      const responseBody: UserInfoResponse = await request.get('/user/info');
+      const responseBody: UserInfoResponse = await request.get('/v1/user/info');
 
       setUser({
         ...responseBody.items.items,

@@ -34,7 +34,7 @@ const FindEmailForm = () => {
       // find-email인 경우
       // TODO: 이메일 찾기 로직 작성 /find-email
       const { success } = await request.post(
-        '/find-email',
+        '/v1/user/find-email',
         {
           'Content-Type': 'application/json',
         },

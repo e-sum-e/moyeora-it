@@ -59,7 +59,7 @@ const RegisterForm = () => {
       // 회원가입 로직 작성 /user/signup
       // 에러처리 별도로 해줘야 할 수도 있음
       await request.post(
-        '/user/signup',
+        '/v1/user/signup',
         {
           'Content-Type': 'application/json',
         },
@@ -70,7 +70,7 @@ const RegisterForm = () => {
       );
 
       await request.post(
-        '/user/login',
+        '/v1/user/login',
         {
           'Content-Type': 'application/json',
         },
@@ -78,7 +78,7 @@ const RegisterForm = () => {
       );
 
       // 회원가입 성공 후(즉시 로그인, 쿠키 바로 설정) 회원정보 불러오기 프로필 설정 setUser(user)
-      const responseBody: UserInfoResponse = await request.get('/user/info');
+      const responseBody: UserInfoResponse = await request.get('/v1/user/info');
 
       setUser({
         ...responseBody.items.items,

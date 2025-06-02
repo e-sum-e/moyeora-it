@@ -14,7 +14,7 @@ export enum Skill {
   'Java',
   'JavaScript',
   'HTML_CSS',
-  'React',
+  'REACT',
   'Vue',
   'Kotlin',
   'Spring',

@@ -1,5 +1,4 @@
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL; //환경변수로 분리
-
 /**
  * get, post, patch, delete 요청을 처리하는 객체
  * @param endpoint: api 엔드포인트
