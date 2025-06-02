@@ -54,7 +54,7 @@ const RegisterOptionalForm = () => {
     values: z.infer<typeof optionalFormSchema>,
   ) => {
     try {
-      //  TODO: 프로필 옵션 설정
+      // 프로필 옵션 설정
       const newValues: z.infer<typeof optionalFormSchema> = {
         ...values,
         nickname: values.nickname || currentUser.email, // 닉네임이 비어있으면 이메일로 설정
