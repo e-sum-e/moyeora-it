@@ -5,7 +5,7 @@ import { Group, GroupType } from '@/types';
 
 export const userHandlers = [
   http.get(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/:id`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/user/:id`,
     ({ params }) => {
       const { id } = params;
 
@@ -27,14 +27,21 @@ export const userHandlers = [
     },
   ),
 
-  http.delete(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/withdraw`, () => {
-    return new HttpResponse(null, {
-      status: Math.trunc(Math.random() * 100) % 2 === 0 ? 200 : 500,
+  http.delete(`${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/user/delete`, () => {
+    if (Math.trunc(Math.random() * 100) % 2) {
+      return HttpResponse.json({
+        success: true,
+        message: '회원 탈퇴 완료',
+      });
+    }
+    return HttpResponse.json({
+      success: false,
+      message: '에러 메시지',
     });
   }),
 
   http.patch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/password`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/user/password`,
     async ({ request }) => {
       const body = (await request.json()) as {
         newPassword: string;
@@ -48,7 +55,7 @@ export const userHandlers = [
   ),
 
   http.patch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/:id`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/user/edit`,
     async ({ params, request }) => {
       const body = await request.formData();
       const nickname = body.get('nickname') as string;

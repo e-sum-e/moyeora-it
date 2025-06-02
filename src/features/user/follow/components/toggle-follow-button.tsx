@@ -1,4 +1,5 @@
 import { useToggleFollow } from '@/features/user/follow/hooks/useToggleFollow';
+import { useDebounce } from '@/hooks/useDebounce';
 import { Button } from '@/components/ui/button';
 
 type ToggleFollowButtonProps = {
@@ -18,12 +19,13 @@ export const ToggleFollowButton = ({
     usedIn,
   });
 
-  const toggleFollowButtonClickHandler: React.MouseEventHandler<
-    HTMLButtonElement
-  > = (e) => {
-    e.preventDefault();
-    toggleFollow();
-  };
+  const toggleFollowButtonClickHandler = useDebounce(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      toggleFollow();
+    },
+    300,
+  );
 
   return (
     <Button
