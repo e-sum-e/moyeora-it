@@ -273,4 +273,7 @@ export const groupsHandlers = [
       return HttpResponse.json({});
     },
   ),
+  http.delete(`${process.env.NEXT_PUBLIC_API_BASE_URL}/groups/:groupId`, () => {
+    return HttpResponse.json({});
+  }),
 ];
