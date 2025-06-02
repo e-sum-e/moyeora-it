@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect } from 'react';
-import useAuthStore from '@/stores/useAuthStore';
 import { request } from '@/api/request';
+import useAuthStore from '@/stores/useAuthStore';
 import { UserInfoResponse } from '@/types/response';
+import { useEffect } from 'react';
 
 type AuthClientProviderProps = {
   hasToken: boolean;
@@ -38,6 +38,7 @@ const AutoLoginClientManager = ({ hasToken }: AuthClientProviderProps) => {
     } else {
       clearUser();
     }
+    // eslint-disable-next-line
   }, []);
 
   return null;

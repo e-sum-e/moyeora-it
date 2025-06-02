@@ -12,7 +12,7 @@ import { Suspense } from 'react';
 export default async function Home({
   searchParams,
 }: {
-  searchParams: Record<string, string | undefined>;
+  searchParams: Promise<Record<string, string | undefined>>;
 }) {
   const awaitedSearchParams = await searchParams; // searchParams가 Promise 객체여서 await으로 벗겨내야 함
   const queryClient = new QueryClient();
