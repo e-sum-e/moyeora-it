@@ -5,15 +5,18 @@ import { GroupCard } from '@/components/molecules/group/group-card';
 import { SortOrder } from '@/components/molecules/group/sort-order';
 import { TypeTab } from '@/components/molecules/group/type-tab';
 import { SearchInput } from '@/components/molecules/search-input/search-input';
+import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
 import { Group } from '@/types';
 import { Position, Skill } from '@/types/enums';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 
-export const GroupList = () => {
-  const searchParams = useSearchParams();
+type GroupListProps = {
+  searchParams: Record<string, string | undefined>;
+};
 
+export const GroupList = ({ searchParams }: GroupListProps) => {
   const router = useRouter();
 
   /**
@@ -40,23 +43,34 @@ export const GroupList = () => {
     router.push(`?${params.toString()}`);
   };
 
-  const queryParams = useMemo(() => {
-    // searchParams의 변화를 감지하고 실행되어야 useFetchItems의 queryParams에 다른 값을 넣어서 queryKey를 변경할 수 있음
-    return {
-      type: searchParams.get('type') ?? '',
-      skill: Skill[searchParams.get('skill') as keyof typeof Skill] ?? '',
-      position:
-        Position[searchParams.get('position') as keyof typeof Position] ?? '',
-      sort: searchParams.get('sort') ?? 'createdAt',
-      order: searchParams.get('order') ?? 'desc',
-      search: searchParams.get('search') ?? '',
-    };
-  }, [searchParams]);
+  const queryParams = useMemo(
+    () => ({
+      type: searchParams.type ?? '',
+      skill: Skill[searchParams.skill as keyof typeof Skill] ?? '',
+      position: Position[searchParams.position as keyof typeof Position] ?? '',
+      sort: searchParams.sort ?? 'createdAt',
+      order: searchParams.order ?? 'desc',
+      search: searchParams.search ?? '',
+    }),
+    [searchParams],
+  );
 
-  const { data } = useFetchItems<Group>({
+  const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<Group>({
     url: '/groups',
-    queryParams,
+    queryParams: { ...queryParams, size: 10 },
   });
+
+  const { ref } = useFetchInView({
+    fetchNextPage,
+    isLoading,
+    options: {
+      rootMargin: '50px',
+    },
+  });
+
+  // useEffect(() => {
+  //   console.log('✅ Hydrated data from client:', queryParams); // DEV : 💡 서버 컴포넌트에서 prefetch 하는지 확인용
+  // }, [queryParams]);
 
   return (
     <>
@@ -71,6 +85,7 @@ export const GroupList = () => {
             <GroupCard key={item.id} item={item} />
           ))}
       </ul>
+      {hasNextPage && <div ref={ref}></div>}
     </>
   );
 };
