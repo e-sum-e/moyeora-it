@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import useAuthStore from '@/stores/useAuthStore';
 import { request } from '@/api/request';
 import { UserInfoResponse } from '@/types/response';
+import { fetchAndSetUser } from '@/features/auth/utils/setUserInfo';
 
 const formSchema = z.object({
   email: z.string().nonempty({ message: '이메일을 입력해주세요' }).email({
@@ -47,12 +48,8 @@ const LoginForm = () => {
       );
 
       // 로그인 성공 후 회원정보 불러오기 /me
-      const responseBody: UserInfoResponse = await request.get('/v1/user/info');
-
-      setUser({
-        ...responseBody.items.items,
-        userId: responseBody.items.items.id.toString(),
-      });
+      await fetchAndSetUser(setUser);
+      
 
       const prevPathname = localStorage.getItem('login-trigger-path') || '/';
       router.push(prevPathname);

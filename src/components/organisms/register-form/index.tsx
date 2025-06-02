@@ -9,7 +9,7 @@ import { Form } from '@/components/ui/form';
 import { useState } from 'react';
 import useAuthStore from '@/stores/useAuthStore';
 import { request } from '@/api/request';
-import { UserInfoResponse } from '@/types/response';
+import { fetchAndSetUser } from '@/features/auth/utils/setUserInfo';
 
 // 회원가입에 쓰이는 이메일과 비밀번호 유효성
 const registerFormSchema = z
@@ -81,14 +81,8 @@ const RegisterForm = () => {
       );
 
       // 회원가입 성공 후(즉시 로그인, 쿠키 바로 설정) 회원정보 불러오기 프로필 설정 setUser(user)
-      const responseBody: UserInfoResponse = await request.get('/v1/user/info');
+      await fetchAndSetUser(setUser); // 공통 되는 부분이라 분리했습니다. 
 
-      console.log(responseBody);
-
-      setUser({
-        ...responseBody.data,
-        userId: responseBody.userId || responseBody.data.userId.toString(), //TODO: 백엔드 response타입 수정 후 삭제
-      });
     } catch (e) {
       // TODO: 회원가입 실패시 에러코드 맞춰서 설정해주기
       setIsRegisterFailed(true);

@@ -57,7 +57,17 @@ const fetchHandler = async (
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`[${response.status}] ${response.statusText} - ${errorText}`);
+    switch (response.status) {
+      case 401:
+        throw new Error('Unauthorized');
+      case 403:
+        throw new Error('Forbidden');
+      case 404:
+        throw new Error('Not Found');
+      default:
+        throw new Error(`[${response.status}] ${response.statusText} - ${errorText}`);
+    }
+
   }
 
   return response.json();

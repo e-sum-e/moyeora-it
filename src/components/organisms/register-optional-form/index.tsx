@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import { request } from '@/api/request';
 import { UserInfoResponse } from '@/types/response';
 import { useState } from 'react';
+import { fetchAndSetUser } from '@/features/auth/utils/setUserInfo';
 
 const positions = Object.keys(Position).filter((k) => isNaN(Number(k))) as [
   string,
@@ -80,12 +81,8 @@ const RegisterOptionalForm = () => {
       });
 
       // 바뀐 프로필 다시 불러와서 설정
-      const responseBody: UserInfoResponse = await request.get('/v1/user/info');
+      await fetchAndSetUser(setUser);
 
-      setUser({
-        ...responseBody.items.items,
-        userId: responseBody.items.items.id.toString(),
-      });
 
       const prevPathname = localStorage.getItem('login-trigger-path') || '/';
       router.push(prevPathname);
