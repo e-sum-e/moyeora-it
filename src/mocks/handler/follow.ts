@@ -71,7 +71,7 @@ export const followHandlers = [
     },
   ),
 
-  http.post(
+  http.delete(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/:userId/unfollow`,
     () => {
       return HttpResponse.json({
@@ -80,7 +80,7 @@ export const followHandlers = [
     },
   ),
 
-  http.post(
+  http.delete(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/:userId/unfollower`,
     () => {
       return HttpResponse.json({
