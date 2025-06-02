@@ -10,7 +10,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import useAuthStore from '@/stores/useAuthStore';
 import { request } from '@/api/request';
-import { UserInfoResponse } from '@/types/response';
 import { fetchAndSetUser } from '@/features/auth/utils/setUserInfo';
 
 const formSchema = z.object({
@@ -39,12 +38,16 @@ const LoginForm = () => {
     try {
       setDisabled(true);
       // 로그인 로직 작성 /login
-      await request.post(
+      // ISSUE: 성공 여부 처리추가 필요 const {status} = 
+       await request.post(
         '/v1/user/login',
         {
           'Content-Type': 'application/json',
         },
         JSON.stringify(values),
+        {
+          credentials: 'include',
+        }
       );
 
       // 로그인 성공 후 회원정보 불러오기 /me
@@ -52,6 +55,7 @@ const LoginForm = () => {
       
 
       const prevPathname = localStorage.getItem('login-trigger-path') || '/';
+      
       router.push(prevPathname);
 
       localStorage.removeItem('login-trigger-path');

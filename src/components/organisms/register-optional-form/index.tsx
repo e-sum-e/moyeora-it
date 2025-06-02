@@ -11,8 +11,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import useAuthStore from '@/stores/useAuthStore';
 import { useRouter } from 'next/navigation';
-import { request } from '@/api/request';
-import { UserInfoResponse } from '@/types/response';
 import { useState } from 'react';
 import { fetchAndSetUser } from '@/features/auth/utils/setUserInfo';
 

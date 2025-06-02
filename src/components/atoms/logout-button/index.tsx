@@ -17,7 +17,6 @@ const LogoutButton = () => {
         {
           'Content-Type': 'application/json',
         },
-        '{}',
       );
     },
     onSuccess: () => {

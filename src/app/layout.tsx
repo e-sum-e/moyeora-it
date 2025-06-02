@@ -29,7 +29,7 @@ export default function RootLayout({
             <WebSocketProvider>{children}</WebSocketProvider>
           </ReactQueryProvider>
           <Toaster />
-          <AutoLoginManager />
+          {/* <AutoLoginManager /> */}
         </MSWComponent>
       </body>
     </html>

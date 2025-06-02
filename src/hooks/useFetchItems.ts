@@ -23,7 +23,11 @@ export const useFetchItems = <T>({
       request.get(url, {
         ...queryParams,
         cursor: pageParam as number | string,
-      }),
+      },
+      {
+        credentials: 'include',
+      }
+    ),
     initialPageParam: 0,
     getNextPageParam(lastPage) {
       return lastPage.hasNext ? lastPage.cursor : null;

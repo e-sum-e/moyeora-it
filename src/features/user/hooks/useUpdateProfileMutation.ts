@@ -28,10 +28,13 @@ export const useUpdateProfileMutation = ({ userId }: { userId: string }) => {
         formData.append('file', data.file);
       }
 
-      return fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/${userId}`, {
-        method: 'PATCH',
-        body: formData,
-      }).then((res) => res.json());
+      return fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/users/${userId}`,
+        {
+          method: 'PATCH',
+          body: formData,
+        },
+      ).then((res) => res.json());
     },
     onSuccess(data: User) {
       setUser(data);

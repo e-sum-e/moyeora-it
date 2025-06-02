@@ -19,14 +19,15 @@ import { getDisplayNickname, getDisplayProfileImage } from '@/utils/fallback';
  */
 export const OtherUserProfile = () => {
   const { id } = useParams();
-
   const {
     data: user,
     isLoading,
     isError,
   } = useQuery<User>({
     queryKey: ['user', id],
-    queryFn: () => request.get(`/v1/user/${id}`),
+    queryFn: () => request.get(`/v1/user/${id}`, {}, {
+      credentials: 'include',
+    }),
     staleTime: 0,
   });
 

@@ -78,6 +78,9 @@ const RegisterForm = () => {
           'Content-Type': 'application/json',
         },
         JSON.stringify(values),
+        {
+          credentials: 'include',
+        }
       );
 
       // 회원가입 성공 후(즉시 로그인, 쿠키 바로 설정) 회원정보 불러오기 프로필 설정 setUser(user)

@@ -13,7 +13,7 @@ export const useChangePassword = () => {
       newPassword: string;
       confirmPassword: string;
     }) => {
-      return fetch('http://localhost:4000/api/users/password', {
+      return fetch('http://localhost:4000/api/v1/users/password', {
         method: 'PATCH',
         body: JSON.stringify({ newPassword, confirmPassword }),
       });

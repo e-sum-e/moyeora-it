@@ -10,16 +10,20 @@ import { useFetchItems } from '@/hooks/useFetchItems';
 import { GroupType } from '@/types';
 import flattenPages from '@/utils/flattenPages';
 import { useState } from 'react';
+const CURSOR_SIZE = 10;
+
 export default function BookmarkPage() {
+
   const tabList: TabType[] = [
     { value: '', label: '모든 그룹' },
     { value: GroupType.STUDY, label: '스터디' },
     { value: GroupType.PROJECT, label: '프로젝트' },
   ];
+  
 
   // 쿼리 파라미터는 state로 관리
   const [queryParams, setQueryParams] = useState({
-    size: 10,
+    size: CURSOR_SIZE,
     cursor: 0,
     type: 'bookmark',
   });

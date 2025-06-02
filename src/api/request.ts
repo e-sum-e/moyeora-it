@@ -91,7 +91,7 @@ export const request = {
       credentials: options?.credentials ?? 'same-origin', // 기본값 설정
     });
   },
-  post: async (endpoint: string, headers: HeadersInit, body: BodyInit, options?: Pick<RequestOptions, 'credentials'>) => {
+  post: async (endpoint: string, headers: HeadersInit, body?: BodyInit, options?: Pick<RequestOptions, 'credentials'>) => {
     return await fetchHandler(`${baseUrl}${endpoint}`, {
       method: 'POST',
       headers,

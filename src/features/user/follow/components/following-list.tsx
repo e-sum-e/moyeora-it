@@ -16,7 +16,7 @@ export const FollowingList = () => {
   const { id } = useParams();
 
   const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<User>({
-    url: `/users/${id}/followings`,
+    url: `/v1/users/${id}/followings`,
     ...(searchParams.size !== 0 && {
       queryParams: Object.fromEntries(searchParams.entries()),
     }),

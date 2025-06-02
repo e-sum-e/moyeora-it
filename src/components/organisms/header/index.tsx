@@ -27,8 +27,7 @@ const loggedOutMenuItems = [
 export const Header = () => {
   const user = useAuthStore((state) => state.user);
   const isLoggedIn = Boolean(user);
-  console.log(user)
-    
+
   const loggedInMenuItems = [
     {
       label: 'MyPage',
@@ -40,6 +39,7 @@ export const Header = () => {
     },
   ];
 
+  console.log('user', user)
   const displayMenuItems = [
     ...menuItems,
     ...(isLoggedIn ? loggedInMenuItems : loggedOutMenuItems),

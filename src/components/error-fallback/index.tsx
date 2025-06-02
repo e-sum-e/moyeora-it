@@ -23,6 +23,7 @@ export const ErrorFallback = ({ error, resetErrorBoundary, children }: ErrorFall
   const handleClick = () => {
     if (error?.message.includes('401') || error?.message.toLowerCase().includes('unauthorized')) {
       clearUser();
+      console.log('401 에러 발생');
       router.push('/login');  // 401 에러면 로그인 페이지로 이동
     } else if (error?.message.includes('Network')) {
       resetErrorBoundary();   // 네트워크 에러면 재시도
