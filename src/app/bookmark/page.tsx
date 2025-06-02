@@ -20,7 +20,7 @@ export default function BookmarkPage() {
   const [queryParams, setQueryParams] = useState({
     size: 10,
     cursor: 0,
-    type: 'bookmark,all',
+    type: 'bookmark',
   });
 
   const { data, isLoading, isError, fetchNextPage } =
