@@ -2,17 +2,23 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { GroupType } from '@/types';
 
 export type TabType = {
-  value: GroupType;
+  value: GroupType | ''; // 전체 선택은 ''로 표기하며, 타입 이름 없이 모든 그룹을 포함ㄴ
   label: string;
 };
 
-
-export const Tab = ({tabList, children, onValueChange}: {tabList: TabType[], children: React.ReactNode, onValueChange: (value: GroupType) => void}) => {
-
+export const Tab = ({
+  tabList,
+  children,
+  onValueChange,
+}: {
+  tabList: TabType[];
+  children: React.ReactNode;
+  onValueChange: (value: GroupType) => void;
+}) => {
   const handleValueChange = (value: string) => {
-      onValueChange(value as GroupType);
+    onValueChange(value as GroupType);
   };
-  
+
   return (
     <Tabs defaultValue={tabList[0].value} onValueChange={handleValueChange}>
       <TabsList>
@@ -28,5 +34,5 @@ export const Tab = ({tabList, children, onValueChange}: {tabList: TabType[], chi
         </TabsContent>
       ))}
     </Tabs>
-  )
+  );
 };
