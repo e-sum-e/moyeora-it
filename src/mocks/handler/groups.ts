@@ -95,6 +95,12 @@ export const groupsHandlers = [
     const sortParam = url.searchParams.get('sort') as GroupSort | null;
     const orderParam = url.searchParams.get('order') as Order | null;
 
+    const searchKeyword = url.searchParams.get('search')?.toLowerCase() ?? '';
+
+    const cursorParam = url.searchParams.get('cursor');
+    const cursor = cursorParam ? Number(cursorParam) : 0;
+    const limit = 10; // 페이지당 아이템 수
+
     const items: Group[] = Array.from({ length: 20 }, (_, index) => {
       const offset = index * 2;
 
@@ -168,7 +174,13 @@ export const groupsHandlers = [
         ? skillFiltered.filter((item) => item.position.includes(positionNumber))
         : skillFiltered;
 
-    const sortedItems = [...positionFiltered].sort((a, b) => {
+    const searchFiltered = searchKeyword
+      ? positionFiltered.filter((item) =>
+          item.title.toLowerCase().includes(decodeURIComponent(searchKeyword)),
+        )
+      : positionFiltered;
+
+    const sortedItems = [...searchFiltered].sort((a, b) => {
       if (!sortParam) return 0;
 
       const aDate = new Date(a[sortParam]);
@@ -179,16 +191,21 @@ export const groupsHandlers = [
       return 0;
     });
 
+    const paginatedItems = sortedItems.slice(cursor, cursor + limit);
+    const nextCursor =
+      cursor + limit < sortedItems.length ? cursor + limit : null;
+
     return HttpResponse.json({
-      items: sortedItems,
+      items: paginatedItems,
+      hasNext: nextCursor !== null,
+      cursor: nextCursor,
     });
   }),
-  http.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group`, () => {
+  http.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/group`, () => {
     return HttpResponse.json({
       success: true,
     });
   }),
-
   http.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/groups/:groupId`, () => {
     return HttpResponse.json(GROUP_LIST[0]);
   }),
