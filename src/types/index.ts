@@ -77,7 +77,6 @@ export type Group = {
   deadline: Date;
   startDate: Date; // 모임의 시작일
   endDate: Date; // 모임의 종료일
-  participants: Pick<User, 'userId' | 'nickname' | 'profileImage'>[];
   maxParticipants: number;
   participants: UserSummary[];
   description: string;

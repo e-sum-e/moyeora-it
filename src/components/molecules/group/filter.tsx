@@ -9,19 +9,23 @@ import {
   SkillName,
 } from '@/types';
 import { PopoverContent } from '@radix-ui/react-popover';
+import { useSearchParams } from 'next/navigation';
 
 type FilterProps = {
-  selectSkill: (skill: SkillName) => void;
-  selectPosition: (skill: PositionName) => void;
+  updateQueryParams: (queries: Record<string, string>) => void;
 };
 
-export const Filter = ({ selectSkill, selectPosition }: FilterProps) => {
+export const Filter = ({ updateQueryParams }: FilterProps) => {
+  const searchParams = useSearchParams();
+  const selectedSkills = searchParams.get('skill')?.split(',');
+  const selectedPositions = searchParams.get('position')?.split(',');
+
   const skillSelectHandler = (skill: SkillName) => {
-    selectSkill(skill);
+    updateQueryParams({ skill: skill });
   };
 
   const positionSelectHandler = (position: PositionName) => {
-    selectPosition(position);
+    updateQueryParams({ position: position });
   };
 
   return (
@@ -31,13 +35,23 @@ export const Filter = ({ selectSkill, selectPosition }: FilterProps) => {
           <Button>기술 스택</Button>
         </PopoverTrigger>
         <PopoverContent>
-          <Button onClick={() => skillSelectHandler('')}>전체</Button>
+          <Button variant="outline" onClick={() => skillSelectHandler('')}>
+            전체
+          </Button>
           {DEFAULT_SKILL_NAMES.map((skill) => (
-            <Button key={skill} onClick={() => skillSelectHandler(skill)}>
+            <Button
+              variant="outline"
+              key={skill}
+              onClick={() => skillSelectHandler(skill)}
+              className={
+                selectedSkills?.includes(skill)
+                  ? 'border-4 border-teal-500'
+                  : ''
+              }
+            >
               {skill}
             </Button>
           ))}
-          <Button></Button>
         </PopoverContent>
       </Popover>
       <Popover>
@@ -45,11 +59,19 @@ export const Filter = ({ selectSkill, selectPosition }: FilterProps) => {
           <Button>포지션</Button>
         </PopoverTrigger>
         <PopoverContent>
-          <Button onClick={() => positionSelectHandler('')}>전체</Button>
+          <Button variant="outline" onClick={() => positionSelectHandler('')}>
+            전체
+          </Button>
           {DEFAULT_POSITION_NAMES.map((position) => (
             <Button
+              variant="outline"
               key={position}
               onClick={() => positionSelectHandler(position)}
+              className={
+                selectedPositions?.includes(position)
+                  ? 'border-4 border-teal-500'
+                  : ''
+              }
             >
               {position}
             </Button>
