@@ -1,3 +1,13 @@
+import { Group, GroupSort, Order } from '@/types';
+import { Position, Skill } from '@/types/enums';
+import {
+  getRandomItem,
+  getRandomItems,
+  groupTypeValues,
+  positionKeys,
+  skillKeys,
+} from '@/utils/mockUtils';
+import { addDays } from 'date-fns';
 import { http, HttpResponse } from 'msw';
 
 const titles = [
@@ -252,11 +262,11 @@ export const groupsHandlers = [
       success: true,
     });
   }),
-  http.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/groups/:groupId`, () => {
+  http.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/v2/groups/:groupId`, () => {
     return HttpResponse.json(GROUP_LIST[0]);
   }),
   http.patch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/bookmark`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/v2/bookmark`,
     async ({ request }) => {
       const body = (await request.json()) as {
         groupId: number;
@@ -273,7 +283,10 @@ export const groupsHandlers = [
       return HttpResponse.json({});
     },
   ),
-  http.delete(`${process.env.NEXT_PUBLIC_API_BASE_URL}/groups/:groupId`, () => {
-    return HttpResponse.json({});
-  }),
+  http.delete(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/v2/groups/:groupId`,
+    () => {
+      return HttpResponse.json({});
+    },
+  ),
 ];

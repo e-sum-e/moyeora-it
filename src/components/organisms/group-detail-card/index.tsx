@@ -50,7 +50,7 @@ export const GroupDetaiilCard = ({
               ))}
             </div>
           </div>
-          <BookmarkButton id={info.id} isBookmark={info.isBookmark} />
+          <BookmarkButton groupId={info.id} isBookmark={info.isBookmark} />
         </header>
 
         {/* 모임 주최자 */}

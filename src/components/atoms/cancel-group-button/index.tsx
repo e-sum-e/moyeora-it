@@ -11,7 +11,7 @@ export const CancelGroupButton = () => {
   const { groupId } = useParams<{ groupId: string }>();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: () => request.delete(`/groups/${groupId}`),
+    mutationFn: () => request.delete(`/v2/groups/${groupId}`),
     onError: () => {
       toast.error('모임 취소에 실패하였습니다. 잠시 후 다시 시도해주세요.');
     },
