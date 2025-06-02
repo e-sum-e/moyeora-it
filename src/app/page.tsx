@@ -1,4 +1,5 @@
 import { request } from '@/api/request';
+import { WriteGroupButton } from '@/components/molecules/group-create-button';
 import { GroupList } from '@/components/organisms/group';
 import { Position, Skill } from '@/types/enums';
 import {
@@ -41,6 +42,7 @@ export default async function Home({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
+      <WriteGroupButton />
       <Suspense fallback={<div>Loading...</div>}>
         <GroupList searchParams={awaitedSearchParams} />
       </Suspense>
