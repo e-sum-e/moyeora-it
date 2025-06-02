@@ -80,7 +80,13 @@ const RegisterOptionalForm = () => {
       });
 
       // 바뀐 프로필 다시 불러와서 설정
-      const responseBody: UserInfoResponse = await request.get('/v1/user/info');
+      const responseBody: UserInfoResponse = await request.get(
+        '/v1/user/info',
+        {},
+        {
+          credentials: 'include',
+        },
+      );
 
       setUser({
         ...responseBody.items.items,

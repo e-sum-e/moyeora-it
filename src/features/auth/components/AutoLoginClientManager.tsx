@@ -21,6 +21,10 @@ const AutoLoginClientManager = ({ hasToken }: AuthClientProviderProps) => {
         // 회원정보 불러오기 /me
         const responseBody: UserInfoResponse = await request.get(
           '/v1/user/info',
+          {},
+          {
+            credentials: 'include',
+          },
         );
 
         setUser({

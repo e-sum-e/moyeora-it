@@ -70,6 +70,9 @@ const RegisterForm = () => {
           email: values.email,
           password: values.password,
         }),
+        {
+          credentials: 'include', // 쿠키를 사용하기 위해 credentials 설정
+        },
       );
 
       await request.post(
@@ -78,10 +81,19 @@ const RegisterForm = () => {
           'Content-Type': 'application/json',
         },
         JSON.stringify(values),
+        {
+          credentials: 'include', // 쿠키를 사용하기 위해 credentials 설정
+        },
       );
 
       // 회원가입 성공 후(즉시 로그인, 쿠키 바로 설정) 회원정보 불러오기 프로필 설정 setUser(user)
-      const responseBody: UserInfoResponse = await request.get('/v1/user/info');
+      const responseBody: UserInfoResponse = await request.get(
+        '/v1/user/info',
+        {},
+        {
+          credentials: 'include',
+        },
+      );
 
       setUser({
         ...responseBody.items.items,
