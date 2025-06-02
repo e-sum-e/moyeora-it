@@ -158,8 +158,8 @@ export const groupsHandlers = [
     const typeFiltered =
       typeParam && !typeParam.includes('')
         ? items.filter((item) => {
-            if (typeParam.includes('bookmark') && item.isBookmark) return true;
-            if (typeParam.includes(item.type)) return true;
+            if (typeParam.includes('bookmark') && item.isBookmark) return true; // type 파라미터로 bookmark가 들어간 경우 isBookmark만 필터링
+            if (typeParam.includes(item.type)) return true; // type 파라미터로 GroupType이 들어간 경우 필터링
             return false;
           })
         : items;
