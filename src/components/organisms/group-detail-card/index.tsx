@@ -5,7 +5,7 @@ import { Title } from '@/components/atoms/title';
 import { Progress } from '@/components/ui/progress';
 import { Group, UserSummary } from '@/types';
 import { getPosition, Skill } from '@/types/enums';
-import { getYearMonthDayWithDot, isBeforeToday } from '@/utils/dateUtils';
+import { formatYearMonthDayWithDot, isBeforeToday } from '@/utils/dateUtils';
 import { getDisplayNickname, getDisplayProfileImage } from '@/utils/fallback';
 import { getSkillBadge } from '@/utils/getSkillBadge';
 import Link from 'next/link';
@@ -72,9 +72,9 @@ export const GroupDetaiilCard = ({
 
         {/* 일정 정보 */}
         <section className="text-sm text-gray-600">
-          <div>모집 종료: {getYearMonthDayWithDot(info.deadline)}</div>
-          <div>모임 시작: {getYearMonthDayWithDot(info.startDate)}</div>
-          <div>모임 종료: {getYearMonthDayWithDot(info.endDate)}</div>
+          <div>모집 종료: {formatYearMonthDayWithDot(info.deadline)}</div>
+          <div>모임 시작: {formatYearMonthDayWithDot(info.startDate)}</div>
+          <div>모임 종료: {formatYearMonthDayWithDot(info.endDate)}</div>
         </section>
 
         {/* 기술 스택 */}

@@ -1,5 +1,4 @@
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL; //환경변수로 분리
-
 /**
  * get, post, patch, delete 요청을 처리하는 객체
  * @param endpoint: api 엔드포인트
@@ -23,7 +22,9 @@ export const request = {
           .join('&')
       : ''; // ?sort=deadline&order=asc
 
-    const response = await fetch(`${baseUrl}${endpoint}${queryString}`);
+    const response = await fetch(`${baseUrl}${endpoint}${queryString}`, {
+      credentials: 'include',
+    });
 
     if (!response.ok) {
       throw new Error('Unexpected Error');
@@ -36,6 +37,7 @@ export const request = {
       method: 'POST',
       headers,
       body,
+      credentials: 'include',
     });
 
     if (!response.ok) {
@@ -44,11 +46,12 @@ export const request = {
     return response.json();
   },
 
-  patch: async (endpoint: string, headers: HeadersInit, body: object) => {
+  patch: async (endpoint: string, headers: HeadersInit, body: BodyInit) => {
     const response = await fetch(`${baseUrl}${endpoint}`, {
       method: 'PATCH',
       headers,
       body: JSON.stringify(body),
+      credentials: 'include',
     });
 
     if (!response.ok) {
@@ -60,6 +63,7 @@ export const request = {
   delete: async (endpoint: string) => {
     const response = await fetch(`${baseUrl}${endpoint}`, {
       method: 'DELETE',
+      credentials: 'include',
     });
 
     if (!response.ok) {

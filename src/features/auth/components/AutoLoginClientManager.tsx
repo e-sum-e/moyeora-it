@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect } from 'react';
-import { User } from '@/types';
 import useAuthStore from '@/stores/useAuthStore';
 import { request } from '@/api/request';
+import { UserInfoResponse } from '@/types/response';
 
 type AuthClientProviderProps = {
   hasToken: boolean;
@@ -18,9 +18,15 @@ const AutoLoginClientManager = ({ hasToken }: AuthClientProviderProps) => {
   useEffect(() => {
     const getProfile = async () => {
       try {
-        // TODO: 회원정보 불러오기 /me
-        const { user } = await request.get('/me');
-        setUser(user as User);
+        // 회원정보 불러오기 /me
+        const responseBody: UserInfoResponse = await request.get(
+          '/v1/user/info',
+        );
+
+        setUser({
+          ...responseBody.items.items,
+          userId: responseBody.items.items.id.toString(),
+        });
       } catch (e) {
         console.log(e);
         clearUser();

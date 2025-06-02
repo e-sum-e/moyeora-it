@@ -10,7 +10,7 @@ const REPLY_LIST: Reply[] = Array.from({ length: 33 }, (_, i) => ({
     profileImage: null,
     email: `w${i + 1}@gmail.com`,
   },
-  createdAt: '2025-05-23',
+  createdAt: '2025-05-31T07:22:02.678Z',
   isDeleted: false,
 }));
 
@@ -26,7 +26,7 @@ const REREPLY_LIST: (Reply & { parentId: number })[] = Array.from(
       profileImage: null,
       email: `q${i + 1}@gmail.com`,
     },
-    createdAt: '2025-05-23',
+    createdAt: '2025-06-10T10:39:05.678Z',
   }),
 );
 

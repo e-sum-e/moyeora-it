@@ -4,7 +4,7 @@ import { Title } from '@/components/atoms/title';
 import { ContentInfo } from '@/components/organisms/bookmark-card';
 import { Progress } from '@/components/ui/progress';
 import { getPosition } from '@/types/enums';
-import { getYearMonthDayWithDot } from '@/utils/dateUtils';
+import { formatYearMonthDayWithDot } from '@/utils/dateUtils';
 
 type BookmarkCardContentsProps = {
   className?: string;
@@ -26,7 +26,7 @@ export const BookmarkCardContents = ({
             </header>
             <div className="flex flex-row gap-2">
               <Badge
-                text={getYearMonthDayWithDot(info.deadline)}
+                text={formatYearMonthDayWithDot(info.deadline)}
                 className="bg-gray-200 text-gray-500"
               />
               {info.position.map((position) => (

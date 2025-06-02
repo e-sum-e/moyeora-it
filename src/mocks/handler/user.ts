@@ -1,6 +1,7 @@
 import { http, HttpResponse } from 'msw';
 import { User } from '@/types';
 import { Position, Skill } from '@/types/enums';
+import { Group, GroupType } from '@/types';
 
 export const userHandlers = [
   http.get(
@@ -18,7 +19,7 @@ export const userHandlers = [
         nickname: '테스트닉네임',
         profileImage: 'https://github.com/shadcn.png',
         position: Position.FE,
-        skills: [Skill.JAVA, Skill.JavaScript, Skill.Spring],
+        skills: [Skill.Java, Skill.JavaScript, Skill.Spring],
         rate: 4.5,
         isFollowing: false,
         isFollower: false,
@@ -69,6 +70,37 @@ export const userHandlers = [
         isFollowing: false,
         isFollower: false,
         rate: 4.5,
+      });
+    },
+  ),
+
+  http.get(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/groups`,
+    ({ request }) => {
+      const url = new URL(request.url);
+      console.log(url);
+
+      const items: Group[] = Array.from({ length: 10 }, () => ({
+        id: Math.floor(Math.random() * 1000000) + 1,
+        title: '스터디1',
+        deadline: new Date('2025-05-22'),
+        startDate: new Date('2025-05-20'),
+        endDate: new Date('2025-05-24'),
+        maxParticipants: 10,
+        participants: [],
+        description: '스터디1 설명',
+        position: [1, 3],
+        skills: [1, 2],
+        createdAt: new Date('2025-05-20'),
+        type: GroupType.STUDY,
+        autoAllow: true,
+        isBookmark: false,
+      }));
+
+      return HttpResponse.json({
+        hasNext: true,
+        items,
+        cursor: 10,
       });
     },
   ),

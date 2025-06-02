@@ -1,7 +1,7 @@
 import { BookmarkButton } from '@/components/atoms/bookmark-button';
 import { Group } from '@/types';
 import { Skill } from '@/types/enums';
-import { getYearMonthDayWithDot } from '@/utils/dateUtils';
+import { formatYearMonthDayWithDot } from '@/utils/dateUtils';
 import { getSkillBadge } from '@/utils/getSkillBadge';
 import { routes } from '@/utils/routes';
 import Link from 'next/link';
