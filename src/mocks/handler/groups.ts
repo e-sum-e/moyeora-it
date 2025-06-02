@@ -72,22 +72,23 @@ const GROUP_LIST = [
 
 export const groupsHandlers = [
   http.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/groups`, ({ request }) => {
-    const url = new URL(request.url); // 요청 url에서 parameter를 뽑아내기 위해 url 전체가 필요
+    const url = new URL(request.url);
 
     const typeParam = url.searchParams.get('type');
-
     const skillParam = url.searchParams.get('skill');
-    const skillNumber = skillParam ? Number(skillParam) : null; // skillParam이 있을 경우 서버에 enum 숫자 값으로 보내기 위해 숫자로 변환
-
+    const skillNumber = skillParam ? Number(skillParam) : null;
     const positionParam = url.searchParams.get('position');
     const positionNumber = positionParam ? Number(positionParam) : null;
     const searchKeyword = url.searchParams.get('search')?.toLowerCase() ?? '';
     const sortParam = url.searchParams.get('sort') as GroupSort | null;
     const orderParam = url.searchParams.get('order') as Order | null;
 
-    const items: Group[] = Array.from({ length: 20 }, (_, index) => {
-      const offset = index * 2;
+    const cursorParam = url.searchParams.get('cursor');
+    const cursor = cursorParam ? Number(cursorParam) : 0;
+    const size = 10; // 페이지당 아이템 수
 
+    const allItems: Group[] = Array.from({ length: 50 }, (_, index) => {
+      const offset = index * 2;
       const baseDate = new Date(2025, 4, 26);
       const createdAt = addDays(baseDate, offset);
       const deadline = addDays(baseDate, offset + 1);
@@ -98,26 +99,23 @@ export const groupsHandlers = [
         positionKeys,
         Math.floor(Math.random() * 3) + 1,
       ).map((key) => Position[key]);
-
       const skills = getRandomItems(
         skillKeys,
         Math.floor(Math.random() * 3) + 1,
       ).map((key) => Skill[key]);
-
-      const type = getRandomItem(groupTypeValues.slice(0, 2)); // 만들어진 그룹은 study | project이다
+      const type = getRandomItem(groupTypeValues.slice(0, 2));
 
       const maxParticipants = Math.floor(Math.random() * (30 - 2 + 1)) + 2;
-
       const participants = Array.from(
         { length: Math.floor(Math.random() * maxParticipants) },
         () => ({
           userId: '1',
           nickname: '모여라잇유저',
           profileImage: null,
+          email: 'user@yopmail.com',
         }),
       );
 
-      // 배열에서 순서대로 타이틀 가져오기
       const title = titles[index % titles.length];
 
       return {
@@ -138,21 +136,17 @@ export const groupsHandlers = [
       };
     });
 
-    const typeFiltered =
-      typeParam && typeParam !== ''
-        ? items.filter((item) => item.type === typeParam)
-        : items;
-
+    const typeFiltered = typeParam
+      ? allItems.filter((item) => item.type === typeParam)
+      : allItems;
     const skillFiltered =
       skillNumber !== null
         ? typeFiltered.filter((item) => item.skills.includes(skillNumber))
         : typeFiltered;
-
     const positionFiltered =
       positionNumber !== null
         ? skillFiltered.filter((item) => item.position.includes(positionNumber))
         : skillFiltered;
-
     const searchFiltered = searchKeyword
       ? positionFiltered.filter((item) =>
           item.title.toLowerCase().includes(decodeURIComponent(searchKeyword)),
@@ -161,17 +155,21 @@ export const groupsHandlers = [
 
     const sortedItems = [...searchFiltered].sort((a, b) => {
       if (!sortParam) return 0;
-
       const aDate = new Date(a[sortParam]);
       const bDate = new Date(b[sortParam]);
-
       if (orderParam === 'asc') return aDate.getTime() - bDate.getTime();
       if (orderParam === 'desc') return bDate.getTime() - aDate.getTime();
       return 0;
     });
 
+    const paginatedItems = sortedItems.slice(cursor, cursor + size);
+    const nextCursor =
+      cursor + size < sortedItems.length ? cursor + size : null;
+
     return HttpResponse.json({
-      items: sortedItems,
+      items: paginatedItems,
+      hasNext: nextCursor !== null,
+      cursor: nextCursor,
     });
   }),
   http.post(
