@@ -80,7 +80,7 @@ export const groupsHandlers = [
     });
   }),
   http.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/groups/:groupId`, () => {
-    return HttpResponse.json(  {
+    return HttpResponse.json({
       title: '스터디1',
       deadline: '2025-05-24',
       startDate: '2025-05-20',

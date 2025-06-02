@@ -13,7 +13,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { WriteForm } from '@/types';
-import { getYearMonthDayWithDot } from '@/utils/dateUtils';
+import { formatYearMonthDayWithDot } from '@/utils/dateUtils';
 import { CalendarIcon } from 'lucide-react';
 import { UseFormReturn } from 'react-hook-form';
 
@@ -61,11 +61,11 @@ export const EndDateCalendar = ({
             >
               <div>
                 {field.value ? (
-                  getYearMonthDayWithDot(field.value)
+                  formatYearMonthDayWithDot(field.value)
                 ) : (
                   <>
                     <div className="text-gray-500">
-                      {getYearMonthDayWithDot(validEndDate)}
+                      {formatYearMonthDayWithDot(validEndDate)}
                     </div>
                     <div>날짜를 선택해주세요.</div>
                   </>
