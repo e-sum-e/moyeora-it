@@ -10,7 +10,7 @@ import { Group, GroupType } from '@/types';
 import { Position, Skill } from '@/types/enums';
 import flattenPages from '@/utils/flattenPages';
 import { useRouter } from 'next/navigation';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 type GroupListProps = {
   searchParams: Record<string, string | undefined>;
@@ -22,7 +22,16 @@ const tabList: TabType[] = [
   { value: GroupType.PROJECT, label: '프로젝트' },
 ];
 
+enum EMPTY_INFO_MESSAGE {
+  EMPTY_INITIAL = '생성된 그룹이 없습니다',
+  SEARCH = '검색 결과가 없습니다',
+  FILTER = '조건에 해당하는 그룹이 없습니다.',
+}
+
 export const GroupList = ({ searchParams }: GroupListProps) => {
+  const [isEmptyItems, setIsEmptyItems] = useState(true);
+  const [emptyInfoMessage, setEmptyInfoMessage] =
+    useState<EMPTY_INFO_MESSAGE | null>(null);
   const router = useRouter();
 
   /**
@@ -52,7 +61,6 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
         params.set(key, value);
       }
     });
-    console.log(params.toString());
 
     router.push(`?${params.toString()}`);
   };
@@ -74,6 +82,31 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
     queryParams,
   });
 
+  const items = flattenPages(data.pages);
+
+  useEffect(() => {
+    if (items.length === 0) {
+      // 받아온 데이터가 없는 경우
+      setIsEmptyItems(true);
+      if (searchParams.search) {
+        // 검색어가 있다면 검색어를 우선으로 메시지 설정
+        setEmptyInfoMessage(EMPTY_INFO_MESSAGE.SEARCH);
+        return;
+      } else if (
+        searchParams.type ||
+        searchParams.skill ||
+        searchParams.position
+      ) {
+        setEmptyInfoMessage(EMPTY_INFO_MESSAGE.FILTER);
+        return;
+      }
+      setEmptyInfoMessage(EMPTY_INFO_MESSAGE.EMPTY_INITIAL); // 받아온 데이터는 없지만 필터도 없는 경우(아직 생성된 그룹이 하나도 없을 경우)
+      return;
+    }
+    setEmptyInfoMessage(null);
+    setIsEmptyItems(false);
+  }, [searchParams, items.length]);
+
   // useEffect(() => {
   //   console.log('✅ Hydrated data from client:', queryParams); // DEV : 💡 서버 컴포넌트에서 prefetch 하는지 확인용
   // }, [queryParams]);
@@ -87,11 +120,15 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
         <Filter updateQueryParams={updateQueryParams} />
         <SortOrder updateQueryParams={updateQueryParams} />
         <SearchInput />
-        <ul>
-          {flattenPages(data.pages).map((group) => (
-            <GroupCard key={group.id} item={group} />
-          ))}
-        </ul>
+        {isEmptyItems && emptyInfoMessage !== null ? (
+          <div>{emptyInfoMessage}</div>
+        ) : (
+          <ul>
+            {items.map((group) => (
+              <GroupCard key={group.id} item={group} />
+            ))}
+          </ul>
+        )}
       </Tab>
     </>
   );
