@@ -16,7 +16,7 @@ const checkAuthCookie = async () => {
     );
 
     if (!response.ok) {
-      return false;
+      throw new Error('Failed to fetch user info');
     }
 
     const responseBody: UserInfoResponse = await response.json();
