@@ -127,7 +127,7 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
     const valueWithCreatedAt = { ...values, skills, createdAt: new Date() };
     try {
       const result = await request.post(
-        `/v2/groups/${userId}`,
+        `/v2/groups?userId=${userId}`,
         { 'Content-Type': 'application/json' },
         JSON.stringify(valueWithCreatedAt),
       );
