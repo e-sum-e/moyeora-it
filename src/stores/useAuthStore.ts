@@ -1,11 +1,14 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { User } from '@/types';
+import { UserInfoResponse } from '@/types/response';
+import { request } from '@/api/request';
 
 export type UserStore = {
   user: User | null;
   setUser: (user: User) => void;
   clearUser: () => void;
+  fetchAndSetUser: () => Promise<void>;
 };
 
 /**
@@ -21,6 +24,32 @@ const useAuthStore = create<UserStore>()(
       user: null,
       setUser: (user: User) => set({ user }),
       clearUser: () => set({ user: null }),
+      fetchAndSetUser: async () => {
+        try {
+          const responseBody: UserInfoResponse = await request.get(
+            '/v1/user/info',
+            {},
+            {
+              credentials: 'include',
+            },
+          );
+
+          if (responseBody.status.success) {
+            set({
+              user: {
+                //@ts-expect-error 백엔드에서 제공하는 타입이 이상해서 임시로 처리
+                userId: responseBody.items.items.id.toString(),
+                ...responseBody.items.items,
+              },
+            });
+          } else {
+            throw new Error('유저 정보 불러오기 실패');
+          }
+        } catch (error) {
+          console.error('유저 정보 불러오기 실패', error);
+          throw error; // 필요시 에러 처리 로직 추가
+        }
+      },
     }),
     {
       name: 'user-store',
