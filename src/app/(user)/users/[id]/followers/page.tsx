@@ -6,6 +6,7 @@ import {
 import { request } from '@/api/request';
 import { Suspense } from 'react';
 import { FollowersList } from '@/features/user/follow/components/followers-list';
+import { QueryErrorBoundary } from '@/components/query-error-boundary';
 
 type FollowersPageProps = {
   params: Promise<{
@@ -26,9 +27,9 @@ export default async function FollowersPage({
   const queryClient = new QueryClient();
 
   await queryClient.fetchInfiniteQuery({
-    queryKey: ['items', `/v1/users/${id}/followers`, queryParams],
+    queryKey: ['items', `/v1/follow/${id}/followers`, queryParams],
     queryFn({ pageParam }) {
-      return request.get(`/v1/users/${id}/followers`, {
+      return request.get(`/v1/follow/${id}/followers`, {
         ...queryParams,
         cursor: pageParam,
         size: 10,
@@ -39,11 +40,13 @@ export default async function FollowersPage({
 
   return (
     <>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <Suspense fallback={<div>Loading...</div>}>
-          <FollowersList />
-        </Suspense>
-      </HydrationBoundary>
+      <QueryErrorBoundary>
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <Suspense fallback={<div>Loading...</div>}>
+            <FollowersList />
+          </Suspense>
+        </HydrationBoundary>
+      </QueryErrorBoundary>
     </>
   );
 }

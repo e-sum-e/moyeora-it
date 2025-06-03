@@ -2,15 +2,14 @@
 
 import useAuthStore from '@/stores/useAuthStore';
 import { useEffect } from 'react';
-import { fetchAndSetUser } from '../utils/setUserInfo';
 
 type AuthClientProviderProps = {
-  hasToken: boolean;
+  isValidCookie: boolean;
 };
 
 // localStorage와 서버가 불일치 할 수도 있어서 재접속시 프로필 1회 업데이트
-const AutoLoginClientManager = ({ hasToken }: AuthClientProviderProps) => {
-  const setUser = useAuthStore((s) => s.setUser);
+const AutoLoginClientManager = ({ isValidCookie }: AuthClientProviderProps) => {
+  const fetchAndSetUser = useAuthStore((s) => s.fetchAndSetUser);
   const clearUser = useAuthStore((s) => s.clearUser);
 
   // 재접속시 무조건 한번만 실행되야함!! 0번도 안되고 2번도 안됨
@@ -18,14 +17,14 @@ const AutoLoginClientManager = ({ hasToken }: AuthClientProviderProps) => {
     const getProfile = async () => {
       try {
         // 회원정보 불러오기 /me
-        await fetchAndSetUser(setUser);
+        await fetchAndSetUser();
       } catch (e) {
         console.log(e);
         clearUser();
       }
     };
 
-    if (hasToken) {
+    if (isValidCookie) {
       getProfile();
     } else {
       clearUser();

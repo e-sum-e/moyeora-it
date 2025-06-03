@@ -78,7 +78,7 @@ export const OtherUserProfile = () => {
       </div>
       <div>
         <ToggleFollowButton
-          userId={userId}
+          userId={String(userId)}
           isFollowing={isFollowing}
           usedIn="profile"
         />

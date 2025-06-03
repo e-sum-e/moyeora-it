@@ -12,7 +12,7 @@ export const useRemoveFollower = ({ userId }: { userId: string }) => {
   return useMutation({
     mutationFn() {
       return request.post(
-        `/v1/users/${userId}/unfollower`,
+        `/v1/follow/${userId}/unfollower`,
         {
           'Content-Type': 'application/json',
         },
@@ -27,7 +27,7 @@ export const useRemoveFollower = ({ userId }: { userId: string }) => {
     onSettled() {
       return Promise.all([
         queryClient.invalidateQueries({
-          queryKey: ['items', `/v1/users/${id}/followers`],
+          queryKey: ['items', `/v1/follow/${id}/followers`],
         }),
         queryClient.invalidateQueries({
           queryKey: ['user', id, 'followers count'],
