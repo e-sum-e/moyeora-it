@@ -19,17 +19,23 @@ jobs:
           yarn install --frozen-lockfile
           yarn build
 
-      - name: Copy build files to EC2
+      - name: Debug - List root files
+        run: ls -al
+
+      - name: Debug - List .next folder
+        run: ls -al .next
+
+      - name: Copy necessary files to EC2
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
-          source: | 
+          source: |
             .next
-            package.json
+            public
+            next.config.js
             ecosystem.config.js
-            yarn.lock
           target: "/projects/moyeora-it-FE/"
           rm: true
 
@@ -47,4 +53,3 @@ jobs:
             else
               pm2 reload ecosystem.config.js --env development
             fi
-
