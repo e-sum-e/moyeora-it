@@ -2,14 +2,25 @@
 
 import { RereplyFormToggle } from '@/components/molecules/reply/rereply-form-toggle';
 import { RereplyList } from '@/components/organisms/reply/rereply-list';
-import { useState } from 'react';
+import { useReplyScrollParams } from '@/hooks/useReplyScrollParams';
+import { useEffect, useState } from 'react';
 
-export const ReplyThread = ({ replyId }: { replyId: number }) => {
+export const ReplyThread = ({ parentReplyId }: { parentReplyId: number }) => {
+  const { targetParentId, targetId } = useReplyScrollParams('rereply');
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [newReplyId, setNewReplyId] = useState<number | null>(null);
+  const [targetReplyId, setTargetReplyId] = useState<number | null>(() => {
+    if (parentReplyId === targetParentId) return targetId;
+    return null;
+  });
 
-  const replyFormSuccessHandler = (newReplyId: number) => {
-    setNewReplyId(newReplyId);
+  useEffect(() => {
+    if (targetReplyId) {
+      setIsOpen(true);
+    }
+  }, [parentReplyId, targetParentId, targetReplyId]);
+
+  const replyFormSuccessHandler = (newReplyId: number | null) => {
+    setTargetReplyId(newReplyId);
     setIsOpen(true);
   };
 
@@ -24,14 +35,14 @@ export const ReplyThread = ({ replyId }: { replyId: number }) => {
         </div>
         {isOpen && (
           <RereplyList
-            newReplyId={newReplyId}
-            setNewReplyId={setNewReplyId}
-            parentReplyId={replyId}
+            targetReplyId={targetReplyId}
+            setTargetReplyId={setTargetReplyId}
+            parentReplyId={parentReplyId}
           />
         )}
       </div>
       <RereplyFormToggle
-        parentReplyId={replyId}
+        parentReplyId={parentReplyId}
         onSuccess={replyFormSuccessHandler}
       />
     </>

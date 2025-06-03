@@ -75,6 +75,7 @@ export const EditableAvatar = ({ imageSrc, fallback }: EditableAvatarProps) => {
         onChange={fileChangeHandler}
       />
       <Button
+        type="button"
         variant="outline"
         onClick={() => {
           setCurrentImageSrc(

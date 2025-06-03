@@ -108,6 +108,10 @@ export const WriteForm = () => {
     },
   });
 
+  const cancelClickHandler = () => {
+    router.push('/');
+  };
+
   const formSubmit = async (values: z.infer<typeof formSchema>) => {
     const skills = values.skills.map(
       (skill) => Skill[skill as keyof typeof Skill],
@@ -116,7 +120,7 @@ export const WriteForm = () => {
     const valueWithCreatedAt = { ...values, skills, createdAt: new Date() };
     try {
       const result = await request.post(
-        '/api/group',
+        '/group',
         { 'Content-Type': 'application/json' },
         JSON.stringify(valueWithCreatedAt),
       );
@@ -165,7 +169,9 @@ export const WriteForm = () => {
         <Description form={form} />
         <SelectSkill form={form} />
         <SelectPosition form={form} />
-        <Button type="button">취소하기</Button>
+        <Button type="button" onClick={cancelClickHandler}>
+          취소하기
+        </Button>
         <Button type="submit">등록하기</Button>
       </form>
     </Form>

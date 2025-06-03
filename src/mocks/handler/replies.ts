@@ -8,8 +8,9 @@ const REPLY_LIST: Reply[] = Array.from({ length: 33 }, (_, i) => ({
     userId: `w${i + 1}`,
     nickname: `w${i + 1}`,
     profileImage: null,
+    email: `w${i + 1}@gmail.com`,
   },
-  createdAt: '2025-05-23',
+  createdAt: '2025-05-31T07:22:02.678Z',
   isDeleted: false,
 }));
 
@@ -23,15 +24,16 @@ const REREPLY_LIST: (Reply & { parentId: number })[] = Array.from(
       userId: `q${i + 1}`,
       nickname: `q${i + 1}`,
       profileImage: null,
+      email: `q${i + 1}@gmail.com`,
     },
-    createdAt: '2025-05-23',
+    createdAt: '2025-06-10T10:39:05.678Z',
   }),
 );
 
 export const repliesHandlers = [
   // 댓글 무한 스크롤로 가져오기
   http.get(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/groups/:groupId/replies`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/v2/groups/:groupId/replies`,
     ({ request }) => {
       const url = new URL(request.url);
       const cursorParam = url.searchParams.get('cursor');
@@ -62,7 +64,7 @@ export const repliesHandlers = [
   ),
   // 대댓글 무한 스크롤로 가져오기
   http.get(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/groups/:groupId/replies/:replyId`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/v2/groups/:groupId/replies/:replyId`,
     ({ request, params }) => {
       const url = new URL(request.url);
       const cursorParam = url.searchParams.get('cursor');
@@ -97,7 +99,7 @@ export const repliesHandlers = [
   ),
   // 댓글 추가
   http.post(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/groups/:groupId/replies`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/v2/groups/:groupId/replies`,
     async ({ request }) => {
       const body = (await request.json()) as { content: string };
       const { content } = body;
@@ -108,8 +110,9 @@ export const repliesHandlers = [
         content,
         writer: {
           userId: `w${newId}`,
-          nickname: `w${newId}`,
+          nickname: null,
           profileImage: null,
+          email: `w${newId}@gmail.com`,
         },
         createdAt: '2025-05-23',
       };
@@ -123,7 +126,7 @@ export const repliesHandlers = [
   ),
   // 대댓글 추가
   http.post(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/groups/:groupId/replies/:replyId`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/v2/groups/:groupId/replies/:replyId`,
     async ({ request, params }) => {
       const body = (await request.json()) as { content: string };
       const { content } = body;
@@ -135,9 +138,10 @@ export const repliesHandlers = [
         parentId,
         content,
         writer: {
-          userId: `w${newId}`,
-          nickname: `w${newId}`,
+          userId: `n${newId}`,
+          nickname: `n${newId}`,
           profileImage: null,
+          email: `n${newId}@gmail.com`,
         },
         createdAt: '2025-05-23',
       };
@@ -152,7 +156,7 @@ export const repliesHandlers = [
   ),
   // 댓글, 대댓글 수정
   http.patch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/groups/:groupId/replies/:replyId`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/v2/groups/:groupId/replies/:replyId`,
     async ({ request, params }) => {
       const body = (await request.json()) as { content: string };
       const { content } = body;
@@ -180,7 +184,7 @@ export const repliesHandlers = [
     },
   ), // 댓글, 대댓글 삭제
   http.delete(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/groups/:groupId/replies/:replyId`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/v2/groups/:groupId/replies/:replyId`,
     async ({ params }) => {
       const replyId = Number(params.replyId);
 

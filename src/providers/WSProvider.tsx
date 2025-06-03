@@ -1,21 +1,24 @@
 // providers/WebSocketProvider.tsx
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
 import { initMockSocket } from '@/mocks/handler/ws';
-import { eNotification } from '@/types/enums';
-import { Notification } from '@/types';
 import useNotificationStore from '@/stores/useNotificationStore';
+import { Notification } from '@/types';
+import { eNotification } from '@/types/enums';
+import { createContext, useContext, useEffect, useState } from 'react';
 const WebSocketContext = createContext<WebSocket | null>(null);
 
-export const WebSocketProvider = ({ children }: { children: React.ReactNode }) => {
+export const WebSocketProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const { addNotification } = useNotificationStore();
 
-
   useEffect(() => {
     initMockSocket();
-    
+
     const ws = new WebSocket('ws://localhost:8080'); // mock-socket 서버 주소
 
     ws.onopen = () => {
@@ -23,20 +26,20 @@ export const WebSocketProvider = ({ children }: { children: React.ReactNode }) =
       ws.send('msg from client');
     };
 
-    type MessageType =  {
-     type: eNotification,
-     notification: {
-      id: number,
-      message: string,
-      isRead: boolean,
-      createdAt: Date,
-      url: string,
-     }
-    }
+    type MessageType = {
+      type: eNotification;
+      notification: {
+        id: number;
+        message: string;
+        isRead: boolean;
+        createdAt: Date;
+        url: string;
+      };
+    };
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data) as MessageType;
-      const {notification, type} = data;
-      const {id, createdAt, isRead, url, message} = notification;
+      const { notification, type } = data;
+      const { id, createdAt, isRead, url, message } = notification;
 
       const params: Notification = {
         id,
@@ -45,21 +48,20 @@ export const WebSocketProvider = ({ children }: { children: React.ReactNode }) =
         createdAt,
         type,
         url,
-      }
+      };
       handleNotification(params);
-
     };
 
-
-  const handleNotification = (notification: Notification) => {
-    addNotification(notification);
-  };
+    const handleNotification = (notification: Notification) => {
+      addNotification(notification);
+    };
 
     setSocket(ws);
 
     return () => {
       ws.close();
     };
+    // eslint-disable-next-line
   }, []);
 
   return (

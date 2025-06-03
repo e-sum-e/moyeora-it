@@ -3,96 +3,106 @@
 import { Filter } from '@/components/molecules/group/filter';
 import { GroupCard } from '@/components/molecules/group/group-card';
 import { SortOrder } from '@/components/molecules/group/sort-order';
+import { SearchInput } from '@/components/molecules/search-input/search-input';
+import { Tab, TabType } from '@/components/molecules/tab';
+import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
-import { Group, GroupSort, Order, PositionName, SkillName } from '@/types';
+import { Group, GroupType } from '@/types';
 import { Position, Skill } from '@/types/enums';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useMemo } from 'react';
 
-export const GroupList = () => {
-  const [selectedSkill, setSelectedSkill] = useState<SkillName>('');
-  const [selectedPosition, setSelectedPosition] = useState<PositionName>('');
-  const [selectedSort, setSelecteSort] = useState<GroupSort>('createdAt');
-  const [selectedOrder, setSelectedOrder] = useState<Order>('desc');
-  const searchParams = useSearchParams();
+type GroupListProps = {
+  searchParams: Record<string, string | undefined>;
+};
+
+export const GroupList = ({ searchParams }: GroupListProps) => {
+  const tabList: TabType[] = [
+    { value: '', label: '모든 그룹' },
+    { value: GroupType.STUDY, label: '스터디' },
+    { value: GroupType.PROJECT, label: '프로젝트' },
+  ];
   const router = useRouter();
 
-  const updateQuery = (key: string, value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
+  /**
+   * router.push를 수행하는 함수
+   * @param queries 여러 query key를 한번에 업데이트 할 수 있기 때문에 인자를 Record 타입으로 받는다
+   */
+  const updateQueryParams = (queries: Record<string, string>) => {
+    const params = new URLSearchParams();
 
-    if (value === '') {
-      params.delete(key); // 전체를 선택할 경우 value가 "" 이고 params에서 삭제한다.
-    } else {
-      params.set(key, value);
-    }
+    // 기존 searchParams를 params에 넣기
+    Object.entries(searchParams).forEach(([key, value]) => {
+      if (value !== undefined && value !== '') {
+        params.set(key, value);
+      }
+    });
+
+    // 업데이트할 쿼리 적용
+    Object.entries(queries).forEach(([key, value]) => {
+      const prevValue = params.get(key);
+
+      if (value === '' || value === 'all') {
+        // 전체 선택 시 해당 key 삭제
+        params.delete(key);
+      } else if (prevValue === value) {
+        // 이미 선택한 값이면 삭제
+        params.delete(key);
+      } else {
+        params.set(key, value);
+      }
+    });
 
     router.push(`?${params.toString()}`);
   };
 
-  const { data } = useFetchItems<Group>({
-    url: '/api/groups',
-    queryParams: {
-      skill: Skill[selectedSkill as keyof typeof Skill] ?? '',
-      position: Position[selectedPosition as keyof typeof Position] ?? '',
-      sort: selectedSort,
-      order: selectedOrder,
+  const queryParams = useMemo(
+    () => ({
+      type: searchParams.type ?? '',
+      skill: Skill[searchParams.skill as keyof typeof Skill] ?? '',
+      position: Position[searchParams.position as keyof typeof Position] ?? '',
+      sort: searchParams.sort ?? 'createdAt',
+      order: searchParams.order ?? 'desc',
+      search: searchParams.search ?? '',
+    }),
+    [searchParams],
+  );
+
+  const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<Group>({
+    url: '/groups',
+    queryParams: { ...queryParams, size: 10 },
+  });
+
+  const { ref } = useFetchInView({
+    fetchNextPage,
+    isLoading,
+    options: {
+      rootMargin: '50px',
     },
   });
 
-  const selectSkill = (currentSkill: SkillName) => {
-    setSelectedSkill(currentSkill);
-    updateQuery('skill', currentSkill);
-  };
-
-  const selectPosition = (currentPosition: PositionName) => {
-    setSelectedPosition(currentPosition);
-    updateQuery('position', currentPosition);
-  };
-
-  const selectSort = (currentSort: GroupSort) => {
-    setSelecteSort(currentSort);
-    updateQuery('sort', currentSort);
-  };
-
-  const selectOrder = (currentOrder: Order) => {
-    setSelectedOrder(currentOrder);
-    updateQuery('order', currentOrder);
-  };
-
-  useEffect(() => {
-    const skill = searchParams.get('skill') as SkillName;
-    const position = searchParams.get('position') as PositionName;
-    const sort = searchParams.get('sort') as GroupSort;
-    const order = searchParams.get('order') as Order;
-
-    if (skill) setSelectedSkill(skill);
-    if (position) setSelectedPosition(position);
-    if (sort) setSelecteSort(sort);
-    if (order) setSelectedOrder(order);
-
-    /**
-     * 초기 1회만 실행하도록 deps는 빈배열로 둠
-     * - searchParams를 deps에 추가할 시 router.push()로 인해 url이 변경되면 searchParams가 또 변경되어 useEffect()가 실행되는데 다른 searchParams를 선택할 경우 코드 흐름이 꼬일 수 있음
-     *  */
-    // eslint-disable-next-line
-  }, []);
+  // useEffect(() => {
+  //   console.log('✅ Hydrated data from client:', queryParams); // DEV : 💡 서버 컴포넌트에서 prefetch 하는지 확인용
+  // }, [queryParams]);
 
   return (
     <>
-      <Filter selectSkill={selectSkill} selectPosition={selectPosition} />
-      <SortOrder
-        selectedSort={selectedSort}
-        selectedOrder={selectedOrder}
-        selectSort={selectSort}
-        selectOrder={selectOrder}
-      />
-      <ul>
-        {data.pages
-          .flatMap((page) => page.items)
-          .map((item) => (
-            <GroupCard key={item.id} item={item} />
-          ))}
-      </ul>
+      <Tab
+        tabList={tabList}
+        onValueChange={(value) => updateQueryParams({ type: value })}
+      >
+        <Filter updateQueryParams={updateQueryParams} />
+        <SortOrder updateQueryParams={updateQueryParams} />
+        <SearchInput />
+        <ul>
+          {data.pages
+            .flatMap((page) => page.items)
+            .map((item) => (
+              <GroupCard key={item.id} item={item} />
+            ))}
+        </ul>
+      </Tab>
+      {hasNextPage && <div ref={ref}></div>}
     </>
   );
 };

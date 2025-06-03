@@ -5,7 +5,7 @@ import LoginTriggerManager from '@/features/auth/components/LoginTriggerManager'
 
 export default async function Page() {
   const headerList = await headers();
-  // next-url: next에서 제공해주는 이전 path, Link나 router.push로 이동할 때 자등으로 저장됨
+  // next-url: next에서 제공해주는 이전 path, Link나 router.push, redirect로 이동할 때 자등으로 저장됨
   const nextUrl = headerList.get('next-url') || '/';
 
   return (
