@@ -29,7 +29,8 @@ export default async function GroupDetailPage({
     }
 
     data = response.data;
-  } catch {
+  } catch (err) {
+    console.error(err);
     notFound();
   }
 
@@ -43,10 +44,7 @@ export default async function GroupDetailPage({
         <ReplyList />
       </main>
       <footer className="fixed bottom-0 z-50 bg-white border-t-2 py-2 px-5 w-full flex justify-end gap-3">
-        <GroupActionButtons
-          hostId={host.userId.toString()}
-          isApplicant={isApplicant}
-        />
+        <GroupActionButtons hostId={host.userId} isApplicant={isApplicant} />
       </footer>
     </div>
   );
