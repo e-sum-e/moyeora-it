@@ -4,17 +4,23 @@ import { Filter } from '@/components/molecules/group/filter';
 import { GroupCard } from '@/components/molecules/group/group-card';
 import { SortOrder } from '@/components/molecules/group/sort-order';
 import { SearchInput } from '@/components/molecules/search-input/search-input';
+import { Tab, TabType } from '@/components/molecules/tab';
 import { useFetchItems } from '@/hooks/useFetchItems';
-import { Group } from '@/types';
+import { Group, GroupType } from '@/types';
 import { Position, Skill } from '@/types/enums';
 import flattenPages from '@/utils/flattenPages';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
-import { TypeTab } from '@/components/molecules/group/type-tab';
 
 type GroupListProps = {
   searchParams: Record<string, string | undefined>;
 };
+
+const tabList: TabType[] = [
+  { value: '', label: '모든 그룹' },
+  { value: GroupType.STUDY, label: '스터디' },
+  { value: GroupType.PROJECT, label: '프로젝트' },
+];
 
 export const GroupList = ({ searchParams }: GroupListProps) => {
   const router = useRouter();
@@ -39,7 +45,7 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
       if (value === '' || value === 'all') {
         // 전체 선택 시 해당 key 삭제
         params.delete(key);
-      } else if (prevValue === value) { //ISSUE: tab의 상태랑 query의 상태가 동일해서 탭 두번클릭하면 초기화됨
+      } else if (prevValue === value) {
         // 이미 선택한 필터를 다시 선택한 경우 params에서 삭제
         params.delete(key);
       } else {
@@ -74,15 +80,19 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
 
   return (
     <>
-      <TypeTab updateQueryParams={updateQueryParams} />
-      <Filter updateQueryParams={updateQueryParams} />
-      <SortOrder updateQueryParams={updateQueryParams} />
-      <SearchInput />
-      <ul>
-      {flattenPages(data.pages).map(group => (
-        <GroupCard key={group.id} item={group} />
-        ))}
-      </ul>
+      <Tab
+        tabList={tabList}
+        onValueChange={(value) => updateQueryParams({ type: value })}
+      >
+        <Filter updateQueryParams={updateQueryParams} />
+        <SortOrder updateQueryParams={updateQueryParams} />
+        <SearchInput />
+        <ul>
+          {flattenPages(data.pages).map((group) => (
+            <GroupCard key={group.id} item={group} />
+          ))}
+        </ul>
+      </Tab>
     </>
   );
 };
