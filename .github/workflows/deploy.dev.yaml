@@ -42,14 +42,10 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
-          # 쉼표 대신 배열 형식 사용
-          source: |
-            .next
-            public
-            next.config.js
-            ecosystem.config.js
-          target: "/projects/moyeora-it-FE/"
+          source: ".next,public,next.config.js,ecosystem.config.js"
+          target: "/home/ubuntu/projects/moyeora-it-FE"
           rm: true
+          debug: true
 
       - name: SSH into EC2 and restart pm2
         uses: appleboy/ssh-action@v1.0.0
