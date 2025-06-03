@@ -108,3 +108,38 @@ export type Reply = {
   createdAt: string;
   isDeleted?: boolean; // 삭제된 댓글인지 여부
 };
+
+export type GroupDetail = {
+  groupInfo: {
+    groupId: number;
+    title: string;
+    description: string;
+    userId: number;
+    autoAllow: boolean;
+    currentParticipants: number;
+    maxParticipants: number;
+    status: boolean;
+    type: string;
+    views: number;
+    skills: string[];
+    positions: string[];
+    deadline: string;
+    startDate: string;
+    endDate: string;
+    userInfos: {
+      userId: number;
+      nickname: string;
+      profileImage: string;
+      email: string;
+    }[];
+  };
+  userInfo: {
+    userId: number;
+    nickname: string;
+    profileImage: string;
+    email: string;
+  };
+  applicant: boolean;
+  joined: boolean;
+  bookmark: boolean;
+};
