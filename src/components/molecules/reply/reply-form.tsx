@@ -28,6 +28,7 @@ export const ReplyForm = ({ onSuccess, parentReplyId }: ReplyFormProps) => {
         endpoint,
         { 'Content-Type': 'application/json' },
         JSON.stringify({ content }),
+        { credentials: 'include' },
       ),
     onSuccess: (data) => {
       // 목록 무효화 후, 작성한 댓글로 이동

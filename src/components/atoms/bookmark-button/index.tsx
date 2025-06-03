@@ -21,7 +21,12 @@ export const BookmarkButton = ({
 
   const { mutate } = useMutation({
     mutationFn: (isBookmark: boolean) =>
-      request.patch('/v2/bookmark', {}, { groupId, isBookmark }),
+      request.patch(
+        '/v2/bookmark',
+        { 'Content-Type': 'application/json' },
+        { groupId, isBookmark },
+        { credentials: 'include' },
+      ),
     onError: () => {
       toast.error('찜하기에 실패하였습니다.');
       setIsBookmark((prev) => !prev);
