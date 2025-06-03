@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { request } from '@/api/request';
 
 /**
  * 비밀번호 변경 커스텀 훅
@@ -13,10 +14,16 @@ export const useChangePassword = () => {
       newPassword: string;
       confirmPassword: string;
     }) => {
-      return fetch('http://localhost:4000/api/v1/users/password', {
-        method: 'PATCH',
-        body: JSON.stringify({ newPassword, confirmPassword }),
-      });
+      return request.patch(
+        '/v1/user/password',
+        {
+          'Content-Type': 'application/json',
+        },
+        {
+          newPassword,
+          confirmPassword,
+        },
+      );
     },
     onSuccess() {
       toast.success('비밀번호 변경 성공', {
