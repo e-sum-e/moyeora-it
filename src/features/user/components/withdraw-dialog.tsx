@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
   AlertDialog,
@@ -13,8 +15,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
+import { request } from '@/api/request';
 import useAuthStore from '@/stores/useAuthStore';
 
 /**
@@ -30,15 +31,7 @@ export const WithdrawDialog = () => {
 
   const withdrawButtonClickHandler = async () => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/withdraw`,
-        {
-          method: 'DELETE',
-        },
-      );
-      if (!response.ok) {
-        throw new Error('회원 탈퇴 실패');
-      }
+      await request.delete('/v1/user/delete');
       toast.success('회원 탈퇴 완료', {
         description: '회원 탈퇴가 완료되었습니다.',
       });

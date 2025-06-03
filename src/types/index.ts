@@ -21,7 +21,6 @@ export type UserSummary = Pick<
 export enum GroupType {
   STUDY = 'study',
   PROJECT = 'project',
-  ALL = 'all',
 }
 
 export type WriteFormWithCreatedAt = WriteForm & { createdAt: Date };
