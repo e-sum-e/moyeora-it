@@ -2,7 +2,7 @@
 import { eNotification, Position, Skill } from './enums';
 
 export type User = {
-  userId: string | number; // ISSUE: 백엔드에서 uuid 안쓰고 그냥 index 리턴해준다고 했나요?
+  userId: number;
   nickname: string | null;
   email: string;
   profileImage: string | null;

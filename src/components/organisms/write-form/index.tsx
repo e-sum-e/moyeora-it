@@ -83,7 +83,11 @@ const formSchema = z
     path: ['endDate'],
   });
 
-export const WriteForm = () => {
+type WriteFormProps = {
+  userId: number;
+};
+
+export const WriteForm = ({ userId }: WriteFormProps) => {
   const [isDeadlineCalendarOpen, setIsDeadlineCalendarOpen] = useState(false);
   const [isStartDateCalendarOpen, setIsStartDateCalendarOpen] = useState(false);
   const [isEndDateCalendarOpen, setIsEndDateCalendarOpen] = useState(false);
@@ -123,7 +127,7 @@ export const WriteForm = () => {
     const valueWithCreatedAt = { ...values, skills, createdAt: new Date() };
     try {
       const result = await request.post(
-        '/v2/groups',
+        `/v2/groups/${userId}`,
         { 'Content-Type': 'application/json' },
         JSON.stringify(valueWithCreatedAt),
       );
