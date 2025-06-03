@@ -10,13 +10,14 @@ import { useFetchItems } from '@/hooks/useFetchItems';
 import { User } from '@/types';
 import { ToggleFollowButton } from '@/features/user/follow/components/toggle-follow-button';
 import { request } from '@/api/request';
+import flattenPages from '@/utils/flattenPages';
 
 export const FollowingList = () => {
   const searchParams = useSearchParams();
   const { id } = useParams();
 
   const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<User>({
-    url: `/users/${id}/followings`,
+    url: `/v1/follow/${id}/followings`,
     ...(searchParams.size !== 0 && {
       queryParams: Object.fromEntries(searchParams.entries()),
     }),
@@ -29,7 +30,7 @@ export const FollowingList = () => {
   const { data: { count: followingCount } = {} } = useQuery({
     queryKey: ['user', id, 'followings count'],
     queryFn() {
-      return request.get(`/users/${id}/followings/count`);
+      return request.get(`/v1/follow/${id}/followings/count`);
     },
     staleTime: 0,
     refetchOnMount: true,
@@ -40,7 +41,7 @@ export const FollowingList = () => {
     isLoading,
   });
 
-  const followingList = data.pages.flatMap((page) => page.items).flat();
+  const followingList = flattenPages<User>(data.pages);
 
   return (
     <>
@@ -65,7 +66,7 @@ export const FollowingList = () => {
                   </div>
                 </div>
                 <ToggleFollowButton
-                  userId={following.userId}
+                  userId={String(following.userId)}
                   isFollowing={following.isFollowing}
                   usedIn="followings"
                 />

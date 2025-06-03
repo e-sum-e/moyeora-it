@@ -1,4 +1,3 @@
-import AutoLoginManager from '@/features/auth/components/AutoLoginManager';
 import { server } from '@/mocks/server';
 import { MSWComponent } from '@/providers/MSWComponent';
 import { ReactQueryProvider } from '@/providers/ReactQueryProvider';
@@ -7,6 +6,7 @@ import type { Metadata } from 'next';
 import { Toaster } from 'sonner';
 import './globals.css';
 import { Header } from '@/components/organisms/header';
+import AutoLoginManager from '@/features/auth/components/AutoLoginManager';
 
 export const metadata: Metadata = {
   title: '모여라-IT',

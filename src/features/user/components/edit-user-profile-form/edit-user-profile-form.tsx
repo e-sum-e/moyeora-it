@@ -48,7 +48,7 @@ export const EditUserProfileForm = ({
   });
 
   const { mutateAsync: updateProfile } = useUpdateProfileMutation({
-    userId: user?.userId ?? '',
+    userId: String(user?.userId),
   });
 
   const formSubmitHandler: SubmitHandler<FormData> = async (data) => {

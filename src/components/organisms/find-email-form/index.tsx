@@ -37,7 +37,9 @@ const FindEmailForm = () => {
 
       // find-email인 경우
       // 중복이면 false, 중복이 아니면 true
-      const { success } = await request.post(
+      const {
+        status: { success },
+      } = await request.post(
         '/v1/user/check-email',
         {
           'Content-Type': 'application/json',
@@ -45,16 +47,18 @@ const FindEmailForm = () => {
         JSON.stringify(values),
       );
 
-      if (!success) {
-        setIsExisted(true);
-        setIsNotExisted(false);
-      } else {
+      if (success) {
         setIsExisted(false);
         setIsNotExisted(true);
+      } else {
+        setIsExisted(true);
+        setIsNotExisted(false);
       }
     } catch (e) {
+      // 중복으로 처리하ㅔ셔서 에러나면 존재하는거임
       // TODO: 이메일 찾기 실패시 에러코드 맞춰서 설정해주기
-      setIsNotExisted(true);
+      setIsExisted(true);
+      setIsNotExisted(false);
       console.log(e);
     } finally {
       setDisabled(false);

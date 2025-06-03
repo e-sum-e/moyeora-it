@@ -11,6 +11,8 @@ import useAuthStore from '@/stores/useAuthStore';
 import { NotificationBadge } from '../notification-badge';
 import { useQuery } from '@tanstack/react-query';
 import { request } from '@/api/request';
+import flattenPages from '@/utils/flattenPages';
+import { getDisplayNickname } from '@/utils/fallback';
 
 export const NotificationList = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,14 +22,15 @@ export const NotificationList = () => {
 
   // 전체 알림 목록 조회
   const { data, fetchNextPage, hasNextPage } = useFetchItems<NotificationType>({
-    url: '/notifications',
+    url: '/v1/notifications',
   });
+  
 
   // 안 읽은 알림 목록 조회
   const { data: unreadData, isLoading: isUnreadLoading } = useQuery<{ unreadCount: number }>({
     queryKey: ['unread-count'],
     queryFn: async () => {
-      return await request.get('/notifications/unread-count');
+      return await request.get('/v1/notifications/unread-count');
     }
   });
 
@@ -39,7 +42,7 @@ export const NotificationList = () => {
   // 전체 알림 목록 저장
   useEffect(() => {
     if (!data) return;
-    const notificationList = data?.pages.flatMap((page) => page.items);
+    const notificationList = flattenPages(data.pages);
     setNotifications(notificationList);
   }, [data, setNotifications]);
 
@@ -60,7 +63,7 @@ export const NotificationList = () => {
       <PopoverTrigger>
         <Avatar
           imageSrc={user.profileImage ?? ''} //TODO 프로필 이미지 없는 경우 기본 이미지 설정 필요
-          fallback={user.email.split('@')[0]}
+          fallback={getDisplayNickname(user.nickname, user.email)}
           className="w-8 h-8 cursor-pointer"
         />
         {unreadCount}
@@ -69,6 +72,7 @@ export const NotificationList = () => {
       <PopoverContent className="p-0">
         <h4>Notification</h4>
         {notifications?.map((notification: NotificationType) => (
+          notification &&
           <NotificationItem 
             key={notification.id} 
             notification={notification}

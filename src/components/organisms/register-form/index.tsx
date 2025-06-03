@@ -9,7 +9,6 @@ import { Form } from '@/components/ui/form';
 import { useState } from 'react';
 import useAuthStore from '@/stores/useAuthStore';
 import { request } from '@/api/request';
-import { UserInfoResponse } from '@/types/response';
 
 // 회원가입에 쓰이는 이메일과 비밀번호 유효성
 const registerFormSchema = z
@@ -51,7 +50,7 @@ const RegisterForm = () => {
 
   const [disabled, setDisabled] = useState(false);
 
-  const setUser = useAuthStore((s) => s.setUser);
+  const fetchAndSetUser = useAuthStore((s) => s.fetchAndSetUser);
 
   // 회원가입
   const onRegisterSubmit = async (
@@ -61,7 +60,9 @@ const RegisterForm = () => {
       setDisabled(true);
       // 회원가입 로직 작성 /user/signup
       // 에러처리 별도로 해줘야 할 수도 있음
-      await request.post(
+      const {
+        status: { success: registerSuccess },
+      } = await request.post(
         '/v1/user/signup',
         {
           'Content-Type': 'application/json',
@@ -72,21 +73,25 @@ const RegisterForm = () => {
         }),
       );
 
-      await request.post(
+      if (!registerSuccess) throw new Error('회원가입 실패');
+
+      const {
+        status: { success: loginSuccess },
+      } = await request.post(
         '/v1/user/login',
         {
           'Content-Type': 'application/json',
         },
         JSON.stringify(values),
+        {
+          credentials: 'include',
+        },
       );
 
-      // 회원가입 성공 후(즉시 로그인, 쿠키 바로 설정) 회원정보 불러오기 프로필 설정 setUser(user)
-      const responseBody: UserInfoResponse = await request.get('/v1/user/info');
+      if (!loginSuccess) throw new Error('로그인 실패');
 
-      setUser({
-        ...responseBody.items.items,
-        userId: responseBody.items.items.id.toString(),
-      });
+      // 회원가입 성공 후(즉시 로그인, 쿠키 바로 설정) 회원정보 불러오기 프로필 설정 setUser(user)
+      await fetchAndSetUser();
     } catch (e) {
       // TODO: 회원가입 실패시 에러코드 맞춰서 설정해주기
       setIsRegisterFailed(true);
