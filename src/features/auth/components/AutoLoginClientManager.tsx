@@ -5,11 +5,11 @@ import { useEffect } from 'react';
 import { fetchAndSetUser } from '../utils/setUserInfo';
 
 type AuthClientProviderProps = {
-  hasToken: boolean;
+  isValidCookie: boolean;
 };
 
 // localStorage와 서버가 불일치 할 수도 있어서 재접속시 프로필 1회 업데이트
-const AutoLoginClientManager = ({ hasToken }: AuthClientProviderProps) => {
+const AutoLoginClientManager = ({ isValidCookie }: AuthClientProviderProps) => {
   const setUser = useAuthStore((s) => s.setUser);
   const clearUser = useAuthStore((s) => s.clearUser);
 
@@ -25,7 +25,7 @@ const AutoLoginClientManager = ({ hasToken }: AuthClientProviderProps) => {
       }
     };
 
-    if (hasToken) {
+    if (isValidCookie) {
       getProfile();
     } else {
       clearUser();

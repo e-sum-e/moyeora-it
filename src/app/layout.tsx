@@ -6,6 +6,7 @@ import type { Metadata } from 'next';
 import { Toaster } from 'sonner';
 import './globals.css';
 import { Header } from '@/components/organisms/header';
+import AutoLoginManager from '@/features/auth/components/AutoLoginManager';
 
 export const metadata: Metadata = {
   title: '모여라-IT',
@@ -28,7 +29,7 @@ export default function RootLayout({
             <WebSocketProvider>{children}</WebSocketProvider>
           </ReactQueryProvider>
           <Toaster />
-          {/* <AutoLoginManager /> */}
+          <AutoLoginManager />
         </MSWComponent>
       </body>
     </html>
