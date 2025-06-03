@@ -30,9 +30,9 @@ export default async function GroupsPage({ searchParams }: GroupsPageProps) {
   };
 
   await queryClient.fetchInfiniteQuery({
-    queryKey: ['items', '/user/groups', queryParams],
+    queryKey: ['items', '/v2/groups', queryParams],
     queryFn({ pageParam }) {
-      return request.get('/user/groups', {
+      return request.get('/v2/groups', {
         ...queryParams,
         cursor: pageParam,
         size: 10,
