@@ -5,7 +5,7 @@ module.exports = {
       script: 'yarn',
       args: 'start',
       interpreter: '/bin/bash',
-      cwd: '/projects/moyeora-it-FE', 
+      cwd: '/home/ubuntu/projects/moyeora-it-FE', 
       env: {
         NODE_ENV: 'development',
         PORT: 3000,

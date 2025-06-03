@@ -44,7 +44,6 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           source: ".next,public,next.config.js,ecosystem.config.js"
           target: "/home/ubuntu/projects/moyeora-it-FE"
-          rm: true
           debug: true
 
       - name: SSH into EC2 and restart pm2
