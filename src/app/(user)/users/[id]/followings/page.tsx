@@ -6,6 +6,7 @@ import {
 import { request } from '@/api/request';
 import { Suspense } from 'react';
 import { FollowingList } from '@/features/user/follow/components/following-list';
+import { QueryErrorBoundary } from '@/components/query-error-boundary';
 
 type FollowingsPageProps = {
   params: Promise<{
@@ -39,11 +40,13 @@ export default async function FollowingsPage({
 
   return (
     <>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <Suspense fallback={<div>Loading...</div>}>
-          <FollowingList />
-        </Suspense>
-      </HydrationBoundary>
+      <QueryErrorBoundary>
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <Suspense fallback={<div>Loading...</div>}>
+            <FollowingList />
+          </Suspense>
+        </HydrationBoundary>
+      </QueryErrorBoundary>
     </>
   );
 }

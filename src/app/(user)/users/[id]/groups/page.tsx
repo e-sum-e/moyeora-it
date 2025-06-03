@@ -7,6 +7,7 @@ import { request } from '@/api/request';
 import { Suspense } from 'react';
 import { GroupFilter } from '@/components/molecules/group-filter/group-filter';
 import { GroupList } from '@/features/user/group/components/group-list';
+import { QueryErrorBoundary } from '@/components/query-error-boundary';
 
 type GroupsPageProps = {
   searchParams: Promise<{
@@ -44,11 +45,13 @@ export default async function GroupsPage({ searchParams }: GroupsPageProps) {
   return (
     <div>
       <GroupFilter />
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <Suspense fallback={<div>Loading...</div>}>
-          <GroupList />
-        </Suspense>
-      </HydrationBoundary>
+      <QueryErrorBoundary>
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <Suspense fallback={<div>Loading...</div>}>
+            <GroupList />
+          </Suspense>
+        </HydrationBoundary>
+      </QueryErrorBoundary>
     </div>
   );
 }
