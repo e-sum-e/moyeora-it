@@ -24,7 +24,7 @@ export const BookmarkButton = ({
       request.patch(
         '/v2/bookmark',
         { 'Content-Type': 'application/json' },
-        { groupId, isBookmark },
+        { groupId, bookmark: isBookmark },
         { credentials: 'include' },
       ),
     onError: () => {
