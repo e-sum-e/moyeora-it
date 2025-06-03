@@ -130,6 +130,7 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
         `/v2/groups?userId=${userId}`,
         { 'Content-Type': 'application/json' },
         JSON.stringify(valueWithCreatedAt),
+        { credentials: 'include' },
       );
 
       if (result.status.success) {
