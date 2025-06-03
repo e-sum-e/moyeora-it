@@ -50,12 +50,12 @@ const FindPassword = () => {
         setIsSuccessEmailSend(true);
         setIsNotExisted(false);
       } else {
-        setIsSuccessEmailSend(false);
-        setIsNotExisted(true);
+        throw new Error('이메일 전송 실패');
       }
     } catch (e) {
       // TODO: 이메일 찾기 실패시 에러코드 맞춰서 설정해주기
       setIsNotExisted(true);
+      setIsSuccessEmailSend(false);
       console.log(e);
     } finally {
       setDisabled(false);
