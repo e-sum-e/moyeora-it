@@ -5,6 +5,7 @@ import { useFetchItems } from '@/hooks/useFetchItems';
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { Group } from '@/types';
 import { GroupCard } from '@/components/molecules/group/group-card';
+import flattenPages from '@/utils/flattenPages';
 
 /**
  * 그룹 목록 컴포넌트
@@ -18,7 +19,7 @@ export const GroupList = () => {
   const { search, type, status, sort } = Object.fromEntries(searchParams.entries());
 
   const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<Group>({
-    url: '/user/groups',
+    url: '/v2/groups',
     queryParams: {
       type: type ?? 'project',
       status: status ?? 'RECRUITING',
@@ -37,7 +38,7 @@ export const GroupList = () => {
     isLoading,
   });
 
-  const groupList = data.pages.flatMap((page) => page.items);
+  const groupList = flattenPages<Group>(data.pages);
 
   return (
     <ul>
