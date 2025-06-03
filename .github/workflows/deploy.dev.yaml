@@ -54,7 +54,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           script: |
-            cd /projects/moyeora-it-FE
+            cd /home/ubuntu/projects/moyeora-it-FE
             pm2 describe ecosystem.config.js > /dev/null 2>&1
             if [ $? -ne 0 ]; then 
               pm2 start ecosystem.config.js --env development
