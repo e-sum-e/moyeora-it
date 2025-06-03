@@ -6,9 +6,9 @@ export default async function AuthPageLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const hasToken = await checkAuthCookie();
+  const isValidCookie = await checkAuthCookie();
 
-  if (hasToken) {
+  if (isValidCookie) {
     // 로그인한 상태에서 로그인 페이지에 접근할 일이 있을까?
     // 계획상 주소창에서 직접 접근하는 경우를 제외하고는 없음
     // 뒤로가기나 회원가입 후 프로필 설정 안하고 로그인으로 돌아가기버튼 클릭시!!

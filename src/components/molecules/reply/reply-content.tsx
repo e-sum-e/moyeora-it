@@ -34,6 +34,7 @@ export const ReplyContent = ({
         {
           content: enteredContent,
         },
+        { credentials: 'include' },
       ),
     onSuccess: () => {
       setIsEditing(false);
@@ -45,7 +46,9 @@ export const ReplyContent = ({
 
   const { mutate: deleteReply } = useMutation({
     mutationFn: async () =>
-      request.delete(`/v2/groups/${groupId}/replies/${replyId}`),
+      request.delete(`/v2/groups/${groupId}/replies/${replyId}`, {
+        credentials: 'include',
+      }),
     onSuccess: () => {
       // 서버에서 삭제 요청이 성공하면 UI에서도 반영
       onDelete?.();

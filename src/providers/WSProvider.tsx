@@ -2,10 +2,13 @@
 'use client';
 
 import { initMockSocket } from '@/mocks/handler/ws';
+import useAuthStore from '@/stores/useAuthStore';
 import useNotificationStore from '@/stores/useNotificationStore';
 import { Notification } from '@/types';
 import { eNotification } from '@/types/enums';
 import { createContext, useContext, useEffect, useState } from 'react';
+
+
 const WebSocketContext = createContext<WebSocket | null>(null);
 
 export const WebSocketProvider = ({
@@ -15,8 +18,10 @@ export const WebSocketProvider = ({
 }) => {
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const { addNotification } = useNotificationStore();
+  const user = useAuthStore((state) => state.user);
 
   useEffect(() => {
+    if (!user) return;
     initMockSocket();
 
     const ws = new WebSocket('ws://localhost:8080'); // mock-socket 서버 주소

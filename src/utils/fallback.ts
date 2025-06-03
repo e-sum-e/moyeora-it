@@ -6,6 +6,7 @@
  * @returns 화면 표시용 사용자 닉네임
  */
 export const getDisplayNickname = (nickname: string | null, email: string) => {
+  if(!email) return '이름 없음';
   return nickname || email.split('@')[0];
 };
 

@@ -8,7 +8,7 @@ import useAuthStore from '@/stores/useAuthStore';
 import { useState } from 'react';
 
 type GroupActionButtonsProps = {
-  hostId: string;
+  hostId: number;
   isApplicant: boolean;
 };
 

@@ -4,6 +4,7 @@ import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
 import { useReplyScrollIntoView } from '@/hooks/useReplyScrollIntoView';
 import { Reply } from '@/types';
+import flattenPages from '@/utils/flattenPages';
 import { useParams } from 'next/navigation';
 import { RereplyItem } from './rereply-item';
 
@@ -42,7 +43,7 @@ export const RereplyList = ({
     hasNextPage,
   });
 
-  const rereplies = data.pages.flatMap((page) => page.items);
+  const rereplies = flattenPages(data.pages);
 
   return (
     <div>

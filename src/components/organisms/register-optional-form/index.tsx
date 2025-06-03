@@ -11,8 +11,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import useAuthStore from '@/stores/useAuthStore';
 import { useRouter } from 'next/navigation';
-import { request } from '@/api/request';
-import { UserInfoResponse } from '@/types/response';
 import { useState } from 'react';
 
 const positions = Object.keys(Position).filter((k) => isNaN(Number(k))) as [
@@ -35,7 +33,7 @@ const optionalFormSchema = z.object({
 });
 
 const RegisterOptionalForm = () => {
-  const setUser = useAuthStore((s) => s.setUser);
+  const fetchAndSetUser = useAuthStore((s) => s.fetchAndSetUser);
   // 이 컴포넌트는 user가 존재할 때만 렌더링되므로, useAuthStore에서 user를 가져올 때는 !를 사용해도 됩니다.
   const currentUser = useAuthStore((s) => s.user)!;
 
@@ -73,19 +71,25 @@ const RegisterOptionalForm = () => {
         formData.append('skills', newValues.skills.join(','));
       }
 
-      await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/user/edit`, {
-        method: 'PATCH',
-        body: formData,
-        credentials: 'include',
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/user/edit`,
+        {
+          method: 'PATCH',
+          body: formData,
+          credentials: 'include',
+        },
+      );
+
+      if (!response.ok) throw new Error('프로필 설정 실패!');
+
+      const {
+        status: { success },
+      } = await response.json();
+
+      if (!success) throw new Error('프로필 설정 실패!');
 
       // 바뀐 프로필 다시 불러와서 설정
-      const responseBody: UserInfoResponse = await request.get('/v1/user/info');
-
-      setUser({
-        ...responseBody.items.items,
-        userId: responseBody.items.items.id.toString(),
-      });
+      await fetchAndSetUser();
 
       const prevPathname = localStorage.getItem('login-trigger-path') || '/';
       router.push(prevPathname);

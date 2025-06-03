@@ -12,8 +12,8 @@ import { OtherUserProfile } from '@/features/user/components/other-user-profile'
  * 그렇지 않으면, OtherUserProfile 컴포넌트를 반환한다.
  */
 export const UserProfile = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const user = useAuthStore((state) => state.user);
 
-  return user?.userId === id ? <CurrentUserProfile /> : <OtherUserProfile />;
+  return String(user?.userId) === id ? <CurrentUserProfile /> : <OtherUserProfile />;
 };

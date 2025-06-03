@@ -36,8 +36,10 @@ const FindPassword = () => {
     try {
       // reset-password일 경우
       // TODO: 비밀번호 찾기 로직 작성 /find-email
-      const { success } = await request.post(
-        '/v1/user/find-password',
+      const {
+        status: { success },
+      } = await request.post(
+        '/v1/user/reset-password',
         {
           'Content-Type': 'application/json',
         },
@@ -48,12 +50,12 @@ const FindPassword = () => {
         setIsSuccessEmailSend(true);
         setIsNotExisted(false);
       } else {
-        setIsSuccessEmailSend(false);
-        setIsNotExisted(true);
+        throw new Error('이메일 전송 실패');
       }
     } catch (e) {
       // TODO: 이메일 찾기 실패시 에러코드 맞춰서 설정해주기
       setIsNotExisted(true);
+      setIsSuccessEmailSend(false);
       console.log(e);
     } finally {
       setDisabled(false);
