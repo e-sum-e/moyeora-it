@@ -1,5 +1,7 @@
 'use client';
 
+import { ErrorBoundary } from '@/components/error-boundary';
+import { handleError } from '@/components/error-boundary/error-handler';
 import { Filter } from '@/components/molecules/group/filter';
 import { GroupCard } from '@/components/molecules/group/group-card';
 import { SortOrder } from '@/components/molecules/group/sort-order';
@@ -120,15 +122,25 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
         <Filter updateQueryParams={updateQueryParams} />
         <SortOrder updateQueryParams={updateQueryParams} />
         <SearchInput />
-        {isEmptyItems && emptyInfoMessage !== null ? (
-          <div>{emptyInfoMessage}</div>
-        ) : (
-          <ul>
-            {items.map((group) => (
-              <GroupCard key={group.id} item={group} />
-            ))}
-          </ul>
-        )}
+        <ErrorBoundary
+          fallback={({ error, resetErrorBoundary }) =>
+            handleError({
+              error,
+              resetErrorBoundary,
+              defaultMessage: '알림을 불러오는 중 문제가 발생했습니다',
+            })
+          }
+        >
+          {isEmptyItems && emptyInfoMessage !== null ? (
+            <div>{emptyInfoMessage}</div>
+          ) : (
+            <ul>
+              {items.map((group) => (
+                <GroupCard key={group.id} item={group} />
+              ))}
+            </ul>
+          )}
+        </ErrorBoundary>
       </Tab>
     </>
   );
