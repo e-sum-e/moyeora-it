@@ -11,7 +11,7 @@ import { request } from '@/api/request';
  * @param userId 사용자 아이디
  * @returns 프로필 수정 커스텀 훅
  */
-export const useUpdateProfileMutation = ({ userId }: { userId: string | number }) => {
+export const useUpdateProfileMutation = () => {
   const { setUser } = useAuthStore((state) => state);
 
   return useMutation({

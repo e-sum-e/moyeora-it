@@ -1,4 +1,3 @@
-import AutoLoginManager from '@/features/auth/components/AutoLoginManager';
 import { server } from '@/mocks/server';
 import { MSWComponent } from '@/providers/MSWComponent';
 import { ReactQueryProvider } from '@/providers/ReactQueryProvider';
