@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import useAuthStore from '@/stores/useAuthStore';
 import { Position, Skill } from '@/types/enums';
+import { getPosition, getSkill } from '@/types/enums';
 import { toast } from 'sonner';
 import { User } from '@/types';
 import { request } from '@/api/request';
@@ -23,22 +24,21 @@ export const useUpdateProfileMutation = () => {
     }) => {
       const formData = new FormData();
       formData.append('nickname', data.nickname);
-      formData.append('position', JSON.stringify(data.position));
-      formData.append('skills', JSON.stringify(data.skills));
+      formData.append('position', getPosition(data.position));
+      formData.append('skills', data.skills.map(getSkill).join(','));
       if (data.file) {
-        formData.append('file', data.file);
+        formData.append('image', data.file);
       }
 
-      //ISSUE: 500에러 날라와요
-      return request.patch(`/v1/user/edit`,
-        {
-          'Content-Type': 'multipart/form-data',
-        },
-        formData,
-        {
-          credentials: 'include',
-        },
-      ).then((res) => res.json());
+      return request
+        .patch(
+          `/v1/user/edit`,
+          {},
+          formData,
+          {
+            credentials: 'include',
+          },
+        );
     },
     onSuccess(data: User) {
       setUser(data);
