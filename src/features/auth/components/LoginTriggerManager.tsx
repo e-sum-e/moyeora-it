@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 type TriggerManagerProps = {
   prevPathname: string;
@@ -24,6 +24,7 @@ const LoginTriggerManager = ({ prevPathname }: TriggerManagerProps) => {
     }
 
     localStorage.setItem('login-trigger-path', prevPathname);
+    // eslint-disable-next-line
   }, []);
 
   return null;

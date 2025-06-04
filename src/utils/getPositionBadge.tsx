@@ -1,17 +1,20 @@
 'use client';
 
 import { Badge } from '@/components/atoms/badge';
-import { Skill } from '@/types/enums';
+import { Position } from '@/types/enums';
 
 /**  숫자 enum Skill의 키 이름으로 이미지 주소와 매칭 시키기 */
-export const allSkillKeys = Object.keys(Skill).filter((key) =>
+export const allPositionlKeys = Object.keys(Position).filter((key) =>
   isNaN(Number(key)),
 );
 
-const skillLogoMap: { [key: string]: string } = {};
+const positionLogoMap: { [key: string]: string } = {};
 
-allSkillKeys.forEach((skill) => {
-  skillLogoMap[skill] = `/logos/${skill.replace(/[^a-zA-Z0-9]/g, '')}.png`;
+allPositionlKeys.forEach((position) => {
+  positionLogoMap[position] = `/logos/${position.replace(
+    /[^a-zA-Z0-9]/g,
+    '',
+  )}.png`;
 });
 
 export const getPositionBadge = (name: string) => {

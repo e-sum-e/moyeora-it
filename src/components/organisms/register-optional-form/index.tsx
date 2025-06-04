@@ -11,8 +11,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import useAuthStore from '@/stores/useAuthStore';
 import { useRouter } from 'next/navigation';
-import { request } from '@/api/request';
-import { User } from '@/types';
+import { useState } from 'react';
 
 const positions = Object.keys(Position).filter((k) => isNaN(Number(k))) as [
   string,
@@ -34,7 +33,7 @@ const optionalFormSchema = z.object({
 });
 
 const RegisterOptionalForm = () => {
-  const setUser = useAuthStore((s) => s.setUser);
+  const fetchAndSetUser = useAuthStore((s) => s.fetchAndSetUser);
   // 이 컴포넌트는 user가 존재할 때만 렌더링되므로, useAuthStore에서 user를 가져올 때는 !를 사용해도 됩니다.
   const currentUser = useAuthStore((s) => s.user)!;
 
@@ -47,6 +46,8 @@ const RegisterOptionalForm = () => {
     },
   });
 
+  const [disabled, setDisabled] = useState(false);
+
   const router = useRouter();
 
   // 옵션 설정
@@ -54,23 +55,41 @@ const RegisterOptionalForm = () => {
     values: z.infer<typeof optionalFormSchema>,
   ) => {
     try {
-      //  TODO: 프로필 옵션 설정
+      setDisabled(true);
+      // 프로필 옵션 설정
       const newValues: z.infer<typeof optionalFormSchema> = {
         ...values,
         nickname: values.nickname || currentUser.email, // 닉네임이 비어있으면 이메일로 설정
       };
 
-      await request.post(
-        '/me',
+      // request는 json 형태인데 api는 form-data로 받아서 별도의 fetch로 요청합니다.
+      const formData = new FormData();
+      formData.append('nickname', newValues.nickname);
+      formData.append('position', newValues.position);
+
+      if (newValues.skills.length > 0) {
+        formData.append('skills', newValues.skills.join(','));
+      }
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/user/edit`,
         {
-          'Content-Type': 'application/json',
+          method: 'PATCH',
+          body: formData,
+          credentials: 'include',
         },
-        JSON.stringify(newValues),
       );
 
+      if (!response.ok) throw new Error('프로필 설정 실패!');
+
+      const {
+        status: { success },
+      } = await response.json();
+
+      if (!success) throw new Error('프로필 설정 실패!');
+
       // 바뀐 프로필 다시 불러와서 설정
-      const { user } = await request.get('/me');
-      setUser(user as User);
+      await fetchAndSetUser();
 
       const prevPathname = localStorage.getItem('login-trigger-path') || '/';
       router.push(prevPathname);
@@ -79,6 +98,7 @@ const RegisterOptionalForm = () => {
     } catch (e) {
       // TODO: 프로필 에러 설정 //
       console.log(e);
+      setDisabled(false);
     }
   };
   return (
@@ -108,7 +128,7 @@ const RegisterOptionalForm = () => {
           label="기술 스택"
           options={skills}
         />
-        <Button>프로필 설정하기</Button>
+        <Button disabled={disabled}>프로필 설정하기</Button>
       </form>
     </Form>
   );

@@ -7,6 +7,7 @@ import { useFetchItems } from '@/hooks/useFetchItems';
 import { useReplyScrollIntoView } from '@/hooks/useReplyScrollIntoView';
 import { useReplyScrollParams } from '@/hooks/useReplyScrollParams';
 import { Reply } from '@/types';
+import flattenPages from '@/utils/flattenPages';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
 
@@ -14,7 +15,7 @@ export const ReplyList = () => {
   const { groupId } = useParams();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useFetchItems<Reply>({
-      url: `/groups/${groupId}/replies`,
+      url: `/v2/groups/${groupId}/replies`,
       queryParams: {
         size: 10,
       },
@@ -42,7 +43,7 @@ export const ReplyList = () => {
     setTargetReplyId(id);
   };
 
-  const replies = data.pages.flatMap((page) => page.items);
+  const replies = flattenPages(data.pages);
 
   return (
     <section>

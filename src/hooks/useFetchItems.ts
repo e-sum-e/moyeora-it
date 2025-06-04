@@ -4,12 +4,7 @@ import {
   useSuspenseInfiniteQuery,
   UseSuspenseInfiniteQueryOptions,
 } from '@tanstack/react-query';
-
-export type Page<T> = {
-  items: T[];
-  hasNext: boolean;
-  cursor: number | null;
-};
+import { Page } from '@/utils/flattenPages';
 
 export const useFetchItems = <T>({
   url,
@@ -28,7 +23,11 @@ export const useFetchItems = <T>({
       request.get(url, {
         ...queryParams,
         cursor: pageParam as number | string,
-      }),
+      },
+      {
+        credentials: 'include',
+      }
+    ),
     initialPageParam: 0,
     getNextPageParam(lastPage) {
       return lastPage.hasNext ? lastPage.cursor : null;

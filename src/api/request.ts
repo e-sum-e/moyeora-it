@@ -57,7 +57,17 @@ const fetchHandler = async (
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`[${response.status}] ${response.statusText} - ${errorText}`);
+    switch (response.status) {
+      case 401:
+        throw new Error('Unauthorized');
+      case 403:
+        throw new Error('Forbidden');
+      case 404:
+        throw new Error('Not Found');
+      default:
+        throw new Error(`[${response.status}] ${response.statusText} - ${errorText}`);
+    }
+
   }
 
   return response.json();
@@ -81,7 +91,7 @@ export const request = {
       credentials: options?.credentials ?? 'same-origin', // 기본값 설정
     });
   },
-  post: async (endpoint: string, headers: HeadersInit, body: BodyInit, options?: Pick<RequestOptions, 'credentials'>) => {
+  post: async (endpoint: string, headers: HeadersInit, body?: BodyInit, options?: Pick<RequestOptions, 'credentials'>) => {
     return await fetchHandler(`${baseUrl}${endpoint}`, {
       method: 'POST',
       headers,

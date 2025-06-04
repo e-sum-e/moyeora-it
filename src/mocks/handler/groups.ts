@@ -1,3 +1,13 @@
+import { Group, GroupSort, Order } from '@/types';
+import { Position, Skill } from '@/types/enums';
+import {
+  getRandomItem,
+  getRandomItems,
+  groupTypeValues,
+  positionKeys,
+  skillKeys,
+} from '@/utils/mockUtils';
+import { addDays } from 'date-fns';
 import { http, HttpResponse } from 'msw';
 
 const titles = [
@@ -74,16 +84,18 @@ export const groupsHandlers = [
   http.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/groups`, ({ request }) => {
     const url = new URL(request.url); // 요청 url에서 parameter를 뽑아내기 위해 url 전체가 필요
 
-    const typeParam = url.searchParams.get('type');
+    const typeParam = url.searchParams.get('type')?.split(',') ?? null;
 
     const skillParam = url.searchParams.get('skill');
     const skillNumber = skillParam ? Number(skillParam) : null; // skillParam이 있을 경우 서버에 enum 숫자 값으로 보내기 위해 숫자로 변환
 
     const positionParam = url.searchParams.get('position');
     const positionNumber = positionParam ? Number(positionParam) : null;
-    const searchKeyword = url.searchParams.get('search')?.toLowerCase() ?? '';
+
     const sortParam = url.searchParams.get('sort') as GroupSort | null;
     const orderParam = url.searchParams.get('order') as Order | null;
+
+    const searchKeyword = url.searchParams.get('search')?.toLowerCase() ?? '';
 
     const items: Group[] = Array.from({ length: 20 }, (_, index) => {
       const offset = index * 2;
@@ -104,16 +116,17 @@ export const groupsHandlers = [
         Math.floor(Math.random() * 3) + 1,
       ).map((key) => Skill[key]);
 
-      const type = getRandomItem(groupTypeValues.slice(0, 2)); // 만들어진 그룹은 study | project이다
+      const type = getRandomItem(groupTypeValues);
 
       const maxParticipants = Math.floor(Math.random() * (30 - 2 + 1)) + 2;
 
       const participants = Array.from(
         { length: Math.floor(Math.random() * maxParticipants) },
         () => ({
-          userId: '1',
+          userId: 1,
           nickname: '모여라잇유저',
           profileImage: null,
+          email: 'user@yopmail.com',
         }),
       );
 
@@ -129,7 +142,7 @@ export const groupsHandlers = [
         participants,
         maxParticipants,
         autoAllow: true,
-        isBookmark: false,
+        isBookmark: Math.random() < 0.5,
         createdAt,
         deadline,
         startDate,
@@ -139,8 +152,12 @@ export const groupsHandlers = [
     });
 
     const typeFiltered =
-      typeParam && typeParam !== ''
-        ? items.filter((item) => item.type === typeParam)
+      typeParam && !typeParam.includes('')
+        ? items.filter((item) => {
+            if (typeParam.includes('bookmark') && item.isBookmark) return true; // type 파라미터로 bookmark가 들어간 경우 isBookmark만 필터링
+            if (typeParam.includes(item.type)) return true; // type 파라미터로 GroupType이 들어간 경우 필터링
+            return false;
+          })
         : items;
 
     const skillFiltered =
@@ -175,7 +192,7 @@ export const groupsHandlers = [
     });
   }),
   http.post(
-    'http://localhost:4000/api/groups/:groupId/join',
+    '/v2/groups/:groupId/join',
     async ({ params, request }) => {
       const { groupId } = params;
       const body = (await request.json()) as {
@@ -242,9 +259,14 @@ export const groupsHandlers = [
     }
 
     return HttpResponse.json({
-      items,
-      hasNext: cursor + size < 100,
-      cursor: cursor + size,
+      status: {
+        code: 200,
+        message: 'success',
+        success: true,
+      },
+      data: items,
+      hasNext: true,
+      cursor: 10,
     });
   }),
   http.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/group`, () => {
@@ -252,11 +274,11 @@ export const groupsHandlers = [
       success: true,
     });
   }),
-  http.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/groups/:groupId`, () => {
+  http.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/v2/groups/:groupId`, () => {
     return HttpResponse.json(GROUP_LIST[0]);
   }),
   http.patch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/bookmark`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/v2/bookmark`,
     async ({ request }) => {
       const body = (await request.json()) as {
         groupId: number;
@@ -270,6 +292,12 @@ export const groupsHandlers = [
         return HttpResponse.json({}, { status: 400 });
       }
 
+      return HttpResponse.json({});
+    },
+  ),
+  http.delete(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/v2/groups/:groupId`,
+    () => {
       return HttpResponse.json({});
     },
   ),

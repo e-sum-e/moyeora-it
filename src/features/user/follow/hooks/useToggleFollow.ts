@@ -28,7 +28,7 @@ export const useToggleFollow = ({
   return useMutation({
     mutationFn() {
       return request.post(
-        `/users/${userId}/${isFollowing ? 'unfollow' : 'follow'}`,
+        `/v1/follow/${userId}/${isFollowing ? 'unfollow' : ''}`,
         {
           'Content-Type': 'application/json',
         },
@@ -52,7 +52,7 @@ export const useToggleFollow = ({
           queryKey: ['user', id, `${usedIn} count`],
         }),
         queryClient.invalidateQueries({
-          queryKey: ['items', `/users/${id}/${usedIn}`],
+          queryKey: ['items', `/v1/follow/${id}/${usedIn}`],
         }),
       ]);
     },

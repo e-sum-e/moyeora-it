@@ -17,8 +17,8 @@ export const ReplyForm = ({ onSuccess, parentReplyId }: ReplyFormProps) => {
 
   const endpoint =
     parentReplyId === undefined
-      ? `/groups/${groupId}/replies`
-      : `/groups/${groupId}/replies/${parentReplyId}`;
+      ? `/v2/groups/${groupId}/replies`
+      : `/v2/groups/${groupId}/replies/${parentReplyId}`;
 
   const queryClient = useQueryClient();
 
@@ -28,6 +28,7 @@ export const ReplyForm = ({ onSuccess, parentReplyId }: ReplyFormProps) => {
         endpoint,
         { 'Content-Type': 'application/json' },
         JSON.stringify({ content }),
+        { credentials: 'include' },
       ),
     onSuccess: (data) => {
       // 목록 무효화 후, 작성한 댓글로 이동

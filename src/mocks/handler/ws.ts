@@ -12,16 +12,16 @@ const createMockNotification = (id: number) => {
   const type = getRandomNotificationType();
   console.log('type', type);
   let message = `알림 메시지 ${id}`;
-  let url = '/groups/1'; // 기본 URL
+  let url = '/v2/groups/1'; // 기본 URL
 
   switch (type) {
     case eNotification.GROUP_HAS_PARTICIPANT:
       message = '새로운 참가자가 그룹에 참여했습니다.';
-      url = '/groups/1/participants';
+      url = '/v2/groups/1/participants';
       break;
     case eNotification.CONFIRMED_PARTICIPANT_CANCELED:
       message = '확정된 참가자가 취소했습니다.';
-      url = '/groups/1';
+      url = '/v2/groups/1';
       break;
     case eNotification.APPLY_APPROVED:
       message = '모임 참가 신청이 승인되었습니다.';

@@ -4,10 +4,11 @@ import { notFound, useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { Avatar } from '@/components/atoms/avatar';
 import { Badge } from '@/components/atoms/badge';
-import { getSkill } from '@/types/enums';
+import { getPosition, getSkill } from '@/types/enums';
 import { User } from '@/types';
 import { request } from '@/api/request';
 import { ToggleFollowButton } from '@/features/user/follow/components/toggle-follow-button';
+import { getDisplayNickname, getDisplayProfileImage } from '@/utils/fallback';
 
 /**
  * 현재 로그인 한 유저가 아닌 다른 유저의 프로필 컴포넌트
@@ -18,14 +19,15 @@ import { ToggleFollowButton } from '@/features/user/follow/components/toggle-fol
  */
 export const OtherUserProfile = () => {
   const { id } = useParams();
-
   const {
     data: user,
     isLoading,
     isError,
   } = useQuery<User>({
     queryKey: ['user', id],
-    queryFn: () => request.get(`/users/${id}`),
+    queryFn: () => request.get(`/v1/user/${id}`, {}, {
+      credentials: 'include',
+    }),
     staleTime: 0,
   });
 
@@ -35,24 +37,35 @@ export const OtherUserProfile = () => {
   // 유저가 존재하지 않으면, 404 Not Found 페이지로 이동한다.
   if (!user) notFound();
 
+  const {
+    nickname,
+    email,
+    profileImage,
+    position,
+    skills,
+    rate,
+    isFollowing,
+    userId,
+  } = user;
+
   return (
     <>
       <div>
         <Avatar
           className="size-36"
-          imageSrc={user.profileImage ?? user.email}
-          fallback="테스트"
+          imageSrc={getDisplayProfileImage(profileImage)}
+          fallback={getDisplayNickname(nickname, email)}
         />
         <div className="flex flex-col gap-y-1">
-          <span>{user.nickname}</span>
-          <span>{user.email}</span>
-          <span>{user.position}</span>
+          <span>{getDisplayNickname(nickname, email)}</span>
+          <span>{email}</span>
+          <span>{position && getPosition(position)}</span>
           <div className="flex items-center gap-x-2">
-            <span>별점 : {user.rate}</span>
+            <span>별점 : {rate}</span>
             <Badge text="뱃지" className="bg-emerald-50 text-emerald-500" />
           </div>
           <ul>
-            {user.skills?.map((skill) => (
+            {skills?.map((skill) => (
               <li key={skill}>
                 <Badge
                   text={getSkill(skill)}
@@ -65,8 +78,8 @@ export const OtherUserProfile = () => {
       </div>
       <div>
         <ToggleFollowButton
-          userId={user.userId}
-          isFollowing={user.isFollowing}
+          userId={String(userId)}
+          isFollowing={isFollowing}
           usedIn="profile"
         />
       </div>

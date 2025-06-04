@@ -10,7 +10,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import useAuthStore from '@/stores/useAuthStore';
 import { request } from '@/api/request';
-import { User } from '@/types';
 
 const formSchema = z.object({
   email: z.string().nonempty({ message: '이메일을 입력해주세요' }).email({
@@ -27,27 +26,40 @@ const LoginForm = () => {
       password: '',
     },
   });
+
+  const [disabled, setDisabled] = useState(false);
   const [isLoginFailed, setIsLoginFailed] = useState(false);
-  const setUser = useAuthStore((s) => s.setUser);
+  const fetchAndSetUser = useAuthStore((s) => s.fetchAndSetUser);
   const router = useRouter();
 
   // 로그인
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      // TODO: 로그인 로직 작성 /login
-      await request.post(
-        '/login',
+      setDisabled(true);
+      // 로그인 로직 작성 /login
+      // 성공처리 추가
+      const {
+        status: { success },
+      } = await request.post(
+        '/v1/user/login',
         {
           'Content-Type': 'application/json',
         },
         JSON.stringify(values),
+        {
+          credentials: 'include',
+        },
       );
 
-      // TODO: 로그인 성공 후 회원정보 불러오기 /me
-      const { user } = await request.get('/me');
-      setUser(user as User);
+      if (!success) {
+        throw new Error('로그인 실패');
+      }
+
+      // 로그인 성공 후 회원정보 불러오기 /me
+      await fetchAndSetUser();
 
       const prevPathname = localStorage.getItem('login-trigger-path') || '/';
+
       router.push(prevPathname);
 
       localStorage.removeItem('login-trigger-path');
@@ -55,6 +67,7 @@ const LoginForm = () => {
       // TODO: 로그인 실패시 에러코드 맞춰서 설정해주기
       setIsLoginFailed(true);
       console.log(e);
+      setDisabled(false);
     }
   };
 
@@ -77,7 +90,7 @@ const LoginForm = () => {
         />
 
         {isLoginFailed && <p className="text-red-600">로그인에 실패했습니다</p>}
-        <Button>로그인</Button>
+        <Button disabled={disabled}>로그인</Button>
       </form>
     </Form>
   );

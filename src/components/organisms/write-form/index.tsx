@@ -1,6 +1,8 @@
 'use client';
 
 import { request } from '@/api/request';
+import { ErrorBoundary } from '@/components/error-boundary';
+import { handleError } from '@/components/error-boundary/error-handler';
 import { AutoAllow } from '@/components/molecules/write-form/autoAllow';
 import { DeadlineCalendar } from '@/components/molecules/write-form/deadlineCalendar';
 import { EndDateCalendar } from '@/components/molecules/write-form/endDateCalendar';
@@ -25,6 +27,7 @@ import { addDays, isAfter } from 'date-fns';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 const formSchema = z
@@ -53,7 +56,7 @@ const formSchema = z
       .string()
       .min(20, { message: '내용을 좀 더 자세하게 적어주세요.' }),
     autoAllow: z.boolean(),
-    type: z.enum([GroupType.STUDY, GroupType.PROJECT, GroupType.ALL]),
+    type: z.enum([GroupType.STUDY, GroupType.PROJECT]),
     skills: z
       .array(
         z.union([
@@ -80,7 +83,11 @@ const formSchema = z
     path: ['endDate'],
   });
 
-export const WriteForm = () => {
+type WriteFormProps = {
+  userId: number;
+};
+
+export const WriteForm = ({ userId }: WriteFormProps) => {
   const [isDeadlineCalendarOpen, setIsDeadlineCalendarOpen] = useState(false);
   const [isStartDateCalendarOpen, setIsStartDateCalendarOpen] = useState(false);
   const [isEndDateCalendarOpen, setIsEndDateCalendarOpen] = useState(false);
@@ -120,60 +127,76 @@ export const WriteForm = () => {
     const valueWithCreatedAt = { ...values, skills, createdAt: new Date() };
     try {
       const result = await request.post(
-        '/group',
+        `/v2/groups?userId=${userId}`,
         { 'Content-Type': 'application/json' },
         JSON.stringify(valueWithCreatedAt),
+        { credentials: 'include' },
       );
 
-      if (result.success) {
+      if (result.status.success) {
         router.push('/');
       } else {
-        // 에러 임시 처리
-        console.log('Group create error : ', result.code);
+        toast.error('에러가 발생했습니다. 다시 시도해주세요.');
+        console.log(
+          `Error code ${result.status.code} : ${result.status.message}`,
+        );
       }
     } catch (error) {
-      // 에러 임시 처리
-      console.log('Group create error: ', error);
+      throw new Error(
+        `Group create error(server): ${
+          error instanceof Error ? error.message : 'Unexpected Error'
+        }`,
+      );
     }
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(formSubmit)}>
-        <Title form={form} />
-        <SelectType form={form} />
-        <DeadlineCalendar
-          form={form}
-          isDeadlineCalendarOpen={isDeadlineCalendarOpen}
-          setValidDeadline={setValidDeadline}
-          openDeadlineCalendar={() => setIsDeadlineCalendarOpen(true)}
-          closeDeadlineCalendar={() => setIsDeadlineCalendarOpen(false)}
-          validDeadline={validDeadline}
-        />
-        <MaxParticipants form={form} />
-        <AutoAllow form={form} />
-        <StartDateCalendar
-          form={form}
-          isStartDateCalendarOpen={isStartDateCalendarOpen}
-          openStartDateCalendar={() => setIsStartDateCalendarOpen(true)}
-          closeStartDateCalendar={() => setIsStartDateCalendarOpen(false)}
-          validStartDate={validStartDate}
-        />
-        <EndDateCalendar
-          form={form}
-          isEndDateCalendarOpen={isEndDateCalendarOpen}
-          openEndDateCalendar={() => setIsEndDateCalendarOpen(true)}
-          closeEndDateCalendar={() => setIsEndDateCalendarOpen(false)}
-          validEndDate={validEndDate}
-        />
-        <Description form={form} />
-        <SelectSkill form={form} />
-        <SelectPosition form={form} />
-        <Button type="button" onClick={cancelClickHandler}>
-          취소하기
-        </Button>
-        <Button type="submit">등록하기</Button>
-      </form>
-    </Form>
+    <ErrorBoundary
+      fallback={({ error, resetErrorBoundary }) =>
+        handleError({
+          error,
+          resetErrorBoundary,
+          defaultMessage: '그룹 생성 중 문제가 발생했습니다.',
+        })
+      }
+    >
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(formSubmit)}>
+          <Title form={form} />
+          <SelectType form={form} />
+          <DeadlineCalendar
+            form={form}
+            isDeadlineCalendarOpen={isDeadlineCalendarOpen}
+            setValidDeadline={setValidDeadline}
+            openDeadlineCalendar={() => setIsDeadlineCalendarOpen(true)}
+            closeDeadlineCalendar={() => setIsDeadlineCalendarOpen(false)}
+            validDeadline={validDeadline}
+          />
+          <MaxParticipants form={form} />
+          <AutoAllow form={form} />
+          <StartDateCalendar
+            form={form}
+            isStartDateCalendarOpen={isStartDateCalendarOpen}
+            openStartDateCalendar={() => setIsStartDateCalendarOpen(true)}
+            closeStartDateCalendar={() => setIsStartDateCalendarOpen(false)}
+            validStartDate={validStartDate}
+          />
+          <EndDateCalendar
+            form={form}
+            isEndDateCalendarOpen={isEndDateCalendarOpen}
+            openEndDateCalendar={() => setIsEndDateCalendarOpen(true)}
+            closeEndDateCalendar={() => setIsEndDateCalendarOpen(false)}
+            validEndDate={validEndDate}
+          />
+          <Description form={form} />
+          <SelectSkill form={form} />
+          <SelectPosition form={form} />
+          <Button type="button" onClick={cancelClickHandler}>
+            취소하기
+          </Button>
+          <Button type="submit">등록하기</Button>
+        </form>
+      </Form>
+    </ErrorBoundary>
   );
 };

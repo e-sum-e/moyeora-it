@@ -6,10 +6,12 @@ import {
 import { request } from '@/api/request';
 import { Suspense } from 'react';
 import { GroupFilter } from '@/components/molecules/group-filter/group-filter';
+import { GroupList } from '@/features/user/group/components/group-list';
+import { QueryErrorBoundary } from '@/components/query-error-boundary';
 
 type GroupsPageProps = {
   searchParams: Promise<{
-    q: string;
+    search: string;
     type: string;
     status: string;
     sort: string;
@@ -19,26 +21,22 @@ type GroupsPageProps = {
 export default async function GroupsPage({ searchParams }: GroupsPageProps) {
   const queryClient = new QueryClient();
 
-  const { q, type, status, sort } = await searchParams;
+  const { search, type, status, sort } = await searchParams;
+
+  const queryParams = {
+    type: type ?? 'project',
+    status: status ?? 'RECRUITING',
+    sort: sort ?? 'deadline',
+    ...(search && { search }),
+  };
 
   await queryClient.fetchInfiniteQuery({
-    queryKey: [
-      'items',
-      '/api/groups',
-      {
-        type: type ?? 'project',
-        status: status ?? 'RECRUITING',
-        sort: sort ?? 'deadline',
-        ...(q && { q }),
-      },
-    ],
+    queryKey: ['items', '/v2/groups', queryParams],
     queryFn({ pageParam }) {
-      return request.get('/api/groups', {
-        type: type ?? 'project',
-        status: status ?? 'RECRUITING',
-        sort: sort ?? 'deadline',
-        ...(q && { q }),
+      return request.get('/v2/groups', {
+        ...queryParams,
         cursor: pageParam,
+        size: 10,
       });
     },
     initialPageParam: 0,
@@ -47,10 +45,13 @@ export default async function GroupsPage({ searchParams }: GroupsPageProps) {
   return (
     <div>
       <GroupFilter />
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <Suspense fallback={<div>Loading...</div>}>
-        </Suspense>
-      </HydrationBoundary>
+      <QueryErrorBoundary>
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <Suspense fallback={<div>Loading...</div>}>
+            <GroupList />
+          </Suspense>
+        </HydrationBoundary>
+      </QueryErrorBoundary>
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import { Avatar } from '@/components/atoms/avatar';
 import { Reply } from '@/types';
+import { formatDateTime } from '@/utils/dateUtils';
 import { getDisplayNickname, getDisplayProfileImage } from '@/utils/fallback';
 
 type ReplyMetaProps = Pick<Reply, 'writer' | 'createdAt'>;
@@ -17,7 +18,7 @@ export const ReplyMeta = ({ writer, createdAt }: ReplyMetaProps) => {
       />
       <div className="flex flex-col">
         <div>{getDisplayNickname(writer.nickname, writer.email)}</div>
-        <div>{createdAt}</div>
+        <div>{formatDateTime(createdAt)}</div>
       </div>
     </div>
   );
