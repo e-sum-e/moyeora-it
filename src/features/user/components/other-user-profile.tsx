@@ -67,10 +67,12 @@ export const OtherUserProfile = () => {
           <ul>
             {skills?.map((skill) => (
               <li key={skill}>
-                <Badge
+                {/* <Badge
                   text={getSkill(skill)}
                   className="bg-gray-100 text-gray-800"
-                />
+                /> */}
+                {/* 백엔드에서 주는 skill 값의 타입이 string이어서 일단 그대로 렌더링 -> 추후 타입 수정 필요 */}
+                {skill}
               </li>
             ))}
           </ul>

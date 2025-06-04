@@ -19,7 +19,7 @@ import { getDisplayNickname, getDisplayProfileImage } from '@/utils/fallback';
 
 export const CurrentUserProfile = () => {
   const user = useAuthStore((state) => state.user);
-
+  
   if (!user) {
     return <div>나의 정보를 불러오는 데 실패했어요. 다시 로그인 해주세요.</div>;
   }
@@ -45,10 +45,12 @@ export const CurrentUserProfile = () => {
           <ul>
             {skills?.map((skill) => (
               <li key={skill}>
-                <Badge
+                {/* <Badge
                   text={getSkill(skill)}
                   className="bg-gray-100 text-gray-800"
-                />
+                /> */}
+                {/* 백엔드에서 주는 skill 값의 타입이 string이어서 일단 그대로 렌더링 -> 추후 타입 수정 필요 */}
+                {skill}
               </li>
             ))}
           </ul>
