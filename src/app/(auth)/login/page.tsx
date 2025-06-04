@@ -2,6 +2,7 @@ import Link from 'next/link';
 import LoginForm from '@/components/organisms/login-form';
 import { headers } from 'next/headers';
 import LoginTriggerManager from '@/features/auth/components/LoginTriggerManager';
+import ClientAuthGuard from '@/features/auth/components/ClientAuthGuard';
 
 export default async function Page() {
   const headerList = await headers();
@@ -9,7 +10,7 @@ export default async function Page() {
   const nextUrl = headerList.get('next-url') || '/';
 
   return (
-    <>
+    <ClientAuthGuard isNeedUser={false}>
       <div>
         <LoginForm />
         <div className="flex flex-col">
@@ -19,6 +20,6 @@ export default async function Page() {
         </div>
       </div>
       <LoginTriggerManager prevPathname={nextUrl} />
-    </>
+    </ClientAuthGuard>
   );
 }
