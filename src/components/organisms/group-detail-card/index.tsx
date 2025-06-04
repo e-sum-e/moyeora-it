@@ -47,7 +47,7 @@ export const GroupDetaiilCard = ({
             </div>
           </div>
           <BookmarkButton
-            groupId={info.groupInfo.groupId}
+            groupId={info.groupInfo.id}
             isBookmark={info.bookmark}
           />
         </header>
@@ -114,7 +114,7 @@ export const GroupDetaiilCard = ({
           <div className="flex gap-2">
             참가자 목록:
             <div className="flex">
-              {info.groupInfo.userInfos
+              {info.groupInfo.participants
                 .slice(0, 3)
                 .map(({ userId, profileImage, email, nickname }) => (
                   <Avatar
@@ -123,7 +123,9 @@ export const GroupDetaiilCard = ({
                     fallback={getDisplayNickname(nickname, email)}
                   />
                 ))}
-              <ParticipantListModal participants={info.groupInfo.userInfos} />
+              <ParticipantListModal
+                participants={info.groupInfo.participants}
+              />
             </div>
           </div>
         </section>

@@ -110,10 +110,9 @@ export type Reply = {
 
 export type GroupDetail = {
   groupInfo: {
-    groupId: number;
+    id: number;
     title: string;
     description: string;
-    userId: number;
     autoAllow: boolean;
     currentParticipants: number;
     maxParticipants: number;
@@ -125,19 +124,10 @@ export type GroupDetail = {
     deadline: string;
     startDate: string;
     endDate: string;
-    userInfos: {
-      userId: number;
-      nickname: string;
-      profileImage: string;
-      email: string;
-    }[];
+    createdAt: string;
+    participants: UserSummary[];
   };
-  userInfo: {
-    userId: number;
-    nickname: string;
-    profileImage: string;
-    email: string;
-  };
+  userInfo: UserSummary;
   applicant: boolean;
   joined: boolean;
   bookmark: boolean;

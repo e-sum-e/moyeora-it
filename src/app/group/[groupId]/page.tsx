@@ -31,6 +31,7 @@ export default async function GroupDetailPage({
       {},
       { credentials: 'include' },
     );
+    console.log(response);
 
     if (!response.status.success || !response.items) {
       return notFound();
