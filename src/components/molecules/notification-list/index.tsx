@@ -42,7 +42,7 @@ export const NotificationList = () => {
   // 전체 알림 목록 저장
   useEffect(() => {
     if (!data) return;
-    const notificationList = flattenPages(data.pages);
+    const notificationList = flattenPages(data.pages).filter((item): item is NotificationType => item !== undefined);
     setNotifications(notificationList);
   }, [data, setNotifications]);
 

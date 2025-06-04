@@ -123,7 +123,7 @@ export const groupsHandlers = [
       const participants = Array.from(
         { length: Math.floor(Math.random() * maxParticipants) },
         () => ({
-          userId: '1',
+          userId: 1,
           nickname: '모여라잇유저',
           profileImage: null,
           email: 'user@yopmail.com',

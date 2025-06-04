@@ -12,7 +12,7 @@ export const followHandlers = [
 
       const items: User[] = Array.from({ length: 10 }).map((_, index) => {
         return {
-          userId: String(index + 1),
+          userId: index + 1,
           email: `test${index + 1}@gmail.com`,
           nickname: `테스트 닉네임${index + 1}`,
           profileImage: `https://github.com/shadcn.png`,
@@ -42,7 +42,7 @@ export const followHandlers = [
 
       const items: User[] = Array.from({ length: 10 }).map((_, index) => {
         return {
-          userId: String(index + 1),
+          userId: index + 1,
           email: `test${index + 1}@gmail.com`,
           nickname: `테스트 닉네임${index + 1}`,
           profileImage: `https://github.com/shadcn.png`,

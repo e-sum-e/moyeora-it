@@ -14,7 +14,7 @@ export const userHandlers = [
       }
 
       return HttpResponse.json<User>({
-        userId: '1',
+        userId: 1,
         email: 'test@test.com',
         nickname: '테스트닉네임',
         profileImage: 'https://github.com/shadcn.png',
@@ -68,7 +68,7 @@ export const userHandlers = [
         : 'https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=';
 
       return HttpResponse.json<User>({
-        userId: params.id as string,
+        userId: Number(params.id),
         nickname,
         position,
         skills,

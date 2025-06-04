@@ -5,7 +5,7 @@ const REPLY_LIST: Reply[] = Array.from({ length: 33 }, (_, i) => ({
   replyId: i + 1,
   content: `댓글 ${i + 1}`,
   writer: {
-    userId: `w${i + 1}`,
+    userId: i + 1,
     nickname: `w${i + 1}`,
     profileImage: null,
     email: `w${i + 1}@gmail.com`,
@@ -21,7 +21,7 @@ const REREPLY_LIST: (Reply & { parentId: number })[] = Array.from(
     parentId: (i % REPLY_LIST.length) + 1,
     content: `대댓글 ${i + 1}`,
     writer: {
-      userId: `q${i + 1}`,
+      userId: i + 1,
       nickname: `q${i + 1}`,
       profileImage: null,
       email: `q${i + 1}@gmail.com`,
@@ -109,7 +109,7 @@ export const repliesHandlers = [
         replyId: newId,
         content,
         writer: {
-          userId: `w${newId}`,
+          userId: newId,
           nickname: null,
           profileImage: null,
           email: `w${newId}@gmail.com`,
@@ -138,7 +138,7 @@ export const repliesHandlers = [
         parentId,
         content,
         writer: {
-          userId: `n${newId}`,
+          userId: newId,
           nickname: `n${newId}`,
           profileImage: null,
           email: `n${newId}@gmail.com`,
