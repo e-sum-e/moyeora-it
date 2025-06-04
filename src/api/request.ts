@@ -1,3 +1,5 @@
+import fetchRefreshToken from '@/features/auth/utils/fetchRefreshToken';
+
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL; //환경변수로 분리
 
 type RequestOptions = {
@@ -22,14 +24,15 @@ const buildUrl = (
     .map(([key, value]) => {
       const encodedKey = encodeURIComponent(key); // 특수문자, 한글인 경우가 있을 수 있으므로 인코딩
       if (Array.isArray(value)) {
-        return `${encodedKey}=${value.map(v => encodeURIComponent(v)).join(',')}`; // 배열 경우 배열 요소 인코딩
+        return `${encodedKey}=${value
+          .map((v) => encodeURIComponent(v))
+          .join(',')}`; // 배열 경우 배열 요소 인코딩
       }
       return `${encodedKey}=${encodeURIComponent(value)}`;
     })
     .join('&');
   return `${baseUrl}${endpoint}?${queryString}`;
 };
-
 
 /**
  * 요청 처리 함수
@@ -39,23 +42,53 @@ const buildUrl = (
  */
 const fetchHandler = async (
   url: string,
-  { method = 'GET', headers, body, credentials = 'same-origin' }: RequestOptions = {},
+  {
+    method = 'GET',
+    headers,
+    body,
+    credentials = 'same-origin',
+  }: RequestOptions = {},
 ) => {
+  let triedRefresh = false; // 토큰 갱신 시도 여부
   const headersObj = new Headers(headers || {});
-  
-  // 헤더에 컨텐츠 타입이 있는지 확인
-  const contentType = headersObj.get('content-type') || headersObj.get('Content-Type');
-  const isJson = contentType?.toLowerCase().includes('application/json');
 
-  const response = await fetch(
-    url, {
-    method,
-    headers: headersObj,
-    body: isJson && typeof body === 'object' ? JSON.stringify(body) : (body as BodyInit),
-    credentials,
-  });
+  const makeRequest = async () => {
+    // 헤더에 컨텐츠 타입이 있는지 확인
+    const contentType =
+      headersObj.get('content-type') || headersObj.get('Content-Type');
+    const isJson = contentType?.toLowerCase().includes('application/json');
+
+    return fetch(url, {
+      method,
+      headers: headersObj,
+      body:
+        isJson && typeof body === 'object'
+          ? JSON.stringify(body)
+          : (body as BodyInit),
+      credentials,
+    });
+  };
+
+  const response = await makeRequest();
 
   if (!response.ok) {
+    if (response.status === 401 && !triedRefresh) {
+      try {
+        const success = await fetchRefreshToken();
+        triedRefresh = true;
+
+        if (!success) {
+          throw new Error('refresh 만료');
+        }
+
+        const resposne2 = await makeRequest();
+        return resposne2.json();
+      } catch (e) {
+        console.log(e);
+        throw new Error('refresh 만료');
+      }
+    }
+
     const errorText = await response.text();
     switch (response.status) {
       case 401:
@@ -65,9 +98,10 @@ const fetchHandler = async (
       case 404:
         throw new Error('Not Found');
       default:
-        throw new Error(`[${response.status}] ${response.statusText} - ${errorText}`);
+        throw new Error(
+          `[${response.status}] ${response.statusText} - ${errorText}`,
+        );
     }
-
   }
 
   return response.json();
@@ -91,7 +125,12 @@ export const request = {
       credentials: options?.credentials ?? 'same-origin', // 기본값 설정
     });
   },
-  post: async (endpoint: string, headers: HeadersInit, body?: BodyInit, options?: Pick<RequestOptions, 'credentials'>) => {
+  post: async (
+    endpoint: string,
+    headers: HeadersInit,
+    body?: BodyInit,
+    options?: Pick<RequestOptions, 'credentials'>,
+  ) => {
     return await fetchHandler(`${baseUrl}${endpoint}`, {
       method: 'POST',
       headers,
@@ -99,7 +138,12 @@ export const request = {
       credentials: options?.credentials ?? 'same-origin',
     });
   },
-  patch: async (endpoint: string, headers: HeadersInit, body: object, options?: Pick<RequestOptions, 'credentials'>) => {
+  patch: async (
+    endpoint: string,
+    headers: HeadersInit,
+    body: object,
+    options?: Pick<RequestOptions, 'credentials'>,
+  ) => {
     return await fetchHandler(`${baseUrl}${endpoint}`, {
       method: 'PATCH',
       headers,
@@ -107,7 +151,10 @@ export const request = {
       credentials: options?.credentials ?? 'same-origin',
     });
   },
-  delete: async (endpoint: string, options?: Pick<RequestOptions, 'credentials'>) => {
+  delete: async (
+    endpoint: string,
+    options?: Pick<RequestOptions, 'credentials'>,
+  ) => {
     return await fetchHandler(`${baseUrl}${endpoint}`, {
       method: 'DELETE',
       credentials: options?.credentials ?? 'same-origin',
