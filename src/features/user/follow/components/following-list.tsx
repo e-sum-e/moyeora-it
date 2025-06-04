@@ -13,12 +13,12 @@ import { request } from '@/api/request';
 import flattenPages from '@/utils/flattenPages';
 
 export const FollowingList = () => {
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams(); 
   const { id } = useParams();
 
   const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<User>({
-    url: `/v1/follow/${id}/followings`,
-    ...(searchParams.size !== 0 && {
+    url: `/v1/follow/${id}/following`,
+    ...(searchParams.size !== 0 && {  
       queryParams: Object.fromEntries(searchParams.entries()),
     }),
     options: {
@@ -30,7 +30,7 @@ export const FollowingList = () => {
   const { data: { count: followingCount } = {} } = useQuery({
     queryKey: ['user', id, 'followings count'],
     queryFn() {
-      return request.get(`/v1/follow/${id}/followings/count`);
+      return request.get(`/v1/follow/${id}/following/count`);
     },
     staleTime: 0,
     refetchOnMount: true,
@@ -68,7 +68,7 @@ export const FollowingList = () => {
                 <ToggleFollowButton
                   userId={String(following.userId)}
                   isFollowing={following.isFollowing}
-                  usedIn="followings"
+                  usedIn="following"
                 />
               </div>
             </Link>
