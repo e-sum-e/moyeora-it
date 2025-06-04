@@ -31,7 +31,6 @@ export default async function GroupDetailPage({
       {},
       { credentials: 'include' },
     );
-    console.log(response);
 
     if (!response.status.success || !response.items) {
       return notFound();
@@ -43,13 +42,13 @@ export default async function GroupDetailPage({
     notFound();
   }
 
-  const { groupInfo, userInfo: host, applicant: isApplicant } = data;
+  const { group, host, applicant: isApplicant } = data;
 
   return (
     <div>
       <main className="w-4/5 mx-auto flex flex-col gap-10 mb-20">
         <GroupDetaiilCard info={data} />
-        <GroupDescription description={groupInfo.description} />
+        <GroupDescription description={group.description} />
         <ReplySection />
       </main>
       <footer className="fixed bottom-0 z-50 bg-white border-t-2 py-2 px-5 w-full flex justify-end gap-3">

@@ -109,16 +109,13 @@ export type Reply = {
 };
 
 export type GroupDetail = {
-  groupInfo: {
+  group: {
     id: number;
     title: string;
     description: string;
     autoAllow: boolean;
-    currentParticipants: number;
     maxParticipants: number;
-    status: boolean;
     type: string;
-    views: number;
     skills: Skill[];
     positions: Position[];
     deadline: string;
@@ -126,9 +123,9 @@ export type GroupDetail = {
     endDate: string;
     createdAt: string;
     participants: UserSummary[];
+    bookmark: boolean;
   };
-  userInfo: UserSummary;
+  host: UserSummary;
   applicant: boolean;
   joined: boolean;
-  bookmark: boolean;
 };
