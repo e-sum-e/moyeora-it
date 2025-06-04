@@ -43,7 +43,7 @@ export const EditUserProfileForm = ({
       nickname: user?.nickname ?? '',
       profileImageFile: null,
       position: user?.position ? String(Position[user.position]) : '',
-      // @ts-ignore
+      // @ts-expect-error 백엔드에서 주는 skills 값의 타입이 string[]이어서 일단 아래와 같이 number[] 배열 반환하도록 변경
       skills: user?.skills ? user?.skills.map((skill) => Skill[skill]) : [],
     },
   });
