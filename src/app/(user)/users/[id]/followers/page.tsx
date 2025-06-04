@@ -40,7 +40,7 @@ export default async function FollowersPage({
 
   return (
     <>
-      <QueryErrorBoundary>
+      <QueryErrorBoundary fallback={<>에러가 발생했어요</>}>
         <HydrationBoundary state={dehydrate(queryClient)}>
           <Suspense fallback={<div>Loading...</div>}>
             <FollowersList />

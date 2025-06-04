@@ -9,7 +9,7 @@ import { InputTextField } from '@/components/molecules/input-text-field';
 import { InputSelectField } from '@/components/molecules/input-select-field';
 import { SkillSelector } from '@/features/user/components/edit-user-profile-form/skill-selector';
 import { Button } from '@/components/ui/button';
-import { Position } from '@/types/enums';
+import { Position, Skill } from '@/types/enums';
 import useAuthStore from '@/stores/useAuthStore';
 import { useUpdateProfileMutation } from '@/features/user/hooks/useUpdateProfileMutation';
 
@@ -17,7 +17,7 @@ const schema = z.object({
   nickname: z.string().nonempty('닉네임을 입력해주세요.'),
   profileImageFile: z.custom<File>().nullable(),
   position: z.string().optional(),
-  skills: z.array(z.number()),
+  skills: z.array(z.nativeEnum(Skill)),
 });
 
 type EditUserProfileFormProps = {
@@ -42,13 +42,14 @@ export const EditUserProfileForm = ({
     defaultValues: {
       nickname: user?.nickname ?? '',
       profileImageFile: null,
-      position: user?.position?.toString() ?? '',
-      skills: user?.skills ?? [],
+      position: user?.position ? String(Position[user.position]) : '',
+      // @ts-expect-error 백엔드에서 주는 skills 값의 타입이 string[]이어서 일단 아래와 같이 number[] 배열 반환하도록 변경
+      skills: user?.skills ? user?.skills.map((skill) => Skill[skill]) : [],
     },
   });
 
   const { mutateAsync: updateProfile } = useUpdateProfileMutation();
-  
+
   const formSubmitHandler: SubmitHandler<FormData> = async (data) => {
     const position = Number(data.position);
     try {
