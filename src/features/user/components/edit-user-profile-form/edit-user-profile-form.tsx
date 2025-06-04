@@ -9,7 +9,7 @@ import { InputTextField } from '@/components/molecules/input-text-field';
 import { InputSelectField } from '@/components/molecules/input-select-field';
 import { SkillSelector } from '@/features/user/components/edit-user-profile-form/skill-selector';
 import { Button } from '@/components/ui/button';
-import { getPosition, Position, Skill } from '@/types/enums';
+import { Position, Skill } from '@/types/enums';
 import useAuthStore from '@/stores/useAuthStore';
 import { useUpdateProfileMutation } from '@/features/user/hooks/useUpdateProfileMutation';
 
@@ -44,12 +44,12 @@ export const EditUserProfileForm = ({
       profileImageFile: null,
       position: user?.position ? String(Position[user.position]) : '',
       // @ts-ignore
-      skills: user?.skills ? user?.skills.map(skill => Skill[skill]) : [],
+      skills: user?.skills ? user?.skills.map((skill) => Skill[skill]) : [],
     },
   });
 
   const { mutateAsync: updateProfile } = useUpdateProfileMutation();
-  
+
   const formSubmitHandler: SubmitHandler<FormData> = async (data) => {
     const position = Number(data.position);
     try {

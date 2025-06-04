@@ -4,7 +4,7 @@ import { notFound, useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { Avatar } from '@/components/atoms/avatar';
 import { Badge } from '@/components/atoms/badge';
-import { getPosition, getSkill } from '@/types/enums';
+import { getPosition } from '@/types/enums';
 import { User } from '@/types';
 import { request } from '@/api/request';
 import { ToggleFollowButton } from '@/features/user/follow/components/toggle-follow-button';

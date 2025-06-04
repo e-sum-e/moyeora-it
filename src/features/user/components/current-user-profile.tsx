@@ -3,7 +3,7 @@
 import { Avatar } from '@/components/atoms/avatar';
 import { Badge } from '@/components/atoms/badge';
 import useAuthStore from '@/stores/useAuthStore';
-import { getPosition, getSkill } from '@/types/enums';
+import { getPosition } from '@/types/enums';
 import { EditUserProfileDialog } from '@/features/user/components/edit-user-profile-dialog';
 import { AccountSettingsDialog } from '@/features/user/components/account-settings-dialog';
 import { WithdrawDialog } from '@/features/user/components/withdraw-dialog';
