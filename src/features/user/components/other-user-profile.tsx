@@ -9,6 +9,7 @@ import { User } from '@/types';
 import { request } from '@/api/request';
 import { ToggleFollowButton } from '@/features/user/follow/components/toggle-follow-button';
 import { getDisplayNickname, getDisplayProfileImage } from '@/utils/fallback';
+import { CommonResponse } from '@/types/response';
 
 /**
  * 현재 로그인 한 유저가 아닌 다른 유저의 프로필 컴포넌트
@@ -20,10 +21,10 @@ import { getDisplayNickname, getDisplayProfileImage } from '@/utils/fallback';
 export const OtherUserProfile = () => {
   const { id } = useParams();
   const {
-    data: user,
+    data: userResponse,
     isLoading,
     isError,
-  } = useQuery<User>({
+  } = useQuery<CommonResponse<User>>({
     queryKey: ['user', id],
     queryFn: () => request.get(`/v1/user/${id}`, {}, {
       credentials: 'include',
@@ -31,6 +32,8 @@ export const OtherUserProfile = () => {
     staleTime: 0,
   });
 
+  const user = userResponse?.data;
+  
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error</div>;
 
