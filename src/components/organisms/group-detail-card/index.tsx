@@ -4,9 +4,9 @@ import { BookmarkButton } from '@/components/atoms/bookmark-button';
 import { Title } from '@/components/atoms/title';
 import { Progress } from '@/components/ui/progress';
 import { GroupDetail } from '@/types';
+import { getPosition, getSkill } from '@/types/enums';
 import { isBeforeToday } from '@/utils/dateUtils';
 import { getDisplayNickname, getDisplayProfileImage } from '@/utils/fallback';
-import { getSkillBadge } from '@/utils/getSkillBadge';
 import Link from 'next/link';
 import { ParticipantListModal } from '../participant-list-modal';
 
@@ -31,7 +31,7 @@ export const GroupDetaiilCard = ({
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2">
               <Badge
-                text={info.groupInfo.type}
+                text={info.groupInfo.type.toUpperCase()}
                 className="border border-black rounded-sm px-1"
               />
               <Title title={info.groupInfo.title} />
@@ -40,7 +40,7 @@ export const GroupDetaiilCard = ({
               {info.groupInfo.positions.map((position) => (
                 <Badge
                   key={position}
-                  text={position}
+                  text={getPosition(position)}
                   className="bg-gray-900 text-gray-100"
                 />
               ))}
@@ -84,7 +84,7 @@ export const GroupDetaiilCard = ({
           <span>사용 기술:</span>
           <ul className="flex gap-2 mt-1">
             {info.groupInfo.skills.map((skill) => (
-              <li key={skill}>{getSkillBadge(skill)}</li>
+              <li key={skill}>{getSkill(skill)}</li>
             ))}
           </ul>
         </section>
@@ -130,7 +130,7 @@ export const GroupDetaiilCard = ({
       </article>
 
       {/* 모집 종료 오버레이 */}
-      {!isBeforeDeadline && (
+      {isBeforeDeadline && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-lg">
           <p className="text-white font-medium">모집이 종료되었습니다.</p>
         </div>

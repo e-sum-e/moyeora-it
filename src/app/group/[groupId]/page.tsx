@@ -4,11 +4,19 @@ import { GroupActionButtons } from '@/components/molecules/gorup-action-buttons'
 import { GroupDetaiilCard } from '@/components/organisms/group-detail-card';
 import { ReplySection } from '@/components/organisms/reply/reply-section';
 import { GroupDetail } from '@/types';
-import { CommonResponse } from '@/types/response';
 import { notFound } from 'next/navigation';
 
 type GroupDetailPageProps = {
   params: Promise<{ groupId: string }>;
+};
+
+type GroupDetailResponse = {
+  status: {
+    code: number;
+    message: string;
+    success: boolean;
+  };
+  items: GroupDetail;
 };
 
 export default async function GroupDetailPage({
@@ -18,17 +26,17 @@ export default async function GroupDetailPage({
   let data: GroupDetail;
 
   try {
-    const response: CommonResponse<GroupDetail> = await request.get(
+    const response: GroupDetailResponse = await request.get(
       `/v2/groups/${groupId}`,
       {},
       { credentials: 'include' },
     );
 
-    if (!response.status.success || !response.data) {
+    if (!response.status.success || !response.items) {
       return notFound();
     }
 
-    data = response.data;
+    data = response.items;
   } catch (err) {
     console.error(err);
     notFound();
@@ -38,7 +46,7 @@ export default async function GroupDetailPage({
 
   return (
     <div>
-      <main className="w-4/5 mx-auto flex flex-col gap-10">
+      <main className="w-4/5 mx-auto flex flex-col gap-10 mb-20">
         <GroupDetaiilCard info={data} />
         <GroupDescription description={groupInfo.description} />
         <ReplySection />

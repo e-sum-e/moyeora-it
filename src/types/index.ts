@@ -120,8 +120,8 @@ export type GroupDetail = {
     status: boolean;
     type: string;
     views: number;
-    skills: string[];
-    positions: string[];
+    skills: Skill[];
+    positions: Position[];
     deadline: string;
     startDate: string;
     endDate: string;
