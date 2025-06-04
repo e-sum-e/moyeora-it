@@ -3,7 +3,7 @@ import { User } from '@/types';
 import { Position, Skill } from '@/types/enums';
 
 let user: User = {
-  userId: 'my-id',
+  userId: 1,
   email: 'me@example.com',
   nickname: null,
   position: null,

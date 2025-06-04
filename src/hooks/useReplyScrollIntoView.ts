@@ -1,7 +1,7 @@
 import { Reply } from '@/types';
 import type { InfiniteData } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
-import { Page } from './useFetchItems';
+import { Page } from '@/utils/flattenPages';
 
 interface UseReplyScrollIntoViewProps {
   data: InfiniteData<Page<Reply>>;
