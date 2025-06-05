@@ -3,19 +3,21 @@
 import { FormProvider, useForm, SubmitHandler } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { EditableAvatar } from '@/features/user/components/editable-avatar';
+import { EditableAvatar } from '@/features/user/components/edit-user-profile-form/editable-avatar';
 import { Form } from '@/components/ui/form';
 import { InputTextField } from '@/components/molecules/input-text-field';
 import { InputSelectField } from '@/components/molecules/input-select-field';
 import { SkillSelector } from '@/features/user/components/edit-user-profile-form/skill-selector';
 import { Button } from '@/components/ui/button';
-import { Position } from '@/types/enums';
+import { Position, Skill } from '@/types/enums';
+import useAuthStore from '@/stores/useAuthStore';
+import { useUpdateProfileMutation } from '@/features/user/hooks/useUpdateProfileMutation';
 
 const schema = z.object({
   nickname: z.string().nonempty('닉네임을 입력해주세요.'),
   profileImageFile: z.custom<File>().nullable(),
   position: z.string().optional(),
-  skills: z.array(z.number()),
+  skills: z.array(z.nativeEnum(Skill)),
 });
 
 type EditUserProfileFormProps = {
@@ -25,28 +27,41 @@ type EditUserProfileFormProps = {
 export type FormData = z.infer<typeof schema>;
 
 /**
- * 사용자 프로필 수정 폼 
- * 
+ * 사용자 프로필 수정 폼
+ *
  * @param closeDialog 모달 닫는 함수
  * @returns 사용자 프로필 수정 폼 컴포넌트
  */
 export const EditUserProfileForm = ({
   closeDialog,
 }: EditUserProfileFormProps) => {
+  const user = useAuthStore((state) => state.user);
+
   const formMethods = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      nickname: 'k',
+      nickname: user?.nickname ?? '',
       profileImageFile: null,
-      position: '0',
-      skills: [1, 2, 3, 4, 5],
+      position: user?.position ? String(Position[user.position]) : '',
+      // @ts-expect-error 백엔드에서 주는 skills 값의 타입이 string[]이어서 일단 아래와 같이 number[] 배열 반환하도록 변경
+      skills: user?.skills ? user?.skills.map((skill) => Skill[skill]) : [],
     },
   });
 
+  const { mutateAsync: updateProfile } = useUpdateProfileMutation();
   const formSubmitHandler: SubmitHandler<FormData> = async (data) => {
     const position = Number(data.position);
-    console.log({ ...data, position });
-    closeDialog();
+    try {
+      await updateProfile({
+        nickname: data.nickname,
+        position,
+        skills: data.skills,
+        ...(data.profileImageFile && { file: data.profileImageFile }),
+      });
+      closeDialog();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -57,8 +72,8 @@ export const EditUserProfileForm = ({
           onSubmit={formMethods.handleSubmit(formSubmitHandler)}
         >
           <EditableAvatar
-            imageSrc={'https://github.com/shadcn.png'}
-            fallback={'CN'}
+            imageSrc={user?.profileImage ?? ''}
+            fallback={user?.nickname?.slice(0, 2) ?? ''}
           />
           <InputTextField
             label="닉네임"

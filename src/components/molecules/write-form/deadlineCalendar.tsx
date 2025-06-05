@@ -13,14 +13,13 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { WriteForm } from '@/types';
-import { getYearMonthDayWithDot } from '@/utils/dateUtils';
+import { formatYearMonthDayWithDot } from '@/utils/dateUtils';
 import { CalendarIcon } from 'lucide-react';
 import { UseFormReturn } from 'react-hook-form';
 
 type TitleProps = {
   form: UseFormReturn<WriteForm>;
   isDeadlineCalendarOpen: boolean;
-  setValidDeadline: (deadline: Date) => void;
   openDeadlineCalendar: () => void;
   closeDeadlineCalendar: () => void;
   validDeadline: Date;
@@ -29,7 +28,7 @@ type TitleProps = {
 export const DeadlineCalendar = ({
   form,
   isDeadlineCalendarOpen,
-  setValidDeadline,
+
   openDeadlineCalendar,
   closeDeadlineCalendar,
   validDeadline,
@@ -42,7 +41,7 @@ export const DeadlineCalendar = ({
     if (!date) return;
 
     onChange(date);
-    setValidDeadline(date);
+    // setValidDeadline(date);
     closeDeadlineCalendar();
   };
 
@@ -64,11 +63,11 @@ export const DeadlineCalendar = ({
             >
               <div>
                 {field.value ? (
-                  getYearMonthDayWithDot(field.value)
+                  formatYearMonthDayWithDot(field.value)
                 ) : (
                   <>
                     <div className="text-gray-500">
-                      {getYearMonthDayWithDot(validDeadline)}
+                      {formatYearMonthDayWithDot(validDeadline)}
                     </div>
                     <div>날짜를 선택해주세요.</div>
                   </>

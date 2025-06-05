@@ -1,3 +1,5 @@
+'use client';
+
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -22,6 +24,8 @@ const FindEmailForm = () => {
     },
   });
 
+  const [disabled, setDisabled] = useState(false);
+
   // find-email인 경우
   const [isExisted, setIsExisted] = useState(false);
   const [isNotExisted, setIsNotExisted] = useState(false);
@@ -29,10 +33,14 @@ const FindEmailForm = () => {
   // 이메일 찾기
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      setDisabled(true);
+
       // find-email인 경우
-      // TODO: 이메일 찾기 로직 작성 /find-email
-      const { success } = await request.post(
-        '/find-email',
+      // 중복이면 false, 중복이 아니면 true
+      const {
+        status: { success },
+      } = await request.post(
+        '/v1/user/check-email',
         {
           'Content-Type': 'application/json',
         },
@@ -40,16 +48,20 @@ const FindEmailForm = () => {
       );
 
       if (success) {
-        setIsExisted(true);
-        setIsNotExisted(false);
-      } else {
         setIsExisted(false);
         setIsNotExisted(true);
+      } else {
+        setIsExisted(true);
+        setIsNotExisted(false);
       }
     } catch (e) {
+      // 중복으로 처리하ㅔ셔서 에러나면 존재하는거임
       // TODO: 이메일 찾기 실패시 에러코드 맞춰서 설정해주기
-      setIsNotExisted(true);
+      setIsExisted(true);
+      setIsNotExisted(false);
       console.log(e);
+    } finally {
+      setDisabled(false);
     }
   };
 
@@ -76,7 +88,7 @@ const FindEmailForm = () => {
         {isNotExisted && (
           <p className="text-red-600">해당 이메일이 존재하지 않습니다</p>
         )}
-        <Button>이메일 찾기</Button>
+        <Button disabled={disabled}>이메일 찾기</Button>
       </form>
     </Form>
   );

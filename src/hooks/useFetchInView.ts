@@ -5,7 +5,7 @@ import { IntersectionOptions, useInView } from 'react-intersection-observer';
 export const useFetchInView = ({
   fetchNextPage,
   options,
-  isLoading
+  isLoading,
 }: {
   fetchNextPage: (options?: FetchNextPageOptions) => void;
   options?: IntersectionOptions;
@@ -17,6 +17,7 @@ export const useFetchInView = ({
     if (inView && !isLoading) {
       fetchNextPage();
     }
+    // eslint-disable-next-line
   }, [inView, isLoading]);
 
   return { ref };

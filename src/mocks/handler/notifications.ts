@@ -1,7 +1,9 @@
 import { eNotification } from '@/types/enums';
 import { http, HttpResponse } from 'msw';
+import { InfiniteResponse } from '@/types/response';
+import { Notification } from '@/types';
 
-const NOTIFICATIONS = [
+export const NOTIFICATIONS = [
   {
     id: 9999,
     message: '알림 메시지1',
@@ -20,17 +22,33 @@ const NOTIFICATIONS = [
 ];
 
 export const notificationsHandlers = [
-  http.get('http://localhost:4000/api/notifications', ({ request }) => {
+  http.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/notifications`, ({ request }) => {
     const url = new URL(request.url);
     const searchParams = new URLSearchParams(url.search);
     const isRead = searchParams.get('isRead');
 
     const filteredNotifications = NOTIFICATIONS.filter((notification) => {
       return isRead === 'false' ? !notification.isRead : true;
-    });
+    }).map(notification => ({
+      ...notification,
+      createdAt: new Date(notification.createdAt),
+      url: notification.url ?? null
+    }));
 
+    return HttpResponse.json<InfiniteResponse<Notification>>({
+      status: {
+        code: 200,
+        message: 'success',
+        success: true
+      },
+      data: filteredNotifications,
+      hasNext: false,
+      cursor: 0,
+    });
+  }),
+  http.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/notifications/unread-count`, () => {
     return HttpResponse.json({
-      items: filteredNotifications,
+      unreadCount: 1
     });
   }),
 ];

@@ -2,7 +2,7 @@
 import { eNotification, Position, Skill } from './enums';
 
 export type User = {
-  userId: string;
+  userId: number;
   nickname: string | null;
   email: string;
   profileImage: string | null;
@@ -13,10 +13,14 @@ export type User = {
   rate: number;
 };
 
+export type UserSummary = Pick<
+  User,
+  'userId' | 'nickname' | 'profileImage' | 'email'
+>;
+
 export enum GroupType {
   STUDY = 'study',
   PROJECT = 'project',
-  ALL = 'all',
 }
 
 export type WriteFormWithCreatedAt = WriteForm & { createdAt: Date };
@@ -73,7 +77,7 @@ export type Group = {
   startDate: Date; // 모임의 시작일
   endDate: Date; // 모임의 종료일
   maxParticipants: number;
-  participants:Pick<User, "id" | "nickname" | "profileImage">[];
+  participants: UserSummary[];
   description: string;
   position: Position[];
   skills: Skill[];
@@ -82,6 +86,10 @@ export type Group = {
   autoAllow: boolean;
   type: GroupType;
 };
+
+export type GroupSort = 'createdAt' | 'deadline';
+
+export type Order = 'asc' | 'desc';
 
 export type Notification = {
   id: number;
@@ -95,6 +103,42 @@ export type Notification = {
 export type Reply = {
   replyId: number;
   content: string;
-  writer: Pick<User, 'userId' | 'nickname' | 'profileImage'>;
+  writer: UserSummary;
   createdAt: string;
+  isDeleted?: boolean; // 삭제된 댓글인지 여부
+};
+
+export type GroupDetail = {
+  groupInfo: {
+    groupId: number;
+    title: string;
+    description: string;
+    userId: number;
+    autoAllow: boolean;
+    currentParticipants: number;
+    maxParticipants: number;
+    status: boolean;
+    type: string;
+    views: number;
+    skills: string[];
+    positions: string[];
+    deadline: string;
+    startDate: string;
+    endDate: string;
+    userInfos: {
+      userId: number;
+      nickname: string;
+      profileImage: string;
+      email: string;
+    }[];
+  };
+  userInfo: {
+    userId: number;
+    nickname: string;
+    profileImage: string;
+    email: string;
+  };
+  applicant: boolean;
+  joined: boolean;
+  bookmark: boolean;
 };

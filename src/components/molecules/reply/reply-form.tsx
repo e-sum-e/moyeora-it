@@ -4,6 +4,7 @@ import { request } from '@/api/request';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 type ReplyFormProps = {
   onSuccess: (id: number) => void;
@@ -16,8 +17,8 @@ export const ReplyForm = ({ onSuccess, parentReplyId }: ReplyFormProps) => {
 
   const endpoint =
     parentReplyId === undefined
-      ? `/api/groups/${groupId}/replies`
-      : `/api/groups/${groupId}/replies/${parentReplyId}`;
+      ? `/v2/groups/${groupId}/replies`
+      : `/v2/groups/${groupId}/replies/${parentReplyId}`;
 
   const queryClient = useQueryClient();
 
@@ -27,6 +28,7 @@ export const ReplyForm = ({ onSuccess, parentReplyId }: ReplyFormProps) => {
         endpoint,
         { 'Content-Type': 'application/json' },
         JSON.stringify({ content }),
+        { credentials: 'include' },
       ),
     onSuccess: (data) => {
       // 목록 무효화 후, 작성한 댓글로 이동
@@ -35,6 +37,9 @@ export const ReplyForm = ({ onSuccess, parentReplyId }: ReplyFormProps) => {
       });
       onSuccess(data.replyId);
       setReplyContent('');
+    },
+    onError: () => {
+      toast.error('댓글 등록에 실패하였습니다.');
     },
   });
 

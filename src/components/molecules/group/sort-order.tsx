@@ -1,0 +1,77 @@
+'use client';
+
+import { Button } from '@/components/ui/button';
+import { Popover } from '@/components/ui/popover';
+import { GroupSort, Order } from '@/types';
+import {
+  PopoverClose,
+  PopoverContent,
+  PopoverTrigger,
+} from '@radix-ui/react-popover';
+import { useSearchParams } from 'next/navigation';
+
+type OrderProps = {
+  updateQueryParams: (queries: Record<string, string>) => void;
+};
+
+export const SortOrder = ({ updateQueryParams }: OrderProps) => {
+  const searchParams = useSearchParams();
+  const selectedSort = searchParams.get('sort');
+  const selectedOrder = searchParams.get('order');
+
+  const orderOptions: {
+    name: string;
+    value: { sort: GroupSort; order: Order };
+  }[] = [
+    { name: '작성일자 ▼', value: { sort: 'createdAt', order: 'desc' } },
+    { name: '작성일자 ▲', value: { sort: 'createdAt', order: 'asc' } },
+    { name: '마감일자 ▼', value: { sort: 'deadline', order: 'desc' } },
+    { name: '마감일자 ▲', value: { sort: 'deadline', order: 'asc' } },
+  ];
+
+  const getSelectedOrderOptionName = () => {
+    return orderOptions.find(
+      (option) =>
+        option.value.sort === selectedSort &&
+        option.value.order === selectedOrder,
+    )?.name;
+  };
+
+  const orderSelectHandler = (option: { sort: GroupSort; order: Order }) => {
+    if (selectedSort === option.sort && selectedOrder === option.order) {
+      // 이미 선택된 정렬 옵션과 현재 선택한 정렬 옵션이 같을 경우 아무 동작하지 않음
+      return;
+    }
+
+    // 이미 선택된 sort나 order가 현재 선택한 sort나 order와 같을 경우 updateQueryParams에서 제외하여 토글되지 않게 한다
+    if (selectedSort === option.sort) {
+      updateQueryParams({ order: option.order });
+      return;
+    }
+    if (selectedOrder === option.order) {
+      updateQueryParams({ sort: option.sort });
+      return;
+    }
+
+    // 이미 선택된 정렬 옵션과 아예 다른 경우 updateQueryParams에서 모두 업데이트 한다
+    updateQueryParams({ sort: option.sort, order: option.order });
+  };
+
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button variant="outline">{getSelectedOrderOptionName()}</Button>
+      </PopoverTrigger>
+      <PopoverContent className="flex flex-col">
+        {orderOptions.map((option) => (
+          <PopoverClose
+            key={option.name}
+            onClick={() => orderSelectHandler(option.value)}
+          >
+            {option.name}
+          </PopoverClose>
+        ))}
+      </PopoverContent>
+    </Popover>
+  );
+};

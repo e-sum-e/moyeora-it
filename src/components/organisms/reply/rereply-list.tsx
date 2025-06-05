@@ -1,45 +1,64 @@
 'use client';
 
-import { ReplyContent } from '@/components/molecules/reply/reply-content';
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
+import { useReplyScrollIntoView } from '@/hooks/useReplyScrollIntoView';
 import { Reply } from '@/types';
+import flattenPages from '@/utils/flattenPages';
 import { useParams } from 'next/navigation';
+import { RereplyItem } from './rereply-item';
 
 type RereplyListProps = {
   parentReplyId: number;
+  targetReplyId: number | null;
+  setTargetReplyId: (id: number | null) => void;
 };
 
-export const RereplyList = ({ parentReplyId }: RereplyListProps) => {
+export const RereplyList = ({
+  targetReplyId,
+  parentReplyId,
+  setTargetReplyId,
+}: RereplyListProps) => {
   const { groupId } = useParams();
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useFetchItems<Reply & { parentId: number }>({
-      url: `/api/groups/${groupId}/replies/${parentReplyId}`,
+      url: `/v2/groups/${groupId}/replies/${parentReplyId}`,
       queryParams: {
         size: 10,
+      },
+      options: {
+        staleTime: 0,
       },
     });
 
   const { ref } = useFetchInView({
     fetchNextPage,
+    isLoading,
   });
 
-  const allRereplies = data.pages.flatMap((page) => page.items);
+  const { itemRefs: rereplyRefs, bottomRef } = useReplyScrollIntoView({
+    data,
+    targetReplyId,
+    setTargetReplyId,
+    hasNextPage,
+  });
+
+  const rereplies = flattenPages(data.pages);
 
   return (
     <div>
       <ul className="flex flex-col gap-5">
-        {allRereplies.map((rereply) => (
-          <li key={rereply.replyId}>
-            <ReplyContent
-              content={rereply.content}
-              writer={rereply.writer}
-              createdAt={rereply.createdAt}
-              replyId={rereply.replyId}
-            />
-          </li>
+        {rereplies.map((rereply) => (
+          <RereplyItem
+            key={rereply.replyId}
+            ref={(el) => {
+              rereplyRefs.current[rereply.replyId] = el;
+            }}
+            {...rereply}
+          />
         ))}
       </ul>
+      <div ref={bottomRef} />
       {hasNextPage && !isFetchingNextPage && (
         <div ref={ref} className="h-2 -translate-y-50 bg-transparent" />
       )}

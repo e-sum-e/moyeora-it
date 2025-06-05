@@ -1,6 +1,8 @@
 'use client';
 
 import { request } from '@/api/request';
+import { ErrorBoundary } from '@/components/error-boundary';
+import { handleError } from '@/components/error-boundary/error-handler';
 import { AutoAllow } from '@/components/molecules/write-form/autoAllow';
 import { DeadlineCalendar } from '@/components/molecules/write-form/deadlineCalendar';
 import { EndDateCalendar } from '@/components/molecules/write-form/endDateCalendar';
@@ -13,19 +15,19 @@ import { Description } from '@/components/molecules/write-form/tiptap/desctiptio
 import { Title } from '@/components/molecules/write-form/title';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
-import { DEFAULT_SKILL_NAMES, GroupType } from '@/types';
-import { Skill } from '@/types/enums';
 import {
   DEFAULT_POSITION_NAMES,
   DEFAULT_SKILL_NAMES,
   GroupType,
 } from '@/types';
+import { Skill } from '@/types/enums';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { addDays, isAfter } from 'date-fns';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 const formSchema = z
@@ -81,12 +83,16 @@ const formSchema = z
     path: ['endDate'],
   });
 
-export const WriteForm = () => {
+type WriteFormProps = {
+  userId: number;
+};
+
+export const WriteForm = ({ userId }: WriteFormProps) => {
   const [isDeadlineCalendarOpen, setIsDeadlineCalendarOpen] = useState(false);
   const [isStartDateCalendarOpen, setIsStartDateCalendarOpen] = useState(false);
   const [isEndDateCalendarOpen, setIsEndDateCalendarOpen] = useState(false);
-  const [validDeadline, setValidDeadline] = useState(addDays(new Date(), 7));
   const router = useRouter();
+  const validDeadline = addDays(new Date(), 7);
 
   const validStartDate = useMemo(
     () => addDays(validDeadline, 1),
@@ -109,6 +115,10 @@ export const WriteForm = () => {
     },
   });
 
+  const cancelClickHandler = () => {
+    router.push('/');
+  };
+
   const formSubmit = async (values: z.infer<typeof formSchema>) => {
     const skills = values.skills.map(
       (skill) => Skill[skill as keyof typeof Skill],
@@ -117,58 +127,75 @@ export const WriteForm = () => {
     const valueWithCreatedAt = { ...values, skills, createdAt: new Date() };
     try {
       const result = await request.post(
-        '/api/group',
+        `/v2/groups?userId=${userId}`,
         { 'Content-Type': 'application/json' },
         JSON.stringify(valueWithCreatedAt),
+        { credentials: 'include' },
       );
 
-      if (result.success) {
+      if (result.status.success) {
         router.push('/');
       } else {
-        // 에러 임시 처리
-        console.log('Group create error : ', result.code);
+        toast.error('에러가 발생했습니다. 다시 시도해주세요.');
+        console.log(
+          `Error code ${result.status.code} : ${result.status.message}`,
+        );
       }
     } catch (error) {
-      // 에러 임시 처리
-      console.log('Group create error: ', error);
+      throw new Error(
+        `Group create error(server): ${
+          error instanceof Error ? error.message : 'Unexpected Error'
+        }`,
+      );
     }
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(formSubmit)}>
-        <Title form={form} />
-        <SelectType form={form} />
-        <DeadlineCalendar
-          form={form}
-          isDeadlineCalendarOpen={isDeadlineCalendarOpen}
-          setValidDeadline={setValidDeadline}
-          openDeadlineCalendar={() => setIsDeadlineCalendarOpen(true)}
-          closeDeadlineCalendar={() => setIsDeadlineCalendarOpen(false)}
-          validDeadline={validDeadline}
-        />
-        <MaxParticipants form={form} />
-        <AutoAllow form={form} />
-        <StartDateCalendar
-          form={form}
-          isStartDateCalendarOpen={isStartDateCalendarOpen}
-          openStartDateCalendar={() => setIsStartDateCalendarOpen(true)}
-          closeStartDateCalendar={() => setIsStartDateCalendarOpen(false)}
-          validStartDate={validStartDate}
-        />
-        <EndDateCalendar
-          form={form}
-          isEndDateCalendarOpen={isEndDateCalendarOpen}
-          openEndDateCalendar={() => setIsEndDateCalendarOpen(true)}
-          closeEndDateCalendar={() => setIsEndDateCalendarOpen(false)}
-          validEndDate={validEndDate}
-        />
-        <Description form={form} />
-        <SelectSkill form={form} />
-        <SelectPosition form={form} />
-        <Button type="button">취소하기</Button>
-        <Button type="submit">등록하기</Button>
-      </form>
-    </Form>
+    <ErrorBoundary
+      fallback={({ error, resetErrorBoundary }) =>
+        handleError({
+          error,
+          resetErrorBoundary,
+          defaultMessage: '그룹 생성 중 문제가 발생했습니다.',
+        })
+      }
+    >
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(formSubmit)}>
+          <Title form={form} />
+          <SelectType form={form} />
+          <DeadlineCalendar
+            form={form}
+            isDeadlineCalendarOpen={isDeadlineCalendarOpen}
+            openDeadlineCalendar={() => setIsDeadlineCalendarOpen(true)}
+            closeDeadlineCalendar={() => setIsDeadlineCalendarOpen(false)}
+            validDeadline={validDeadline}
+          />
+          <MaxParticipants form={form} />
+          <AutoAllow form={form} />
+          <StartDateCalendar
+            form={form}
+            isStartDateCalendarOpen={isStartDateCalendarOpen}
+            openStartDateCalendar={() => setIsStartDateCalendarOpen(true)}
+            closeStartDateCalendar={() => setIsStartDateCalendarOpen(false)}
+            validStartDate={validStartDate}
+          />
+          <EndDateCalendar
+            form={form}
+            isEndDateCalendarOpen={isEndDateCalendarOpen}
+            openEndDateCalendar={() => setIsEndDateCalendarOpen(true)}
+            closeEndDateCalendar={() => setIsEndDateCalendarOpen(false)}
+            validEndDate={validEndDate}
+          />
+          <Description form={form} />
+          <SelectSkill form={form} />
+          <SelectPosition form={form} />
+          <Button type="button" onClick={cancelClickHandler}>
+            취소하기
+          </Button>
+          <Button type="submit">등록하기</Button>
+        </form>
+      </Form>
+    </ErrorBoundary>
   );
 };

@@ -2,39 +2,46 @@
 
 import Link from 'next/link';
 import { useParams, useSearchParams } from 'next/navigation';
-import { useFetchItems } from '@/hooks/useFetchItems';
-import { useFetchInView } from '@/hooks/useFetchInView';
-import { useDebounce } from '@/hooks/useDebounce';
+import { useQuery } from '@tanstack/react-query';
 import { Avatar } from '@/components/atoms/avatar';
-import { Button } from '@/components/ui/button';
 import { SearchInput } from '@/components/molecules/search-input/search-input';
+import { useFetchInView } from '@/hooks/useFetchInView';
+import { useFetchItems } from '@/hooks/useFetchItems';
+import { User } from '@/types';
+import { ToggleFollowButton } from '@/features/user/follow/components/toggle-follow-button';
+import { request } from '@/api/request';
+import flattenPages from '@/utils/flattenPages';
 
 export const FollowingList = () => {
-  const { id } = useParams();
-  const userId = '1';
-  const isCurrentUser = id === userId;
-
   const searchParams = useSearchParams();
+  const { id } = useParams();
+
   const search = searchParams.get('search');
 
-  const { data, fetchNextPage, hasNextPage } = useFetchItems({
-    url: '/api/users/followings',
-    ...(search && { queryParams: { search } }),
+  const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<User>({
+    url: `/v1/follow/${id}/following`,
+    ...(search && { queryParams: { name: search } }),
+    options: {
+      refetchOnMount: true,
+      staleTime: 0,
+    },
+  });
+
+  const { data: { count: followingCount } = {} } = useQuery({
+    queryKey: ['user', id, 'followings count'],
+    queryFn() {
+      return request.get(`/v1/follow/${id}/following/count`);
+    },
+    staleTime: 0,
+    refetchOnMount: true,
   });
 
   const { ref } = useFetchInView({
     fetchNextPage,
+    isLoading,
   });
 
-  const followingList = data?.pages.flatMap((page) => page.items);
-
-  const followButtonClickHandler = useDebounce((userId: string) => {
-    console.log(userId);
-  }, 500);
-
-  const unfollowButtonClickHandler = useDebounce((userId: string) => {
-    console.log(userId);
-  }, 500);
+  const followingList = flattenPages<User>(data.pages);
 
   return (
     <>
@@ -42,9 +49,10 @@ export const FollowingList = () => {
         <SearchInput placeholder="닉네임으로 검색해보세요." />
       </div>
       <ul>
+        <h1>팔로잉 {followingCount ?? null}</h1>
         {followingList?.map((following) => (
           <li key={following.userId}>
-            <Link href={`/user/${following.userId}`}>
+            <Link href={`/users/${following.userId}`}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-x-2">
                   <Avatar
@@ -57,40 +65,11 @@ export const FollowingList = () => {
                     <span>{following.email}</span>
                   </div>
                 </div>
-                {isCurrentUser ? (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      unfollowButtonClickHandler(following.userId);
-                    }}
-                  >
-                    언팔로우
-                  </Button>
-                ) : following.isFollowing ? (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      unfollowButtonClickHandler(following.userId);
-                    }}
-                  >
-                    팔로잉
-                  </Button>
-                ) : (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      followButtonClickHandler(following.userId);
-                    }}
-                  >
-                    팔로우
-                  </Button>
-                )}
+                <ToggleFollowButton
+                  userId={String(following.userId)}
+                  isFollowing={following.isFollowing}
+                  usedIn="following"
+                />
               </div>
             </Link>
           </li>

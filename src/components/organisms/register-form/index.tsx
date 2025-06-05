@@ -1,3 +1,5 @@
+'use client';
+
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -7,7 +9,6 @@ import { Form } from '@/components/ui/form';
 import { useState } from 'react';
 import useAuthStore from '@/stores/useAuthStore';
 import { request } from '@/api/request';
-import { User } from '@/types';
 
 // 회원가입에 쓰이는 이메일과 비밀번호 유효성
 const registerFormSchema = z
@@ -19,7 +20,7 @@ const registerFormSchema = z
       .string()
       .nonempty({ message: '비밀번호를 입력해주세요' })
       .regex(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).{8,}$/, {
-        message: '영어 대/소문자, 숫자, 특수문자를 혼합하여 8자리 이상',
+        message: '영어, 숫자, 특수문자를 혼합하여 8자리 이상',
       }),
     passwordConfirm: z.string().nonempty({
       message: '비밀번호를 다시 입력해주세요',
@@ -47,30 +48,55 @@ const RegisterForm = () => {
     },
   });
 
-  const setUser = useAuthStore((s) => s.setUser);
+  const [disabled, setDisabled] = useState(false);
+
+  const fetchAndSetUser = useAuthStore((s) => s.fetchAndSetUser);
 
   // 회원가입
   const onRegisterSubmit = async (
     values: z.infer<typeof registerFormSchema>,
   ) => {
     try {
-      // TODO: 회원가입 로직 작성 /register
+      setDisabled(true);
+      // 회원가입 로직 작성 /user/signup
       // 에러처리 별도로 해줘야 할 수도 있음
-      await request.post(
-        '/register',
+      const {
+        status: { success: registerSuccess },
+      } = await request.post(
+        '/v1/user/signup',
+        {
+          'Content-Type': 'application/json',
+        },
+        JSON.stringify({
+          email: values.email,
+          password: values.password,
+        }),
+      );
+
+      if (!registerSuccess) throw new Error('회원가입 실패');
+
+      const {
+        status: { success: loginSuccess },
+      } = await request.post(
+        '/v1/user/login',
         {
           'Content-Type': 'application/json',
         },
         JSON.stringify(values),
+        {
+          credentials: 'include',
+        },
       );
 
-      // TODO: 회원가입 성공 후(즉시 로그인, 쿠키 바로 설정) 회원정보 불러오기 프로필 설정 setUser(user)
-      const { user } = await request.get('/me');
-      setUser(user as User);
+      if (!loginSuccess) throw new Error('로그인 실패');
+
+      // 회원가입 성공 후(즉시 로그인, 쿠키 바로 설정) 회원정보 불러오기 프로필 설정 setUser(user)
+      await fetchAndSetUser();
     } catch (e) {
       // TODO: 회원가입 실패시 에러코드 맞춰서 설정해주기
       setIsRegisterFailed(true);
       console.log(e);
+      setDisabled(false);
     }
   };
 
@@ -105,9 +131,9 @@ const RegisterForm = () => {
         />
 
         {isRegisterFailed && (
-          <p className="text-red-600">회원가입에 실패했습니다</p>
+          <p className="text-red-600">이미 존재하는 회원입니다</p>
         )}
-        <Button type="submit">회원가입</Button>
+        <Button disabled={disabled}>회원가입</Button>
       </form>
     </Form>
   );

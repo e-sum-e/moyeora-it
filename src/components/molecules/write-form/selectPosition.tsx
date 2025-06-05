@@ -1,3 +1,4 @@
+import { PositionBadge } from '@/components/molecules/position-badge';
 import {
   FormControl,
   FormField,
@@ -6,7 +7,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { DEFAULT_POSITION_NAMES, PositionName, WriteForm } from '@/types';
-import { getPositionBadge } from '@/utils/getPositionBadge';
 import { useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 
@@ -50,9 +50,9 @@ export const SelectPosition = ({ form }: SelectPositionProps) => {
             <FormLabel>모집할 포지션을 선택해주세요.</FormLabel>
             <FormControl>
               <ul className="flex gap-2">
-                {DEFAULT_POSITION_NAMES.map((position) => (
+                {DEFAULT_POSITION_NAMES.map((position, i) => (
                   <li
-                    key={position}
+                    key={i}
                     className={
                       selectedPositions.includes(position)
                         ? '[&_.position-badge]:border-3 [&_.position-badge]:border-green-500'
@@ -65,7 +65,7 @@ export const SelectPosition = ({ form }: SelectPositionProps) => {
                         positionClickHandler(position);
                       }}
                     >
-                      {getPositionBadge(position)}
+                      <PositionBadge name={position} />
                     </button>
                   </li>
                 ))}

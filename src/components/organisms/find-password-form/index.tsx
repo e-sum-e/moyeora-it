@@ -1,3 +1,5 @@
+'use client';
+
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -22,19 +24,22 @@ const FindPassword = () => {
     },
   });
 
-  const [isNotExisted, setIsNotExisted] = useState(false);
+  const [disabled, setDisabled] = useState(false);
 
+  const [isNotExisted, setIsNotExisted] = useState(false);
   // reset-password일 경우
   const [isSuccessEmailSend, setIsSuccessEmailSend] = useState(false);
 
   // 이메일 찾기
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    setDisabled(true);
     try {
       // reset-password일 경우
       // TODO: 비밀번호 찾기 로직 작성 /find-email
-      const { success } = await request.post(
-        '/find-password',
+      const {
+        status: { success },
+      } = await request.post(
+        '/v1/user/reset-password',
         {
           'Content-Type': 'application/json',
         },
@@ -45,13 +50,15 @@ const FindPassword = () => {
         setIsSuccessEmailSend(true);
         setIsNotExisted(false);
       } else {
-        setIsSuccessEmailSend(false);
-        setIsNotExisted(true);
+        throw new Error('이메일 전송 실패');
       }
     } catch (e) {
       // TODO: 이메일 찾기 실패시 에러코드 맞춰서 설정해주기
       setIsNotExisted(true);
+      setIsSuccessEmailSend(false);
       console.log(e);
+    } finally {
+      setDisabled(false);
     }
   };
 
@@ -77,7 +84,7 @@ const FindPassword = () => {
         {isNotExisted && (
           <p className="text-red-600">해당 이메일이 존재하지 않습니다</p>
         )}
-        <Button>비밀번호 찾기</Button>
+        <Button disabled={disabled}>비밀번호 찾기</Button>
       </form>
     </Form>
   );
