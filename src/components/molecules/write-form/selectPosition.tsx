@@ -1,3 +1,4 @@
+import { PositionBadge } from '@/components/molecules/position-badge';
 import {
   FormControl,
   FormField,
@@ -6,7 +7,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { DEFAULT_POSITION_NAMES, PositionName, WriteForm } from '@/types';
-import { getPositionBadge } from '@/utils/getPositionBadge';
 import { useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 
@@ -65,7 +65,7 @@ export const SelectPosition = ({ form }: SelectPositionProps) => {
                         positionClickHandler(position);
                       }}
                     >
-                      {getPositionBadge(position)}
+                      {PositionBadge(position)}
                     </button>
                   </li>
                 ))}
