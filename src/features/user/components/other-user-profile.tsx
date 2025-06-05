@@ -4,11 +4,12 @@ import { notFound, useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { Avatar } from '@/components/atoms/avatar';
 import { Badge } from '@/components/atoms/badge';
-import { getPosition, getSkill } from '@/types/enums';
+import { getPosition } from '@/types/enums';
 import { User } from '@/types';
 import { request } from '@/api/request';
 import { ToggleFollowButton } from '@/features/user/follow/components/toggle-follow-button';
 import { getDisplayNickname, getDisplayProfileImage } from '@/utils/fallback';
+import { CommonResponse } from '@/types/response';
 
 /**
  * 현재 로그인 한 유저가 아닌 다른 유저의 프로필 컴포넌트
@@ -20,10 +21,10 @@ import { getDisplayNickname, getDisplayProfileImage } from '@/utils/fallback';
 export const OtherUserProfile = () => {
   const { id } = useParams();
   const {
-    data: user,
+    data: userResponse,
     isLoading,
     isError,
-  } = useQuery<User>({
+  } = useQuery<CommonResponse<User>>({
     queryKey: ['user', id],
     queryFn: () => request.get(`/v1/user/${id}`, {}, {
       credentials: 'include',
@@ -31,6 +32,8 @@ export const OtherUserProfile = () => {
     staleTime: 0,
   });
 
+  const user = userResponse?.data;
+  
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error</div>;
 
@@ -67,10 +70,12 @@ export const OtherUserProfile = () => {
           <ul>
             {skills?.map((skill) => (
               <li key={skill}>
-                <Badge
+                {/* <Badge
                   text={getSkill(skill)}
                   className="bg-gray-100 text-gray-800"
-                />
+                /> */}
+                {/* 백엔드에서 주는 skill 값의 타입이 string이어서 일단 그대로 렌더링 -> 추후 타입 수정 필요 */}
+                {skill}
               </li>
             ))}
           </ul>

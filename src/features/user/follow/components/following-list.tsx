@@ -16,11 +16,11 @@ export const FollowingList = () => {
   const searchParams = useSearchParams();
   const { id } = useParams();
 
+  const search = searchParams.get('search');
+
   const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<User>({
-    url: `/v1/follow/${id}/followings`,
-    ...(searchParams.size !== 0 && {
-      queryParams: Object.fromEntries(searchParams.entries()),
-    }),
+    url: `/v1/follow/${id}/following`,
+    ...(search && { queryParams: { name: search } }),
     options: {
       refetchOnMount: true,
       staleTime: 0,
@@ -30,7 +30,7 @@ export const FollowingList = () => {
   const { data: { count: followingCount } = {} } = useQuery({
     queryKey: ['user', id, 'followings count'],
     queryFn() {
-      return request.get(`/v1/follow/${id}/followings/count`);
+      return request.get(`/v1/follow/${id}/following/count`);
     },
     staleTime: 0,
     refetchOnMount: true,
@@ -68,7 +68,7 @@ export const FollowingList = () => {
                 <ToggleFollowButton
                   userId={String(following.userId)}
                   isFollowing={following.isFollowing}
-                  usedIn="followings"
+                  usedIn="following"
                 />
               </div>
             </Link>

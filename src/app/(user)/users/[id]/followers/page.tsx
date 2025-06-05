@@ -13,7 +13,7 @@ type FollowersPageProps = {
     id: string;
   }>;
   searchParams: Promise<{
-    q: string;
+    search: string;
   }>;
 };
 
@@ -22,6 +22,7 @@ export default async function FollowersPage({
   searchParams,
 }: FollowersPageProps) {
   const queryParams = await searchParams;
+  
   const { id } = await params;
 
   const queryClient = new QueryClient();
@@ -30,7 +31,7 @@ export default async function FollowersPage({
     queryKey: ['items', `/v1/follow/${id}/followers`, queryParams],
     queryFn({ pageParam }) {
       return request.get(`/v1/follow/${id}/followers`, {
-        ...queryParams,
+        ...(queryParams.search && { name: queryParams.search }),
         cursor: pageParam,
         size: 10,
       });
@@ -40,7 +41,7 @@ export default async function FollowersPage({
 
   return (
     <>
-      <QueryErrorBoundary>
+      <QueryErrorBoundary fallback={<>에러가 발생했어요</>}>
         <HydrationBoundary state={dehydrate(queryClient)}>
           <Suspense fallback={<div>Loading...</div>}>
             <FollowersList />

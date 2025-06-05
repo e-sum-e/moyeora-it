@@ -13,7 +13,7 @@ type FollowingsPageProps = {
     id: string;
   }>;
   searchParams: Promise<{
-    q: string;
+    search: string;
   }>;
 };
 
@@ -27,10 +27,10 @@ export default async function FollowingsPage({
   const queryClient = new QueryClient();
 
   await queryClient.fetchInfiniteQuery({
-    queryKey: ['items', `/v1/follow/${id}/followings`, queryParams],
+    queryKey: ['items', `/v1/follow/${id}/following`, queryParams],
     queryFn({ pageParam }) {
-      return request.get(`/v1/follow/${id}/followings`, {
-        ...queryParams,
+      return request.get(`/v1/follow/${id}/following`, {
+        ...(queryParams.search && { name: queryParams.search }),
         cursor: pageParam,
         size: 10,
       });
@@ -40,7 +40,7 @@ export default async function FollowingsPage({
 
   return (
     <>
-      <QueryErrorBoundary>
+      <QueryErrorBoundary fallback={<>에러가 발생했어요</>}>
         <HydrationBoundary state={dehydrate(queryClient)}>
           <Suspense fallback={<div>Loading...</div>}>
             <FollowingList />

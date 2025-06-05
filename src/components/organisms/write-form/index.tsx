@@ -91,8 +91,8 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
   const [isDeadlineCalendarOpen, setIsDeadlineCalendarOpen] = useState(false);
   const [isStartDateCalendarOpen, setIsStartDateCalendarOpen] = useState(false);
   const [isEndDateCalendarOpen, setIsEndDateCalendarOpen] = useState(false);
-  const [validDeadline, setValidDeadline] = useState(addDays(new Date(), 7));
   const router = useRouter();
+  const validDeadline = addDays(new Date(), 7);
 
   const validStartDate = useMemo(
     () => addDays(validDeadline, 1),
@@ -167,7 +167,6 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
           <DeadlineCalendar
             form={form}
             isDeadlineCalendarOpen={isDeadlineCalendarOpen}
-            setValidDeadline={setValidDeadline}
             openDeadlineCalendar={() => setIsDeadlineCalendarOpen(true)}
             closeDeadlineCalendar={() => setIsDeadlineCalendarOpen(false)}
             validDeadline={validDeadline}
