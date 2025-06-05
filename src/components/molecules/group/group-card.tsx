@@ -1,6 +1,7 @@
+import { Badge } from '@/components/atoms/badge';
 import { BookmarkButton } from '@/components/atoms/bookmark-button';
 import { SkillBadge } from '@/components/molecules/skill-badge';
-import { Group } from '@/types';
+import { Group, GroupTypeName } from '@/types';
 import { Skill } from '@/types/enums';
 import { formatYearMonthDayWithDot } from '@/utils/dateUtils';
 import { routes } from '@/utils/routes';
@@ -17,7 +18,7 @@ export const GroupCard = ({ item }: GroupCardProps) => {
       <BookmarkButton groupId={item.id} isBookmark={item.isBookmark} />
       <Link href={routes.groupDetail(item.id)}>
         <div>
-          <div>{item.type}</div>
+          <Badge text={GroupTypeName[item.type]} className="bg-gray-200" />
           <h3>{item.title}</h3>
         </div>
         <div>
