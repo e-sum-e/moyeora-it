@@ -191,19 +191,16 @@ export const groupsHandlers = [
       items: sortedItems,
     });
   }),
-  http.post(
-    '/v2/groups/:groupId/join',
-    async ({ params, request }) => {
-      const { groupId } = params;
-      const body = (await request.json()) as {
-        userId: string;
-        status: 'approve' | 'deny';
-      };
-      console.log(groupId, body);
+  http.post('/groups/:groupId/join', async ({ params, request }) => {
+    const { groupId } = params;
+    const body = (await request.json()) as {
+      userId: string;
+      status: 'approve' | 'deny';
+    };
+    console.log(groupId, body);
 
-      return HttpResponse.json({}, { status: 200 });
-    },
-  ),
+    return HttpResponse.json({}, { status: 200 });
+  }),
 
   http.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/groups`, ({ request }) => {
     const url = new URL(request.url);
@@ -274,11 +271,11 @@ export const groupsHandlers = [
       success: true,
     });
   }),
-  http.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/v2/groups/:groupId`, () => {
+  http.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/groups/:groupId`, () => {
     return HttpResponse.json(GROUP_LIST[0]);
   }),
   http.patch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/v2/bookmark`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/bookmark`,
     async ({ request }) => {
       const body = (await request.json()) as {
         groupId: number;
@@ -295,10 +292,7 @@ export const groupsHandlers = [
       return HttpResponse.json({});
     },
   ),
-  http.delete(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/v2/groups/:groupId`,
-    () => {
-      return HttpResponse.json({});
-    },
-  ),
+  http.delete(`${process.env.NEXT_PUBLIC_API_BASE_URL}/groups/:groupId`, () => {
+    return HttpResponse.json({});
+  }),
 ];
