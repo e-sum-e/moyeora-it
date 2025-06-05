@@ -1,4 +1,5 @@
 import fetchRefreshToken from '@/features/auth/utils/fetchRefreshToken';
+import useAuthStore from '@/stores/useAuthStore';
 
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL; //환경변수로 분리
 
@@ -81,10 +82,27 @@ const fetchHandler = async (
           throw new Error('refresh 만료');
         }
 
-        const resposne2 = await makeRequest();
-        return resposne2.json();
+        const response2 = await makeRequest();
+        return response2.json();
       } catch (e) {
         console.log(e);
+
+        // 실패시 로그아웃 요청후
+        await request.post(
+          '/v1/user/logout',
+          {
+            'Content-Type': 'application/json',
+          },
+          '{}',
+          {
+            credentials: 'include',
+          },
+        );
+
+        useAuthStore.setState(() => ({
+          user: null,
+        }));
+
         throw new Error('refresh 만료');
       }
     }
