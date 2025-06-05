@@ -25,49 +25,23 @@ jobs:
       - name: Debug - List .next folder
         run: ls -al .next
 
-      # === [1] 현재 러너 IP를 보안 그룹에 추가 ===
-      - name: Whitelist GitHub Actions IP
-        uses: bbharathkumarreddy/aws-whitelist-ip@v1.0
-        with:
-          security-group-id: ${{ secrets.AWS_SECURITY_GROUP_ID }}
-          action: whitelist
-          port: 22
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-2 # 서울 리전
-
-      - name: Copy necessary files to EC2
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_KEY }}
-          source: ".next,public,next.config.js,ecosystem.config.js"
-          target: "/home/ubuntu/projects/moyeora-it-FE"
-          debug: true
-
-      - name: SSH into EC2 and restart pm2
+      - name: SSH into EC2 and deploy
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_KEY }}
+          key: ${{ secrets.EC2_KEY }} 
           script: |
             cd /home/ubuntu/projects/moyeora-it-FE
-            pm2 describe ecosystem.config.js > /dev/null 2>&1
-            if [ $? -ne 0 ]; then 
-              pm2 start ecosystem.config.js --env development
-            else
-              pm2 reload ecosystem.config.js --env development
-            fi
 
-      # === [2] 배포 후 러너 IP를 보안 그룹에서 제거 ===
-      - name: Remove GitHub Actions IP
-        uses: bbharathkumarreddy/aws-whitelist-ip@v1.0
-        with:
-          security-group-id: ${{ secrets.AWS_SECURITY_GROUP_ID }}
-          action: remove
-          port: 22
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-2
+            echo "Pulling latest code from branch: ${{ github.ref_name }}"
+            git fetch origin
+            git checkout ${{ github.ref_name }}
+            git reset --hard origin/${{ github.ref_name }}
+
+            echo "Installing dependencies and building"
+            yarn install --frozen-lockfile
+            yarn build
+
+            echo "Restarting PM2"
+            pm2 restart ecosystem.config.js --env development
