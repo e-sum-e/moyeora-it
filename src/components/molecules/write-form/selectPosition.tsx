@@ -65,7 +65,7 @@ export const SelectPosition = ({ form }: SelectPositionProps) => {
                         positionClickHandler(position);
                       }}
                     >
-                      {PositionBadge(position)}
+                      <PositionBadge name={position} />
                     </button>
                   </li>
                 ))}

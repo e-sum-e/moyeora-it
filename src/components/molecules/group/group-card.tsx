@@ -32,7 +32,13 @@ export const GroupCard = ({ item }: GroupCardProps) => {
           <div>
             사용 기술 :
             <div className="flex gap-2">
-              {item.skills.map((skill) => SkillBadge(Skill[skill]))}
+              <ul>
+                {item.skills.map((skill) => (
+                  <li key={skill}>
+                    <SkillBadge name={Skill[skill]} />
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
