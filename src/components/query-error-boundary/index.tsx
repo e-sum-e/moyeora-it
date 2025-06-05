@@ -6,6 +6,7 @@ import { ErrorFallback } from '@/components/error-fallback';
 
 type QueryErrorBoundaryProps = {
   children: React.ReactNode;
+  fallback?: React.ReactNode;
 };
 
 /**
@@ -18,7 +19,7 @@ type QueryErrorBoundaryProps = {
  * @param children 자식 컴포넌트
  * @returns 쿼리 에러 바운더리
  */
-export const QueryErrorBoundary = ({ children }: QueryErrorBoundaryProps) => {
+export const QueryErrorBoundary = ({ children, fallback }: QueryErrorBoundaryProps) => {
   return (
     <QueryErrorResetBoundary>
       {({ reset }) => (
@@ -28,7 +29,7 @@ export const QueryErrorBoundary = ({ children }: QueryErrorBoundaryProps) => {
               error={error}
               resetErrorBoundary={resetErrorBoundary}
             >
-              {children}
+              {fallback}
             </ErrorFallback>
           )}
           onReset={reset}
