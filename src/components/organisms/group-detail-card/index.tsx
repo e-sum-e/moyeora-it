@@ -83,8 +83,8 @@ export const GroupDetaiilCard = ({
         <section>
           <span>사용 기술:</span>
           <ul className="flex gap-2 mt-1">
-            {info.groupInfo.skills.map((skill) => (
-              <li key={skill}>
+            {info.groupInfo.skills.map((skill, i) => (
+              <li key={i}>
                 <SkillBadge name={skill} />
               </li>
             ))}

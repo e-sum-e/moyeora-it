@@ -48,9 +48,9 @@ export const SelectSkill = ({ form }: SelectSkillProps) => {
             <FormLabel>사용 기술</FormLabel>
             <FormControl>
               <ul className="flex gap-2">
-                {DEFAULT_SKILL_NAMES.map((skill) => (
+                {DEFAULT_SKILL_NAMES.map((skill, i) => (
                   <li
-                    key={skill}
+                    key={i}
                     className={
                       selectedSkills.includes(skill)
                         ? '[&_.skill-badge]:border-3 [&_.skill-badge]:border-green-500'

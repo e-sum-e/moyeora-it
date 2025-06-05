@@ -50,9 +50,9 @@ export const SelectPosition = ({ form }: SelectPositionProps) => {
             <FormLabel>모집할 포지션을 선택해주세요.</FormLabel>
             <FormControl>
               <ul className="flex gap-2">
-                {DEFAULT_POSITION_NAMES.map((position) => (
+                {DEFAULT_POSITION_NAMES.map((position, i) => (
                   <li
-                    key={position}
+                    key={i}
                     className={
                       selectedPositions.includes(position)
                         ? '[&_.position-badge]:border-3 [&_.position-badge]:border-green-500'
