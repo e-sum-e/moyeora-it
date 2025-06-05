@@ -30,11 +30,18 @@ export const SortOrder = ({ updateQueryParams }: OrderProps) => {
   ];
 
   const getSelectedOrderOptionName = () => {
-    return orderOptions.find(
+    const found = orderOptions.find(
       (option) =>
         option.value.sort === selectedSort &&
         option.value.order === selectedOrder,
-    )?.name;
+    );
+
+    if (!selectedSort && !selectedOrder) {
+      // 초기값은 sort, order가 모두 없으므로 기본값 반환
+      return '작성일자 ▼';
+    }
+
+    return found?.name;
   };
 
   const orderSelectHandler = (option: { sort: GroupSort; order: Order }) => {
