@@ -1,4 +1,5 @@
 import { Badge } from '@/components/atoms/badge';
+import { SkillName } from '@/types';
 import { Skill } from '@/types/enums';
 import Image from 'next/image';
 
@@ -14,7 +15,7 @@ allSkillKeys.forEach((skill) => {
 });
 
 type SkillBadgeProps = {
-  name: string;
+  name: SkillName;
   isDefault?: boolean;
 };
 

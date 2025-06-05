@@ -63,7 +63,7 @@ export const SelectSkill = ({ form }: SelectSkillProps) => {
                         skillClickHandler(skill);
                       }}
                     >
-                      {SkillBadge(skill)}
+                      <SkillBadge name={skill} />
                     </button>
                   </li>
                 ))}
