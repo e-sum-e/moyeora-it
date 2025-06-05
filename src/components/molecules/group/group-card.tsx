@@ -14,8 +14,8 @@ type GroupCardProps = {
 export const GroupCard = ({ item }: GroupCardProps) => {
   return (
     <li className="border-1 border-y-teal-500 rounded-md">
+      <BookmarkButton groupId={item.id} isBookmark={item.isBookmark} />
       <Link href={routes.groupDetail(item.id)}>
-        <BookmarkButton groupId={item.id} isBookmark={item.isBookmark} />
         <div>
           <div>{item.type}</div>
           <h3>{item.title}</h3>
