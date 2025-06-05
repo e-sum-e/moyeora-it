@@ -6,22 +6,20 @@ import { ParticipantListModal } from '@/components/organisms/participant-list-mo
 import { Progress } from '@/components/ui/progress';
 import { GroupDetail } from '@/types';
 import { getPosition, getSkill } from '@/types/enums';
-import { isBeforeToday } from '@/utils/dateUtils';
 import { getDisplayNickname, getDisplayProfileImage } from '@/utils/fallback';
 import Link from 'next/link';
 
 type GroupDetaiilCardProps = {
   className?: string;
   info: GroupDetail;
+  isRecruiting: boolean;
 };
 
 export const GroupDetaiilCard = ({
   className,
   info,
+  isRecruiting,
 }: GroupDetaiilCardProps) => {
-  const deadline = new Date(info.group.deadline);
-  const isBeforeDeadline = isBeforeToday(deadline);
-
   return (
     <div className="relative">
       <article
@@ -97,10 +95,7 @@ export const GroupDetaiilCard = ({
           <div className="flex items-center gap-2 ">
             <Progress value={50} />
             <div className="whitespace-nowrap">
-              {isBeforeDeadline &&
-              info.group.participants.length < info.group.maxParticipants
-                ? '모집중'
-                : '완료'}
+              {isRecruiting ? '모집중' : '완료'}
             </div>
           </div>
         </section>
@@ -126,7 +121,7 @@ export const GroupDetaiilCard = ({
       </article>
 
       {/* 모집 종료 오버레이 */}
-      {isBeforeDeadline && (
+      {isRecruiting && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-lg">
           <p className="text-white font-medium">모집이 종료되었습니다.</p>
         </div>
