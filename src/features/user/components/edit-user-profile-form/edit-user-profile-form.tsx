@@ -49,7 +49,6 @@ export const EditUserProfileForm = ({
   });
 
   const { mutateAsync: updateProfile } = useUpdateProfileMutation();
-
   const formSubmitHandler: SubmitHandler<FormData> = async (data) => {
     const position = Number(data.position);
     try {
