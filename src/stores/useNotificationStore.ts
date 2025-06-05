@@ -44,7 +44,7 @@ const useNotificationStore = create<NotificationStore>((set, get) => ({
     unreadCount: count,
   })),
   clearAllNotifications: async () => {
-    await fetch('/api/notifications', { method: 'DELETE' });
+    await fetch('/api/v1/notification', { method: 'DELETE' });
     set(() => ({
       notifications: [],
       unreadCount: 0,

@@ -4,6 +4,7 @@ import { Position, Skill } from '@/types/enums';
 import { getPosition, getSkill } from '@/types/enums';
 import { toast } from 'sonner';
 import { User } from '@/types';
+import { CommonResponse } from '@/types/response';
 import { request } from '@/api/request';
 
 /**
@@ -40,8 +41,9 @@ export const useUpdateProfileMutation = () => {
           },
         );
     },
-    onSuccess(data: User) {
-      setUser(data);
+    onSuccess(response: CommonResponse<User>) {
+      const user = response.data;
+      setUser(user);
       toast.success('프로필 수정 성공', {
         description: '프로필이 수정되었어요',
       });

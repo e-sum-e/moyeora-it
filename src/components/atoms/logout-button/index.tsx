@@ -10,7 +10,6 @@ const LogoutButton = () => {
   const { user, clearUser } = useAuthStore();
   const router = useRouter();
 
-  // TODO: https 환경에서 해봐야됨
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
       await request.post(
