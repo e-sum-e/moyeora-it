@@ -47,10 +47,5 @@ export const GroupActionButtons = ({
     return <CancelJoinButton onSuccess={successCancelApply} />;
   }
 
-  return (
-    <ApplyJoinButton
-      isLoginUser={userType === 'nonApplicant'}
-      onSuccess={successApply}
-    />
-  );
+  return <ApplyJoinButton onSuccess={successApply} />;
 };
