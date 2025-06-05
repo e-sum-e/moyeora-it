@@ -13,7 +13,7 @@ type FollowingsPageProps = {
     id: string;
   }>;
   searchParams: Promise<{
-    q: string;
+    search: string;
   }>;
 };
 
@@ -30,7 +30,7 @@ export default async function FollowingsPage({
     queryKey: ['items', `/v1/follow/${id}/following`, queryParams],
     queryFn({ pageParam }) {
       return request.get(`/v1/follow/${id}/following`, {
-        ...queryParams,
+        ...(queryParams.search && { name: queryParams.search }),
         cursor: pageParam,
         size: 10,
       });
