@@ -16,7 +16,7 @@ type GroupCardProps = {
 // TODO : 섹션별로 component 나누기
 export const GroupCard = ({ item }: GroupCardProps) => {
   return (
-    <li className="border-1 border-y-teal-500 rounded-md">
+    <div className="p-6 bg-white rounded-md">
       <Link href={routes.groupDetail(item.id)}>
         <BookmarkButton groupId={item.id} isBookmark={item.isBookmark} />
         <div>
@@ -38,6 +38,6 @@ export const GroupCard = ({ item }: GroupCardProps) => {
           </div>
         </div>
       </Link>
-    </li>
+    </div>
   );
 };
