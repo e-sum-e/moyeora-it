@@ -24,16 +24,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2 # 서울 리전
 
-      - name: Copy necessary files to EC2
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_KEY }}
-          source: ".next,public,next.config.js,ecosystem.config.js"
-          target: "/home/ubuntu/projects/moyeora-it-FE"
-          debug: true
-
       - name: SSH into EC2 and deploy
         uses: appleboy/ssh-action@v1.0.0
         with:
