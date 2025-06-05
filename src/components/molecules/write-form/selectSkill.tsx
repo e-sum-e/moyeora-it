@@ -9,7 +9,7 @@ import { DEFAULT_SKILL_NAMES, WriteForm } from '@/types';
 import { SkillName } from '@/types/index';
 import { useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
-import { getSkillBadge } from '../../../utils/getSkillBadge';
+import { SkillBadge } from '../skill-badge';
 
 type SelectSkillProps = {
   form: UseFormReturn<WriteForm>;
@@ -63,7 +63,7 @@ export const SelectSkill = ({ form }: SelectSkillProps) => {
                         skillClickHandler(skill);
                       }}
                     >
-                      {getSkillBadge(skill)}
+                      {SkillBadge(skill)}
                     </button>
                   </li>
                 ))}
