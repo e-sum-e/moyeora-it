@@ -10,7 +10,7 @@ afterAll(() => server.close());
 describe('useNotificationStore 테스트', () => {
   it('clearAllNotifications: 서버에 DELETE 요청 후 상태 초기화', async () => {
     server.use(
-      http.delete('/api/notifications', () => {
+      http.delete('/api/v1/notification', () => {
         return HttpResponse.json({ result: { success: true } });
       })
     );
