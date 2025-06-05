@@ -14,23 +14,33 @@ import { request } from '@/api/request';
 import flattenPages from '@/utils/flattenPages';
 import { getDisplayNickname } from '@/utils/fallback';
 
+const MAX_PAGE_SIZE = 10;
 export const NotificationList = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const { notifications, setNotifications, setUnreadCount, unreadCount } = useNotificationStore();
   const user = useAuthStore((state) => state.user);
+  
 
   // 전체 알림 목록 조회
   const { data, fetchNextPage, hasNextPage } = useFetchItems<NotificationType>({
-    url: '/v1/notifications',
+    url: '/v1/notification',
+    queryParams: {
+      cursor: 0,
+      size: MAX_PAGE_SIZE,
+    },
   });
+
   
+
 
   // 안 읽은 알림 목록 조회
   const { data: unreadData, isLoading: isUnreadLoading } = useQuery<{ unreadCount: number }>({
     queryKey: ['unread-count'],
     queryFn: async () => {
-      return await request.get('/v1/notifications/unread-count');
+      return await request.get('/v1/notification/unread-count',{}, {
+        credentials: 'include',
+      });
     }
   });
 
@@ -41,10 +51,16 @@ export const NotificationList = () => {
   
   // 전체 알림 목록 저장
   useEffect(() => {
-    if (!data) return;
-    const notificationList = flattenPages(data.pages).filter((item): item is NotificationType => item !== undefined);
-    setNotifications(notificationList);
-  }, [data, setNotifications]);
+    if (!data || !isOpen) return;
+    const notificationList = flattenPages(data.pages)
+    if(Array.isArray(notificationList)) {
+      //@ts-expect-error 백엔드 타입 에러
+      const items = notificationList[0].items;
+      setNotifications(items);
+    }else{
+      setNotifications(notificationList);
+    }
+  }, [isOpen, data, setNotifications]);
 
   // 안 읽은 알림 개수 저장
   useEffect(() => {
@@ -71,14 +87,15 @@ export const NotificationList = () => {
       </PopoverTrigger>
       <PopoverContent className="p-0">
         <h4>Notification</h4>
-        {notifications?.map((notification: NotificationType) => (
+        {notifications.length ? notifications?.map((notification: NotificationType) => (
           notification &&
           <NotificationItem 
             key={notification.id} 
             notification={notification}
             onClose={() => setIsOpen(false)}
           />
-        ))}
+        )) : <div>알림이 없습니다.</div>}
+
         {hasNextPage && <div ref={ref} />}
       </PopoverContent>
     </Popover>

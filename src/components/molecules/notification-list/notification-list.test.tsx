@@ -54,11 +54,11 @@ describe('알람 목록 컴포넌트 테스트', () => {
     document.cookie = 'accessToken=test-token';
 
     server.use(
-      http.get('/api/notifications', () => {
+      http.get('/api/notification', () => {
         return HttpResponse.json({ items: [] });
       }),
 
-      http.get('/api/notifications/unread-count', () => {
+      http.get('/api/notification/unread-count', () => {
         return HttpResponse.json({ unreadCount: 1 });
       })
     );
