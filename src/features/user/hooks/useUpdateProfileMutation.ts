@@ -19,27 +19,28 @@ export const useUpdateProfileMutation = () => {
   return useMutation({
     mutationFn: (data: {
       nickname: string;
-      position: Position;
-      skills: Skill[];
+      position: Position | null;
+      skills: Skill[] | null;
       file?: File;
     }) => {
       const formData = new FormData();
       formData.append('nickname', data.nickname);
-      formData.append('position', getPosition(data.position));
-      formData.append('skills', data.skills.map(getSkill).join(','));
+
+      if (data.position) {
+        formData.append('position', JSON.stringify(data.position));
+      }
+
+      if (data.skills) {
+        formData.append('skills', data.skills.join(','));
+      }
+
       if (data.file) {
         formData.append('image', data.file);
       }
 
-      return request
-        .patch(
-          `/v1/user/edit`,
-          {},
-          formData,
-          {
-            credentials: 'include',
-          },
-        );
+      return request.patch(`/v1/user/edit`, {}, formData, {
+        credentials: 'include',
+      });
     },
     onSuccess(response: CommonResponse<User>) {
       const user = response.data;
