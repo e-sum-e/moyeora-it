@@ -21,11 +21,11 @@ export const FollowersList = () => {
 
   const searchParams = useSearchParams();
 
+  const search = searchParams.get('search');
+
   const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<User>({
     url: `/v1/follow/${id}/followers`,
-    ...(searchParams.size !== 0 && {
-      queryParams: Object.fromEntries(searchParams.entries()),
-    }),
+    ...(search && { queryParams: { name: search } }),
     options: {
       refetchOnMount: true,
       staleTime: 0,

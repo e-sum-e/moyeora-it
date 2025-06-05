@@ -13,14 +13,14 @@ import { request } from '@/api/request';
 import flattenPages from '@/utils/flattenPages';
 
 export const FollowingList = () => {
-  const searchParams = useSearchParams(); 
+  const searchParams = useSearchParams();
   const { id } = useParams();
+
+  const search = searchParams.get('search');
 
   const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<User>({
     url: `/v1/follow/${id}/following`,
-    ...(searchParams.size !== 0 && {  
-      queryParams: Object.fromEntries(searchParams.entries()),
-    }),
+    ...(search && { queryParams: { name: search } }),
     options: {
       refetchOnMount: true,
       staleTime: 0,
