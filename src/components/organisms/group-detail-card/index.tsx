@@ -2,13 +2,13 @@ import { Avatar } from '@/components/atoms/avatar';
 import { Badge } from '@/components/atoms/badge';
 import { BookmarkButton } from '@/components/atoms/bookmark-button';
 import { Title } from '@/components/atoms/title';
+import { ParticipantListModal } from '@/components/organisms/participant-list-modal';
 import { Progress } from '@/components/ui/progress';
 import { GroupDetail } from '@/types';
 import { getPosition, getSkill } from '@/types/enums';
 import { isBeforeToday } from '@/utils/dateUtils';
 import { getDisplayNickname, getDisplayProfileImage } from '@/utils/fallback';
 import Link from 'next/link';
-import { ParticipantListModal } from '../participant-list-modal';
 
 type GroupDetaiilCardProps = {
   className?: string;
@@ -37,7 +37,7 @@ export const GroupDetaiilCard = ({
               <Title title={info.group.title} />
             </div>
             <div className="flex gap-2">
-              {info.group.positions.map((position) => (
+              {info.group.position.map((position) => (
                 <Badge
                   key={position}
                   text={getPosition(position)}
@@ -48,7 +48,7 @@ export const GroupDetaiilCard = ({
           </div>
           <BookmarkButton
             groupId={info.group.id}
-            isBookmark={info.group.bookmark}
+            isBookmark={info.group.isBbookmark}
           />
         </header>
 

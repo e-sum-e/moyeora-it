@@ -42,7 +42,7 @@ export default async function GroupDetailPage({
     notFound();
   }
 
-  const { group, host, applicant: isApplicant } = data;
+  const { group, host, isApplicant } = data;
 
   return (
     <div>
