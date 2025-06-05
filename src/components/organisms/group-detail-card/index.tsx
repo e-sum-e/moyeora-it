@@ -2,11 +2,11 @@ import { Avatar } from '@/components/atoms/avatar';
 import { Badge } from '@/components/atoms/badge';
 import { BookmarkButton } from '@/components/atoms/bookmark-button';
 import { Title } from '@/components/atoms/title';
+import { SkillBadge } from '@/components/molecules/skill-badge';
 import { Progress } from '@/components/ui/progress';
 import { GroupDetail } from '@/types';
 import { isBeforeToday } from '@/utils/dateUtils';
 import { getDisplayNickname, getDisplayProfileImage } from '@/utils/fallback';
-import { getSkillBadge } from '@/utils/getSkillBadge';
 import Link from 'next/link';
 import { ParticipantListModal } from '../participant-list-modal';
 
@@ -83,8 +83,10 @@ export const GroupDetaiilCard = ({
         <section>
           <span>사용 기술:</span>
           <ul className="flex gap-2 mt-1">
-            {info.groupInfo.skills.map((skill) => (
-              <li key={skill}>{getSkillBadge(skill)}</li>
+            {info.groupInfo.skills.map((skill, i) => (
+              <li key={i}>
+                <SkillBadge name={skill} />
+              </li>
             ))}
           </ul>
         </section>
