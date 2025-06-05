@@ -15,5 +15,5 @@ export default function Page() {
     return;
   }
 
-  return <WriteForm userId={1} />;
+  return <WriteForm userId={user.userId} />;
 }
