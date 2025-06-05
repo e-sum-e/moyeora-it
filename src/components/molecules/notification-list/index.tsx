@@ -82,7 +82,6 @@ export const NotificationList = () => {
           fallback={getDisplayNickname(user.nickname, user.email)}
           className="w-8 h-8 cursor-pointer"
         />
-        {unreadCount}
        {unreadCount > 0 && <NotificationBadge /> }
       </PopoverTrigger>
       <PopoverContent className="p-0">
