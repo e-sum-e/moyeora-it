@@ -22,7 +22,8 @@ const useNotificationStore = create<NotificationStore>((set, get) => ({
 	unreadCount: 0,
 	addNotification: (notification: Notification) => {
     const { notifications } = get();
-    const exists = notifications.some(n => n.id === notification.id); // 이미 같은 ID의 알림이 있는지 확인
+    const exists = notifications.some(n => n?.id === notification.id); // 이미 같은 ID의 알림이 있는지 확인
+    
     if (exists) return; // 이미 존재하면 상태 변경 없음
     set((state) => ({
       notifications: [notification, ...state.notifications],

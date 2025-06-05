@@ -12,6 +12,7 @@ import useAuthStore from '@/stores/useAuthStore';
 import { User } from '@/types/index';
 import { RemoveFollowerButton } from '@/features/user/follow/components/remove-follower-button';
 import { request } from '@/api/request';
+import flattenPages from '@/utils/flattenPages';
 
 export const FollowersList = () => {
   const { id } = useParams();
@@ -21,7 +22,7 @@ export const FollowersList = () => {
   const searchParams = useSearchParams();
 
   const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<User>({
-    url: `/users/${id}/followers`,
+    url: `/v1/follow/${id}/followers`,
     ...(searchParams.size !== 0 && {
       queryParams: Object.fromEntries(searchParams.entries()),
     }),
@@ -34,7 +35,7 @@ export const FollowersList = () => {
   const { data: { count: followersCount } = {} } = useQuery({
     queryKey: ['user', id, 'followers count'],
     queryFn() {
-      return request.get(`/users/${id}/followers/count`);
+      return request.get(`/v1/follow/${id}/followers/count`);
     },
     staleTime: 0,
     refetchOnMount: true,
@@ -45,7 +46,7 @@ export const FollowersList = () => {
     isLoading,
   });
 
-  const followersList = data.pages.flatMap((page) => page.items).flat();
+  const followersList = flattenPages<User>(data.pages);
 
   return (
     <>
@@ -70,11 +71,11 @@ export const FollowersList = () => {
                   </div>
                 </div>
                 {isCurrentUser && (
-                  <RemoveFollowerButton userId={follower.userId} />
+                  <RemoveFollowerButton userId={String(follower.userId)} />
                 )}
                 {!isCurrentUser && (
                   <ToggleFollowButton
-                    userId={follower.userId}
+                    userId={String(follower.userId)}
                     isFollowing={follower.isFollowing}
                     usedIn="followers"
                   />

@@ -28,9 +28,10 @@ export default async function Home({
 
   // console.log('✅ Fetching data from server ', queryParams); // DEV: 💡 서버 컴포넌트에서 prefetch 하는지 확인용
 
-  await queryClient.fetchInfiniteQuery({
-    queryKey: ['items', '/groups', queryParams],
-    queryFn({ pageParam }) {
+  try {
+    await queryClient.fetchInfiniteQuery({
+      queryKey: ['items', '/v2/groups', queryParams],
+      queryFn({ pageParam }) {
       return request.get('/groups', {
         ...queryParams,
         size: 10,
@@ -39,6 +40,11 @@ export default async function Home({
     },
     initialPageParam: 0,
   });
+  } catch (e) {
+    //ISSUE: 에러 설정
+    console.log(e);
+    return <div>Error</div>;
+  }
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
