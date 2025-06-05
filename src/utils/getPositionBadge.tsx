@@ -1,5 +1,3 @@
-'use client';
-
 import { Badge } from '@/components/atoms/badge';
 import { Position } from '@/types/enums';
 
