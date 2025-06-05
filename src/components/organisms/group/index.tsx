@@ -7,6 +7,7 @@ import { GroupCard } from '@/components/molecules/group/group-card';
 import { SortOrder } from '@/components/molecules/group/sort-order';
 import { SearchInput } from '@/components/molecules/search-input/search-input';
 import { Tab, TabType } from '@/components/molecules/tab';
+import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
 import { Group, GroupType } from '@/types';
 import { Position, Skill } from '@/types/enums';
@@ -79,12 +80,20 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
     [searchParams],
   );
 
-  const { data } = useFetchItems<Group>({
-    url: '/v2/groups',
-    queryParams,
+  const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<Group>({
+    url: '/groups',
+    queryParams: { ...queryParams, size: 10 },
   });
 
   const items = flattenPages(data.pages);
+
+  const { ref } = useFetchInView({
+    fetchNextPage,
+    isLoading,
+    options: {
+      rootMargin: '50px',
+    },
+  });
 
   useEffect(() => {
     if (items.length === 0) {
@@ -140,6 +149,7 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
               ))}
             </ul>
           )}
+          {hasNextPage && <div ref={ref}></div>}
         </ErrorBoundary>
       </Tab>
     </>
