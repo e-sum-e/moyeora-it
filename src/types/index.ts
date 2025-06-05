@@ -22,6 +22,10 @@ export enum GroupType {
   STUDY = 'study',
   PROJECT = 'project',
 }
+export const GroupTypeName = {
+  study: '스터디',
+  project: '프로젝트',
+};
 
 export type WriteFormWithCreatedAt = WriteForm & { createdAt: Date };
 /** 제공해주는 기본 skill의 이름들. enum Skill과 동기화되어야 함 */

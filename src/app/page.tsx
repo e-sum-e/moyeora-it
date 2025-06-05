@@ -48,10 +48,12 @@ export default async function Home({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <WriteGroupButton />
-      <Suspense fallback={<div>Loading...</div>}>
-        <GroupList searchParams={awaitedSearchParams} />
-      </Suspense>
+      <div className="bg-gray-100">
+        <WriteGroupButton />
+        <Suspense fallback={<div>Loading...</div>}>
+          <GroupList searchParams={awaitedSearchParams} />
+        </Suspense>
+      </div>
     </HydrationBoundary>
   );
 }
