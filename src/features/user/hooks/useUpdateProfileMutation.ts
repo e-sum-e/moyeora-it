@@ -1,7 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import useAuthStore from '@/stores/useAuthStore';
 import { Position, Skill } from '@/types/enums';
-import { getPosition, getSkill } from '@/types/enums';
 import { toast } from 'sonner';
 import { User } from '@/types';
 import { CommonResponse } from '@/types/response';
