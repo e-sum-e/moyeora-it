@@ -1,6 +1,7 @@
 import { request } from '@/api/request';
 import { WriteGroupButton } from '@/components/molecules/group-create-button';
 import { GroupList } from '@/components/organisms/group';
+import RecommendGroup from '@/components/organisms/recommend-group';
 import { Position, Skill } from '@/types/enums';
 import {
   dehydrate,
@@ -32,14 +33,14 @@ export default async function Home({
     await queryClient.fetchInfiniteQuery({
       queryKey: ['items', '/v2/groups', queryParams],
       queryFn({ pageParam }) {
-      return request.get('/groups', {
-        ...queryParams,
-        size: 10,
-        cursor: pageParam,
-      });
-    },
-    initialPageParam: 0,
-  });
+        return request.get('/v2/groups', {
+          ...queryParams,
+          size: 10,
+          cursor: pageParam,
+        });
+      },
+      initialPageParam: 0,
+    });
   } catch (e) {
     //ISSUE: 에러 설정
     console.log(e);
@@ -48,6 +49,7 @@ export default async function Home({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
+      <RecommendGroup />
       <WriteGroupButton />
       <Suspense fallback={<div>Loading...</div>}>
         <GroupList searchParams={awaitedSearchParams} />
