@@ -13,6 +13,7 @@ import { User } from '@/types/index';
 import { RemoveFollowerButton } from '@/features/user/follow/components/remove-follower-button';
 import { request } from '@/api/request';
 import flattenPages from '@/utils/flattenPages';
+import { getDisplayNickname, getDisplayProfileImage } from '@/utils/fallback';
 
 export const FollowersList = () => {
   const { id } = useParams();
@@ -55,28 +56,29 @@ export const FollowersList = () => {
       </div>
       <ul>
         <h1>팔로워 {followersCount ?? null}</h1>
-        {followersList.map((follower) => (
-          <li key={follower.userId}>
-            <Link href={`/users/${follower.userId}`}>
+        {/* @ts-expect-error 현재 User 타입에는 id 프로퍼티가 없음 -> 추후 수정 필요 */}
+        {followersList.map(({ id: userId, nickname, profileImage, email, isFollowing }) => (
+          <li key={userId}>
+            <Link href={`/users/${userId}`}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-x-2">
                   <Avatar
-                    imageSrc={follower.profileImage ?? ''}
-                    fallback={follower.nickname?.slice(0, 2) ?? ''}
+                    imageSrc={getDisplayProfileImage(profileImage)}
+                    fallback={getDisplayNickname(nickname, email)}
                     className="size-16"
                   />
                   <div className="flex flex-col">
-                    <span>{follower.nickname}</span>
-                    <span>{follower.email}</span>
+                    <span>{getDisplayNickname(nickname, email)}</span>
+                    <span>{email}</span>
                   </div>
                 </div>
                 {isCurrentUser && (
-                  <RemoveFollowerButton userId={String(follower.userId)} />
+                  <RemoveFollowerButton userId={String(userId)} />
                 )}
                 {!isCurrentUser && (
                   <ToggleFollowButton
-                    userId={String(follower.userId)}
-                    isFollowing={follower.isFollowing}
+                    userId={String(userId)}
+                    isFollowing={isFollowing}
                     usedIn="followers"
                   />
                 )}

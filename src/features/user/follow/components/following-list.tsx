@@ -11,6 +11,7 @@ import { User } from '@/types';
 import { ToggleFollowButton } from '@/features/user/follow/components/toggle-follow-button';
 import { request } from '@/api/request';
 import flattenPages from '@/utils/flattenPages';
+import { getDisplayNickname, getDisplayProfileImage } from '@/utils/fallback';
 
 export const FollowingList = () => {
   const searchParams = useSearchParams();
@@ -50,24 +51,25 @@ export const FollowingList = () => {
       </div>
       <ul>
         <h1>팔로잉 {followingCount ?? null}</h1>
-        {followingList?.map((following) => (
-          <li key={following.userId}>
-            <Link href={`/users/${following.userId}`}>
+        {/* @ts-expect-error 현재 User 타입에는 id 프로퍼티가 없음 -> 추후 수정 필요 */}
+        {followingList?.map(({ id: userId, nickname, profileImage, email, isFollowing }) => (
+          <li key={userId}>
+            <Link href={`/users/${userId}`}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-x-2">
                   <Avatar
-                    imageSrc={following.profileImage ?? ''}
-                    fallback={following.nickname?.slice(0, 2) ?? ''}
+                    imageSrc={getDisplayProfileImage(profileImage)}
+                    fallback={getDisplayNickname(nickname, email)}
                     className="size-16"
                   />
                   <div className="flex flex-col">
-                    <span>{following.nickname}</span>
-                    <span>{following.email}</span>
+                    <span>{getDisplayNickname(nickname, email)}</span>
+                    <span>{email}</span>
                   </div>
                 </div>
                 <ToggleFollowButton
-                  userId={String(following.userId)}
-                  isFollowing={following.isFollowing}
+                  userId={String(userId)}
+                  isFollowing={isFollowing}
                   usedIn="following"
                 />
               </div>
