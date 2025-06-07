@@ -1,6 +1,7 @@
 import { request } from '@/api/request';
 import { WriteGroupButton } from '@/components/molecules/group-create-button';
 import { GroupList } from '@/components/organisms/group';
+import RecommendGroup from '@/components/organisms/recommend-group';
 import { Position, Skill } from '@/types/enums';
 import {
   dehydrate,
@@ -48,6 +49,7 @@ export default async function Home({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
+      <RecommendGroup />
       <WriteGroupButton />
       <Suspense fallback={<div>Loading...</div>}>
         <GroupList searchParams={awaitedSearchParams} />
