@@ -75,7 +75,7 @@ export const FollowersList = () => {
                 {isCurrentUser && (
                   <RemoveFollowerButton userId={String(userId)} />
                 )}
-                {!isCurrentUser && (
+                {!isCurrentUser && user?.userId !== userId (
                   <ToggleFollowButton
                     userId={String(userId)}
                     isFollowing={isFollowing}
