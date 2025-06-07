@@ -128,17 +128,11 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
       (position) => Position[position as keyof typeof Position],
     );
 
-    const valueWithCreatedAt = {
-      ...values,
-      skills,
-      position,
-      createdAt: new Date(),
-    };
     try {
       const result = await request.post(
         `/v2/groups?userId=${userId}`,
         { 'Content-Type': 'application/json' },
-        JSON.stringify(valueWithCreatedAt),
+        JSON.stringify({ ...values, skills, position }),
         { credentials: 'include' },
       );
 
