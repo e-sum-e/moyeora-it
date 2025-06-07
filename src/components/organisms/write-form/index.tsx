@@ -20,7 +20,7 @@ import {
   DEFAULT_SKILL_NAMES,
   GroupType,
 } from '@/types';
-import { Skill } from '@/types/enums';
+import { Position, Skill } from '@/types/enums';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { addDays, isAfter } from 'date-fns';
@@ -124,7 +124,16 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
       (skill) => Skill[skill as keyof typeof Skill],
     ); // server에 보낼때 enum의 인덱스로 보내기로 했으므로 string을 enum의 인덱스로 변환
 
-    const valueWithCreatedAt = { ...values, skills, createdAt: new Date() };
+    const position = values.positions.map(
+      (position) => Position[position as keyof typeof Position],
+    );
+
+    const valueWithCreatedAt = {
+      ...values,
+      skills,
+      position,
+      createdAt: new Date(),
+    };
     try {
       const result = await request.post(
         `/v2/groups?userId=${userId}`,
