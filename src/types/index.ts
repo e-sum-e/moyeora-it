@@ -109,36 +109,23 @@ export type Reply = {
 };
 
 export type GroupDetail = {
-  groupInfo: {
-    groupId: number;
+  group: {
+    id: number;
     title: string;
     description: string;
-    userId: number;
     autoAllow: boolean;
-    currentParticipants: number;
     maxParticipants: number;
-    status: boolean;
     type: string;
-    views: number;
-    skills: string[];
-    positions: string[];
+    skills: Skill[];
+    position: Position[];
     deadline: string;
     startDate: string;
     endDate: string;
-    userInfos: {
-      userId: number;
-      nickname: string;
-      profileImage: string;
-      email: string;
-    }[];
+    createdAt: string;
+    participants: UserSummary[];
+    isBbookmark: boolean;
   };
-  userInfo: {
-    userId: number;
-    nickname: string;
-    profileImage: string;
-    email: string;
-  };
-  applicant: boolean;
-  joined: boolean;
-  bookmark: boolean;
+  host: UserSummary;
+  isApplicant: boolean;
+  isJoined: boolean;
 };
