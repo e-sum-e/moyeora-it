@@ -67,7 +67,7 @@ export type WriteForm = {
   autoAllow: boolean;
   type: GroupType;
   skills: SkillName[];
-  positions: PositionName[];
+  position: PositionName[];
 };
 
 export type Group = {
