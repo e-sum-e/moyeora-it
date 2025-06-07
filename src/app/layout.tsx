@@ -26,7 +26,11 @@ export default function RootLayout({
         {/* <MSWComponent> */}
           <ReactQueryProvider>
             <Header />
-            <WebSocketProvider>{children}</WebSocketProvider>
+            <WebSocketProvider>
+            <div className="w-full md:max-w-[1280px] mx-auto">
+              {children}
+            </div>  
+            </WebSocketProvider>
           </ReactQueryProvider>
           <Toaster />
           <AutoLoginManager />
