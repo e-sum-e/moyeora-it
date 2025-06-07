@@ -1,4 +1,3 @@
-import { Avatar } from '../../atoms/avatar';
 import { PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { NotificationItem } from '../../atoms/notification-item';
 import { Popover } from "@/components/ui/popover";
@@ -12,8 +11,7 @@ import { NotificationBadge } from '../notification-badge';
 import { useQuery } from '@tanstack/react-query';
 import { request } from '@/api/request';
 import flattenPages from '@/utils/flattenPages';
-import { getDisplayNickname } from '@/utils/fallback';
-
+import Image from 'next/image';
 const MAX_PAGE_SIZE = 10;
 export const NotificationList = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,8 +28,6 @@ export const NotificationList = () => {
       size: MAX_PAGE_SIZE,
     },
   });
-
-  
 
 
   // 안 읽은 알림 목록 조회
@@ -53,13 +49,7 @@ export const NotificationList = () => {
   useEffect(() => {
     if (!data || !isOpen) return;
     const notificationList = flattenPages(data.pages)
-    if(Array.isArray(notificationList)) {
-      //@ts-expect-error 백엔드 타입 에러
-      const items = notificationList[0].items;
-      setNotifications(items);
-    }else{
-      setNotifications(notificationList);
-    }
+    setNotifications(notificationList);
   }, [isOpen, data, setNotifications]);
 
   // 안 읽은 알림 개수 저장
@@ -77,12 +67,8 @@ export const NotificationList = () => {
   return (
     <Popover open={isOpen} onOpenChange={onOpenChange}>
       <PopoverTrigger>
-        <Avatar
-          imageSrc={user.profileImage ?? ''} //TODO 프로필 이미지 없는 경우 기본 이미지 설정 필요
-          fallback={getDisplayNickname(user.nickname, user.email)}
-          className="w-8 h-8 cursor-pointer"
-        />
-        {unreadCount}
+        <Image src="/icons/alarm-default.svg" alt="action" width={24} height={24} />
+       
        {unreadCount > 0 && <NotificationBadge /> }
       </PopoverTrigger>
       <PopoverContent className="p-0">
