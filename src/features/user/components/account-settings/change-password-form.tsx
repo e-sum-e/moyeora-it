@@ -6,28 +6,18 @@ import { Form } from '@/components/ui/form';
 import { InputTextField } from '@/components/molecules/input-text-field';
 import { useChangePassword } from '@/features/user/hooks/useChangePassword';
 
-const schema = z
-  .object({
-    newPassword: z
-      .string()
-      .nonempty({ message: '비밀번호를 입력해주세요' })
-      .regex(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).{8,}$/, {
-        message:
-          '영어 대/소문자, 숫자, 특수문자를 혼합하여 8자리 이상 입력해주세요.',
-      }),
-    confirmPassword: z.string().nonempty({
-      message: '비밀번호를 다시 입력해주세요',
+const schema = z.object({
+  newPassword: z
+    .string()
+    .nonempty({ message: '새 비밀번호를 입력해주세요' })
+    .regex(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).{8,}$/, {
+      message:
+        '영어 대/소문자, 숫자, 특수문자를 혼합하여 8자리 이상 입력해주세요.',
     }),
-  })
-  .superRefine(({ newPassword, confirmPassword }, ctx) => {
-    if (newPassword && confirmPassword && newPassword !== confirmPassword) {
-      ctx.addIssue({
-        path: ['confirmPassword'],
-        message: '위에서 입력한 비밀번호와 일치하지 않습니다.',
-        code: z.ZodIssueCode.custom,
-      });
-    }
-  });
+  confirmPassword: z
+    .string()
+    .nonempty({ message: '기존 비밀번호를 입력해주세요' }),
+});
 
 type ChangePasswordFormProps = {
   closeDialog: () => void;
@@ -71,17 +61,19 @@ export const ChangePasswordForm = ({
         onSubmit={formMethods.handleSubmit(onSubmit)}
       >
         <InputTextField
+          label="기존 비밀번호"
+          name="confirmPassword"
+          form={formMethods}
+          type="password"
+        />
+
+        <InputTextField
           label="새 비밀번호"
           name="newPassword"
           form={formMethods}
           type="password"
         />
-        <InputTextField
-          label="비밀번호 확인"
-          name="confirmPassword"
-          form={formMethods}
-          type="password"
-        />
+
         <Button
           className="self-end"
           type="submit"

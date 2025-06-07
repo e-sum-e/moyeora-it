@@ -3,7 +3,7 @@
 import { Avatar } from '@/components/atoms/avatar';
 import { Badge } from '@/components/atoms/badge';
 import useAuthStore from '@/stores/useAuthStore';
-import { getPosition } from '@/types/enums';
+import { getPosition, getSkill } from '@/types/enums';
 import { EditUserProfileDialog } from '@/features/user/components/edit-user-profile-dialog';
 import { AccountSettingsDialog } from '@/features/user/components/account-settings-dialog';
 import { WithdrawDialog } from '@/features/user/components/withdraw-dialog';
@@ -45,12 +45,10 @@ export const CurrentUserProfile = () => {
           <ul>
             {skills?.map((skill) => (
               <li key={skill}>
-                {/* <Badge
+                <Badge
                   text={getSkill(skill)}
                   className="bg-gray-100 text-gray-800"
-                /> */}
-                {/* 백엔드에서 주는 skill 값의 타입이 string이어서 일단 그대로 렌더링 -> 추후 타입 수정 필요 */}
-                {skill}
+                />
               </li>
             ))}
           </ul>

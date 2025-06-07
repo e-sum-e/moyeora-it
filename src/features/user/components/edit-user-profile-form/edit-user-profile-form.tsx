@@ -16,7 +16,7 @@ import { useUpdateProfileMutation } from '@/features/user/hooks/useUpdateProfile
 const schema = z.object({
   nickname: z.string().nonempty('닉네임을 입력해주세요.'),
   profileImageFile: z.custom<File>().nullable(),
-  position: z.string().optional(),
+  position: z.string().nullable(),
   skills: z.array(z.nativeEnum(Skill)),
 });
 
@@ -40,23 +40,23 @@ export const EditUserProfileForm = ({
   const formMethods = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      nickname: user?.nickname ?? '',
+      nickname: user?.nickname ?? user?.email.split('@')[0],
       profileImageFile: null,
-      position: user?.position ? String(Position[user.position]) : '',
-      // @ts-expect-error 백엔드에서 주는 skills 값의 타입이 string[]이어서 일단 아래와 같이 number[] 배열 반환하도록 변경
-      skills: user?.skills ? user?.skills.map((skill) => Skill[skill]) : [],
+      position: user?.position ? String(user.position) : null,
+      skills: user?.skills ?? [],
     },
   });
 
   const { mutateAsync: updateProfile } = useUpdateProfileMutation();
   const formSubmitHandler: SubmitHandler<FormData> = async (data) => {
-    const position = Number(data.position);
+    const { nickname, position, skills, profileImageFile } = data;
+
     try {
       await updateProfile({
-        nickname: data.nickname,
-        position,
-        skills: data.skills,
-        ...(data.profileImageFile && { file: data.profileImageFile }),
+        nickname,
+        position: Number(position),
+        skills,
+        ...(profileImageFile && { file: profileImageFile }),
       });
       closeDialog();
     } catch (error) {

@@ -4,7 +4,7 @@ import { notFound, useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { Avatar } from '@/components/atoms/avatar';
 import { Badge } from '@/components/atoms/badge';
-import { getPosition } from '@/types/enums';
+import { getPosition, getSkill } from '@/types/enums';
 import { User } from '@/types';
 import { request } from '@/api/request';
 import { ToggleFollowButton } from '@/features/user/follow/components/toggle-follow-button';
@@ -33,7 +33,7 @@ export const OtherUserProfile = () => {
   });
 
   const user = userResponse?.data;
-  
+
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error</div>;
 
@@ -48,7 +48,6 @@ export const OtherUserProfile = () => {
     skills,
     rate,
     isFollowing,
-    userId,
   } = user;
 
   return (
@@ -70,12 +69,10 @@ export const OtherUserProfile = () => {
           <ul>
             {skills?.map((skill) => (
               <li key={skill}>
-                {/* <Badge
+                <Badge
                   text={getSkill(skill)}
                   className="bg-gray-100 text-gray-800"
-                /> */}
-                {/* 백엔드에서 주는 skill 값의 타입이 string이어서 일단 그대로 렌더링 -> 추후 타입 수정 필요 */}
-                {skill}
+                />
               </li>
             ))}
           </ul>
@@ -83,7 +80,6 @@ export const OtherUserProfile = () => {
       </div>
       <div>
         <ToggleFollowButton
-          userId={String(userId)}
           isFollowing={isFollowing}
           usedIn="profile"
         />
