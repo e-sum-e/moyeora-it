@@ -33,7 +33,7 @@ export const OtherUserProfile = () => {
   });
 
   const user = userResponse?.data;
-  
+
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error</div>;
 
@@ -48,7 +48,6 @@ export const OtherUserProfile = () => {
     skills,
     rate,
     isFollowing,
-    userId,
   } = user;
 
   return (
@@ -81,7 +80,6 @@ export const OtherUserProfile = () => {
       </div>
       <div>
         <ToggleFollowButton
-          userId={String(userId)}
           isFollowing={isFollowing}
           usedIn="profile"
         />
