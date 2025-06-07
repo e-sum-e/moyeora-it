@@ -9,7 +9,7 @@ import { DEFAULT_SKILL_NAMES, WriteForm } from '@/types';
 import { SkillName } from '@/types/index';
 import { useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
-import { getSkillBadge } from '../../../utils/getSkillBadge';
+import { SkillBadge } from '../skill-badge';
 
 type SelectSkillProps = {
   form: UseFormReturn<WriteForm>;
@@ -48,9 +48,9 @@ export const SelectSkill = ({ form }: SelectSkillProps) => {
             <FormLabel>사용 기술</FormLabel>
             <FormControl>
               <ul className="flex gap-2">
-                {DEFAULT_SKILL_NAMES.map((skill) => (
+                {DEFAULT_SKILL_NAMES.map((skill, i) => (
                   <li
-                    key={skill}
+                    key={i}
                     className={
                       selectedSkills.includes(skill)
                         ? '[&_.skill-badge]:border-3 [&_.skill-badge]:border-green-500'
@@ -63,7 +63,7 @@ export const SelectSkill = ({ form }: SelectSkillProps) => {
                         skillClickHandler(skill);
                       }}
                     >
-                      {getSkillBadge(skill)}
+                      <SkillBadge name={skill} />
                     </button>
                   </li>
                 ))}
