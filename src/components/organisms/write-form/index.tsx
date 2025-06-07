@@ -196,7 +196,7 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
           <Button type="button" onClick={cancelClickHandler}>
             취소하기
           </Button>
-          <Button type="submit">등록하기</Button>
+          <button type="submit">등록하기</button>
         </form>
       </Form>
     </ErrorBoundary>
