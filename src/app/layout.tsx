@@ -23,14 +23,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <MSWComponent>
+        {/* <MSWComponent> */}
           <ReactQueryProvider>
             <Header />
             <WebSocketProvider>{children}</WebSocketProvider>
           </ReactQueryProvider>
           <Toaster />
           <AutoLoginManager />
-        </MSWComponent>
+        {/* </MSWComponent> */}
       </body>
     </html>
   );
