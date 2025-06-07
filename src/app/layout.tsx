@@ -1,5 +1,4 @@
 import { server } from '@/mocks/server';
-import { MSWComponent } from '@/providers/MSWComponent';
 import { ReactQueryProvider } from '@/providers/ReactQueryProvider';
 import { WebSocketProvider } from '@/providers/WSProvider';
 import type { Metadata } from 'next';
@@ -23,18 +22,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {/* <MSWComponent> */}
-          <ReactQueryProvider>
-            <Header />
-            <WebSocketProvider>
-            <div className="w-full md:max-w-[1280px] mx-auto">
-              {children}
-            </div>  
-            </WebSocketProvider>
-          </ReactQueryProvider>
-          <Toaster />
-          <AutoLoginManager />
-        {/* </MSWComponent> */}
+        <ReactQueryProvider>
+          <Header />
+          <WebSocketProvider>
+          <div className="w-full md:max-w-[1280px] mx-auto px-4">
+            {children}
+          </div>  
+          </WebSocketProvider>
+        </ReactQueryProvider>
+        <Toaster />
+        <AutoLoginManager />
       </body>
     </html>
   );

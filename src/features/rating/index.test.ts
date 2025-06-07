@@ -16,7 +16,6 @@ describe("setRating", () => {
   it("점수 등록이 성공하면 success: true를 반환한다", async () => {
     const targetUserId = 1;
     const rate = 4.5;
-샤
     const response = await setRating(targetUserId, rate);
 
     expect(request.post).toHaveBeenCalledWith(

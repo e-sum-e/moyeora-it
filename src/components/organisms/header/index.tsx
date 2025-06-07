@@ -122,7 +122,7 @@ export const Header = () => {
           </>
         ) : (
           <Link href="/login">
-            <Button className="text-sm font-semibold bg-green-500 text-white">
+            <Button className="text-sm cursor-pointer font-semibold bg-green-500 text-white">
               로그인 및 회원가입
             </Button>
           </Link>
