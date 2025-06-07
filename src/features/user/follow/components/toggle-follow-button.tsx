@@ -3,7 +3,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { Button } from '@/components/ui/button';
 
 type ToggleFollowButtonProps = {
-  userId: string;
+  userId?: string;
   isFollowing: boolean;
   usedIn: string;
 };
@@ -14,7 +14,7 @@ export const ToggleFollowButton = ({
   usedIn,
 }: ToggleFollowButtonProps) => {
   const { mutate: toggleFollow, isPending } = useToggleFollow({
-    userId,
+    ...(userId && { userId }),
     isFollowing,
     usedIn,
   });
