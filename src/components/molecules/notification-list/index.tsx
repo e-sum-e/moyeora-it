@@ -29,8 +29,6 @@ export const NotificationList = () => {
     },
   });
 
-  
-
 
   // 안 읽은 알림 목록 조회
   const { data: unreadData, isLoading: isUnreadLoading } = useQuery<{ unreadCount: number }>({
@@ -51,13 +49,7 @@ export const NotificationList = () => {
   useEffect(() => {
     if (!data || !isOpen) return;
     const notificationList = flattenPages(data.pages)
-    if(Array.isArray(notificationList)) {
-      //@ts-expect-error 백엔드 타입 에러
-      const items = notificationList[0].items;
-      setNotifications(items);
-    }else{
-      setNotifications(notificationList);
-    }
+    setNotifications(notificationList);
   }, [isOpen, data, setNotifications]);
 
   // 안 읽은 알림 개수 저장

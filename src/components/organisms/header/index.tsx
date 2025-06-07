@@ -29,7 +29,7 @@ const menuItems: MenuItem[] = [
 const Logo = ({ isMobile = false }: { isMobile?: boolean }) => (
   <Link href="/" className="flex items-center">
     <Image
-      src="/logos/logo.png"
+      src="/logos/logo-text.png"
       alt="모여라-IT"
       width={isMobile ? 100 : 120}
       height={isMobile ? 25 : 30}
