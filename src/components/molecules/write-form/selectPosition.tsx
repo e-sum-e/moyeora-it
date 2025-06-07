@@ -7,6 +7,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { DEFAULT_POSITION_NAMES, PositionName, WriteForm } from '@/types';
+import { Position } from '@/types/enums';
 import { useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 
@@ -31,20 +32,22 @@ export const SelectPosition = ({ form }: SelectPositionProps) => {
       );
 
       setSelectedPositions(nextSelectedPositions);
-      form.setValue('positions', nextSelectedPositions);
+      form.setValue('position', nextSelectedPositions);
     } else {
       const nextSelectedPositions = [...selectedPositions, position];
 
       setSelectedPositions(nextSelectedPositions);
-      form.setValue('positions', nextSelectedPositions);
+      form.setValue('position', nextSelectedPositions);
     }
   };
-  console.log(selectedPositions);
+  console.log(
+    JSON.stringify(Position[selectedPositions[0] as keyof typeof Position]),
+  );
   return (
     <>
       <FormField
         control={form.control}
-        name="positions"
+        name="position"
         render={({}) => (
           <FormItem>
             <FormLabel>모집할 포지션을 선택해주세요.</FormLabel>
