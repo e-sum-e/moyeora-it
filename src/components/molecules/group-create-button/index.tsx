@@ -10,7 +10,7 @@ export const WriteGroupButton = () => {
   const router = useRouter();
 
   const writeButtonClickHandler = () => {
-    if (!user) {
+    if (user) {
       router.push(routes.login);
       return;
     }

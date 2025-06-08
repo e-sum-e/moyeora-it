@@ -1,6 +1,7 @@
 'use client';
 
 import { request } from '@/api/request';
+import { CategoryName } from '@/components/atoms/form/categoryName';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { handleError } from '@/components/error-boundary/error-handler';
 import { AutoAllow } from '@/components/molecules/write-form/autoAllow';
@@ -165,8 +166,10 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(formSubmit)}>
-          <Title form={form} />
+          <CategoryName number={1} text="모임 기본 정보를 입력해주세요." />
           <SelectType form={form} />
+          <MaxParticipants form={form} />
+
           <DeadlineCalendar
             form={form}
             isDeadlineCalendarOpen={isDeadlineCalendarOpen}
@@ -174,8 +177,6 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
             closeDeadlineCalendar={() => setIsDeadlineCalendarOpen(false)}
             validDeadline={validDeadline}
           />
-          <MaxParticipants form={form} />
-          <AutoAllow form={form} />
           <StartDateCalendar
             form={form}
             isStartDateCalendarOpen={isStartDateCalendarOpen}
@@ -190,9 +191,12 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
             closeEndDateCalendar={() => setIsEndDateCalendarOpen(false)}
             validEndDate={validEndDate}
           />
-          <Description form={form} />
           <SelectSkill form={form} />
           <SelectPosition form={form} />
+          <AutoAllow form={form} />
+          <CategoryName number={2} text="모임에 대해 설명해주세요." />
+          <Title form={form} />
+          <Description form={form} />
           <Button type="button" onClick={cancelClickHandler}>
             취소하기
           </Button>
