@@ -12,7 +12,7 @@ export const GroupProgress = ({
   className,
 }: GroupProgressProps) => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col mt-4">
       <div>{`👤 ${participantsCount}/${maxParticipants}`}</div>
       <Progress
         value={(participantsCount / maxParticipants) * 100}

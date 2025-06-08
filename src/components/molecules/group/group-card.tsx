@@ -1,6 +1,7 @@
 import { Badge } from '@/components/atoms/badge';
 import { BookmarkButton } from '@/components/atoms/bookmark-button';
 import { Deadline } from '@/components/atoms/group/deadline';
+import { GroupPositions } from '@/components/atoms/group/group-positions';
 import { GroupTitle } from '@/components/atoms/group/group-title';
 import { GroupProgress } from '@/components/atoms/group/particiapant-progress';
 import { Group, GroupTypeName } from '@/types';
@@ -31,10 +32,10 @@ export const GroupCard = ({ item }: GroupCardProps) => {
           participantsCount={item.participants.length}
           maxParticipants={item.maxParticipants}
         />
-        <div>
-          <div className="flex gap-2">
+        <div className="mt-4">
+          <div className="flex flex-col gap-2">
             <GroupSkills skills={item.skills} />
-            <GroupSkills skills={item.skills} />
+            <GroupPositions positions={item.position} />
           </div>
         </div>
       </Link>

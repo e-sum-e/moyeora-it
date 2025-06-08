@@ -5,7 +5,7 @@ type DeadlineProps = {
 
 export const Deadline = ({ text, className }: DeadlineProps) => {
   return (
-    <div className="text-gray-500 font-semibold text-sm line">
+    <div className="mt-4 text-gray-500 font-semibold text-sm line">
       <span
         className={`relative before:absolute before:top-[1px] before:bottom-[1px] before:left-[100%] before:content-[''] before:w-[2px] before:bg-gray-500 before:mx-[2px]`}
       >
