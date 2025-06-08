@@ -1,6 +1,5 @@
 import { server } from '@/mocks/server';
 import { ReactQueryProvider } from '@/providers/ReactQueryProvider';
-import { WebSocketProvider } from '@/providers/WSProvider';
 import type { Metadata } from 'next';
 import { Toaster } from 'sonner';
 import './globals.css';
