@@ -14,6 +14,10 @@ type TitleProps = {
   form: UseFormReturn<WriteForm>;
 };
 
+const ItemWrap = ({ children }: { children: React.ReactNode }) => {
+  return <div className="flex items-center gap-1">{children}</div>;
+};
+
 export const SelectType = ({ form }: TitleProps) => {
   return (
     <>
@@ -23,21 +27,24 @@ export const SelectType = ({ form }: TitleProps) => {
         render={({ field }) => (
           <FormItem>
             <WriteFormLabel htmlFor="autoAllow" text="모집 구분" />
-
             <FormControl>
               <RadioGroup
                 value={field.value}
                 onValueChange={field.onChange}
                 className="flex gap-4"
               >
-                <div>
+                <ItemWrap>
                   <RadioGroupItem value={GroupType.STUDY} id="study" />
-                  <Label htmlFor="study">스터디</Label>
-                </div>
-                <div>
+                  <Label htmlFor="study" className="text-base">
+                    스터디
+                  </Label>
+                </ItemWrap>
+                <ItemWrap>
                   <RadioGroupItem value={GroupType.PROJECT} id="project" />
-                  <Label htmlFor="project">프로젝트</Label>
-                </div>
+                  <Label htmlFor="project" className="text-base">
+                    프로젝트
+                  </Label>
+                </ItemWrap>
               </RadioGroup>
             </FormControl>
             <FormMessage />
