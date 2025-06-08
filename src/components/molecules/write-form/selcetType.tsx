@@ -1,8 +1,8 @@
+import { WriteFormLabel } from '@/components/atoms/write-form/form-label';
 import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 import { Label } from '@/components/ui/label';
@@ -22,9 +22,8 @@ export const SelectType = ({ form }: TitleProps) => {
         name="type"
         render={({ field }) => (
           <FormItem>
-            <FormLabel htmlFor="autoAllow">
-              모집할 모임의 유형을 골라주세요
-            </FormLabel>
+            <WriteFormLabel htmlFor="autoAllow" text="모집 구분" />
+
             <FormControl>
               <RadioGroup
                 value={field.value}

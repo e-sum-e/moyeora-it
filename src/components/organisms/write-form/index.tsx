@@ -1,7 +1,7 @@
 'use client';
 
 import { request } from '@/api/request';
-import { CategoryName } from '@/components/atoms/form/categoryName';
+import { CategoryName } from '@/components/atoms/write-form/categoryName';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { handleError } from '@/components/error-boundary/error-handler';
 import { AutoAllow } from '@/components/molecules/write-form/autoAllow';
@@ -169,7 +169,6 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
           <CategoryName number={1} text="모임 기본 정보를 입력해주세요." />
           <SelectType form={form} />
           <MaxParticipants form={form} />
-
           <DeadlineCalendar
             form={form}
             isDeadlineCalendarOpen={isDeadlineCalendarOpen}
