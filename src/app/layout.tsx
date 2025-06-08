@@ -21,16 +21,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ReactQueryProvider>
-          <Header />
-          <WebSocketProvider>
-          <div className="w-full md:max-w-[1280px] mx-auto px-4">
-            {children}
-          </div>  
-          </WebSocketProvider>
-        </ReactQueryProvider>
-        <Toaster />
-        <AutoLoginManager />
+          <ReactQueryProvider>
+            <Header />
+              {children}
+          </ReactQueryProvider>
+          <Toaster />
+          <AutoLoginManager />
       </body>
     </html>
   );
