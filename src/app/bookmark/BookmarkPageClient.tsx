@@ -81,14 +81,28 @@ export function BookmarkPageClient() {
           <div className="flex flex-col gap-4">
             {isError && <div>에러가 발생했습니다.</div>}
             {isLoading && <div>로딩 중...</div>}
-            {items.map((item: ContentInfo, index: number) => (
-              <div
-                key={item.id}
-                ref={index === items.length - 1 ? ref : undefined}
-              >
-                <BookmarkCard info={item} />
+            {items.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16 gap-4">
+                <Image
+                  src="/logos/my-img.png" 
+                  alt="빈 북마크"
+                  width={120}
+                  height={120}
+                  className="grayscale"
+                />
+                <p className="text-gray-500 text-lg">아직 찜한 프로젝트가 없어요</p>
+                <p className="text-gray-400">관심있는 프로젝트를 찜해보세요!</p>
               </div>
-            ))}
+            ) : (
+              items.map((item: ContentInfo, index: number) => (
+                <div
+                  key={item.id}
+                  ref={index === items.length - 1 ? ref : undefined}
+                >
+                  <BookmarkCard info={item} />
+                </div>
+              ))
+            )}
           </div>
         </Tab>
       </main>
