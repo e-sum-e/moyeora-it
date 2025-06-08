@@ -1,5 +1,3 @@
-'use client';
-
 import { Badge } from '@/components/atoms/badge';
 import { Position } from '@/types/enums';
 
@@ -17,7 +15,11 @@ allPositionlKeys.forEach((position) => {
   )}.png`;
 });
 
-export const getPositionBadge = (name: string) => {
+type PositionBadgeProps = {
+  name: string;
+};
+
+export const PositionBadge = ({ name }: PositionBadgeProps) => {
   return (
     <div className="position-badge flex flex-row border border-gray-800 rounded-md">
       <Badge text={name} className="" />

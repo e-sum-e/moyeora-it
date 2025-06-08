@@ -127,7 +127,7 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
             handleError({
               error,
               resetErrorBoundary,
-              defaultMessage: '알림을 불러오는 중 문제가 발생했습니다',
+              defaultMessage: '그룹을 불러오는 중 문제가 발생했습니다',
             })
           }
         >

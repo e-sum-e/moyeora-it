@@ -1,6 +1,7 @@
 'use client';
 
 import { request } from '@/api/request';
+import { LoginRequireButton } from '@/components/atoms/login-require-button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
@@ -56,13 +57,9 @@ export const ReplyForm = ({ onSuccess, parentReplyId }: ReplyFormProps) => {
         value={replyContent}
         onChange={(e) => setReplyContent(e.target.value)}
       />
-      <button
-        type="submit"
-        className="bg-blue-500 text-white px-3 py-1 rounded"
-        onClick={submitReplyButtonClickHandler}
-      >
+      <LoginRequireButton onClick={submitReplyButtonClickHandler}>
         등록
-      </button>
+      </LoginRequireButton>
     </div>
   );
 };

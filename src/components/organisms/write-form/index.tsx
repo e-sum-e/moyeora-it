@@ -20,7 +20,7 @@ import {
   DEFAULT_SKILL_NAMES,
   GroupType,
 } from '@/types';
-import { Skill } from '@/types/enums';
+import { Position, Skill } from '@/types/enums';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { addDays, isAfter } from 'date-fns';
@@ -47,8 +47,8 @@ const formSchema = z
       .max(30, {
         message: '최대 인원은 30명까지 가능합니다.',
       }),
-    deadline: z.date().min(addDays(new Date(), 6), {
-      message: '모집 마감일은 오늘로부터 7일 이후부터 설정 가능합니다.',
+    deadline: z.date().min(addDays(new Date(), 0), {
+      message: '모집 마감일은 오늘로부터 1일 이후부터 설정 가능합니다.',
     }),
     startDate: z.date(),
     endDate: z.date(),
@@ -65,7 +65,7 @@ const formSchema = z
         ]),
       )
       .min(1, { message: '사용 기술을 한가지 이상 선택해주세요.' }),
-    positions: z
+    position: z
       .array(
         z.union([
           z.enum(DEFAULT_POSITION_NAMES), // 미리 정해진 position과
@@ -91,8 +91,8 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
   const [isDeadlineCalendarOpen, setIsDeadlineCalendarOpen] = useState(false);
   const [isStartDateCalendarOpen, setIsStartDateCalendarOpen] = useState(false);
   const [isEndDateCalendarOpen, setIsEndDateCalendarOpen] = useState(false);
-  const [validDeadline, setValidDeadline] = useState(addDays(new Date(), 7));
   const router = useRouter();
+  const validDeadline = addDays(new Date(), 7);
 
   const validStartDate = useMemo(
     () => addDays(validDeadline, 1),
@@ -124,12 +124,15 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
       (skill) => Skill[skill as keyof typeof Skill],
     ); // server에 보낼때 enum의 인덱스로 보내기로 했으므로 string을 enum의 인덱스로 변환
 
-    const valueWithCreatedAt = { ...values, skills, createdAt: new Date() };
+    const position = values.position.map(
+      (position) => Position[position as keyof typeof Position],
+    );
+
     try {
       const result = await request.post(
         `/v2/groups?userId=${userId}`,
         { 'Content-Type': 'application/json' },
-        JSON.stringify(valueWithCreatedAt),
+        JSON.stringify({ ...values, skills, position }),
         { credentials: 'include' },
       );
 
@@ -167,7 +170,6 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
           <DeadlineCalendar
             form={form}
             isDeadlineCalendarOpen={isDeadlineCalendarOpen}
-            setValidDeadline={setValidDeadline}
             openDeadlineCalendar={() => setIsDeadlineCalendarOpen(true)}
             closeDeadlineCalendar={() => setIsDeadlineCalendarOpen(false)}
             validDeadline={validDeadline}
@@ -194,7 +196,7 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
           <Button type="button" onClick={cancelClickHandler}>
             취소하기
           </Button>
-          <Button type="submit">등록하기</Button>
+          <button type="submit">등록하기</button>
         </form>
       </Form>
     </ErrorBoundary>

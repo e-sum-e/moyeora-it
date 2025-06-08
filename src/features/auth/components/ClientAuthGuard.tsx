@@ -4,7 +4,11 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import useAuthStore from '@/stores/useAuthStore';
 
-export default function ClientAuthGuard({ children }: { children: React.ReactNode }) {
+type ClientAuthGuardProps = {
+  children: React.ReactNode;
+};
+
+export default function ClientAuthGuard({ children }: ClientAuthGuardProps) {
   const user = useAuthStore((state) => state.user);
   const router = useRouter();
 
@@ -14,8 +18,6 @@ export default function ClientAuthGuard({ children }: { children: React.ReactNod
     }
     // eslint-disable-next-line
   }, [user]);
-
-  if (!user) return null;
 
   return <>{children}</>;
 }

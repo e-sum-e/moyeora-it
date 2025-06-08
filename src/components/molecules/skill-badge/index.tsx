@@ -1,4 +1,5 @@
 import { Badge } from '@/components/atoms/badge';
+import { SkillName } from '@/types';
 import { Skill } from '@/types/enums';
 import Image from 'next/image';
 
@@ -13,7 +14,12 @@ allSkillKeys.forEach((skill) => {
   skillLogoMap[skill] = `/logos/${skill.replace(/[^a-zA-Z0-9]/g, '')}.png`;
 });
 
-export const getSkillBadge = (name: string, isDefault = true) => {
+type SkillBadgeProps = {
+  name: SkillName;
+  isDefault?: boolean;
+};
+
+export const SkillBadge = ({ name, isDefault = true }: SkillBadgeProps) => {
   return (
     <div className="skill-badge flex flex-row border border-gray-800 rounded-md">
       {isDefault && (
