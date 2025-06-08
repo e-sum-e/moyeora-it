@@ -120,3 +120,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .group-title {
+    @apply text-lg font-semibold;
+  }
+}
