@@ -3,5 +3,5 @@ type BadgeProps = {
   className?: string;
 };
 export const Badge = ({ text, className }: BadgeProps) => {
-  return <div className={`p-1 rounded-sm ${className}`}>{text}</div>;
+  return <span className={`p-1 rounded-sm ${className}`}>{text}</span>;
 };
