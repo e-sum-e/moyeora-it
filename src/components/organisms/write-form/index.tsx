@@ -164,44 +164,49 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
         })
       }
     >
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(formSubmit)}>
-          <CategoryName number={1} text="모임 기본 정보를 입력해주세요." />
-          <SelectType form={form} />
-          <MaxParticipants form={form} />
-          <DeadlineCalendar
-            form={form}
-            isDeadlineCalendarOpen={isDeadlineCalendarOpen}
-            openDeadlineCalendar={() => setIsDeadlineCalendarOpen(true)}
-            closeDeadlineCalendar={() => setIsDeadlineCalendarOpen(false)}
-            validDeadline={validDeadline}
-          />
-          <StartDateCalendar
-            form={form}
-            isStartDateCalendarOpen={isStartDateCalendarOpen}
-            openStartDateCalendar={() => setIsStartDateCalendarOpen(true)}
-            closeStartDateCalendar={() => setIsStartDateCalendarOpen(false)}
-            validStartDate={validStartDate}
-          />
-          <EndDateCalendar
-            form={form}
-            isEndDateCalendarOpen={isEndDateCalendarOpen}
-            openEndDateCalendar={() => setIsEndDateCalendarOpen(true)}
-            closeEndDateCalendar={() => setIsEndDateCalendarOpen(false)}
-            validEndDate={validEndDate}
-          />
-          <SelectSkill form={form} />
-          <SelectPosition form={form} />
-          <AutoAllow form={form} />
-          <CategoryName number={2} text="모임에 대해 설명해주세요." />
-          <Title form={form} />
-          <Description form={form} />
-          <Button type="button" onClick={cancelClickHandler}>
-            취소하기
-          </Button>
-          <button type="submit">등록하기</button>
-        </form>
-      </Form>
+      <div className="px-4 py-14">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(formSubmit)}
+            className="flex flex-col gap-5"
+          >
+            <CategoryName number={1} text="모임 기본 정보를 입력해주세요." />
+            <SelectType form={form} />
+            <MaxParticipants form={form} />
+            <DeadlineCalendar
+              form={form}
+              isDeadlineCalendarOpen={isDeadlineCalendarOpen}
+              openDeadlineCalendar={() => setIsDeadlineCalendarOpen(true)}
+              closeDeadlineCalendar={() => setIsDeadlineCalendarOpen(false)}
+              validDeadline={validDeadline}
+            />
+            <StartDateCalendar
+              form={form}
+              isStartDateCalendarOpen={isStartDateCalendarOpen}
+              openStartDateCalendar={() => setIsStartDateCalendarOpen(true)}
+              closeStartDateCalendar={() => setIsStartDateCalendarOpen(false)}
+              validStartDate={validStartDate}
+            />
+            <EndDateCalendar
+              form={form}
+              isEndDateCalendarOpen={isEndDateCalendarOpen}
+              openEndDateCalendar={() => setIsEndDateCalendarOpen(true)}
+              closeEndDateCalendar={() => setIsEndDateCalendarOpen(false)}
+              validEndDate={validEndDate}
+            />
+            <SelectSkill form={form} />
+            <SelectPosition form={form} />
+            <AutoAllow form={form} />
+            <CategoryName number={2} text="모임에 대해 설명해주세요." />
+            <Title form={form} />
+            <Description form={form} />
+            <Button type="button" onClick={cancelClickHandler}>
+              취소하기
+            </Button>
+            <Button type="submit">등록하기</Button>
+          </form>
+        </Form>
+      </div>
     </ErrorBoundary>
   );
 };
