@@ -4,6 +4,7 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -29,6 +30,9 @@ export const ParticipantListModal = ({
       <DialogContent className="sm:max-w-[425px] max-h-[90vh] p-0">
         <DialogHeader className="sticky top-0 z-10 bg-white p-4 border-b">
           <DialogTitle>참여자 목록</DialogTitle>
+          <DialogDescription className="sr-only">
+            이 모달은 참여자 목록을 보여줍니다.
+          </DialogDescription>
         </DialogHeader>
         <div className="overflow-y-auto max-h-[60vh] px-4 py-2">
           <div className="grid gap-4">

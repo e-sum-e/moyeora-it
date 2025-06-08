@@ -65,10 +65,16 @@ const RegisterOptionalForm = () => {
       // request는 json 형태인데 api는 form-data로 받아서 별도의 fetch로 요청합니다.
       const formData = new FormData();
       formData.append('nickname', newValues.nickname);
-      formData.append('position', newValues.position);
+      formData.append(
+        'position',
+        String(Position[newValues.position as keyof typeof Position]),
+      );
 
       if (newValues.skills.length > 0) {
-        formData.append('skills', newValues.skills.join(','));
+        const skillValues = newValues.skills.map(
+          (skillKey) => Skill[skillKey as keyof typeof Skill],
+        );
+        formData.append('skills', skillValues.join(','));
       }
 
       const response = await fetch(

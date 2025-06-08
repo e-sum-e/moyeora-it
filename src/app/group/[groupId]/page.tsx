@@ -4,11 +4,20 @@ import { GroupActionButtons } from '@/components/molecules/gorup-action-buttons'
 import { GroupDetaiilCard } from '@/components/organisms/group-detail-card';
 import { ReplySection } from '@/components/organisms/reply/reply-section';
 import { GroupDetail } from '@/types';
-import { CommonResponse } from '@/types/response';
+import { isBeforeToday } from '@/utils/dateUtils';
 import { notFound } from 'next/navigation';
 
 type GroupDetailPageProps = {
   params: Promise<{ groupId: string }>;
+};
+
+type GroupDetailResponse = {
+  status: {
+    code: number;
+    message: string;
+    success: boolean;
+  };
+  items: GroupDetail;
 };
 
 export default async function GroupDetailPage({
@@ -18,34 +27,40 @@ export default async function GroupDetailPage({
   let data: GroupDetail;
 
   try {
-    const response: CommonResponse<GroupDetail> = await request.get(
+    const response: GroupDetailResponse = await request.get(
       `/v2/groups/${groupId}`,
       {},
       { credentials: 'include' },
     );
 
-    if (!response.status.success || !response.data) {
+    if (!response.status.success || !response.items) {
       return notFound();
     }
 
-    data = response.data;
+    data = response.items;
   } catch (err) {
     console.error(err);
     notFound();
   }
 
-  const { groupInfo, userInfo: host, applicant: isApplicant } = data;
+  const { group, host, isApplicant } = data;
+  const deadline = new Date(data.group.deadline);
+  const isRecruiting =
+    isBeforeToday(deadline) &&
+    data.group.participants.length < data.group.maxParticipants;
 
   return (
     <div>
-      <main className="w-4/5 mx-auto flex flex-col gap-10">
-        <GroupDetaiilCard info={data} />
-        <GroupDescription description={groupInfo.description} />
+      <main className="w-4/5 mx-auto flex flex-col gap-10 mb-20">
+        <GroupDetaiilCard info={data} isRecruiting={isRecruiting} />
+        <GroupDescription description={group.description} />
         <ReplySection />
       </main>
-      <footer className="fixed bottom-0 z-50 bg-white border-t-2 py-2 px-5 w-full flex justify-end gap-3">
-        <GroupActionButtons hostId={host.userId} isApplicant={isApplicant} />
-      </footer>
+      {isRecruiting && (
+        <footer className="fixed bottom-0 z-50 bg-white border-t-2 py-2 px-5 w-full flex justify-end gap-3">
+          <GroupActionButtons hostId={host.userId} isApplicant={isApplicant} />
+        </footer>
+      )}
     </div>
   );
 }
