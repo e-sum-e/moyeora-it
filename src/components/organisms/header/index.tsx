@@ -22,7 +22,7 @@ type MenuItem = {
 };
 
 const menuItems: MenuItem[] = [
-  { label: '프로젝트 찾기', href: '/projects' },
+  // { label: '프로젝트 찾기', href: '/projects' },
   { label: '찜한 프로젝트', href: '/bookmark' },
 ];
 
