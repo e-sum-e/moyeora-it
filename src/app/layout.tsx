@@ -1,10 +1,10 @@
-import { server } from '@/mocks/server';
 import { ReactQueryProvider } from '@/providers/ReactQueryProvider';
 import type { Metadata } from 'next';
 import { Toaster } from 'sonner';
 import './globals.css';
 import { Header } from '@/components/organisms/header';
 import AutoLoginManager from '@/features/auth/components/AutoLoginManager';
+import { SocketProvider } from '@/providers/WSProvider';
 
 export const metadata: Metadata = {
   title: '모여라-IT',
@@ -16,17 +16,18 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  server.listen();
-
   return (
     <html lang="en">
       <body>
-          <ReactQueryProvider>
+        <ReactQueryProvider>
+          {/* 소켓 설정 전에 로그인 판단해야하므로 로그인 위로 올림 */}
+          <AutoLoginManager /> 
+          <SocketProvider>
             <Header />
-              {children}
-          </ReactQueryProvider>
-          <Toaster />
-          <AutoLoginManager />
+            {children}
+          </SocketProvider>
+        </ReactQueryProvider>
+        <Toaster />
       </body>
     </html>
   );
