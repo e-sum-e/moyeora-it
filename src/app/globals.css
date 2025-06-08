@@ -125,4 +125,15 @@
   .group-title {
     @apply text-lg font-semibold;
   }
+
+  /* 스크롤바 숨기는 클래스(Edge, Firefox) */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* 스크롤바 숨기는 클래스(Chrome, Safari) */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+  }
 }
