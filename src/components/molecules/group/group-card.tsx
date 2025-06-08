@@ -2,7 +2,7 @@ import { Badge } from '@/components/atoms/badge';
 import { BookmarkButton } from '@/components/atoms/bookmark-button';
 import { Deadline } from '@/components/atoms/group/deadline';
 import { GroupTitle } from '@/components/atoms/group/group-title';
-import { Progress } from '@/components/ui/progress';
+import { GroupProgress } from '@/components/atoms/group/particiapant-progress';
 import { Group, GroupTypeName } from '@/types';
 import { formatYearMonthDayWithDot } from '@/utils/dateUtils';
 import { routes } from '@/utils/routes';
@@ -27,18 +27,10 @@ export const GroupCard = ({ item }: GroupCardProps) => {
           <Deadline text={formatYearMonthDayWithDot(item.endDate)} />
           <GroupTitle text={item.title} />
         </div>
-
-        <div>
-          참가 현황
-          <Progress
-            value={(item.participants.length / item.maxParticipants) * 100}
-          />
-        </div>
-        <div>
-          <div>모집 종료 : {formatYearMonthDayWithDot(item.deadline)}</div>
-          <div>모임 시작 : {formatYearMonthDayWithDot(item.startDate)}</div>
-          <div>모임 종료 : {formatYearMonthDayWithDot(item.endDate)}</div>
-        </div>
+        <GroupProgress
+          participantsCount={item.participants.length}
+          maxParticipants={item.maxParticipants}
+        />
         <div>
           <div className="flex gap-2">
             <GroupSkills skills={item.skills} />
