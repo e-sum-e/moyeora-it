@@ -128,8 +128,10 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
         tabList={tabList}
         onValueChange={(value) => updateQueryParams({ type: value })}
       >
-        <Filter updateQueryParams={updateQueryParams} />
-        <SortOrder updateQueryParams={updateQueryParams} />
+        <div className="flex justify-start ">
+          <Filter updateQueryParams={updateQueryParams} />
+          <SortOrder updateQueryParams={updateQueryParams} />
+        </div>
         <SearchInput />
         <ErrorBoundary
           fallback={({ error, resetErrorBoundary }) =>
