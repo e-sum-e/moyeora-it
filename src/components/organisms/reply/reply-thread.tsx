@@ -25,11 +25,14 @@ export const ReplyThread = ({ parentReplyId }: { parentReplyId: number }) => {
   };
 
   return (
-    <>
-      <div className="p-2 rounded">
-        <div className="flex justify-between mb-2">
+    <div className="bg-gray-100">
+      <div>
+        <div className="flex justify-between mb-2 pt-3 px-3">
           <div>대댓글</div>
-          <button onClick={() => setIsOpen((prev) => !prev)}>
+          <button
+            className="cursor-pointer"
+            onClick={() => setIsOpen((prev) => !prev)}
+          >
             {isOpen ? '접기' : '펼치기'}
           </button>
         </div>
@@ -45,6 +48,6 @@ export const ReplyThread = ({ parentReplyId }: { parentReplyId: number }) => {
         parentReplyId={parentReplyId}
         onSuccess={replyFormSuccessHandler}
       />
-    </>
+    </div>
   );
 };

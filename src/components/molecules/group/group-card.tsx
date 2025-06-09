@@ -18,13 +18,15 @@ type GroupCardProps = {
 export const GroupCard = ({ item }: GroupCardProps) => {
   return (
     <div className="p-6 bg-white shadow-sm shadow-gray-400">
-      <BookmarkButton groupId={item.id} isBookmark={item.isBookmark} />
       <Link href={routes.groupDetail(item.id)}>
         <div>
-          <Badge
-            text={GroupTypeName[item.type]}
-            className=" text-sm font-semibold bg-gray-200"
-          />
+          <div className="flex justify-between">
+            <Badge
+              text={GroupTypeName[item.type]}
+              className=" text-sm font-semibold bg-gray-200"
+            />
+            <BookmarkButton groupId={item.id} isBookmark={item.isBookmark} />
+          </div>
           <Deadline text={formatYearMonthDayWithDot(item.endDate)} />
           <GroupTitle text={item.title} />
         </div>

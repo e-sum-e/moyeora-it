@@ -1,10 +1,11 @@
 import { Avatar } from '@/components/atoms/avatar';
+import { Badge } from '@/components/atoms/badge';
 import { BookmarkButton } from '@/components/atoms/bookmark-button';
-import { GroupPositions } from '@/components/atoms/group/group-positions';
 import { GroupSkills } from '@/components/atoms/group/group-skills';
 import { GroupProgress } from '@/components/atoms/group/particiapant-progress';
 import { ParticipantListModal } from '@/components/organisms/participant-list-modal';
 import { GroupDetail, GroupTypeName } from '@/types';
+import { Position } from '@/types/enums';
 import { formatYearMonthDayWithDot } from '@/utils/dateUtils';
 import { getDisplayNickname, getDisplayProfileImage } from '@/utils/fallback';
 import Link from 'next/link';
@@ -20,12 +21,12 @@ export const GroupDetaiilCard = ({
 }: GroupDetaiilCardProps) => {
   return (
     <article className="flex flex-col gap-5 w-full">
-      <header className="flex flex-col gap-5">
+      <header className="flex flex-col gap-8">
         <div className="flex justify-between items-start">
           <h1 className="font-bold text-3xl">{info.group.title}</h1>
           <BookmarkButton
             groupId={info.group.id}
-            isBookmark={info.group.isBbookmark}
+            isBookmark={info.group.isBookmark}
           />
         </div>
         {/* 모임 주최자 */}
@@ -35,14 +36,14 @@ export const GroupDetaiilCard = ({
               imageSrc={getDisplayProfileImage(info.host.profileImage)}
               fallback={getDisplayNickname(info.host.nickname, info.host.email)}
             />
-            <span className="text-base font-semibold">
+            <span className="font-semibold">
               {getDisplayNickname(info.host.nickname, info.host.email)}
             </span>
           </Link>
         </div>
       </header>
 
-      <section className="border-t-2 border-gray-200 flex flex-col gap-3 pt-6 text-lg">
+      <section className="border-t-2 border-gray-200 flex flex-col gap-5 pt-8">
         <GroupInfoItem label="모집 구분">
           {GroupTypeName[info.group.type]}
         </GroupInfoItem>
@@ -57,7 +58,17 @@ export const GroupDetaiilCard = ({
         </GroupInfoItem>
 
         <GroupInfoItem label="모집 분야">
-          <GroupPositions positions={info.group.position} />
+          <ul>
+            {info.group.position.map((position) => (
+              <li key={Position[position]}>
+                <Badge
+                  text={Position[position]}
+                  className="py-0 px-1 border border-gray-800"
+                />
+              </li>
+            ))}
+          </ul>
+          {/* <GroupPositions positions={info.group.position} /> */}
         </GroupInfoItem>
 
         <GroupInfoItem label="기술 스택">

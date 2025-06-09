@@ -36,7 +36,8 @@ export const ReplyForm = ({ onSuccess, parentReplyId }: ReplyFormProps) => {
       queryClient.invalidateQueries({
         queryKey: ['items', endpoint],
       });
-      onSuccess(data.replyId);
+
+      onSuccess(data.items);
       setReplyContent('');
     },
     onError: () => {

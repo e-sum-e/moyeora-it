@@ -109,7 +109,7 @@ export type Reply = {
   content: string;
   writer: UserSummary;
   createdAt: string;
-  isDeleted?: boolean; // 삭제된 댓글인지 여부
+  deleted: boolean; // 삭제된 댓글인지 여부
 };
 
 export type GroupDetail = {
@@ -127,7 +127,7 @@ export type GroupDetail = {
     endDate: string;
     createdAt: string;
     participants: UserSummary[];
-    isBbookmark: boolean;
+    isBookmark: boolean;
   };
   host: UserSummary;
   isApplicant: boolean;
