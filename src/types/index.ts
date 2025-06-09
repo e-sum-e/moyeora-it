@@ -77,9 +77,9 @@ export type WriteForm = {
 export type Group = {
   id: number;
   title: string;
-  deadline: Date;
-  startDate: Date; // 모임의 시작일
-  endDate: Date; // 모임의 종료일
+  deadline: string;
+  startDate: string; // 모임의 시작일
+  endDate: string; // 모임의 종료일
   maxParticipants: number;
   participants: UserSummary[];
   description: string;

@@ -98,7 +98,7 @@ export const Description = ({ form }: DescriptionProps) => {
     editorProps: {
       attributes: {
         class:
-          'min-h-[150px] border rounded w-full py-2 px-3 bg-white text-black text-2xl mt-0 focus:outline-none focus:shadow-outline',
+          'h-[500px] w-full mt-0 py-2 px-3 text-black text-2xl bg-white  border roundedfocus:outline-none focus:shadow-outline',
       },
     },
   });
@@ -122,9 +122,9 @@ export const Description = ({ form }: DescriptionProps) => {
       control={form.control}
       name="description"
       render={() => (
-        <FormItem>
+        <FormItem className="block h-[500px]  bg-gray-100 rounded">
           <FormControl>
-            <EditorContent editor={editor} placeholder="내용을 입력해주세요" />
+            <EditorContent editor={editor} />
           </FormControl>
           <FormMessage />
         </FormItem>

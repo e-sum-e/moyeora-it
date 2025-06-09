@@ -64,16 +64,18 @@ const formSchema = z
           z.enum(DEFAULT_SKILL_NAMES), // 미리 정해진 skill과
           z.string(), // 유저가 입력한 커스텀 skill을 합친 union 타입 형태로 유효성 검사
         ]),
+        { required_error: '사용 기술을 한가지 이상 선택해주세요.' }, // 아예 선택도 하지 않은 경우
       )
-      .min(1, { message: '사용 기술을 한가지 이상 선택해주세요.' }),
+      .min(1, { message: '사용 기술을 한가지 이상 선택해주세요.' }), // 선택했다가 지워서 [] 인 경우
     position: z
       .array(
         z.union([
           z.enum(DEFAULT_POSITION_NAMES), // 미리 정해진 position과
           z.string(), // 유저가 입력한 커스텀 skill을 합친 union 타입 형태로 유효성 검사
         ]),
+        { required_error: '포지션을 한 가지 이상 선택해주세요.' }, // 아예 선택도 하지 않은 경우
       )
-      .min(1, { message: '사용 기술을 한가지 이상 선택해주세요.' }),
+      .min(1, { message: '포지션을 한 가지 이상 선택해주세요.' }), // 선택했다가 지워서 [] 인 경우
   })
   .refine((data) => isAfter(data.startDate, addDays(data.deadline, 0)), {
     message: '모임 시작일은 모집 마감일로부터 1일 이후여야 합니다.',
@@ -95,14 +97,21 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
   const router = useRouter();
   const validDeadline = addDays(new Date(), 7);
 
+  const [selectedDeadline, setSelectedDeadline] = useState(validDeadline);
+
   const validStartDate = useMemo(
-    () => addDays(validDeadline, 1),
-    [validDeadline],
+    () => addDays(selectedDeadline, 1),
+    [selectedDeadline],
   );
+
   const validEndDate = useMemo(
     () => addDays(validStartDate, 6),
     [validStartDate],
   );
+
+  const deadlineSelectHandler = (date: Date) => {
+    setSelectedDeadline(date);
+  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema), // 유효성 검사는 zodResolver로 한다
@@ -113,6 +122,9 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
       description: '',
       autoAllow: false,
       type: GroupType.STUDY,
+      deadline: validDeadline, // 선택하지 않았을 경우 validDeadline 그대로 사용
+      startDate: validStartDate, // 선택하지 않았을 경우 validStartDate 일자 그대로 사용
+      endDate: validEndDate, // 선택하지 않았을 경우 validEndDate 그대로 사용
     },
   });
 
@@ -121,13 +133,15 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
   };
 
   const formSubmit = async (values: z.infer<typeof formSchema>) => {
+    console.log('?');
+
     const skills = values.skills.map(
       (skill) => Skill[skill as keyof typeof Skill],
     ); // server에 보낼때 enum의 인덱스로 보내기로 했으므로 string을 enum의 인덱스로 변환
 
     const position = values.position.map(
       (position) => Position[position as keyof typeof Position],
-    );
+    ); // server에 보낼때 enum의 인덱스로 보내기로 했으므로 string을 enum의 인덱스로 변환
 
     try {
       const result = await request.post(
@@ -168,7 +182,7 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(formSubmit)}
-            className="flex flex-col gap-5"
+            className="flex flex-col gap-7"
           >
             <CategoryName number={1} text="모임 기본 정보를 입력해주세요." />
             <SelectType form={form} />
@@ -176,6 +190,7 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
             <DeadlineCalendar
               form={form}
               isDeadlineCalendarOpen={isDeadlineCalendarOpen}
+              deadlineSelect={deadlineSelectHandler}
               openDeadlineCalendar={() => setIsDeadlineCalendarOpen(true)}
               closeDeadlineCalendar={() => setIsDeadlineCalendarOpen(false)}
               validDeadline={validDeadline}
@@ -200,10 +215,19 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
             <CategoryName number={2} text="모임에 대해 설명해주세요." />
             <Title form={form} />
             <Description form={form} />
-            <Button type="button" onClick={cancelClickHandler}>
-              취소하기
-            </Button>
-            <button type="submit">등록하기</button>
+            <div className="flex md:justify-end gap-2">
+              <Button
+                variant={'outline'}
+                type="button"
+                onClick={cancelClickHandler}
+                className="flex-1 md:flex-none"
+              >
+                취소하기
+              </Button>
+              <Button type="submit" className="flex-1 md:flex-none">
+                등록하기
+              </Button>
+            </div>
           </form>
         </Form>
       </div>
