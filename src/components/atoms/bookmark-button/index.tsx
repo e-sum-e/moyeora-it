@@ -4,6 +4,7 @@ import { request } from '@/api/request';
 import { addBookmarkItem, removeBookmarkItem } from '@/features/bookmark';
 import useAuthStore from '@/stores/useAuthStore';
 import { useMutation } from '@tanstack/react-query';
+import { Bookmark } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -49,11 +50,8 @@ export const BookmarkButton = ({
   };
 
   return (
-    <button
-      onClick={bookmarkButtonToggleHandler}
-      className={`${isBookmark ? 'bg-red-400' : ''}`}
-    >
-      찜하기
+    <button onClick={bookmarkButtonToggleHandler}>
+      <Bookmark className={`${isBookmark ? 'fill-yellow-300' : ''}`} />
     </button>
   );
 };
