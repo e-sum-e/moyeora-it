@@ -20,6 +20,7 @@ import { UseFormReturn } from 'react-hook-form';
 type TitleProps = {
   form: UseFormReturn<WriteForm>;
   isDeadlineCalendarOpen: boolean;
+  deadlineSelect: (date: Date) => void;
   openDeadlineCalendar: () => void;
   closeDeadlineCalendar: () => void;
   validDeadline: Date;
@@ -28,7 +29,7 @@ type TitleProps = {
 export const DeadlineCalendar = ({
   form,
   isDeadlineCalendarOpen,
-
+  deadlineSelect,
   openDeadlineCalendar,
   closeDeadlineCalendar,
   validDeadline,
@@ -40,6 +41,7 @@ export const DeadlineCalendar = ({
   ) => {
     if (!date) return;
 
+    deadlineSelect(date);
     onChange(date);
     // setValidDeadline(date);
     closeDeadlineCalendar();

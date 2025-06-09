@@ -95,14 +95,20 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
   const router = useRouter();
   const validDeadline = addDays(new Date(), 7);
 
+  const [selectedDeadline, setSelectedDeadline] = useState(validDeadline);
+
   const validStartDate = useMemo(
-    () => addDays(validDeadline, 1),
-    [validDeadline],
+    () => addDays(selectedDeadline, 1),
+    [selectedDeadline],
   );
   const validEndDate = useMemo(
     () => addDays(validStartDate, 6),
     [validStartDate],
   );
+
+  const deadlineSelectHandler = (date: Date) => {
+    setSelectedDeadline(date);
+  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema), // 유효성 검사는 zodResolver로 한다
@@ -176,6 +182,7 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
             <DeadlineCalendar
               form={form}
               isDeadlineCalendarOpen={isDeadlineCalendarOpen}
+              deadlineSelect={deadlineSelectHandler}
               openDeadlineCalendar={() => setIsDeadlineCalendarOpen(true)}
               closeDeadlineCalendar={() => setIsDeadlineCalendarOpen(false)}
               validDeadline={validDeadline}
