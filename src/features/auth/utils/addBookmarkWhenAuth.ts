@@ -5,13 +5,20 @@ const addBookmarkWhenAuth = async (bookmarkListStr: string) => {
   let bookmarkList: number[] = [];
   bookmarkList = JSON.parse(bookmarkListStr) as number[];
 
-  // TODO: api 수정 요청
-  await request.patch(
-    `/v2/bookmark/addids`,
-    { 'Content-Type': 'application/json' },
-    { groupId: bookmarkList, bookmark: true },
-    { credentials: 'include' },
-  );
+  try {
+    // TODO: api 수정 요청
+    await request.patch(
+      `/v2/bookmark/addids`,
+      { 'Content-Type': 'application/json' },
+      { groupId: bookmarkList, bookmark: true },
+      { credentials: 'include' },
+    );
+
+    // db에 북마크 추가 성공 후 로컬 스토리지에서 북마크 정보 삭제
+    localStorage.removeItem('bookmarkList');
+  } catch (e) {
+    console.error('북마크 추가 중 오류 발생:', e);
+  }
 };
 
 export default addBookmarkWhenAuth;
