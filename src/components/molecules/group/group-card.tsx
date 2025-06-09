@@ -23,7 +23,7 @@ export const GroupCard = ({ item }: GroupCardProps) => {
         <div>
           <Badge
             text={GroupTypeName[item.type]}
-            className=" text-sm font-semibold bg-gray-200"
+            className="w-[fit-content] text-sm font-semibold bg-gray-200"
           />
           <Deadline text={formatYearMonthDayWithDot(item.endDate)} />
           <GroupTitle text={item.title} />
