@@ -1,14 +1,10 @@
 'use client';
 
 import { request } from '@/api/request';
-import {
-  addBookmarkItem,
-  getBookmarkList,
-  removeBookmarkItem,
-} from '@/features/bookmark';
+import { addBookmarkItem, removeBookmarkItem } from '@/features/bookmark';
 import useAuthStore from '@/stores/useAuthStore';
 import { useMutation } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
 type BookmarkButtonProps = {
@@ -22,13 +18,6 @@ export const BookmarkButton = ({
 }: BookmarkButtonProps) => {
   const user = useAuthStore((state) => state.user);
   const [isBookmark, setIsBookmark] = useState<boolean>(initialIsBookmarkState);
-
-  useEffect(() => {
-    if (user === null) {
-      const bookmarkList = getBookmarkList();
-      setIsBookmark(bookmarkList.includes(groupId));
-    }
-  }, [groupId, user]);
 
   const { mutate } = useMutation({
     mutationFn: (isBookmark: boolean) =>
