@@ -81,7 +81,7 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
   );
 
   const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<Group>({
-    url: '/groups',
+    url: '/v2/groups',
     queryParams: { ...queryParams, size: 10 },
   });
 
