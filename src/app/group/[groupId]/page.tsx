@@ -36,10 +36,11 @@ export default async function GroupDetailPage({
     if (!response.status.success || !response.items) {
       return notFound();
     }
-    
+
     data = response.items;
   } catch (err) {
     console.error(err);
+    // notFound 외의 처리도 필요
     notFound();
   }
 
@@ -51,9 +52,12 @@ export default async function GroupDetailPage({
 
   return (
     <div>
-      <main className="w-4/5 mx-auto flex flex-col gap-10 mb-20">
+      <main className="w-4/5 mx-auto flex flex-col gap-20 mb-20 mt-12">
         <GroupDetaiilCard info={data} isRecruiting={isRecruiting} />
-        <GroupDescription description={group.description} />
+        <GroupDescription
+          description={group.description}
+          groupType={group.type}
+        />
         <ReplySection />
       </main>
       {isRecruiting && (
