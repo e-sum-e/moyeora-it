@@ -26,11 +26,11 @@ export enum GroupType {
 export type WriteFormWithCreatedAt = WriteForm & { createdAt: Date };
 /** 제공해주는 기본 skill의 이름들. enum Skill과 동기화되어야 함 */
 export const DEFAULT_SKILL_NAMES = [
-  'JAVA',
+  'Java',
   'JavaScript',
-  'HTML/CSS',
-  'React',
-  'Vue.js',
+  'HTML_CSS',
+  'REACT',
+  'Vue',
   'Kotlin',
   'Spring',
 ] as const;
@@ -67,7 +67,7 @@ export type WriteForm = {
   autoAllow: boolean;
   type: GroupType;
   skills: SkillName[];
-  positions: PositionName[];
+  position: PositionName[];
 };
 
 export type Group = {
@@ -109,36 +109,23 @@ export type Reply = {
 };
 
 export type GroupDetail = {
-  groupInfo: {
-    groupId: number;
+  group: {
+    id: number;
     title: string;
     description: string;
-    userId: number;
     autoAllow: boolean;
-    currentParticipants: number;
     maxParticipants: number;
-    status: boolean;
     type: string;
-    views: number;
-    skills: string[];
-    positions: string[];
+    skills: Skill[];
+    position: Position[];
     deadline: string;
     startDate: string;
     endDate: string;
-    userInfos: {
-      userId: number;
-      nickname: string;
-      profileImage: string;
-      email: string;
-    }[];
+    createdAt: string;
+    participants: UserSummary[];
+    isBbookmark: boolean;
   };
-  userInfo: {
-    userId: number;
-    nickname: string;
-    profileImage: string;
-    email: string;
-  };
-  applicant: boolean;
-  joined: boolean;
-  bookmark: boolean;
+  host: UserSummary;
+  isApplicant: boolean;
+  isJoined: boolean;
 };

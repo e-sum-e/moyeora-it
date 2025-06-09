@@ -5,74 +5,164 @@ import Link from 'next/link';
 import { NotificationList } from '@/components/molecules/notification-list';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { handleError } from '@/components/error-boundary/error-handler';
+import Image from 'next/image';
+import { Button } from '@/components/ui/button';
+import { useState } from 'react';
+import {
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { DropdownMenu } from '@/components/ui/dropdown-menu';
+import { Avatar } from '@/components/atoms/avatar';
 
-const menuItems = [
-    {
-      label: '모여라-IT',
-      href: '/',
-    },
-    {
-      label: 'Bookmark',
-      href: '/bookmark',
-    },
-  ];
+type MenuItem = {
+  label: string;
+  href: string;
+};
 
-const loggedOutMenuItems = [
-  {
-    label: 'Login',
-    href: '/login',
-  },
+const menuItems: MenuItem[] = [
+  // { label: '프로젝트 찾기', href: '/projects' },
+  { label: '찜한 프로젝트', href: '/bookmark' },
 ];
+
+const Logo = ({ isMobile = false }: { isMobile?: boolean }) => (
+  <Link href="/" className="flex items-center">
+    <Image
+      src="/logos/logo-text.png"
+      alt="모여라-IT"
+      width={isMobile ? 100 : 120}
+      height={isMobile ? 25 : 30}
+      className={`w-auto ${isMobile ? 'h-7' : 'h-8'}`}
+      priority
+    />
+  </Link>
+);
+
+const MenuLinks = ({ onClick }: { onClick?: () => void }) => (
+  <>
+    {menuItems.map(({ label, href }) => (
+      <Link
+        key={href}
+        href={href}
+        className="text-sm font-medium text-gray-800 hover:text-primary"
+        onClick={onClick}
+      >
+        {label}
+      </Link>
+    ))}
+  </>
+);
+
+const MobileMenuLinks = ({ onClick }: { onClick?: () => void }) => (
+  <>
+    {menuItems.map(({ label, href }) => (
+      <DropdownMenuItem key={href} asChild onClick={onClick}>
+        <Link href={href}>{label}</Link>
+      </DropdownMenuItem>
+    ))}
+  </>
+);
+
+const UserProfile = ({
+  userId,
+  profileImage,
+}: {
+  userId: number;
+  profileImage: string;
+}) => (
+  <Link href={`/users/${userId}`}>
+    <Avatar
+      imageSrc={profileImage}
+      fallback={userId.toString()}
+      className="rounded-full w-8 h-8"
+    />
+  </Link>
+);
+
+const NotificationWithBoundary = () => (
+  <ErrorBoundary
+    fallback={({ error, resetErrorBoundary }) =>
+      handleError({
+        error,
+        resetErrorBoundary,
+        defaultMessage: '알림을 불러오는 중 문제가 발생했습니다',
+      })
+    }
+  >
+    <NotificationList />
+  </ErrorBoundary>
+);
 
 export const Header = () => {
   const user = useAuthStore((state) => state.user);
   const isLoggedIn = Boolean(user);
+  const userId = user?.userId ?? 0;
+  const profileImage = user?.profileImage || '';
 
-  const loggedInMenuItems = [
-    {
-      label: 'MyPage',
-      href: `/users/${user?.userId}`,
-    },
-    {
-      label: 'Notification',
-      href: '/notification',
-    },
-  ];
-
-  const displayMenuItems = [
-    ...menuItems,
-    ...(isLoggedIn ? loggedInMenuItems : loggedOutMenuItems),
-  ];
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header>
-      <nav>
-        <ul className="flex gap-4 w-full justify-between">
-          {displayMenuItems.map((item) => (
-            <li key={item.href}>
-              {item.href === '/' ? (
-                <h1>
-                  <Link href={item.href}>{item.label}</Link>
-                </h1>
-              ) : isLoggedIn && item.label === 'Notification' ? (
-                <ErrorBoundary                  
-                  fallback={({ error, resetErrorBoundary }) => 
-                    handleError({ 
-                      error, 
-                      resetErrorBoundary,
-                      defaultMessage: '알림을 불러오는 중 문제가 발생했습니다'
-                    })
-                  }
-                >
-                  <NotificationList />
-                </ErrorBoundary>
-              ) : (
-                <Link href={item.href}>{item.label}</Link>
-              )}
-            </li>
-          ))}
+    <header className="w-full bg-white flex justify-between items-center h-16 md:px-8">
+      <nav className="hidden md:flex items-center">
+        <Logo />
+        <ul className="flex gap-8 ml-8">
+          <MenuLinks />
         </ul>
       </nav>
+
+      <div className="hidden md:flex items-center gap-4">
+        {isLoggedIn ? (
+          <>
+            <NotificationWithBoundary />
+            <UserProfile
+              userId={userId}
+              profileImage={profileImage}
+            />
+          </>
+        ) : (
+          <Link href="/login">
+            <Button className="text-sm cursor-pointer font-semibold bg-green-500 text-white">
+              로그인 및 회원가입
+            </Button>
+          </Link>
+        )}
+      </div>
+
+      <div className="flex md:hidden justify-between items-center h-14 px-4 w-full">
+        <Logo isMobile />
+
+        <div className="flex items-center gap-2">
+          {isLoggedIn && (
+            <NotificationWithBoundary />
+          )}
+
+          <DropdownMenu open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+            <DropdownMenuTrigger asChild>
+              <button type="button" aria-label="메뉴 열기">
+                <Image
+                  src="/icons/menu.svg"
+                  alt="menu"
+                  width={28}
+                  height={28}
+                />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <MobileMenuLinks onClick={() => setIsMenuOpen(false)} />
+              {!isLoggedIn ? (
+                <DropdownMenuItem asChild onClick={() => setIsMenuOpen(false)}>
+                  <Link href="/login">로그인 및 회원가입</Link>
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem asChild onClick={() => setIsMenuOpen(false)}>
+                  <Link href={`/users/${userId}`}>마이 페이지</Link>
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
     </header>
   );
 };
