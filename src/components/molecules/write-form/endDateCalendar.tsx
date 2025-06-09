@@ -1,10 +1,10 @@
+import { WriteFormLabel } from '@/components/atoms/write-form/form-label';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 import {
@@ -50,7 +50,7 @@ export const EndDateCalendar = ({
         name="endDate"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>모임 종료일</FormLabel>
+            <WriteFormLabel text="모임 종료일" />
             <Popover
               open={isEndDateCalendarOpen}
               onOpenChange={

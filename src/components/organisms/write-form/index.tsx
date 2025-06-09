@@ -1,6 +1,7 @@
 'use client';
 
 import { request } from '@/api/request';
+import { CategoryName } from '@/components/atoms/write-form/categoryName';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { handleError } from '@/components/error-boundary/error-handler';
 import { AutoAllow } from '@/components/molecules/write-form/autoAllow';
@@ -163,42 +164,49 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
         })
       }
     >
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(formSubmit)}>
-          <Title form={form} />
-          <SelectType form={form} />
-          <DeadlineCalendar
-            form={form}
-            isDeadlineCalendarOpen={isDeadlineCalendarOpen}
-            openDeadlineCalendar={() => setIsDeadlineCalendarOpen(true)}
-            closeDeadlineCalendar={() => setIsDeadlineCalendarOpen(false)}
-            validDeadline={validDeadline}
-          />
-          <MaxParticipants form={form} />
-          <AutoAllow form={form} />
-          <StartDateCalendar
-            form={form}
-            isStartDateCalendarOpen={isStartDateCalendarOpen}
-            openStartDateCalendar={() => setIsStartDateCalendarOpen(true)}
-            closeStartDateCalendar={() => setIsStartDateCalendarOpen(false)}
-            validStartDate={validStartDate}
-          />
-          <EndDateCalendar
-            form={form}
-            isEndDateCalendarOpen={isEndDateCalendarOpen}
-            openEndDateCalendar={() => setIsEndDateCalendarOpen(true)}
-            closeEndDateCalendar={() => setIsEndDateCalendarOpen(false)}
-            validEndDate={validEndDate}
-          />
-          <Description form={form} />
-          <SelectSkill form={form} />
-          <SelectPosition form={form} />
-          <Button type="button" onClick={cancelClickHandler}>
-            취소하기
-          </Button>
-          <button type="submit">등록하기</button>
-        </form>
-      </Form>
+      <div className="px-4 py-14">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(formSubmit)}
+            className="flex flex-col gap-5"
+          >
+            <CategoryName number={1} text="모임 기본 정보를 입력해주세요." />
+            <SelectType form={form} />
+            <MaxParticipants form={form} />
+            <DeadlineCalendar
+              form={form}
+              isDeadlineCalendarOpen={isDeadlineCalendarOpen}
+              openDeadlineCalendar={() => setIsDeadlineCalendarOpen(true)}
+              closeDeadlineCalendar={() => setIsDeadlineCalendarOpen(false)}
+              validDeadline={validDeadline}
+            />
+            <StartDateCalendar
+              form={form}
+              isStartDateCalendarOpen={isStartDateCalendarOpen}
+              openStartDateCalendar={() => setIsStartDateCalendarOpen(true)}
+              closeStartDateCalendar={() => setIsStartDateCalendarOpen(false)}
+              validStartDate={validStartDate}
+            />
+            <EndDateCalendar
+              form={form}
+              isEndDateCalendarOpen={isEndDateCalendarOpen}
+              openEndDateCalendar={() => setIsEndDateCalendarOpen(true)}
+              closeEndDateCalendar={() => setIsEndDateCalendarOpen(false)}
+              validEndDate={validEndDate}
+            />
+            <SelectSkill form={form} />
+            <SelectPosition form={form} />
+            <AutoAllow form={form} />
+            <CategoryName number={2} text="모임에 대해 설명해주세요." />
+            <Title form={form} />
+            <Description form={form} />
+            <Button type="button" onClick={cancelClickHandler}>
+              취소하기
+            </Button>
+            <button type="submit">등록하기</button>
+          </form>
+        </Form>
+      </div>
     </ErrorBoundary>
   );
 };
