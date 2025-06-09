@@ -215,10 +215,19 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
             <CategoryName number={2} text="모임에 대해 설명해주세요." />
             <Title form={form} />
             <Description form={form} />
-            <Button type="button" onClick={cancelClickHandler}>
-              취소하기
-            </Button>
-            <button type="submit">등록하기</button>
+            <div className="flex md:justify-end gap-2">
+              <Button
+                variant={'outline'}
+                type="button"
+                onClick={cancelClickHandler}
+                className="flex-1 md:flex-none"
+              >
+                취소하기
+              </Button>
+              <Button type="submit" className="flex-1 md:flex-none">
+                등록하기
+              </Button>
+            </div>
           </form>
         </Form>
       </div>
