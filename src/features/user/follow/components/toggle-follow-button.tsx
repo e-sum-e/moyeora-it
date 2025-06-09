@@ -1,9 +1,12 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
 import { useToggleFollow } from '@/features/user/follow/hooks/useToggleFollow';
-import { useDebounce } from '@/hooks/useDebounce';
 import { Button } from '@/components/ui/button';
+import useAuthStore from '@/stores/useAuthStore';
 
 type ToggleFollowButtonProps = {
-  userId: string;
+  userId?: string;
   isFollowing: boolean;
   usedIn: string;
 };
@@ -13,19 +16,26 @@ export const ToggleFollowButton = ({
   isFollowing,
   usedIn,
 }: ToggleFollowButtonProps) => {
+  const user = useAuthStore((state) => state.user);
+
+  const router = useRouter();
+
   const { mutate: toggleFollow, isPending } = useToggleFollow({
-    userId,
+    ...(userId && { userId }),
     isFollowing,
     usedIn,
   });
 
-  const toggleFollowButtonClickHandler = useDebounce(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.preventDefault();
-      toggleFollow();
-    },
-    300,
-  );
+  const toggleFollowButtonClickHandler = (
+    e: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    e.preventDefault();
+    if (!user) {
+      router.push('/login');
+      return;
+    }
+    toggleFollow();
+  };
 
   return (
     <Button

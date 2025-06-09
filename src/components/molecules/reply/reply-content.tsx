@@ -2,6 +2,7 @@
 
 import { request } from '@/api/request';
 import { ReplyMeta } from '@/components/molecules/reply/reply-meta';
+import useAuthStore from '@/stores/useAuthStore';
 import { Reply } from '@/types';
 import { useMutation } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
@@ -23,8 +24,9 @@ export const ReplyContent = ({
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isLocallyDeleted, setIsLocallyDeleted] = useState<boolean>(isDeleted);
   const [content, setContent] = useState<string>(initalContent);
+  const user = useAuthStore((state) => state.user);
 
-  const isWriter = true; // writer.userId === user.userId
+  const isWriter = user && writer.userId == user.userId;
 
   const { mutate: updateReply } = useMutation({
     mutationFn: async (enteredContent: string) =>

@@ -19,7 +19,7 @@ export const GroupList = () => {
   const { search, type, status, sort } = Object.fromEntries(searchParams.entries());
 
   const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<Group>({
-    url: '/v2/groups',
+    url: '/v2/groups/mygroup',
     queryParams: {
       type: type ?? 'project',
       status: status ?? 'RECRUITING',

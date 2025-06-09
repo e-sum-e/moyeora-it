@@ -11,13 +11,9 @@ export const useRemoveFollower = ({ userId }: { userId: string }) => {
 
   return useMutation({
     mutationFn() {
-      return request.post(
-        `/v1/follow/${userId}/unfollower`,
-        {
-          'Content-Type': 'application/json',
-        },
-        JSON.stringify({ userId }),
-      );
+      return request.delete(`/v1/follow/${userId}/unfollower`, {
+        credentials: 'include',
+      });
     },
     onError() {
       toast.error('팔로워 삭제 실패', {

@@ -3,15 +3,15 @@ import {
   FieldPath,
   FieldValues,
   UseFormReturn,
-} from "react-hook-form";
+} from 'react-hook-form';
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+} from '@/components/ui/form';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 interface FormRadioGroupFieldProps<T extends FieldValues> {
   form: UseFormReturn<T>;
@@ -41,7 +41,7 @@ export const FormRadioGroupField = <T extends FieldValues>({
             <RadioGroup
               onValueChange={field.onChange}
               defaultValue={field.value}
-              className="flex gap-4"
+              className="flex gap-4 flex-wrap"
             >
               {options.map((option) => (
                 <FormItem
@@ -53,7 +53,7 @@ export const FormRadioGroupField = <T extends FieldValues>({
                   </FormControl>
                   <FormLabel
                     className={`font-normal p-1 rounded text-gray-600 cursor-pointer bg-gray-300 ${
-                      form.watch(name) === option && "bg-red-300"
+                      form.watch(name) === option && 'bg-red-300'
                     }`}
                   >
                     {option}
