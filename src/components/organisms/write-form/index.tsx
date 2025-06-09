@@ -168,7 +168,7 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(formSubmit)}
-            className="flex flex-col gap-5"
+            className="flex flex-col gap-7"
           >
             <CategoryName number={1} text="모임 기본 정보를 입력해주세요." />
             <SelectType form={form} />

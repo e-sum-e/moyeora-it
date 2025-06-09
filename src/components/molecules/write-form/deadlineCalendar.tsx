@@ -52,7 +52,7 @@ export const DeadlineCalendar = ({
         name="deadline"
         render={({ field }) => (
           <FormItem>
-            <WriteFormLabel text="모집 마감일" />
+            <WriteFormLabel text="모집 마감일" className="" />
             <Popover
               open={isDeadlineCalendarOpen}
               onOpenChange={
@@ -61,36 +61,36 @@ export const DeadlineCalendar = ({
                   : openDeadlineCalendar
               }
             >
-              <div>
-                {field.value ? (
-                  formatYearMonthDayWithDot(field.value)
-                ) : (
-                  <>
-                    <div className="text-gray-500">
-                      {formatYearMonthDayWithDot(validDeadline)}
-                    </div>
-                    <div>날짜를 선택해주세요.</div>
-                  </>
-                )}
+              <div className="flex items-center gap-5">
+                <div>
+                  {field.value ? (
+                    formatYearMonthDayWithDot(field.value)
+                  ) : (
+                    <>
+                      <div className="text-gray-400">
+                        {formatYearMonthDayWithDot(validDeadline)}
+                      </div>
+                    </>
+                  )}
+                </div>
+                <PopoverTrigger asChild>
+                  <FormControl className="inline-block">
+                    <Button type="button" className="w-[fit-content]">
+                      <CalendarIcon />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <Calendar
+                    mode="single"
+                    selected={field.value}
+                    onSelect={(e) => {
+                      dealineSelect(e, field.onChange);
+                    }}
+                    disabled={{ before: validDeadline }}
+                  />
+                </PopoverContent>
               </div>
-              <PopoverTrigger asChild>
-                <FormControl>
-                  <Button type="button" className="w-[fit-content]">
-                    <CalendarIcon />
-                  </Button>
-                </FormControl>
-              </PopoverTrigger>
-              <PopoverContent>
-                <Calendar
-                  mode="single"
-                  selected={field.value}
-                  onSelect={(e) => {
-                    dealineSelect(e, field.onChange);
-                  }}
-                  disabled={{ before: validDeadline }}
-                  className="bg-blue-100"
-                />
-              </PopoverContent>
             </Popover>
             <FormMessage />
           </FormItem>
