@@ -8,8 +8,8 @@ import {
 } from 'date-fns';
 
 /** 날짜를 0000.00.00 형태로 반환하는 함수 */
-export const formatYearMonthDayWithDot = (utcTime: string) => {
-  const date = new Date(utcTime);
+export const formatYearMonthDayWithDot = (utcTime: string | Date) => {
+  const date = typeof utcTime === 'string' ? new Date(utcTime) : utcTime;
   return format(date, 'yyyy.MM.dd');
 };
 

@@ -9,11 +9,15 @@ export default function Page() {
   const user = useAuthStore((state) => state.user);
   const router = useRouter();
 
-  if (!user) {
+  if (user) {
     router.push(routes.login);
 
     return;
   }
 
-  return <WriteForm userId={user.userId} />;
+  return (
+    <div className="relative w-[300px] sm:w-[370px] md:w-[740px] m-auto mb-10">
+      <WriteForm userId={1} />
+    </div>
+  );
 }

@@ -3,12 +3,11 @@
 import { request } from '@/api/request';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { handleError } from '@/components/error-boundary/error-handler';
-import { GroupCard } from '@/components/molecules/group/group-card';
+import { RecommendGroupCard } from '@/components/molecules/recommend-group/recommend-group-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Group } from '@/types';
 import { isBeforeToday } from '@/utils/dateUtils';
 import { useQuery } from '@tanstack/react-query';
-import { isSameDay } from 'date-fns';
 
 export default function RecommendGroup() {
   const { data: items = [], isLoading } = useQuery<Group[]>({
@@ -23,10 +22,7 @@ export default function RecommendGroup() {
    * 백엔드에서 적용해서 보내줘야 하지만 일단 프론트에서 처리
    */
   const validItems = items
-    .filter(
-      (item) =>
-        isBeforeToday(item.deadline) || isSameDay(item.deadline, new Date()),
-    )
+    .filter((item) => !isBeforeToday(item.deadline))
     .slice(0, 10);
 
   if (isLoading) {
@@ -35,7 +31,7 @@ export default function RecommendGroup() {
         {Array.from({ length: 10 }).map((_, i) => (
           <Skeleton
             key={i}
-            className="inline-block w-[158px] h-[300px] flex-shrink-0 rounded-md"
+            className="inline-block w-[200px] h-[134px] flex-shrink-0 rounded-md"
           />
         ))}
       </div>
@@ -58,7 +54,7 @@ export default function RecommendGroup() {
         <ul className="flex gap-2 overflow-x-auto whitespace-nowrap scrollbar-hide p-2">
           {validItems.map((group) => (
             <li key={group.id} className="inline-block">
-              <GroupCard item={group} />
+              <RecommendGroupCard item={group} />
             </li>
           ))}
         </ul>
