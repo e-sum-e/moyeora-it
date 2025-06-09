@@ -4,7 +4,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 import { WriteForm } from '@/types';
@@ -124,9 +123,8 @@ export const Description = ({ form }: DescriptionProps) => {
       name="description"
       render={() => (
         <FormItem>
-          <FormLabel>내용</FormLabel>
           <FormControl>
-            <EditorContent editor={editor} />
+            <EditorContent editor={editor} placeholder="내용을 입력해주세요" />
           </FormControl>
           <FormMessage />
         </FormItem>

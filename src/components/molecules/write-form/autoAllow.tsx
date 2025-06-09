@@ -1,9 +1,9 @@
+import { WriteFormLabel } from '@/components/atoms/write-form/form-label';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 import { WriteForm } from '@/types';
@@ -21,7 +21,7 @@ export const AutoAllow = ({ form }: TitleProps) => {
         name="autoAllow"
         render={(field) => (
           <FormItem>
-            <FormLabel htmlFor="autoAllow">참가자 자동 수락</FormLabel>
+            <WriteFormLabel text="참가 자동 수락" />
             <FormControl>
               <Checkbox
                 id="autoAllow"

@@ -1,8 +1,8 @@
+import { WriteFormLabel } from '@/components/atoms/write-form/form-label';
 import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 import { DEFAULT_SKILL_NAMES, WriteForm } from '@/types';
@@ -45,7 +45,7 @@ export const SelectSkill = ({ form }: SelectSkillProps) => {
         name="skills"
         render={({}) => (
           <FormItem>
-            <FormLabel>사용 기술</FormLabel>
+            <WriteFormLabel text="기술 스택" />
             <FormControl>
               <ul className="flex gap-2">
                 {DEFAULT_SKILL_NAMES.map((skill, i) => (

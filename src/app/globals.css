@@ -121,6 +121,23 @@
 }
 
 
+@layer components {
+  .group-title {
+    @apply text-lg font-semibold;
+  }
+
+  /* 스크롤바 숨기는 클래스(Edge, Firefox) */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* 스크롤바 숨기는 클래스(Chrome, Safari) */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+  }
+}
+
 /* 모여라-IT 디자인 시스템 */
 @theme {
   --breakpoint-md: 745px;
