@@ -1,11 +1,10 @@
-import { server } from '@/mocks/server';
+import { Header } from '@/components/organisms/header';
+import AutoLoginManager from '@/features/auth/components/AutoLoginManager';
 import { ReactQueryProvider } from '@/providers/ReactQueryProvider';
+import { WebSocketProvider } from '@/providers/WSProvider';
 import type { Metadata } from 'next';
 import { Toaster } from 'sonner';
 import './globals.css';
-import { Header } from '@/components/organisms/header';
-import AutoLoginManager from '@/features/auth/components/AutoLoginManager';
-import { WebSocketProvider } from '@/providers/WSProvider';
 
 export const metadata: Metadata = {
   title: '모여라-IT',
@@ -17,17 +16,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  server.listen();
-
   return (
     <html lang="en">
       <body>
         <ReactQueryProvider>
           <Header />
           <WebSocketProvider>
-          <div className="w-full md:max-w-[1280px] mx-auto px-4">
-            {children}
-          </div>  
+            <div className="w-full md:max-w-[1280px] mx-auto px-4">
+              {children}
+            </div>
           </WebSocketProvider>
         </ReactQueryProvider>
         <Toaster />
