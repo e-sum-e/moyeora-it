@@ -91,9 +91,6 @@ const RegisterForm = () => {
 
       if (!loginSuccess) throw new Error('로그인 실패');
 
-      // 회원가입 성공 후(즉시 로그인, 쿠키 바로 설정) 회원정보 불러오기 프로필 설정 setUser(user)
-      await fetchAndSetUser();
-
       // 로그인 성공 후 북마크 정보 불러오기
       const bookmarkListStr = localStorage.getItem('bookmarkList');
 
@@ -101,6 +98,9 @@ const RegisterForm = () => {
       if (bookmarkListStr !== null) {
         await addBookmarkWhenAuth(bookmarkListStr);
       }
+
+      // 로그인 성공 후 회원정보 불러오기 /me
+      await fetchAndSetUser();
     } catch (e) {
       setIsRegisterFailed(true);
       console.log(e);
