@@ -25,7 +25,7 @@ export const AutoAllow = ({ form }: TitleProps) => {
                 }}
               />
             </FormControl>
-            <WriteFormLabel text="참가 자동 수락" />
+            <WriteFormLabel htmlFor="autoAllow" text="참가 자동 수락" />
           </FormItem>
         )}
       />
