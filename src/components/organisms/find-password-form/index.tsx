@@ -84,7 +84,7 @@ const FindPassword = () => {
         {isNotExisted && (
           <p className="text-red-600">해당 이메일이 존재하지 않습니다</p>
         )}
-        <Button className="w-full bg-[#9CA3AF]" disabled={disabled}>
+        <Button className="w-full bg-gray-400" disabled={disabled}>
           비밀번호 찾기
         </Button>
       </form>

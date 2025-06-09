@@ -141,7 +141,7 @@ const RegisterForm = () => {
         {isRegisterFailed && (
           <p className="text-red-600">이미 존재하는 회원입니다</p>
         )}
-        <Button className="w-full bg-[#9CA3AF]" disabled={disabled}>
+        <Button className="w-full bg-gray-400" disabled={disabled}>
           회원가입
         </Button>
       </form>

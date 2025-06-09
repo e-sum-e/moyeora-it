@@ -100,7 +100,7 @@ const LoginForm = () => {
         />
 
         {isLoginFailed && <p className="text-red-600">로그인에 실패했습니다</p>}
-        <Button className="w-full bg-[#9CA3AF]" disabled={disabled}>
+        <Button className="w-full bg-gray-400" disabled={disabled}>
           로그인
         </Button>
       </form>

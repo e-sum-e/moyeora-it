@@ -10,7 +10,7 @@ export default function Page() {
 
   return (
     <>
-      <p className="font-extrabold text-center text-[#1F2937]">회원가입</p>
+      <p className="font-extrabold text-center text-gray-800">회원가입</p>
       {/* 회원가입 전 로그인이 되지 않은 상태의 경우 회원가입 폼을 출력 */}
       {!user && <RegisterForm />}
 
@@ -20,7 +20,7 @@ export default function Page() {
       {!user && (
         <Link href={routes.login} className=" flex justify-center">
           이미 회원이신가요?
-          <span className="text-[#00A79A] ml-1">로그인 하러 가기</span>
+          <span className="text-green-600 ml-1">로그인 하러 가기</span>
         </Link>
       )}
     </>
