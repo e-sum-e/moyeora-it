@@ -1,6 +1,7 @@
 'use client';
 
 import { request } from '@/api/request';
+import { CategoryName } from '@/components/atoms/write-form/categoryName';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { handleError } from '@/components/error-boundary/error-handler';
 import { AutoAllow } from '@/components/molecules/write-form/autoAllow';
@@ -20,7 +21,7 @@ import {
   DEFAULT_SKILL_NAMES,
   GroupType,
 } from '@/types';
-import { Skill } from '@/types/enums';
+import { Position, Skill } from '@/types/enums';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { addDays, isAfter } from 'date-fns';
@@ -47,8 +48,8 @@ const formSchema = z
       .max(30, {
         message: '최대 인원은 30명까지 가능합니다.',
       }),
-    deadline: z.date().min(addDays(new Date(), 6), {
-      message: '모집 마감일은 오늘로부터 7일 이후부터 설정 가능합니다.',
+    deadline: z.date().min(addDays(new Date(), 0), {
+      message: '모집 마감일은 오늘로부터 1일 이후부터 설정 가능합니다.',
     }),
     startDate: z.date(),
     endDate: z.date(),
@@ -65,7 +66,7 @@ const formSchema = z
         ]),
       )
       .min(1, { message: '사용 기술을 한가지 이상 선택해주세요.' }),
-    positions: z
+    position: z
       .array(
         z.union([
           z.enum(DEFAULT_POSITION_NAMES), // 미리 정해진 position과
@@ -124,12 +125,15 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
       (skill) => Skill[skill as keyof typeof Skill],
     ); // server에 보낼때 enum의 인덱스로 보내기로 했으므로 string을 enum의 인덱스로 변환
 
-    const valueWithCreatedAt = { ...values, skills, createdAt: new Date() };
+    const position = values.position.map(
+      (position) => Position[position as keyof typeof Position],
+    );
+
     try {
       const result = await request.post(
         `/v2/groups?userId=${userId}`,
         { 'Content-Type': 'application/json' },
-        JSON.stringify(valueWithCreatedAt),
+        JSON.stringify({ ...values, skills, position }),
         { credentials: 'include' },
       );
 
@@ -160,42 +164,49 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
         })
       }
     >
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(formSubmit)}>
-          <Title form={form} />
-          <SelectType form={form} />
-          <DeadlineCalendar
-            form={form}
-            isDeadlineCalendarOpen={isDeadlineCalendarOpen}
-            openDeadlineCalendar={() => setIsDeadlineCalendarOpen(true)}
-            closeDeadlineCalendar={() => setIsDeadlineCalendarOpen(false)}
-            validDeadline={validDeadline}
-          />
-          <MaxParticipants form={form} />
-          <AutoAllow form={form} />
-          <StartDateCalendar
-            form={form}
-            isStartDateCalendarOpen={isStartDateCalendarOpen}
-            openStartDateCalendar={() => setIsStartDateCalendarOpen(true)}
-            closeStartDateCalendar={() => setIsStartDateCalendarOpen(false)}
-            validStartDate={validStartDate}
-          />
-          <EndDateCalendar
-            form={form}
-            isEndDateCalendarOpen={isEndDateCalendarOpen}
-            openEndDateCalendar={() => setIsEndDateCalendarOpen(true)}
-            closeEndDateCalendar={() => setIsEndDateCalendarOpen(false)}
-            validEndDate={validEndDate}
-          />
-          <Description form={form} />
-          <SelectSkill form={form} />
-          <SelectPosition form={form} />
-          <Button type="button" onClick={cancelClickHandler}>
-            취소하기
-          </Button>
-          <Button type="submit">등록하기</Button>
-        </form>
-      </Form>
+      <div className="px-4 py-14">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(formSubmit)}
+            className="flex flex-col gap-5"
+          >
+            <CategoryName number={1} text="모임 기본 정보를 입력해주세요." />
+            <SelectType form={form} />
+            <MaxParticipants form={form} />
+            <DeadlineCalendar
+              form={form}
+              isDeadlineCalendarOpen={isDeadlineCalendarOpen}
+              openDeadlineCalendar={() => setIsDeadlineCalendarOpen(true)}
+              closeDeadlineCalendar={() => setIsDeadlineCalendarOpen(false)}
+              validDeadline={validDeadline}
+            />
+            <StartDateCalendar
+              form={form}
+              isStartDateCalendarOpen={isStartDateCalendarOpen}
+              openStartDateCalendar={() => setIsStartDateCalendarOpen(true)}
+              closeStartDateCalendar={() => setIsStartDateCalendarOpen(false)}
+              validStartDate={validStartDate}
+            />
+            <EndDateCalendar
+              form={form}
+              isEndDateCalendarOpen={isEndDateCalendarOpen}
+              openEndDateCalendar={() => setIsEndDateCalendarOpen(true)}
+              closeEndDateCalendar={() => setIsEndDateCalendarOpen(false)}
+              validEndDate={validEndDate}
+            />
+            <SelectSkill form={form} />
+            <SelectPosition form={form} />
+            <AutoAllow form={form} />
+            <CategoryName number={2} text="모임에 대해 설명해주세요." />
+            <Title form={form} />
+            <Description form={form} />
+            <Button type="button" onClick={cancelClickHandler}>
+              취소하기
+            </Button>
+            <button type="submit">등록하기</button>
+          </form>
+        </Form>
+      </div>
     </ErrorBoundary>
   );
 };

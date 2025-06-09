@@ -1,8 +1,8 @@
+import { WriteFormLabel } from '@/components/atoms/write-form/form-label';
 import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -21,9 +21,9 @@ export const Title = ({ form }: TitleProps) => {
         name="title"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>제목</FormLabel>
+            <WriteFormLabel text="제목" />
             <FormControl>
-              <Input placeholder="제목을 입력해주세요" {...field} />
+              <Input placeholder="제목과 내용을 입력해주세요!" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>

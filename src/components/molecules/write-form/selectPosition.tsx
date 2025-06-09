@@ -1,9 +1,9 @@
+import { WriteFormLabel } from '@/components/atoms/write-form/form-label';
 import { PositionBadge } from '@/components/molecules/position-badge';
 import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 import { DEFAULT_POSITION_NAMES, PositionName, WriteForm } from '@/types';
@@ -31,23 +31,22 @@ export const SelectPosition = ({ form }: SelectPositionProps) => {
       );
 
       setSelectedPositions(nextSelectedPositions);
-      form.setValue('positions', nextSelectedPositions);
+      form.setValue('position', nextSelectedPositions);
     } else {
       const nextSelectedPositions = [...selectedPositions, position];
 
       setSelectedPositions(nextSelectedPositions);
-      form.setValue('positions', nextSelectedPositions);
+      form.setValue('position', nextSelectedPositions);
     }
   };
-  console.log(selectedPositions);
   return (
     <>
       <FormField
         control={form.control}
-        name="positions"
+        name="position"
         render={({}) => (
           <FormItem>
-            <FormLabel>모집할 포지션을 선택해주세요.</FormLabel>
+            <WriteFormLabel text="모집 포지션" />
             <FormControl>
               <ul className="flex gap-2">
                 {DEFAULT_POSITION_NAMES.map((position, i) => (
