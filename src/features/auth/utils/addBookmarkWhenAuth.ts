@@ -7,10 +7,10 @@ const addBookmarkWhenAuth = async (bookmarkListStr: string) => {
 
   try {
     // TODO: api 수정 요청
-    await request.patch(
+    await request.post(
       `/v2/bookmark/addids`,
       { 'Content-Type': 'application/json' },
-      { groupId: bookmarkList, bookmark: true },
+      { groupIds: bookmarkList },
       { credentials: 'include' },
     );
 
