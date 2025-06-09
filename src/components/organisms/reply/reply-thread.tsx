@@ -3,7 +3,7 @@
 import { RereplyFormToggle } from '@/components/molecules/reply/rereply-form-toggle';
 import { RereplyList } from '@/components/organisms/reply/rereply-list';
 import { useReplyScrollParams } from '@/hooks/useReplyScrollParams';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 export const ReplyThread = ({ parentReplyId }: { parentReplyId: number }) => {
   const { targetParentId, targetId } = useReplyScrollParams('rereply');
@@ -13,16 +13,16 @@ export const ReplyThread = ({ parentReplyId }: { parentReplyId: number }) => {
     return null;
   });
 
-  useEffect(() => {
-    if (targetReplyId) {
-      setIsOpen(true);
-    }
-  }, [parentReplyId, targetParentId, targetReplyId]);
+  // useEffect(() => {
+  //   if (targetReplyId) {
+  //     setIsOpen(true);
+  //   }
+  // }, [parentReplyId, targetParentId, targetReplyId]);
 
-  const replyFormSuccessHandler = (newReplyId: number | null) => {
-    setTargetReplyId(newReplyId);
-    setIsOpen(true);
-  };
+  // const replyFormSuccessHandler = (newReplyId: number | null) => {
+  //   setTargetReplyId(newReplyId);
+  //   setIsOpen(true);
+  // };
 
   return (
     <div className="bg-gray-100">
@@ -44,10 +44,7 @@ export const ReplyThread = ({ parentReplyId }: { parentReplyId: number }) => {
           />
         )}
       </div>
-      <RereplyFormToggle
-        parentReplyId={parentReplyId}
-        onSuccess={replyFormSuccessHandler}
-      />
+      <RereplyFormToggle parentReplyId={parentReplyId} onSuccess={() => {}} />
     </div>
   );
 };
