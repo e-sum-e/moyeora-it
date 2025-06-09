@@ -81,7 +81,7 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
   );
 
   const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<Group>({
-    url: '/groups',
+    url: '/v2/groups',
     queryParams: { ...queryParams, size: 10 },
   });
 
@@ -128,8 +128,10 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
         tabList={tabList}
         onValueChange={(value) => updateQueryParams({ type: value })}
       >
-        <Filter updateQueryParams={updateQueryParams} />
-        <SortOrder updateQueryParams={updateQueryParams} />
+        <div className="flex justify-start ">
+          <Filter updateQueryParams={updateQueryParams} />
+          <SortOrder updateQueryParams={updateQueryParams} />
+        </div>
         <SearchInput />
         <ErrorBoundary
           fallback={({ error, resetErrorBoundary }) =>
@@ -143,7 +145,7 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
           {isEmptyItems && emptyInfoMessage !== null ? (
             <div>{emptyInfoMessage}</div>
           ) : (
-            <ul>
+            <ul className="flex flex-col gap-3">
               {items.map((group) => (
                 <GroupCard key={group.id} item={group} />
               ))}
