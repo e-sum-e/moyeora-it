@@ -15,5 +15,9 @@ export default function Page() {
     return;
   }
 
-  return <WriteForm userId={user.userId} />;
+  return (
+    <div className="relative w-[300px] sm:w-[370px] md:w-[740px] m-auto mb-10">
+      <WriteForm userId={user.userId} />
+    </div>
+  );
 }

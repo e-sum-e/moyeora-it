@@ -59,36 +59,36 @@ export const EndDateCalendar = ({
                   : openEndDateCalendar
               }
             >
-              <div>
-                {field.value ? (
-                  formatYearMonthDayWithDot(field.value)
-                ) : (
-                  <>
-                    <div className="text-gray-500">
-                      {formatYearMonthDayWithDot(validEndDate)}
-                    </div>
-                    <div>날짜를 선택해주세요.</div>
-                  </>
-                )}
+              <div className="flex items-center gap-5">
+                <div>
+                  {field.value ? (
+                    formatYearMonthDayWithDot(field.value)
+                  ) : (
+                    <>
+                      <div className="text-gray-500">
+                        {formatYearMonthDayWithDot(validEndDate)}
+                      </div>
+                    </>
+                  )}
+                </div>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button type="button" className="w-[fit-content]">
+                      <CalendarIcon />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <Calendar
+                    mode="single"
+                    selected={field.value}
+                    onSelect={(e) => {
+                      endDateSelect(e, field.onChange);
+                    }}
+                    disabled={{ before: validEndDate }}
+                  />
+                </PopoverContent>
               </div>
-              <PopoverTrigger asChild>
-                <FormControl>
-                  <Button type="button" className="w-[fit-content]">
-                    <CalendarIcon />
-                  </Button>
-                </FormControl>
-              </PopoverTrigger>
-              <PopoverContent>
-                <Calendar
-                  mode="single"
-                  selected={field.value}
-                  onSelect={(e) => {
-                    endDateSelect(e, field.onChange);
-                  }}
-                  disabled={{ before: validEndDate }}
-                  className="bg-purple-100"
-                />
-              </PopoverContent>
             </Popover>
             <FormMessage />
           </FormItem>

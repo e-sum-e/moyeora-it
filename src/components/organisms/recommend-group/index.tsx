@@ -3,14 +3,16 @@
 import { request } from '@/api/request';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { handleError } from '@/components/error-boundary/error-handler';
-import { GroupCard } from '@/components/molecules/group/group-card';
+import { RecommendGroupCard } from '@/components/molecules/recommend-group/recommend-group-card';
+import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Group } from '@/types';
 import { isBeforeToday } from '@/utils/dateUtils';
 import { useQuery } from '@tanstack/react-query';
-import { isSameDay } from 'date-fns';
+import { useState } from 'react';
 
 export default function RecommendGroup() {
+
   const { data: items = [], isLoading } = useQuery<Group[]>({
     queryKey: ['recommendGroups'],
     queryFn: async () => {
@@ -19,15 +21,16 @@ export default function RecommendGroup() {
     },
   });
 
-  /** 마감일자가 지나지 않은 추천 그룹만 10개 필터링
-   * 백엔드에서 적용해서 보내줘야 하지만 일단 프론트에서 처리
-   */
   const validItems = items
-    .filter(
-      (item) =>
-        isBeforeToday(item.deadline) || isSameDay(item.deadline, new Date()),
-    )
+    .filter((item) => !isBeforeToday(item.deadline))
     .slice(0, 10);
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const maxIndex = Math.max(validItems.length - 1, 0);
+
+  const handlePrev = () => setCurrentIndex((prev) => Math.max(prev - 1, 0));
+  const handleNext = () =>
+    setCurrentIndex((prev) => Math.min(prev + 1, maxIndex));
 
   if (isLoading) {
     return (
@@ -35,11 +38,15 @@ export default function RecommendGroup() {
         {Array.from({ length: 10 }).map((_, i) => (
           <Skeleton
             key={i}
-            className="inline-block w-[158px] h-[300px] flex-shrink-0 rounded-md"
+            className="inline-block w-[200px] h-[134px] flex-shrink-0 rounded-md"
           />
         ))}
       </div>
     );
+  }
+
+  if (validItems.length === 0) {
+    return <div>현재 추천할 그룹이 없습니다.</div>;
   }
 
   return (
@@ -52,17 +59,38 @@ export default function RecommendGroup() {
         })
       }
     >
-      {validItems.length === 0 ? (
-        <div>현재 추천할 그룹이 없습니다.</div>
-      ) : (
-        <ul className="flex gap-2 overflow-x-auto whitespace-nowrap scrollbar-hide p-2">
-          {validItems.map((group) => (
-            <li key={group.id} className="inline-block">
-              <GroupCard item={group} />
-            </li>
-          ))}
-        </ul>
-      )}
+      <div className="relative mt-4">
+        <div className="overflow-hidden px-1 py-2">
+          <ul
+            className="flex transition-transform duration-300 ease-in-out"
+            style={{ transform: `translateX(-${currentIndex * 220}px)` }} // 200px + 5vw ≈ 220px 가정
+          >
+            {validItems.map((group) => (
+              <li
+                key={group.id}
+                className="w-[200px] h-[134px] mr-[2vw] bg-gray-300 rounded flex-shrink-0"
+              >
+                <RecommendGroupCard item={group} />
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <Button
+          onClick={handlePrev}
+          disabled={currentIndex === 0}
+          className="w-9 h-9 absolute top-0 left-0 bottom-0 m-auto rounded-full"
+        >
+          ◀
+        </Button>
+        <Button
+          onClick={handleNext}
+          disabled={currentIndex === maxIndex}
+          className="w-9 h-9 absolute top-0 right-0 bottom-0 m-auto rounded-full"
+        >
+          ▶
+        </Button>
+      </div>
     </ErrorBoundary>
   );
 }

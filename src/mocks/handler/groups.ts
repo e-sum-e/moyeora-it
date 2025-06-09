@@ -101,9 +101,9 @@ export const groupsHandlers = [
       const offset = index * 2;
       const baseDate = new Date(2025, 4, 26);
       const createdAt = addDays(baseDate, offset);
-      const deadline = addDays(baseDate, offset + 1);
-      const startDate = addDays(baseDate, offset + 5);
-      const endDate = addDays(baseDate, offset + 10);
+      const deadline = addDays(baseDate, offset + 1).toISOString();
+      const startDate = addDays(baseDate, offset + 5).toISOString();
+      const endDate = addDays(baseDate, offset + 10).toISOString();
 
       const positions = getRandomItems(
         positionKeys,

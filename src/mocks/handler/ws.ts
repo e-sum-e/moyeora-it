@@ -15,7 +15,7 @@ const createMockNotification = (id: number) => {
   let url = '/v2/groups/1'; // 기본 URL
 
   switch (type) {
-    case eNotification.GROUP_HAS_PARTICIPANT:
+    case eNotification.GROUP_HAS_PARTICIPANT: 
       message = '새로운 참가자가 그룹에 참여했습니다.';
       url = '/v2/groups/1/participants';
       break;

@@ -28,6 +28,7 @@ export const MaxParticipants = ({ form }: TitleProps) => {
                 placeholder="정원을 입력해주세요"
                 {...field}
                 type="number"
+                max="30"
               />
             </FormControl>
             <FormMessage />

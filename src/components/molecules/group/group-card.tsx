@@ -1,9 +1,9 @@
 import { Badge } from '@/components/atoms/badge';
-import { BookmarkButton } from '@/components/atoms/bookmark-button';
 import { Deadline } from '@/components/atoms/group/deadline';
 import { GroupPositions } from '@/components/atoms/group/group-positions';
 import { GroupTitle } from '@/components/atoms/group/group-title';
 import { GroupProgress } from '@/components/atoms/group/particiapant-progress';
+import { BookmarkButtonContainer } from '@/components/organisms/group-detail-card/BookmarkButtonContainer';
 import { Group, GroupTypeName } from '@/types';
 import { formatYearMonthDayWithDot } from '@/utils/dateUtils';
 import { routes } from '@/utils/routes';
@@ -17,16 +17,19 @@ type GroupCardProps = {
 // TODO : 섹션별로 component 나누기
 export const GroupCard = ({ item }: GroupCardProps) => {
   return (
-    <div className="p-6 bg-white shadow-sm shadow-gray-400">
+    <div className="relative p-6 md:w-[300px] bg-white shadow-sm shadow-gray-400">
+      <div className="absolute top-0 right-0 m-6">
+        <BookmarkButtonContainer
+          groupId={item.id}
+          isBookmark={item.isBookmark}
+        />
+      </div>
       <Link href={routes.groupDetail(item.id)}>
         <div>
-          <div className="flex justify-between">
-            <Badge
-              text={GroupTypeName[item.type]}
-              className=" text-sm font-semibold bg-gray-200"
-            />
-            <BookmarkButton groupId={item.id} isBookmark={item.isBookmark} />
-          </div>
+          <Badge
+            text={GroupTypeName[item.type]}
+            className="w-[fit-content] text-sm font-semibold bg-gray-200"
+          />
           <Deadline text={formatYearMonthDayWithDot(item.endDate)} />
           <GroupTitle text={item.title} />
         </div>

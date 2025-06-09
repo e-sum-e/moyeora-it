@@ -21,7 +21,7 @@ type PositionBadgeProps = {
 
 export const PositionBadge = ({ name }: PositionBadgeProps) => {
   return (
-    <div className="position-badge flex flex-row border border-gray-800 rounded-md">
+    <div className="position-badge flex flex-row border border-primary rounded-md">
       <Badge text={name} className="" />
     </div>
   );

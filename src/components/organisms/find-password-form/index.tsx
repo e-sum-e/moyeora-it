@@ -70,7 +70,7 @@ const FindPassword = () => {
           name="email"
           label="이메일"
           type="email"
-          placeholder="myemail@mail.com"
+          placeholder="이메일을 입력해주세요"
         />
 
         {/* 이메일 전송시 로그인페이지로 가기*/}
@@ -84,7 +84,9 @@ const FindPassword = () => {
         {isNotExisted && (
           <p className="text-red-600">해당 이메일이 존재하지 않습니다</p>
         )}
-        <Button disabled={disabled}>비밀번호 찾기</Button>
+        <Button className="w-full bg-gray-400" disabled={disabled}>
+          비밀번호 찾기
+        </Button>
       </form>
     </Form>
   );
