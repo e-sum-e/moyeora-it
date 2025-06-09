@@ -162,11 +162,11 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
           {isEmptyItems && emptyInfoMessage !== null ? (
             <div>{emptyInfoMessage}</div>
           ) : (
-            <div className="flex flex-col gap-4">
-              {displayItems.map((item) => (
-                <GroupCard key={item.id} item={item} />
+            <ul className="flex flex-col gap-3 mt-8 md:flex-row md:flex-wrap md:gap-6 md:justify-center">
+              {displayItems.map((group) => (
+                <GroupCard key={group.id} item={group} />
               ))}
-            </div>
+            </ul>
           )}
           {hasNextPage && <div ref={ref}></div>}
         </ErrorBoundary>
