@@ -32,9 +32,9 @@ export const Filter = ({ updateQueryParams }: FilterProps) => {
     <>
       <Popover>
         <PopoverTrigger asChild>
-          <Button>기술 스택</Button>
+          <Button variant="outline">기술 스택</Button>
         </PopoverTrigger>
-        <PopoverContent>
+        <PopoverContent className="flex gap-1 mt-1 p-3 bg-white ring-1 ring-gray-200 rounded-md">
           <Button variant="outline" onClick={() => skillSelectHandler('')}>
             전체
           </Button>
@@ -44,9 +44,7 @@ export const Filter = ({ updateQueryParams }: FilterProps) => {
               key={skill}
               onClick={() => skillSelectHandler(skill)}
               className={
-                selectedSkills?.includes(skill)
-                  ? 'border-4 border-teal-500'
-                  : ''
+                selectedSkills?.includes(skill) ? 'ring-2 ring-green-400' : ''
               }
             >
               {skill}
@@ -56,9 +54,9 @@ export const Filter = ({ updateQueryParams }: FilterProps) => {
       </Popover>
       <Popover>
         <PopoverTrigger asChild>
-          <Button>포지션</Button>
+          <Button variant="outline">포지션</Button>
         </PopoverTrigger>
-        <PopoverContent>
+        <PopoverContent className="flex gap-1 mt-2 p-2  bg-white ring-1 ring-gray-200 rounded-md">
           <Button variant="outline" onClick={() => positionSelectHandler('')}>
             전체
           </Button>
@@ -69,14 +67,13 @@ export const Filter = ({ updateQueryParams }: FilterProps) => {
               onClick={() => positionSelectHandler(position)}
               className={
                 selectedPositions?.includes(position)
-                  ? 'border-4 border-teal-500'
+                  ? 'ring-2 ring-green-400'
                   : ''
               }
             >
               {position}
             </Button>
           ))}
-          <Button></Button>
         </PopoverContent>
       </Popover>
     </>

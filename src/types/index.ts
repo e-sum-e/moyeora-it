@@ -32,7 +32,7 @@ export type WriteFormWithCreatedAt = WriteForm & { createdAt: Date };
 export const DEFAULT_SKILL_NAMES = [
   'Java',
   'JavaScript',
-  'HTML_CSS',
+  'HTML/CSS',
   'REACT',
   'Vue',
   'Kotlin',
