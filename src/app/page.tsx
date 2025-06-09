@@ -48,7 +48,7 @@ export default async function Home({
   }
 
   return (
-    <div className="w-[300px] sm:w-[370px] md:w-[740px] m-auto mb-10">
+    <div className="relative w-[300px] sm:w-[370px] md:w-[740px] m-auto mb-10">
       <HydrationBoundary state={dehydrate(queryClient)}>
         <RecommendGroup />
         <WriteGroupButton />
