@@ -4,6 +4,7 @@ import { request } from '@/api/request';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { handleError } from '@/components/error-boundary/error-handler';
 import { GroupCard } from '@/components/molecules/group/group-card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Group } from '@/types';
 import { isBeforeToday } from '@/utils/dateUtils';
 import { useQuery } from '@tanstack/react-query';
@@ -29,7 +30,16 @@ export default function RecommendGroup() {
     .slice(0, 10);
 
   if (isLoading) {
-    return <div className="h-[300px]">추천 그룹을 불러오는 중입니다...</div>;
+    return (
+      <div className="flex gap-2 overflow-x-auto whitespace-nowrap scrollbar-hide py-2">
+        {Array.from({ length: 10 }).map((_, i) => (
+          <Skeleton
+            key={i}
+            className="inline-block w-[158px] h-[300px] flex-shrink-0 rounded-md"
+          />
+        ))}
+      </div>
+    );
   }
 
   return (
