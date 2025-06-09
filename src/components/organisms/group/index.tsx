@@ -10,12 +10,12 @@ import { Tab, TabType } from '@/components/molecules/tab';
 import { getBookmarkList } from '@/features/bookmark';
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
+import useAuthStore from '@/stores/useAuthStore';
 import { Group, GroupType } from '@/types';
 import { Position, Skill } from '@/types/enums';
 import flattenPages from '@/utils/flattenPages';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
-import useAuthStore from '@/stores/useAuthStore';
 
 type GroupListProps = {
   searchParams: Record<string, string | undefined>;
@@ -125,20 +125,22 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
   //   console.log('✅ Hydrated data from client:', queryParams); // DEV : 💡 서버 컴포넌트에서 prefetch 하는지 확인용
   // }, [queryParams]);
 
-   //북마크 처리
-   const [displayItems, setDisplayItems] = useState<Group[]>(items);
+  //북마크 처리
+  const [displayItems, setDisplayItems] = useState<Group[]>(items);
 
-   useEffect(() => {
-    if(!user){
-      const bookmark = getBookmarkList()
-      const processedItems = items.map((item) => ({
+  useEffect(() => {
+    if (!user) {
+      const bookmark = getBookmarkList();
+      const processedItems = flattenPages(data.pages).map((item) => ({
         ...item,
-        isBookmark: bookmark.includes(item.id)
+        isBookmark: bookmark.includes(item.id),
       }));
       setDisplayItems(processedItems);
-   }
-   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+    } else {
+      setDisplayItems(flattenPages(data.pages));
+    }
+  }, [data.pages, user]);
+
   return (
     <>
       <Tab
