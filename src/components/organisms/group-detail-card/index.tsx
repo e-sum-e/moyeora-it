@@ -121,7 +121,7 @@ export const GroupDetaiilCard = ({
       </article>
 
       {/* 모집 종료 오버레이 */}
-      {isRecruiting && (
+      {!isRecruiting && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-lg">
           <p className="text-white font-medium">모집이 종료되었습니다.</p>
         </div>
