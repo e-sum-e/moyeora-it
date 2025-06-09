@@ -36,7 +36,7 @@ export default async function GroupDetailPage({
     if (!response.status.success || !response.items) {
       return notFound();
     }
-
+    
     data = response.items;
   } catch (err) {
     console.error(err);
@@ -44,9 +44,9 @@ export default async function GroupDetailPage({
   }
 
   const { group, host, isApplicant } = data;
-  const deadline = new Date(data.group.deadline);
+
   const isRecruiting =
-    isBeforeToday(deadline) &&
+    isBeforeToday(data.group.deadline) &&
     data.group.participants.length < data.group.maxParticipants;
 
   return (

@@ -1,11 +1,6 @@
+import { WriteFormLabel } from '@/components/atoms/write-form/form-label';
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { FormControl, FormField, FormItem } from '@/components/ui/form';
 import { WriteForm } from '@/types';
 import { UseFormReturn } from 'react-hook-form';
 
@@ -20,8 +15,7 @@ export const AutoAllow = ({ form }: TitleProps) => {
         control={form.control}
         name="autoAllow"
         render={(field) => (
-          <FormItem>
-            <FormLabel htmlFor="autoAllow">참가자 자동 수락</FormLabel>
+          <FormItem className="flex items-center">
             <FormControl>
               <Checkbox
                 id="autoAllow"
@@ -31,7 +25,7 @@ export const AutoAllow = ({ form }: TitleProps) => {
                 }}
               />
             </FormControl>
-            <FormMessage />
+            <WriteFormLabel htmlFor="autoAllow" text="참가 자동 수락" />
           </FormItem>
         )}
       />

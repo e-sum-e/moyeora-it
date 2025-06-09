@@ -2,6 +2,7 @@ import Link from 'next/link';
 import LoginForm from '@/components/organisms/login-form';
 import { headers } from 'next/headers';
 import LoginTriggerManager from '@/features/auth/components/LoginTriggerManager';
+import { routes } from '@/utils/routes';
 
 export default async function Page() {
   const headerList = await headers();
@@ -10,14 +11,24 @@ export default async function Page() {
 
   return (
     <>
-      <div>
-        <LoginForm />
-        <div className="flex flex-col">
-          <Link href="/register">회원가입</Link>
-          <Link href="/find-email">이메일 찾기</Link>
-          <Link href="/find-password">비밀번호 찾기</Link>
+      <p className="font-extrabold text-center text-gray-800">로그인</p>
+      <LoginForm />
+
+      <div className="flex flex-col items-center gap-1">
+        <div className="flex gap-1">
+          <p>모여라it이 처음이신가요?</p>
+          <Link href={routes.register} className="text-green-600">
+            회원가입
+          </Link>
         </div>
+        <Link href={routes.findEmail} className="text-green-600">
+          이메일 찾기
+        </Link>
+        <Link href={routes.findPassword} className="text-green-600">
+          비밀번호 찾기
+        </Link>
       </div>
+
       <LoginTriggerManager prevPathname={nextUrl} />
     </>
   );

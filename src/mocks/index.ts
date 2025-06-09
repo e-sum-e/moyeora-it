@@ -1,6 +1,6 @@
 export async function initMocks() {
-  console.log('initMocks');
   if (process.env.NODE_ENV !== 'development') return;
+  console.log('initMocks');
   if (typeof window === 'undefined') {
     // 서버 사이드
     const { server } = await import('./server');

@@ -7,6 +7,7 @@ import { GroupCard } from '@/components/molecules/group/group-card';
 import { SortOrder } from '@/components/molecules/group/sort-order';
 import { SearchInput } from '@/components/molecules/search-input/search-input';
 import { Tab, TabType } from '@/components/molecules/tab';
+import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
 import { Group, GroupType } from '@/types';
 import { Position, Skill } from '@/types/enums';
@@ -79,12 +80,20 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
     [searchParams],
   );
 
-  const { data } = useFetchItems<Group>({
+  const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<Group>({
     url: '/v2/groups',
-    queryParams,
+    queryParams: { ...queryParams, size: 10 },
   });
 
   const items = flattenPages(data.pages);
+
+  const { ref } = useFetchInView({
+    fetchNextPage,
+    isLoading,
+    options: {
+      rootMargin: '50px',
+    },
+  });
 
   useEffect(() => {
     if (items.length === 0) {
@@ -119,8 +128,10 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
         tabList={tabList}
         onValueChange={(value) => updateQueryParams({ type: value })}
       >
-        <Filter updateQueryParams={updateQueryParams} />
-        <SortOrder updateQueryParams={updateQueryParams} />
+        <div className="flex justify-start ">
+          <Filter updateQueryParams={updateQueryParams} />
+          <SortOrder updateQueryParams={updateQueryParams} />
+        </div>
         <SearchInput />
         <ErrorBoundary
           fallback={({ error, resetErrorBoundary }) =>
@@ -134,12 +145,13 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
           {isEmptyItems && emptyInfoMessage !== null ? (
             <div>{emptyInfoMessage}</div>
           ) : (
-            <ul>
+            <ul className="flex flex-col gap-3 mt-8 md:flex-row md:flex-wrap md:gap-6 md:justify-center">
               {items.map((group) => (
                 <GroupCard key={group.id} item={group} />
               ))}
             </ul>
           )}
+          {hasNextPage && <div ref={ref}></div>}
         </ErrorBoundary>
       </Tab>
     </>
