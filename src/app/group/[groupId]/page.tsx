@@ -36,7 +36,7 @@ export default async function GroupDetailPage({
     if (!response.status.success || !response.items) {
       return notFound();
     }
-    console.log(response);
+    
     data = response.items;
   } catch (err) {
     console.error(err);

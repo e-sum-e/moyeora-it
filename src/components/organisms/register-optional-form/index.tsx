@@ -12,6 +12,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import useAuthStore from '@/stores/useAuthStore';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { request } from '@/api/request';
 
 const positions = Object.keys(Position).filter((k) => isNaN(Number(k))) as [
   string,
@@ -77,20 +78,11 @@ const RegisterOptionalForm = () => {
         formData.append('skills', skillValues.join(','));
       }
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/user/edit`,
-        {
-          method: 'PATCH',
-          body: formData,
-          credentials: 'include',
-        },
-      );
-
-      if (!response.ok) throw new Error('프로필 설정 실패!');
-
       const {
         status: { success },
-      } = await response.json();
+      } = await request.patch(`/v1/user/edit`, {}, formData, {
+        credentials: 'include',
+      });
 
       if (!success) throw new Error('프로필 설정 실패!');
 

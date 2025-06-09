@@ -8,7 +8,7 @@ import { Group } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 
 export default function RecommendGroup() {
-  const { data: items, isLoading } = useQuery<Group[]>({
+  const { data: items = [], isLoading } = useQuery<Group[]>({
     queryKey: ['recommendGroups'],
     queryFn: async () => {
       const response = await request.get('/v2/groups/recommend');
@@ -30,12 +30,12 @@ export default function RecommendGroup() {
         })
       }
     >
-      {items && items.length === 0 ? (
+      {items.length === 0 ? (
         <div>현재 추천할 그룹이 없습니다.</div>
       ) : (
-        <ul className="flex flex-row gap-2">
-          {items?.map((group) => (
-            <li key={group.id}>
+        <ul className="flex gap-2 overflow-x-auto whitespace-nowrap scrollbar-hide py-2">
+          {items.map((group) => (
+            <li key={group.id} className="inline-block">
               <GroupCard item={group} />
             </li>
           ))}

@@ -14,16 +14,13 @@ export const useChangePassword = () => {
       newPassword: string;
       confirmPassword: string;
     }) => {
-      return request.patch(
-        '/v1/user/password',
-        {
-          'Content-Type': 'application/json',
-        },
-        {
-          newPassword,
-          confirmPassword,
-        },
-      );
+      const formData = new FormData();
+      formData.append('newPassword', newPassword);
+      formData.append('confirmPassword', confirmPassword);
+
+      return request.patch('/v1/user/edit', {}, formData, {
+        credentials: 'include',
+      });
     },
     onSuccess() {
       toast.success('비밀번호 변경 성공', {

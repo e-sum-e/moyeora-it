@@ -22,15 +22,19 @@ export enum GroupType {
   STUDY = 'study',
   PROJECT = 'project',
 }
+export const GroupTypeName = {
+  study: '스터디',
+  project: '프로젝트',
+};
 
 export type WriteFormWithCreatedAt = WriteForm & { createdAt: Date };
 /** 제공해주는 기본 skill의 이름들. enum Skill과 동기화되어야 함 */
 export const DEFAULT_SKILL_NAMES = [
-  'JAVA',
+  'Java',
   'JavaScript',
-  'HTML/CSS',
-  'React',
-  'Vue.js',
+  'HTML_CSS',
+  'REACT',
+  'Vue',
   'Kotlin',
   'Spring',
 ] as const;
@@ -67,7 +71,7 @@ export type WriteForm = {
   autoAllow: boolean;
   type: GroupType;
   skills: SkillName[];
-  positions: PositionName[];
+  position: PositionName[];
 };
 
 export type Group = {
