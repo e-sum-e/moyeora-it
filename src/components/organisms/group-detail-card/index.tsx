@@ -1,6 +1,5 @@
 import { Avatar } from '@/components/atoms/avatar';
 import { Badge } from '@/components/atoms/badge';
-import { BookmarkButton } from '@/components/atoms/bookmark-button';
 import { Title } from '@/components/atoms/title';
 import { ParticipantListModal } from '@/components/organisms/participant-list-modal';
 import { Progress } from '@/components/ui/progress';
@@ -8,6 +7,7 @@ import { GroupDetail } from '@/types';
 import { getPosition, getSkill } from '@/types/enums';
 import { getDisplayNickname, getDisplayProfileImage } from '@/utils/fallback';
 import Link from 'next/link';
+import { BookmarkButtonContainer } from './BookmarkButtonContainer';
 
 type GroupDetaiilCardProps = {
   className?: string;
@@ -43,7 +43,7 @@ export const GroupDetaiilCard = ({
             ))}
           </div>
         </div>
-        <BookmarkButton
+        <BookmarkButtonContainer 
           groupId={info.group.id}
           isBookmark={info.group.isBbookmark}
         />

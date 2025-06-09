@@ -6,6 +6,7 @@ import useAuthStore from '@/stores/useAuthStore';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import Image from 'next/image';
 
 type BookmarkButtonProps = {
   groupId: number;
@@ -33,7 +34,8 @@ export const BookmarkButton = ({
     },
   });
 
-  const bookmarkButtonToggleHandler = () => {
+  const bookmarkButtonToggleHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     setIsBookmark((prev) => !prev);
 
     if (user === null) {
@@ -49,11 +51,8 @@ export const BookmarkButton = ({
   };
 
   return (
-    <button
-      onClick={bookmarkButtonToggleHandler}
-      className={`${isBookmark ? 'bg-red-400' : ''}`}
-    >
-      찜하기
+    <button onClick={bookmarkButtonToggleHandler}>
+      <Image src={`/icons/bookmark-${isBookmark ? 'active' : 'default'}.svg`} alt="찜히기" width={24} height={24} />
     </button>
   );
 };

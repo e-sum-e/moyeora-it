@@ -8,8 +8,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Group } from '@/types';
 import { isBeforeToday } from '@/utils/dateUtils';
 import { useQuery } from '@tanstack/react-query';
+import useAuthStore from '@/stores/useAuthStore';
+import { getBookmarkList } from '@/features/bookmark';
 
 export default function RecommendGroup() {
+  const user = useAuthStore((state) => state.user);
+
   const { data: items = [], isLoading } = useQuery<Group[]>({
     queryKey: ['recommendGroups'],
     queryFn: async () => {
@@ -21,9 +25,21 @@ export default function RecommendGroup() {
   /** 마감일자가 지나지 않은 추천 그룹만 10개 필터링
    * 백엔드에서 적용해서 보내줘야 하지만 일단 프론트에서 처리
    */
-  const validItems = items
+  let validItems = items
     .filter((item) => !isBeforeToday(item.deadline))
     .slice(0, 10);
+
+  if(!user){
+    validItems = validItems.map((item) => {
+        const bookmark = getBookmarkList()
+        if(bookmark.includes(item.id)){
+          item.isBookmark = true
+        }
+        return item
+    })
+  }
+ 
+ 
 
   if (isLoading) {
     return (
