@@ -101,6 +101,7 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
     () => addDays(selectedDeadline, 1),
     [selectedDeadline],
   );
+
   const validEndDate = useMemo(
     () => addDays(validStartDate, 6),
     [validStartDate],
@@ -119,6 +120,9 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
       description: '',
       autoAllow: false,
       type: GroupType.STUDY,
+      deadline: validDeadline, // 선택하지 않았을 경우 validDeadline 그대로 사용
+      startDate: validStartDate, // 선택하지 않았을 경우 validStartDate 일자 그대로 사용
+      endDate: validEndDate, // 선택하지 않았을 경우 validEndDate 그대로 사용
     },
   });
 
@@ -127,13 +131,15 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
   };
 
   const formSubmit = async (values: z.infer<typeof formSchema>) => {
+    console.log('?');
+
     const skills = values.skills.map(
       (skill) => Skill[skill as keyof typeof Skill],
     ); // server에 보낼때 enum의 인덱스로 보내기로 했으므로 string을 enum의 인덱스로 변환
 
     const position = values.position.map(
       (position) => Position[position as keyof typeof Position],
-    );
+    ); // server에 보낼때 enum의 인덱스로 보내기로 했으므로 string을 enum의 인덱스로 변환
 
     try {
       const result = await request.post(
