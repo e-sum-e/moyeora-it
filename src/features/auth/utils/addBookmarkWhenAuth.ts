@@ -10,7 +10,7 @@ const addBookmarkWhenAuth = async (bookmarkListStr: string) => {
     await request.post(
       `/v2/bookmark/addids`,
       { 'Content-Type': 'application/json' },
-      { groupIds: bookmarkList },
+      JSON.stringify({ groupIds: bookmarkList }),
       { credentials: 'include' },
     );
 
