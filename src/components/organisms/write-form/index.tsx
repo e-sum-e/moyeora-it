@@ -64,16 +64,18 @@ const formSchema = z
           z.enum(DEFAULT_SKILL_NAMES), // 미리 정해진 skill과
           z.string(), // 유저가 입력한 커스텀 skill을 합친 union 타입 형태로 유효성 검사
         ]),
+        { required_error: '사용 기술을 한가지 이상 선택해주세요.' }, // 아예 선택도 하지 않은 경우
       )
-      .min(1, { message: '사용 기술을 한가지 이상 선택해주세요.' }),
+      .min(1, { message: '사용 기술을 한가지 이상 선택해주세요.' }), // 선택했다가 지워서 [] 인 경우
     position: z
       .array(
         z.union([
           z.enum(DEFAULT_POSITION_NAMES), // 미리 정해진 position과
           z.string(), // 유저가 입력한 커스텀 skill을 합친 union 타입 형태로 유효성 검사
         ]),
+        { required_error: '포지션을 한 가지 이상 선택해주세요.' }, // 아예 선택도 하지 않은 경우
       )
-      .min(1, { message: '사용 기술을 한가지 이상 선택해주세요.' }),
+      .min(1, { message: '포지션을 한 가지 이상 선택해주세요.' }), // 선택했다가 지워서 [] 인 경우
   })
   .refine((data) => isAfter(data.startDate, addDays(data.deadline, 0)), {
     message: '모임 시작일은 모집 마감일로부터 1일 이후여야 합니다.',
