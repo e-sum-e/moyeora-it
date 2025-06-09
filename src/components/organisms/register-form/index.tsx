@@ -9,6 +9,7 @@ import { Form } from '@/components/ui/form';
 import { useState } from 'react';
 import useAuthStore from '@/stores/useAuthStore';
 import { request } from '@/api/request';
+import addBookmarkWhenAuth from '@/features/auth/utils/addBookmarkWhenAuth';
 
 // 회원가입에 쓰이는 이메일과 비밀번호 유효성
 const registerFormSchema = z
@@ -90,10 +91,17 @@ const RegisterForm = () => {
 
       if (!loginSuccess) throw new Error('로그인 실패');
 
-      // 회원가입 성공 후(즉시 로그인, 쿠키 바로 설정) 회원정보 불러오기 프로필 설정 setUser(user)
+      // 로그인 성공 후 북마크 정보 불러오기
+      const bookmarkListStr = localStorage.getItem('bookmarkList');
+
+      // 북마크 정보가 있다면 서버에 저장
+      if (bookmarkListStr !== null) {
+        await addBookmarkWhenAuth(bookmarkListStr);
+      }
+
+      // 로그인 성공 후 회원정보 불러오기 /me
       await fetchAndSetUser();
     } catch (e) {
-      // TODO: 회원가입 실패시 에러코드 맞춰서 설정해주기
       setIsRegisterFailed(true);
       console.log(e);
       setDisabled(false);
@@ -133,7 +141,9 @@ const RegisterForm = () => {
         {isRegisterFailed && (
           <p className="text-red-600">이미 존재하는 회원입니다</p>
         )}
-        <Button disabled={disabled}>회원가입</Button>
+        <Button className="w-full bg-gray-400" disabled={disabled}>
+          회원가입
+        </Button>
       </form>
     </Form>
   );

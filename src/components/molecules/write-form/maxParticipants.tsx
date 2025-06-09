@@ -1,8 +1,8 @@
+import { WriteFormLabel } from '@/components/atoms/write-form/form-label';
 import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -21,12 +21,14 @@ export const MaxParticipants = ({ form }: TitleProps) => {
         name="maxParticipants"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>정원</FormLabel>
+            <WriteFormLabel htmlFor="maxParticipants" text="정원" />
             <FormControl>
               <Input
+                id="maxParticipants"
                 placeholder="정원을 입력해주세요"
                 {...field}
                 type="number"
+                max="30"
               />
             </FormControl>
             <FormMessage />

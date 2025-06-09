@@ -30,11 +30,18 @@ export const SortOrder = ({ updateQueryParams }: OrderProps) => {
   ];
 
   const getSelectedOrderOptionName = () => {
-    return orderOptions.find(
+    const found = orderOptions.find(
       (option) =>
         option.value.sort === selectedSort &&
         option.value.order === selectedOrder,
-    )?.name;
+    );
+
+    if (!selectedSort && !selectedOrder) {
+      // 초기값은 sort, order가 모두 없으므로 기본값 반환
+      return '작성일자 ▼';
+    }
+
+    return found?.name;
   };
 
   const orderSelectHandler = (option: { sort: GroupSort; order: Order }) => {
@@ -60,13 +67,16 @@ export const SortOrder = ({ updateQueryParams }: OrderProps) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline">{getSelectedOrderOptionName()}</Button>
+        <Button variant="outline" className="flex-none ml-auto">
+          {getSelectedOrderOptionName()}
+        </Button>
       </PopoverTrigger>
-      <PopoverContent className="flex flex-col">
+      <PopoverContent className="flex flex-col gap-1 px-4 py-2 text-sm text-primary font-medium bg-white  rounded-[12px] border border-gray-200">
         {orderOptions.map((option) => (
           <PopoverClose
             key={option.name}
             onClick={() => orderSelectHandler(option.value)}
+            className="p-1"
           >
             {option.name}
           </PopoverClose>
