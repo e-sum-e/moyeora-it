@@ -143,7 +143,7 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
           {isEmptyItems && emptyInfoMessage !== null ? (
             <div>{emptyInfoMessage}</div>
           ) : (
-            <ul>
+            <ul className="flex flex-col gap-3">
               {items.map((group) => (
                 <GroupCard key={group.id} item={group} />
               ))}

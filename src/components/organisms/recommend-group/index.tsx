@@ -55,7 +55,7 @@ export default function RecommendGroup() {
       {validItems.length === 0 ? (
         <div>현재 추천할 그룹이 없습니다.</div>
       ) : (
-        <ul className="flex gap-2 overflow-x-auto whitespace-nowrap scrollbar-hide py-2">
+        <ul className="flex gap-2 overflow-x-auto whitespace-nowrap scrollbar-hide p-2">
           {validItems.map((group) => (
             <li key={group.id} className="inline-block">
               <GroupCard item={group} />
