@@ -43,7 +43,8 @@ export const useUpdateProfileMutation = () => {
     },
     onSuccess(response: CommonResponse<User>) {
       const user = response.data;
-      setUser(user);
+      // @ts-expect-error 백엔드에서 응답하는 객체에 userId 프로퍼티가 존재하지 않음. -> 추후 타입 수정 필요
+      setUser({ ...user, userId: user.id });
       toast.success('프로필 수정 성공', {
         description: '프로필이 수정되었어요',
       });
