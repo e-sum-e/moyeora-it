@@ -3,6 +3,7 @@ import useAuthStore from '@/stores/useAuthStore';
 import Link from 'next/link';
 import RegisterForm from '@/components/organisms/register-form';
 import RegisterOptionalForm from '@/components/organisms/register-optional-form';
+import { routes } from '@/utils/routes';
 
 export default function Page() {
   const user = useAuthStore((store) => store.user);
@@ -17,7 +18,7 @@ export default function Page() {
       {user && <RegisterOptionalForm />}
       {/* 회원가입 후 로그인 된 상태에선 혼란 방지용 겸 가급적 프로필 설정 */}
       {!user && (
-        <Link href="/login" className=" flex justify-center">
+        <Link href={routes.login} className=" flex justify-center">
           이미 회원이신가요?
           <span className="text-[#00A79A] ml-1">로그인 하러 가기</span>
         </Link>

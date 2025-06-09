@@ -2,6 +2,7 @@ import Link from 'next/link';
 import LoginForm from '@/components/organisms/login-form';
 import { headers } from 'next/headers';
 import LoginTriggerManager from '@/features/auth/components/LoginTriggerManager';
+import { routes } from '@/utils/routes';
 
 export default async function Page() {
   const headerList = await headers();
@@ -16,14 +17,14 @@ export default async function Page() {
       <div className="flex flex-col items-center gap-1">
         <div className="flex gap-1">
           <p>모여라it이 처음이신가요?</p>
-          <Link href="/register" className="text-[#00A79A]">
+          <Link href={routes.register} className="text-[#00A79A]">
             회원가입
           </Link>
         </div>
-        <Link href="/find-email" className="text-[#00A79A]">
+        <Link href={routes.findEmail} className="text-[#00A79A]">
           이메일 찾기
         </Link>
-        <Link href="/find-password" className="text-[#00A79A]">
+        <Link href={routes.findPassword} className="text-[#00A79A]">
           비밀번호 찾기
         </Link>
       </div>
