@@ -10,14 +10,24 @@ export default async function Page() {
 
   return (
     <>
-      <div>
-        <LoginForm />
-        <div className="flex flex-col">
-          <Link href="/register">회원가입</Link>
-          <Link href="/find-email">이메일 찾기</Link>
-          <Link href="/find-password">비밀번호 찾기</Link>
+      <p className="font-extrabold text-center text-[#1F2937]">로그인</p>
+      <LoginForm />
+
+      <div className="flex flex-col items-center gap-1">
+        <div className="flex gap-1">
+          <p>모여라it이 처음이신가요?</p>
+          <Link href="/register" className="text-[#00A79A]">
+            회원가입
+          </Link>
         </div>
+        <Link href="/find-email" className="text-[#00A79A]">
+          이메일 찾기
+        </Link>
+        <Link href="/find-password" className="text-[#00A79A]">
+          비밀번호 찾기
+        </Link>
       </div>
+
       <LoginTriggerManager prevPathname={nextUrl} />
     </>
   );

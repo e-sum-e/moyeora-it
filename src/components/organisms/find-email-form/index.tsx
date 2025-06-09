@@ -73,7 +73,7 @@ const FindEmailForm = () => {
           name="email"
           label="이메일"
           type="email"
-          placeholder="myemail@mail.com"
+          placeholder="이메일을 입력해주세요"
         />
 
         {/* 성공시 로그인페이지로 갈지 비밀번호 찾기로 갈지 물어보기 */}
@@ -88,7 +88,9 @@ const FindEmailForm = () => {
         {isNotExisted && (
           <p className="text-red-600">해당 이메일이 존재하지 않습니다</p>
         )}
-        <Button disabled={disabled}>이메일 찾기</Button>
+        <Button className="w-full bg-[#9CA3AF]" disabled={disabled}>
+          이메일 찾기
+        </Button>
       </form>
     </Form>
   );

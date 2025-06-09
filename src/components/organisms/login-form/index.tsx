@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import useAuthStore from '@/stores/useAuthStore';
 import { request } from '@/api/request';
+import addBookmarkWhenAuth from '@/features/auth/utils/addBookmarkWhenAuth';
 
 const formSchema = z.object({
   email: z.string().nonempty({ message: '이메일을 입력해주세요' }).email({
@@ -58,6 +59,14 @@ const LoginForm = () => {
       // 로그인 성공 후 회원정보 불러오기 /me
       await fetchAndSetUser();
 
+      // 로그인 성공 후 북마크 정보 불러오기
+      const bookmarkListStr = localStorage.getItem('bookmarkList');
+
+      // 북마크 정보가 있다면 서버에 저장
+      if (bookmarkListStr !== null) {
+        await addBookmarkWhenAuth(bookmarkListStr);
+      }
+
       const prevPathname = localStorage.getItem('login-trigger-path') || '/';
 
       router.push(prevPathname);
@@ -79,18 +88,21 @@ const LoginForm = () => {
           name="email"
           label="이메일"
           type="email"
-          placeholder="myemail@mail.com"
+          placeholder="이메일을 입력해주세요"
         />
+
         <InputTextField
           form={form}
           name="password"
           label="비밀번호"
           type="password"
-          placeholder="나만의 비밀번호..."
+          placeholder="비밀번호를 입력해주세요"
         />
 
         {isLoginFailed && <p className="text-red-600">로그인에 실패했습니다</p>}
-        <Button disabled={disabled}>로그인</Button>
+        <Button className="w-full bg-[#9CA3AF]" disabled={disabled}>
+          로그인
+        </Button>
       </form>
     </Form>
   );
