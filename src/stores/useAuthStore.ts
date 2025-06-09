@@ -1,8 +1,8 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { request } from '@/api/request';
 import { User } from '@/types';
 import { UserInfoResponse } from '@/types/response';
-import { request } from '@/api/request';
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 export type UserStore = {
   user: User | null;
@@ -38,7 +38,7 @@ const useAuthStore = create<UserStore>()(
             set({
               user: {
                 //@ts-expect-error 백엔드에서 제공하는 타입이 이상해서 임시로 처리
-                userId: responseBody.items.items.id.toString(),
+                userId: responseBody.items.items.id,
                 ...responseBody.items.items,
               },
             });
