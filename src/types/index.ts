@@ -119,7 +119,7 @@ export type GroupDetail = {
     description: string;
     autoAllow: boolean;
     maxParticipants: number;
-    type: string;
+    type: GroupType;
     skills: Skill[];
     position: Position[];
     deadline: string;
