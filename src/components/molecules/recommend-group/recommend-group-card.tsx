@@ -24,7 +24,11 @@ export const RecommendGroupCard = ({ item }: RecommendGroupCardProps) => {
             className="h-[22px] text-sm font-semibold bg-gray-200"
           />
           <Badge
-            text={`🚨마감 ${formatRelativeTime(item.deadline)}`}
+            text={`🚨마감 ${
+              formatRelativeTime(item.deadline).includes('년')
+                ? formatRelativeTime(item.deadline).slice(6)
+                : formatRelativeTime(item.deadline)
+            }`} // formatRelativeTime이 년월일을 표기해야 하는 함수라서 월일만 자름
             className="h-[22px] text-sm text-red-600 border-1 border-red-600 "
           />
         </div>
