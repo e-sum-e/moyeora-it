@@ -29,9 +29,7 @@ export const InputTextField = <T extends FieldValues>({
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel className="font-extrabold text-gray-900">
-            {label}
-          </FormLabel>
+          <FormLabel className="font-bold text-gray-900">{label}</FormLabel>
           <FormControl>
             <InputText placeholder={placeholder} type={type} {...field} />
           </FormControl>

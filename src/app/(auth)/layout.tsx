@@ -9,7 +9,7 @@ export default function AuthLayout({
     <>
       <div className="h-[calc(100dvh-64px)] flex flex-col lg:flex-row lg:justify-center items-center py-8 gap-8">
         <div className="lg:w-[510px] flex flex-col items-center">
-          <h2 className="text-[20px]">모여라! 이곳으로!</h2>
+          <h2 className="text-[20px] font-extrabold">모여라! 이곳으로!</h2>
           <p className="text-[14px] text-center py-4">
             모여라it에서 실력과 팀원,
             <br />두 마리 토끼를 모두 잡으세요
