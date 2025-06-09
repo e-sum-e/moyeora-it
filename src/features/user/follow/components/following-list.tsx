@@ -70,7 +70,7 @@ export const FollowingList = () => {
                       <span>{email}</span>
                     </div>
                   </div>
-                  {user?.userId !== userId && (
+                  {String(user?.userId) !== String(userId) && (
                     <ToggleFollowButton
                       userId={String(userId)}
                       isFollowing={isFollowing}
