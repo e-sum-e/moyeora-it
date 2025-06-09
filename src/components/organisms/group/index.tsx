@@ -7,6 +7,7 @@ import { GroupCard } from '@/components/molecules/group/group-card';
 import { SortOrder } from '@/components/molecules/group/sort-order';
 import { SearchInput } from '@/components/molecules/search-input/search-input';
 import { Tab, TabType } from '@/components/molecules/tab';
+import { getBookmarkList } from '@/features/bookmark';
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
 import { Group, GroupType } from '@/types';
@@ -14,6 +15,7 @@ import { Position, Skill } from '@/types/enums';
 import flattenPages from '@/utils/flattenPages';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
+import useAuthStore from '@/stores/useAuthStore';
 
 type GroupListProps = {
   searchParams: Record<string, string | undefined>;
@@ -36,6 +38,7 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
   const [emptyInfoMessage, setEmptyInfoMessage] =
     useState<EMPTY_INFO_MESSAGE | null>(null);
   const router = useRouter();
+  const user = useAuthStore((state) => state.user);
 
   /**
    * router.push를 수행하는 함수
@@ -122,6 +125,20 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
   //   console.log('✅ Hydrated data from client:', queryParams); // DEV : 💡 서버 컴포넌트에서 prefetch 하는지 확인용
   // }, [queryParams]);
 
+   //북마크 처리
+   const [displayItems, setDisplayItems] = useState<Group[]>(items);
+
+   useEffect(() => {
+    if(!user){
+      const bookmark = getBookmarkList()
+      const processedItems = items.map((item) => ({
+        ...item,
+        isBookmark: bookmark.includes(item.id)
+      }));
+      setDisplayItems(processedItems);
+   }
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
   return (
     <>
       <Tab
@@ -146,7 +163,7 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
             <div>{emptyInfoMessage}</div>
           ) : (
             <ul className="flex flex-col gap-3 mt-8 md:flex-row md:flex-wrap md:gap-6 md:justify-center">
-              {items.map((group) => (
+              {displayItems.map((group) => (
                 <GroupCard key={group.id} item={group} />
               ))}
             </ul>

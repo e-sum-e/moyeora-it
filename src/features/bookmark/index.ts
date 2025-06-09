@@ -1,3 +1,6 @@
+import { ContentInfo } from "@/components/organisms/bookmark-card";
+import { Group } from "@/types";
+
 /** localStorage에서 찜 목록을 조회하는 함수 */
 export const getBookmarkList = () => {
 	let bookmarkList: number[] = [];
@@ -23,3 +26,13 @@ export const removeBookmarkItem = (itemId: number) => {
 	bookmarkList = bookmarkList.filter((bookmark) => bookmark !== itemId);
 	localStorage.setItem('bookmarkList', JSON.stringify(bookmarkList));
 };
+
+
+export const setLocalBookmarkItems = (items: Group[] | ContentInfo[]) => {
+	const bookmarkList = getBookmarkList();
+
+	return items.map((item) => ({
+		...item,
+		isBookmark: bookmarkList.includes(item.id)
+	}));
+}

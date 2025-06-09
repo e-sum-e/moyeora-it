@@ -12,6 +12,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 
 export default function RecommendGroup() {
+
   const { data: items = [], isLoading } = useQuery<Group[]>({
     queryKey: ['recommendGroups'],
     queryFn: async () => {

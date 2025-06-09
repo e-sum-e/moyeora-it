@@ -9,12 +9,15 @@ import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
 import { GroupType } from '@/types';
 import flattenPages from '@/utils/flattenPages';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import useAuthStore from '@/stores/useAuthStore';
+import { setLocalBookmarkItems } from '@/features/bookmark';
 
 const CURSOR_SIZE = 10;
 
 export function BookmarkPageClient() {
+  const user = useAuthStore((state) => state.user);
   const tabList: TabType[] = [
     { value: '', label: '모든 그룹' },
     { value: GroupType.STUDY, label: '스터디' },
@@ -25,9 +28,11 @@ export function BookmarkPageClient() {
   const [queryParams, setQueryParams] = useState({
     size: CURSOR_SIZE,
     cursor: 0,
-    type: 'bookmark',
+    sort: 'createdAt',
+    order: 'desc',
   });
 
+  //ISSUE: 일단 전체 그룹 데이터 가져오기
   const {
     data,
     isLoading,
@@ -53,6 +58,18 @@ export function BookmarkPageClient() {
 
   // 데이터 가공
   const items = flattenPages(data.pages);
+  const [bookmarkItems, setBookmarkItems] = useState<ContentInfo[]>([]);
+
+  useEffect(() => {
+    if (!user) {
+      const processedItems = setLocalBookmarkItems(items).filter((item) => item.isBookmark);
+      setBookmarkItems(processedItems);
+    } else {
+      setBookmarkItems(items);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
 
   // 탭 변경 핸들러
   const handleValueChange = (value: GroupType) => {
@@ -61,6 +78,7 @@ export function BookmarkPageClient() {
       type: `bookmark,${value}`,
     }));
   };
+
 
   return (
     <div>
@@ -81,7 +99,7 @@ export function BookmarkPageClient() {
           <div className="flex flex-col gap-4">
             {isError && <div>에러가 발생했습니다.</div>}
             {isLoading && <div>로딩 중...</div>}
-            {items.length === 0 ? (
+            {bookmarkItems.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 gap-4">
                 <Image
                   src="/logos/my-img.png" 
@@ -94,10 +112,10 @@ export function BookmarkPageClient() {
                 <p className="text-gray-400">관심있는 프로젝트를 찜해보세요!</p>
               </div>
             ) : (
-              items.map((item: ContentInfo, index: number) => (
+              bookmarkItems.map((item: ContentInfo, index: number) => (
                 <div
                   key={item.id}
-                  ref={index === items.length - 1 ? ref : undefined}
+                  ref={index === bookmarkItems.length - 1 ? ref : undefined}
                 >
                   <BookmarkCard info={item} />
                 </div>
