@@ -19,7 +19,7 @@ export default async function Home({
   const queryClient = new QueryClient();
   const queryParams = {
     type: awaitedSearchParams.type ?? '',
-    skill: Skill[awaitedSearchParams.skill as keyof typeof Skill] ?? '',
+    skills: Skill[awaitedSearchParams.skill as keyof typeof Skill] ?? '',
     position:
       Position[awaitedSearchParams.position as keyof typeof Position] ?? '',
     sort: awaitedSearchParams.sort ?? 'createdAt',

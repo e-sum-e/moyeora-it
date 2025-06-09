@@ -18,7 +18,7 @@ export const useToggleFollow = ({
   isFollowing,
   usedIn,
 }: {
-  userId: string;
+  userId?: string;
   isFollowing: boolean;
   usedIn: string;
 }) => {
@@ -28,11 +28,12 @@ export const useToggleFollow = ({
   return useMutation({
     mutationFn() {
       return request.post(
-        `/v1/follow/${userId}/${isFollowing ? 'unfollow' : ''}`,
+        `/v1/follow/${userId ?? id}/${isFollowing ? 'unfollow' : ''}`,
         {
           'Content-Type': 'application/json',
         },
-        JSON.stringify({ userId }),
+        JSON.stringify({ id: userId ?? id }),
+        { credentials: 'include' },
       );
     },
     onError() {
