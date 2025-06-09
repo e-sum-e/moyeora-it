@@ -1,5 +1,3 @@
-'use client';
-
 import { Skill } from '@/types/enums';
 import { SkillBadge } from '../../molecules/skill-badge';
 
@@ -9,8 +7,6 @@ type GroupSkillsProps = {
 };
 
 export const GroupSkills = ({ skills, className }: GroupSkillsProps) => {
-  if (!skills) return null;
-
   return (
     <ul className="flex gap-2">
       {skills?.map((skill, i) => (

@@ -15,15 +15,17 @@ import { PlusIcon } from 'lucide-react';
 
 type ParticipantListModalProps = {
   participants: UserSummary[];
+  className?: string;
 };
 
 export const ParticipantListModal = ({
   participants,
+  className = '',
 }: ParticipantListModalProps) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button className="rounded-full border p-2 ">
+        <button className={`rounded-full border p-2 bg-white ${className}`}>
           <PlusIcon className="w-3 h-3" />
         </button>
       </DialogTrigger>
