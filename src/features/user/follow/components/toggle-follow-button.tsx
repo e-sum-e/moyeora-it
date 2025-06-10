@@ -3,18 +3,21 @@
 import { useRouter } from 'next/navigation';
 import { useToggleFollow } from '@/features/user/follow/hooks/useToggleFollow';
 import { Button } from '@/components/ui/button';
+import { X, Plus } from 'lucide-react';
 import useAuthStore from '@/stores/useAuthStore';
 
 type ToggleFollowButtonProps = {
   userId?: string;
   isFollowing: boolean;
   usedIn: string;
+  className?: string;
 };
 
 export const ToggleFollowButton = ({
   userId,
   isFollowing,
   usedIn,
+  className,
 }: ToggleFollowButtonProps) => {
   const user = useAuthStore((state) => state.user);
 
@@ -39,12 +42,21 @@ export const ToggleFollowButton = ({
 
   return (
     <Button
-      variant={isFollowing ? 'outline' : 'default'}
-      size="sm"
       onClick={toggleFollowButtonClickHandler}
       disabled={isPending}
+      className={className}
     >
-      {isFollowing ? '언팔로우' : '팔로우'}
+      {isFollowing ? (
+        <>
+          <X className='size-4' />
+          언팔하기
+        </>
+      ) : (
+        <>
+          <Plus className='size-4' />
+          팔로우
+        </>
+      )}
     </Button>
   );
 };

@@ -68,37 +68,41 @@ export const EditUserProfileForm = ({
     <FormProvider {...formMethods}>
       <Form {...formMethods}>
         <form
-          className="flex flex-col gap-y-4"
+          className="flex flex-col gap-y-7"
           onSubmit={formMethods.handleSubmit(formSubmitHandler)}
         >
-          <EditableAvatar
-            imageSrc={user?.profileImage ?? ''}
-            fallback={user?.nickname?.slice(0, 2) ?? ''}
-          />
-          <InputTextField
-            label="닉네임"
-            name="nickname"
-            form={formMethods}
-            placeholder="수정할 닉네임을 입력해주세요."
-          />
-          <InputSelectField
-            label="포지션"
-            name="position"
-            form={formMethods}
-            placeholder="포지션 선택"
-            options={Object.entries(Position)
-              .filter(([key]) => isNaN(Number(key)))
-              .map(([key, value]) => ({
-                label: key,
-                value: String(value),
-              }))}
-          />
+          <div className='flex gap-x-6 px-6'>
+            <EditableAvatar
+              imageSrc={user?.profileImage ?? ''}
+              fallback={user?.nickname?.slice(0, 2) ?? ''}
+            />
+            <div className='flex flex-col gap-y-[20px] flex-grow min-w-0'>
+              <InputTextField
+                label="닉네임"
+                name="nickname"
+                form={formMethods}
+                placeholder="수정할 닉네임을 입력해주세요."
+              />
+              <InputSelectField
+                label="포지션"
+                name="position"
+                form={formMethods}
+                placeholder="포지션 선택"
+                options={Object.entries(Position)
+                  .filter(([key]) => isNaN(Number(key)))
+                  .map(([key, value]) => ({
+                    label: key,
+                    value: String(value),
+                  }))}
+              />
+            </div>
+          </div>
           <SkillSelector />
-          <div className="flex gap-x-2 justify-end">
-            <Button type="button" onClick={closeDialog} variant="outline">
-              취소
+          <div className="flex gap-x-2 justify-end border-t-[6px] border-[#f5f6f7] py-[20px] px-6">
+            <Button className='w-1/2 shrink-0 h-12 text-sm rounded-lg font-semibold border-gray-300 text-gray-600' type="button" onClick={closeDialog} variant="outline">
+              취소하기
             </Button>
-            <Button>수정</Button>
+            <Button className='w-1/2 shrink-0 h-12 text-sm rounded-lg font-semibold'>수정하기</Button>
           </div>
         </form>
       </Form>

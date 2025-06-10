@@ -54,14 +54,35 @@ export const EditableAvatar = ({ imageSrc, fallback }: EditableAvatarProps) => {
 
   return (
     <div className={'relative'}>
-      <Avatar
-        imageSrc={currentImageSrc}
-        fallback={fallback}
-        className={'size-16'}
-        onClick={() => {
-          fileInputRef.current?.click();
-        }}
-      />
+      <div className="flex flex-col gap-y-3 items-center">
+        <Avatar
+          imageSrc={currentImageSrc}
+          fallback={fallback}
+          className={'size-20'}
+        />
+        <div className='flex flex-col gap-y-2'>
+          <Button
+            type="button"
+            onClick={() => {
+              fileInputRef.current?.click();
+            }}
+            className="h-8 rounded-[6px] text-sm font-medium bg-white text-gray-500 border cursor-pointer border-gray-300 shadow-none hover:bg-gray-50"
+          >
+            사진 업로드
+          </Button>
+          <button
+            type="button"
+            onClick={() => {
+              setCurrentImageSrc(
+                'https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=',
+              );
+            }}
+            className="h-8 text-sm font-medium bg-white text-gray-400 shadow-none hover:bg-none cursor-pointer"
+          >
+            사진 제거
+          </button>
+        </div>
+      </div>
       <input
         type={'file'}
         accept={'image/*'}
@@ -74,17 +95,6 @@ export const EditableAvatar = ({ imageSrc, fallback }: EditableAvatarProps) => {
         }}
         onChange={fileChangeHandler}
       />
-      <Button
-        type="button"
-        variant="outline"
-        onClick={() => {
-          setCurrentImageSrc(
-            'https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=',
-          );
-        }}
-      >
-        기본 이미지
-      </Button>
     </div>
   );
 };
