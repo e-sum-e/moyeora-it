@@ -9,6 +9,7 @@ import { request } from '@/api/request';
 import { ToggleFollowButton } from '@/features/user/follow/components/toggle-follow-button';
 import { getDisplayNickname, getDisplayProfileImage } from '@/utils/fallback';
 import { CommonResponse } from '@/types/response';
+import useAuthStore from '@/stores/useAuthStore';
 
 /**
  * 현재 로그인 한 유저가 아닌 다른 유저의 프로필 컴포넌트
@@ -19,6 +20,9 @@ import { CommonResponse } from '@/types/response';
  */
 export const OtherUserProfile = () => {
   const { id } = useParams();
+
+  const currentUser = useAuthStore((state) => state.user);
+
   const {
     data: userResponse,
     isLoading,
@@ -44,7 +48,16 @@ export const OtherUserProfile = () => {
   // 유저가 존재하지 않으면, 404 Not Found 페이지로 이동한다.
   if (!user) notFound();
 
-  const { nickname, email, profileImage, skills, isFollowing } = user;
+  const { nickname, email, profileImage, skills } = user;
+
+  console.log(user);
+
+  // @ts-expect-error 특정 유저 정보 조회의 경우 백엔드에서 팔로잉 여부를 주지 않음.
+  const isFollowing = user?.following.some(
+    // @ts-expect-error 특정 유저 정보 조회의 경우 백엔드에서 팔로잉 여부를 주지 않음.
+    (follower) => follower.follower_id === currentUser?.id,
+  );
+  console.log(isFollowing);
 
   return (
     <>
