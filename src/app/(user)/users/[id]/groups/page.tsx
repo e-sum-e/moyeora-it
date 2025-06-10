@@ -46,9 +46,9 @@ export default async function GroupsPage({ searchParams }: GroupsPageProps) {
   return (
     <div>
       <GroupFilter />
-      <QueryErrorBoundary>
+      <QueryErrorBoundary fallback={<p className='text-center text-gray-500 mt-30'>로그인 후 다시 시도해주세요</p>}>
         <HydrationBoundary state={dehydrate(queryClient)}>
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<div></div>}>
             <GroupList />
           </Suspense>
         </HydrationBoundary>
