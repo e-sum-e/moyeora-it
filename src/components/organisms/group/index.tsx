@@ -77,7 +77,7 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
       skill: Skill[searchParams.skill as keyof typeof Skill] ?? '',
       position: Position[searchParams.position as keyof typeof Position] ?? '',
       sort: searchParams.sort ?? 'createdAt',
-      order: searchParams.order ?? 'desc',
+      order: searchParams.order ?? 'asc', // MVP 평가를 위해 임시로 asc 적용. 원래는 desc여야 함
       search: searchParams.search ?? '',
     }),
     [searchParams],
