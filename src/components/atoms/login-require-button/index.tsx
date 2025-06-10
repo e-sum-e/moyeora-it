@@ -42,7 +42,7 @@ export const LoginRequireButton = ({
       <Button
         onClick={LoginRequireButtonClickHandler}
         disabled={disabled}
-        className={className}
+        className={`cursor-pointer ${className}`}
       >
         {children}
       </Button>
