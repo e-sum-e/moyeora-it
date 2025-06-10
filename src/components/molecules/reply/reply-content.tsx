@@ -85,16 +85,28 @@ export const ReplyContent = ({
         {isWriter && !isLocallyDeleted && (
           <div className="flex gap-2 max-sm:order-1">
             {!isEditing && (
-              <Button onClick={editButtonClickHandler} variant="ghost">
+              <Button
+                onClick={editButtonClickHandler}
+                variant="ghost"
+                className="cursor-pointer"
+              >
                 수정
               </Button>
             )}
             {isEditing && (
-              <Button onClick={saveButtonClickHandler} variant="ghost">
+              <Button
+                onClick={saveButtonClickHandler}
+                variant="ghost"
+                className="cursor-pointer"
+              >
                 저장
               </Button>
             )}
-            <Button onClick={deleteButtonClickHandler} variant="ghost">
+            <Button
+              onClick={deleteButtonClickHandler}
+              variant="ghost"
+              className="cursor-pointer"
+            >
               삭제
             </Button>
           </div>
@@ -104,7 +116,7 @@ export const ReplyContent = ({
         <textarea
           value={content}
           onChange={(e) => setContent(e.currentTarget.value)}
-          className="h-10 w-full border-2 border-slate-950"
+          className="max-h-20 w-full border-2 border-slate-800 rounded-sm p-3 resize-none"
         />
       ) : (
         <p className={`${isLocallyDeleted ? 'text-gray-500' : ''}`}>

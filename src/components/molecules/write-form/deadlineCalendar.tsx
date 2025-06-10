@@ -75,7 +75,7 @@ export const DeadlineCalendar = ({
                     </>
                   )}
                 </div>
-                <PopoverTrigger asChild>
+                <PopoverTrigger className="cursor-pointer" asChild>
                   <FormControl className="inline-block">
                     <Button type="button" className="w-[fit-content]">
                       <CalendarIcon />

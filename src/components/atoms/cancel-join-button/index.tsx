@@ -27,7 +27,11 @@ export const CancelJoinButton = ({ onSuccess }: { onSuccess: () => void }) => {
   };
 
   return (
-    <Button onClick={cancelJoinHandler} disabled={isPending}>
+    <Button
+      onClick={cancelJoinHandler}
+      disabled={isPending}
+      className="cursor-pointer"
+    >
       참여 신청 취소
     </Button>
   );
