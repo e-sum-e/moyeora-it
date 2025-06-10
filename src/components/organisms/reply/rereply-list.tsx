@@ -45,9 +45,11 @@ export const RereplyList = ({
 
   const rereplies = flattenPages(data.pages);
 
+  if (rereplies.length === 0) return null;
+
   return (
-    <div>
-      <ul className="flex flex-col gap-5">
+    <div className="pb-6 pt-3">
+      <ul className="flex flex-col gap-3">
         {rereplies.map((rereply) => (
           <RereplyItem
             key={rereply.replyId}

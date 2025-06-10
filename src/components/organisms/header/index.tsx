@@ -1,20 +1,20 @@
 'use client';
 
-import useAuthStore from '@/stores/useAuthStore';
-import Link from 'next/link';
-import { NotificationList } from '@/components/molecules/notification-list';
+import { Avatar } from '@/components/atoms/avatar';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { handleError } from '@/components/error-boundary/error-handler';
-import Image from 'next/image';
+import { NotificationList } from '@/components/molecules/notification-list';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
 import {
+  DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { DropdownMenu } from '@/components/ui/dropdown-menu';
-import { Avatar } from '@/components/atoms/avatar';
+import useAuthStore from '@/stores/useAuthStore';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useState } from 'react';
 
 type MenuItem = {
   label: string;
@@ -115,10 +115,7 @@ export const Header = () => {
         {isLoggedIn ? (
           <>
             <NotificationWithBoundary />
-            <UserProfile
-              userId={userId}
-              profileImage={profileImage}
-            />
+            <UserProfile userId={userId} profileImage={profileImage} />
           </>
         ) : (
           <Link href="/login">
@@ -133,9 +130,7 @@ export const Header = () => {
         <Logo isMobile />
 
         <div className="flex items-center gap-2">
-          {isLoggedIn && (
-            <NotificationWithBoundary />
-          )}
+          {isLoggedIn && <NotificationWithBoundary />}
 
           <DropdownMenu open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <DropdownMenuTrigger asChild>

@@ -32,7 +32,7 @@ export type WriteFormWithCreatedAt = WriteForm & { createdAt: Date };
 export const DEFAULT_SKILL_NAMES = [
   'Java',
   'JavaScript',
-  'HTML/CSS',
+  'HTML_CSS',
   'REACT',
   'Vue',
   'Kotlin',
@@ -109,7 +109,7 @@ export type Reply = {
   content: string;
   writer: UserSummary;
   createdAt: string;
-  isDeleted?: boolean; // 삭제된 댓글인지 여부
+  deleted: boolean; // 삭제된 댓글인지 여부
 };
 
 export type GroupDetail = {
@@ -119,7 +119,7 @@ export type GroupDetail = {
     description: string;
     autoAllow: boolean;
     maxParticipants: number;
-    type: string;
+    type: GroupType;
     skills: Skill[];
     position: Position[];
     deadline: string;
@@ -127,7 +127,7 @@ export type GroupDetail = {
     endDate: string;
     createdAt: string;
     participants: UserSummary[];
-    isBbookmark: boolean;
+    isBookmark: boolean;
   };
   host: UserSummary;
   isApplicant: boolean;

@@ -1,7 +1,7 @@
 import { Reply } from '@/types';
-import type { InfiniteData } from '@tanstack/react-query';
-import { useEffect, useRef } from 'react';
 import { Page } from '@/utils/flattenPages';
+import type { InfiniteData } from '@tanstack/react-query';
+import { useRef } from 'react';
 
 interface UseReplyScrollIntoViewProps {
   data: InfiniteData<Page<Reply>>;
@@ -21,6 +21,7 @@ interface UseReplyScrollIntoViewProps {
  * @returns itemRefs - 댓글 각각에 대응되는 ref 객체
  * @returns bottomRef - 요소가 존재하지 않을 경우 스크롤할 fallback 위치
  */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 export const useReplyScrollIntoView = ({
   data,
   targetReplyId,
@@ -30,20 +31,23 @@ export const useReplyScrollIntoView = ({
   const itemRefs = useRef<Record<number, HTMLLIElement | null>>({});
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    if (targetReplyId === null) return;
+  // useEffect(() => {
+  //   if (!targetReplyId) return;
 
-    const targetElement = itemRefs.current[targetReplyId];
+  //   const targetElement = itemRefs.current[targetReplyId];
 
-    if (targetElement) {
-      targetElement.scrollIntoView({ behavior: 'instant', block: 'center' });
-      setTargetReplyId(null);
-    } else {
-      bottomRef.current?.scrollIntoView({ behavior: 'instant', block: 'end' });
-    }
+  //   if (targetElement) {
+  //     targetElement.scrollIntoView({ behavior: 'instant', block: 'start' });
+  //     setTargetReplyId(null);
+  //   } else {
+  //     bottomRef.current?.scrollIntoView({
+  //       behavior: 'instant',
+  //       block: 'end',
+  //     });
+  //   }
 
-    if (!hasNextPage) setTargetReplyId(null);
-  }, [data, targetReplyId, setTargetReplyId, hasNextPage]);
+  //   if (!hasNextPage) setTargetReplyId(null);
+  // }, [data.pages.length, targetReplyId, setTargetReplyId, hasNextPage]);
 
   return {
     itemRefs,

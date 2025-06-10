@@ -133,8 +133,6 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
   };
 
   const formSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log('?');
-
     const skills = values.skills.map(
       (skill) => Skill[skill as keyof typeof Skill],
     ); // server에 보낼때 enum의 인덱스로 보내기로 했으므로 string을 enum의 인덱스로 변환

@@ -4,12 +4,12 @@ import { forwardRef, useState } from 'react';
 
 /** 대댓글 삭제를 위해 ReplyContent를 둘러싸기 위해 만든 컴포넌트 */
 export const RereplyItem = forwardRef<HTMLLIElement, Reply>((props, ref) => {
-  const [isDeleted, setIsDeleted] = useState(props.isDeleted);
+  const [isDeleted, setIsDeleted] = useState(props.deleted);
 
   if (isDeleted) return null;
 
   return (
-    <li ref={ref}>
+    <li ref={ref} className="border-[1px] rounded-md mx-2">
       <ReplyContent {...props} onDelete={() => setIsDeleted(true)} />
     </li>
   );
