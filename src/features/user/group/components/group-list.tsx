@@ -5,6 +5,7 @@ import { useFetchItems } from '@/hooks/useFetchItems';
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { Group } from '@/types';
 import { GroupCard } from '@/components/molecules/group/group-card';
+import { useParams } from 'next/navigation';
 import flattenPages from '@/utils/flattenPages';
 
 /**
@@ -15,6 +16,7 @@ import flattenPages from '@/utils/flattenPages';
  * @returns 그룹 목록 컴포넌트
  */
 export const GroupList = () => {
+  const { id } = useParams();
   const searchParams = useSearchParams();
   const { search, type, status, sort } = Object.fromEntries(
     searchParams.entries(),
@@ -23,6 +25,7 @@ export const GroupList = () => {
   const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<Group>({
     url: '/v2/groups/mygroup',
     queryParams: {
+      userId: String(id),
       type: type ?? 'project',
       status: status ?? 'RECRUITING',
       sort: sort ?? 'deadline',
@@ -46,11 +49,11 @@ export const GroupList = () => {
   return (
     <>
       {groupList.length === 0 ? (
-        <div className='flex flex-col items-center justify-center mt-30'>
-          <p className='text-center font-medium text-gray-500'>
-            {status === 'RECRUITING'
-              ? <>모집 중인 그룹이 없어요. <br /> 새로운 그룹을 만들어보세요!</>
-              : <>참여 중인 그룹이 없어요. <br /> 새로운 그룹을 찾아보세요!</>}
+        <div className="flex flex-col items-center justify-center mt-30">
+          <p className="text-center font-medium text-gray-500">
+            {!status || status === 'RECRUITING'
+              ? '모집 중인 그룹이 없어요.'
+              : '참여 중인 그룹이 없어요.'}
           </p>
         </div>
       ) : (
