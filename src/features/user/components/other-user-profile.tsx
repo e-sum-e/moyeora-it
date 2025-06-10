@@ -53,9 +53,9 @@ export const OtherUserProfile = () => {
   console.log(user);
 
   // @ts-expect-error 특정 유저 정보 조회의 경우 백엔드에서 팔로잉 여부를 주지 않음.
-  const isFollowing = user?.following.some(
+  const isFollowing = user?.followers.some(
     // @ts-expect-error 특정 유저 정보 조회의 경우 백엔드에서 팔로잉 여부를 주지 않음.
-    (follower) => follower.follower_id === currentUser?.id,
+    (follower) => follower.id === currentUser?.id,
   );
   console.log(isFollowing);
 
