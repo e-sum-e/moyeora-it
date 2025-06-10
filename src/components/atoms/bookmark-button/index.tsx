@@ -4,9 +4,9 @@ import { request } from '@/api/request';
 import { addBookmarkItem, removeBookmarkItem } from '@/features/bookmark';
 import useAuthStore from '@/stores/useAuthStore';
 import { useMutation } from '@tanstack/react-query';
+import Image from 'next/image';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import Image from 'next/image';
 
 type BookmarkButtonProps = {
   groupId: number;
@@ -34,7 +34,9 @@ export const BookmarkButton = ({
     },
   });
 
-  const bookmarkButtonToggleHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const bookmarkButtonToggleHandler = (
+    e: React.MouseEvent<HTMLButtonElement>,
+  ) => {
     e.preventDefault();
     setIsBookmark((prev) => !prev);
 
@@ -52,7 +54,12 @@ export const BookmarkButton = ({
 
   return (
     <button onClick={bookmarkButtonToggleHandler}>
-      <Image src={`/icons/bookmark-${isBookmark ? 'active' : 'default'}.svg`} alt="찜히기" width={24} height={24} />
+      <Image
+        src={`/icons/bookmark-${isBookmark ? 'active' : 'default'}.svg`}
+        alt="찜히기"
+        width={24}
+        height={24}
+      />
     </button>
   );
 };

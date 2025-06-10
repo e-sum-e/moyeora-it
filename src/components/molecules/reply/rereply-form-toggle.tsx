@@ -21,10 +21,12 @@ export const RereplyFormToggle = ({
   };
 
   return isWriting ? (
-    <ReplyForm
-      parentReplyId={parentReplyId}
-      onSuccess={rereplyFormSuccessHandler}
-    />
+    <div className="px-3 py-5">
+      <ReplyForm
+        parentReplyId={parentReplyId}
+        onSuccess={rereplyFormSuccessHandler}
+      />
+    </div>
   ) : (
     <AddRereplyButton onClick={() => setIsWriting(true)} />
   );

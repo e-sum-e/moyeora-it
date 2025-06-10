@@ -89,6 +89,7 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
   });
 
   const items = flattenPages(data.pages);
+  console.log(items);
 
   const { ref } = useFetchInView({
     fetchNextPage,

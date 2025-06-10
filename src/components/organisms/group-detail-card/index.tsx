@@ -1,121 +1,126 @@
 import { Avatar } from '@/components/atoms/avatar';
 import { Badge } from '@/components/atoms/badge';
-import { Title } from '@/components/atoms/title';
+import { GroupSkills } from '@/components/atoms/group/group-skills';
+import { GroupProgress } from '@/components/atoms/group/particiapant-progress';
 import { ParticipantListModal } from '@/components/organisms/participant-list-modal';
-import { Progress } from '@/components/ui/progress';
-import { GroupDetail } from '@/types';
-import { getPosition, getSkill } from '@/types/enums';
+import { GroupDetail, GroupTypeName } from '@/types';
+import { Position } from '@/types/enums';
+import { formatYearMonthDayWithDot } from '@/utils/dateUtils';
 import { getDisplayNickname, getDisplayProfileImage } from '@/utils/fallback';
 import Link from 'next/link';
 import { BookmarkButtonContainer } from './BookmarkButtonContainer';
 
 type GroupDetaiilCardProps = {
-  className?: string;
   info: GroupDetail;
   isRecruiting: boolean;
 };
 
 export const GroupDetaiilCard = ({
-  className,
   info,
   isRecruiting,
 }: GroupDetaiilCardProps) => {
   return (
-    <article
-      className={`flex flex-col gap-4 w-full ${className} border-2 border-green-800 p-2 rounded-lg`}
-    >
-      <header className="flex justify-between items-start">
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2">
-            <Badge
-              text={info.group.type.toUpperCase()}
-              className="border border-black rounded-sm px-1"
-            />
-            <Title title={info.group.title} />
-          </div>
-          <div className="flex gap-2">
-            {info.group.position.map((position) => (
-              <Badge
-                key={position}
-                text={getPosition(position)}
-                className="bg-gray-900 text-gray-100"
-              />
-            ))}
-          </div>
+    <article className="flex flex-col gap-5 w-full">
+      <header className="flex flex-col gap-8">
+        <div className="flex justify-between items-start">
+          <h1 className="font-bold text-3xl">{info.group.title}</h1>
+          <BookmarkButtonContainer
+            groupId={info.group.id}
+            isBookmark={info.group.isBookmark}
+          />
         </div>
-        <BookmarkButtonContainer 
-          groupId={info.group.id}
-          isBookmark={info.group.isBbookmark}
-        />
-      </header>
-
-      {/* 모임 주최자 */}
-      <section>
         <div className="flex gap-2 items-center">
-          작성자:
           <Link href={`/users/${info.host.userId}`} className="flex gap-2">
             <Avatar
               imageSrc={getDisplayProfileImage(info.host.profileImage)}
               fallback={getDisplayNickname(info.host.nickname, info.host.email)}
             />
-            {getDisplayNickname(info.host.nickname, info.host.email)}
+            <span className="font-semibold">
+              {getDisplayNickname(info.host.nickname, info.host.email)}
+            </span>
           </Link>
         </div>
-      </section>
+      </header>
 
-      {/* 일정 정보 */}
-      <section className="text-sm text-gray-600">
-        <div>모집 종료: {info.group.deadline}</div>
-        <div>모임 시작: {info.group.startDate}</div>
-        <div>모임 종료: {info.group.endDate}</div>
-      </section>
+      <section className="border-t-2 border-gray-200 flex flex-col gap-5 pt-8">
+        <GroupInfoItem label="모집 구분">
+          {GroupTypeName[info.group.type]}
+        </GroupInfoItem>
 
-      {/* 기술 스택 */}
-      {info.group.skills && (
-        <section>
-          <span>사용 기술:</span>
-          <ul className="flex gap-2 mt-1">
-            {info.group.skills.map((skill) => (
-              <li key={skill}>{getSkill(skill)}</li>
+        <GroupInfoItem label="모집 마감">
+          {formatYearMonthDayWithDot(new Date(info.group.deadline))}
+        </GroupInfoItem>
+
+        <GroupInfoItem label="예상 일정">
+          {formatYearMonthDayWithDot(new Date(info.group.startDate))} ~{' '}
+          {formatYearMonthDayWithDot(new Date(info.group.endDate))}
+        </GroupInfoItem>
+
+        <GroupInfoItem label="모집 분야">
+          <ul>
+            {info.group.position.map((position) => (
+              <li key={Position[position]}>
+                <Badge
+                  text={Position[position]}
+                  className="py-0 px-1 border border-gray-800"
+                />
+              </li>
             ))}
           </ul>
-        </section>
-      )}
+          {/* <GroupPositions positions={info.group.position} /> */}
+        </GroupInfoItem>
 
-      {/* 모집 현황 */}
-      <section>
+        <GroupInfoItem label="기술 스택">
+          <GroupSkills skills={info.group.skills} />
+        </GroupInfoItem>
+
         <div>
-          <span>
-            참가 현황: {info.group.participants.length}/
-            {info.group.maxParticipants}
-          </span>
-        </div>
-        <div className="flex items-center gap-2 ">
-          <Progress value={50} />
-          <div className="whitespace-nowrap">
-            {isRecruiting ? '모집중' : '완료'}
+          <div>모집 현황</div>
+          <div className="-mt-3">
+            <GroupProgress
+              participantsCount={info.group.participants.length}
+              maxParticipants={info.group.maxParticipants}
+            />
           </div>
         </div>
-      </section>
 
-      {/* 참가자 목록 */}
-      <section>
-        <div className="flex gap-2">
-          참가자 목록:
+        <div className="flex justify-between">
           <div className="flex">
             {info.group.participants
               .slice(0, 3)
-              .map(({ userId, profileImage, email, nickname }) => (
+              .map(({ userId, profileImage, email, nickname }, index) => (
                 <Avatar
                   key={userId}
                   imageSrc={getDisplayProfileImage(profileImage)}
                   fallback={getDisplayNickname(nickname, email)}
+                  className={`${index !== 0 ? '-ml-3' : ''} z-${10 + index}`}
                 />
               ))}
-            <ParticipantListModal participants={info.group.participants} />
+            <ParticipantListModal
+              participants={info.group.participants}
+              className={`z-50 ${
+                info.group.participants.length > 0 ? '-ml-3' : ''
+              }`}
+            />
           </div>
+          <div>{isRecruiting ? '모집 중' : '모집 마감'}</div>
         </div>
       </section>
     </article>
+  );
+};
+
+const GroupInfoItem = ({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) => {
+  return (
+    <div className="flex gap-4 font-bold items-center">
+      <div className="whitespace-nowrap">{label}</div>
+      <div>{children}</div>
+    </div>
   );
 };

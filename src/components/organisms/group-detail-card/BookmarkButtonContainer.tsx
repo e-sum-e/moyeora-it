@@ -10,10 +10,13 @@ type BookmarkButtonContainerProps = {
   isBookmark: boolean;
 };
 
-export const BookmarkButtonContainer = ({ groupId, isBookmark }: BookmarkButtonContainerProps) => {
+export const BookmarkButtonContainer = ({
+  groupId,
+  isBookmark,
+}: BookmarkButtonContainerProps) => {
   const user = useAuthStore((state) => state.user);
-  
-  if(!user){
+
+  if (!user) {
     const bookmarkList = getBookmarkList();
     isBookmark = bookmarkList.includes(groupId);
   }
@@ -23,4 +26,4 @@ export const BookmarkButtonContainer = ({ groupId, isBookmark }: BookmarkButtonC
       <BookmarkButton groupId={groupId} isBookmark={isBookmark} />
     </div>
   );
-}; 
+};
