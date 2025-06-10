@@ -11,7 +11,7 @@ const REPLY_LIST: Reply[] = Array.from({ length: 33 }, (_, i) => ({
     email: `w${i + 1}@gmail.com`,
   },
   createdAt: '2025-05-31T07:22:02.678Z',
-  isDeleted: false,
+  deleted: false,
 }));
 
 const REREPLY_LIST: (Reply & { parentId: number })[] = Array.from(
@@ -27,6 +27,7 @@ const REREPLY_LIST: (Reply & { parentId: number })[] = Array.from(
       email: `q${i + 1}@gmail.com`,
     },
     createdAt: '2025-06-10T10:39:05.678Z',
+    deleted: false,
   }),
 );
 
@@ -115,6 +116,7 @@ export const repliesHandlers = [
           email: `w${newId}@gmail.com`,
         },
         createdAt: '2025-05-23',
+        deleted: false,
       };
 
       REPLY_LIST.push(newReplyData);
@@ -144,6 +146,7 @@ export const repliesHandlers = [
           email: `n${newId}@gmail.com`,
         },
         createdAt: '2025-05-23',
+        deleted: false,
       };
 
       REREPLY_LIST.push(newRereplyData);
@@ -195,7 +198,7 @@ export const repliesHandlers = [
         // 대댓글이 하나도 없으면 댓글 완전 삭제, 달려 있으면 content와 isDeleted만 변경
         if (REREPLY_LIST.some((item) => item.parentId === replyId)) {
           REPLY_LIST[replyIdx].content = '삭제된 댓글입니다.';
-          REPLY_LIST[replyIdx].isDeleted = true;
+          REPLY_LIST[replyIdx].deleted = true;
         } else {
           REPLY_LIST.splice(replyIdx, 1);
         }
@@ -218,7 +221,7 @@ export const repliesHandlers = [
 
         // 부모 댓글도 삭제된 상태면 부모 댓글도 완전 삭제
         if (
-          REPLY_LIST[parentReplyIdx].isDeleted &&
+          REPLY_LIST[parentReplyIdx].deleted &&
           REREPLY_LIST.some((item) => item.parentId === replyId)
         ) {
           REPLY_LIST.splice(replyIdx, 1);

@@ -64,53 +64,58 @@ export const FollowersList = () => {
           placeholder="검색"
         />
       </div>
-      <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <h1 className='hidden'>팔로워 {followersCount ?? null}</h1>
-        {followersList.map(
-          // @ts-expect-error 현재 User 타입에는 id 프로퍼티가 없음 -> 추후 수정 필요
-          ({ id: userId, nickname, profileImage, email, isFollowing }) => (
-            <li
-              className="border-b-2 border-gray-200 border-dashed pb-6 "
-              key={userId}
-            >
-              <Link href={`/users/${userId}`}>
-                <div className="flex justify-between">
-                  <div className="flex gap-x-6">
-                    <Avatar
-                      imageSrc={getDisplayProfileImage(profileImage)}
-                      fallback={getDisplayNickname(nickname, email)}
-                      className="size-[4.75rem]"
-                    />
-                    <div className="flex flex-col justify-start">
-                      <span className="text-gray-900 text-lg font-semibold">
-                        {getDisplayNickname(nickname, email)}
-                      </span>
-                      <span className="text-gray-300 text-sm font-medium">
-                        {email}
-                      </span>
+      {followersList.length === 0 ? (
+        <p className="text-center font-medium text-gray-500">
+          아직 팔로워가 없어요.
+        </p>
+      ) : (
+        <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <h1 className="hidden">팔로워 {followersCount ?? null}</h1>
+          {followersList.map(
+            // @ts-expect-error 현재 User 타입에는 id 프로퍼티가 없음 -> 추후 수정 필요
+            ({ id: userId, nickname, profileImage, email, isFollowing }) => (
+              <li
+                className="border-b-2 border-gray-200 border-dashed pb-6 "
+                key={userId}
+              >
+                <Link href={`/users/${userId}`}>
+                  <div className="flex justify-between">
+                    <div className="flex gap-x-6">
+                      <Avatar
+                        imageSrc={getDisplayProfileImage(profileImage)}
+                        fallback={getDisplayNickname(nickname, email)}
+                        className="size-[4.75rem]"
+                      />
+                      <div className="flex flex-col justify-start">
+                        <span className="text-gray-900 text-lg font-semibold">
+                          {getDisplayNickname(nickname, email)}
+                        </span>
+                        <span className="text-gray-300 text-sm font-medium">
+                          {email}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                  {user && String(user?.userId) !== String(userId) && (
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <button
-                          type="button"
-                          className="size-6 self-start inline-flex justify-center"
-                        >
-                          <Image
-                            src="/icons/more.svg"
-                            alt="more"
-                            width={3.5}
-                            height={3.5}
-                          />
-                        </button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent className="min-w-[110px]">
-                        {isCurrentUser && (
-                          <RemoveFollowerButton userId={String(userId)} />
-                        )}
+                    {user && String(user?.userId) !== String(userId) && (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button
+                            type="button"
+                            className="size-6 self-start inline-flex justify-center"
+                          >
+                            <Image
+                              src="/icons/more.svg"
+                              alt="more"
+                              width={3.5}
+                              height={3.5}
+                            />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="min-w-[110px]">
+                          {isCurrentUser && (
+                            <RemoveFollowerButton userId={String(userId)} />
+                          )}
 
-                        {!isCurrentUser && (
+                          {!isCurrentUser && (
                             <ToggleFollowButton
                               userId={String(userId)}
                               isFollowing={isFollowing}
@@ -118,16 +123,17 @@ export const FollowersList = () => {
                               className={`shadow-none hover:bg-white! ${isFollowing ? 'text-red-600 [&>svg]:text-red-600!' : 'text-black [&_svg]:text-black'} bg-white h-[28px] cursor-pointer text-sm font-semibold rounded-lg py-1 px-3 gap-x-[6px]`}
                             />
                           )}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  )}
-                </div>
-              </Link>
-            </li>
-          ),
-        )}
-        {hasNextPage && <div ref={ref} className="h-10" />}
-      </ul>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
+                  </div>
+                </Link>
+              </li>
+            ),
+          )}
+          {hasNextPage && <div ref={ref} className="h-10" />}
+        </ul>
+      )}
     </div>
   );
 };
