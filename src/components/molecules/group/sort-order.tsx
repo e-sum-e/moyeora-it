@@ -67,7 +67,7 @@ export const SortOrder = ({ updateQueryParams }: OrderProps) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" className="flex-none ml-auto">
+        <Button variant="outline" className="flex-none ml-auto cursor-pointer">
           {getSelectedOrderOptionName()}
         </Button>
       </PopoverTrigger>
@@ -76,7 +76,7 @@ export const SortOrder = ({ updateQueryParams }: OrderProps) => {
           <PopoverClose
             key={option.name}
             onClick={() => orderSelectHandler(option.value)}
-            className="p-1"
+            className="p-1 cursor-pointer"
           >
             {option.name}
           </PopoverClose>
