@@ -20,7 +20,7 @@ type SkillBadgeProps = {
 
 export const SkillBadge = ({ name, isDefault = true }: SkillBadgeProps) => {
   return (
-    <div className="skill-badge flex flex-row border p-1 border-primary rounded-full">
+    <div className="skill-badge flex flex-row border p-1 border-primary rounded-full cursor-pointer">
       {isDefault && (
         <Image src={skillLogoMap[name]} alt="logo" width={24} height={24} />
       )}

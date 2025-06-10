@@ -71,7 +71,7 @@ export const EndDateCalendar = ({
                     </>
                   )}
                 </div>
-                <PopoverTrigger asChild>
+                <PopoverTrigger className="cursor-pointer" asChild>
                   <FormControl>
                     <Button type="button" className="w-[fit-content]">
                       <CalendarIcon />
