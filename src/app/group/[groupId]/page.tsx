@@ -74,7 +74,7 @@ export default function GroupDetailPage() {
   const { group, host, isApplicant } = data;
 
   const isRecruiting =
-    isBeforeToday(data.group.deadline) &&
+    !isBeforeToday(data.group.deadline) &&
     data.group.participants.length < data.group.maxParticipants;
 
   return (
