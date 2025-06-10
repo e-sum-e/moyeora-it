@@ -4,10 +4,23 @@ import { WriteForm } from '@/components/organisms/write-form';
 import useAuthStore from '@/stores/useAuthStore';
 import { routes } from '@/utils/routes';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function Page() {
   const user = useAuthStore((state) => state.user);
   const router = useRouter();
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = ''; // 브라우저 경고창을 띄우기 위한 트리거
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
 
   if (!user) {
     router.push(routes.login);

@@ -50,7 +50,7 @@ export const StartDateCalendar = ({
         name="startDate"
         render={({ field }) => (
           <FormItem>
-            <WriteFormLabel text="모일 시작일" />
+            <WriteFormLabel text="모임 시작일" />
             <Popover
               open={isStartDateCalendarOpen}
               onOpenChange={

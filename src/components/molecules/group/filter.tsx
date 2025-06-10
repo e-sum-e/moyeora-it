@@ -17,8 +17,10 @@ type FilterProps = {
 
 export const Filter = ({ updateQueryParams }: FilterProps) => {
   const searchParams = useSearchParams();
-  const selectedSkills = searchParams.get('skill')?.split(',');
-  const selectedPositions = searchParams.get('position')?.split(',');
+  const selectedSkills = searchParams.get('skill')?.split(',') ?? [];
+  const selectedPositions = searchParams.get('position')?.split(',') ?? [];
+  const isSelectedSkills = selectedSkills?.length > 0;
+  const isSelectedPosition = selectedPositions?.length > 0;
 
   const skillSelectHandler = (skill: SkillName) => {
     updateQueryParams({ skill: skill });
@@ -29,10 +31,12 @@ export const Filter = ({ updateQueryParams }: FilterProps) => {
   };
 
   return (
-    <>
+    <div className="flex gap-1">
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="outline">기술 스택</Button>
+          <Button variant={isSelectedSkills ? 'default' : 'outline'}>
+            기술 스택
+          </Button>
         </PopoverTrigger>
         <PopoverContent className="flex gap-1 mt-1 p-3 bg-white ring-1 ring-gray-200 rounded-md">
           <Button variant="outline" onClick={() => skillSelectHandler('')}>
@@ -54,7 +58,9 @@ export const Filter = ({ updateQueryParams }: FilterProps) => {
       </Popover>
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="outline">포지션</Button>
+          <Button variant={isSelectedPosition ? 'default' : 'outline'}>
+            포지션
+          </Button>
         </PopoverTrigger>
         <PopoverContent className="flex gap-1 mt-2 p-2  bg-white ring-1 ring-gray-200 rounded-md">
           <Button variant="outline" onClick={() => positionSelectHandler('')}>
@@ -76,6 +82,6 @@ export const Filter = ({ updateQueryParams }: FilterProps) => {
           ))}
         </PopoverContent>
       </Popover>
-    </>
+    </div>
   );
 };
