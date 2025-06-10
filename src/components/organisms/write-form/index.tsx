@@ -105,7 +105,7 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
   );
 
   const validEndDate = useMemo(
-    () => addDays(validStartDate, 6),
+    () => addDays(validStartDate, 7),
     [validStartDate],
   );
 
