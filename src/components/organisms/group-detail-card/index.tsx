@@ -57,7 +57,7 @@ export const GroupDetaiilCard = ({
         </GroupInfoItem>
 
         <GroupInfoItem label="모집 분야">
-          <ul>
+          <ul className="flex gap-2">
             {info.group.position.map((position) => (
               <li key={Position[position]}>
                 <Badge
