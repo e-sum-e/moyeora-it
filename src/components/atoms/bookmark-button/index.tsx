@@ -38,6 +38,7 @@ export const BookmarkButton = ({
     e: React.MouseEvent<HTMLButtonElement>,
   ) => {
     e.preventDefault();
+    e.stopPropagation();
     setIsBookmark((prev) => !prev);
 
     if (user === null) {
