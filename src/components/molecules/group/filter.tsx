@@ -89,7 +89,7 @@ export const Filter = ({ updateQueryParams }: FilterProps) => {
               onClick={() => positionSelectHandler(position)}
               className={`cursor-pointer
                 ${
-                  selectedSkills?.includes(position)
+                  selectedPositions?.includes(position)
                     ? 'ring-2 ring-green-400'
                     : ''
                 } 
