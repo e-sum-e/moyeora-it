@@ -27,7 +27,7 @@ export const useToggleFollow = ({
 
   return useMutation({
     mutationFn() {
-      if(isFollowing) {
+      if (isFollowing) {
         return request.delete(`/v1/follow/${userId ?? id}/unfollow`, {
           credentials: 'include',
         });
@@ -49,10 +49,15 @@ export const useToggleFollow = ({
     },
     onSettled() {
       if (usedIn === 'profile')
-        return queryClient.invalidateQueries({
-          queryKey: ['user', id],
-          exact: true,
-        });
+        return Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: ['user', id],
+            exact: true,
+          }),
+          queryClient.invalidateQueries({
+            queryKey: ['items', `/v1/follow/${id}/followers`],
+          }),
+        ]);
       return Promise.all([
         queryClient.invalidateQueries({
           queryKey: ['user', id, `${usedIn} count`],
