@@ -40,9 +40,9 @@ export default async function FollowingsPage({
 
   return (
     <>
-      <QueryErrorBoundary fallback={<>에러가 발생했어요</>}>
+      <QueryErrorBoundary fallback={<p className='text-center text-gray-500 mt-30'>로그인 후 다시 시도해주세요</p>}>
         <HydrationBoundary state={dehydrate(queryClient)}>
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<div></div>}>
             <FollowingList />
           </Suspense>
         </HydrationBoundary>

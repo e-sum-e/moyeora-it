@@ -53,9 +53,9 @@ export const OtherUserProfile = () => {
   console.log(user);
 
   // @ts-expect-error 특정 유저 정보 조회의 경우 백엔드에서 팔로잉 여부를 주지 않음.
-  const isFollowing = user?.following.some(
+  const isFollowing = user?.followers.some(
     // @ts-expect-error 특정 유저 정보 조회의 경우 백엔드에서 팔로잉 여부를 주지 않음.
-    (follower) => follower.follower_id === currentUser?.id,
+    (follower) => follower.id === currentUser?.id,
   );
   console.log(isFollowing);
 
@@ -77,7 +77,7 @@ export const OtherUserProfile = () => {
             <ToggleFollowButton
               isFollowing={isFollowing}
               usedIn="profile"
-              className={`${isFollowing ? 'bg-red-600' : 'bg-black hover:bg-black/70'} text-white h-[28px] text-sm font-semibold rounded-lg py-1 px-3 gap-x-[6px]`}
+              className={`${isFollowing ? 'bg-red-600 hover:bg-red-700' : 'bg-black hover:bg-black/70'} text-white h-[28px] text-sm font-semibold rounded-lg py-1 px-3 gap-x-[6px]`}
             />
           </div>
           <div className="flex flex-col gap-y-1 min-w-0">

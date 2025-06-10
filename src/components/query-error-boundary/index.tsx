@@ -2,7 +2,7 @@
 
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { ErrorBoundary } from '@/components/error-boundary';
-import { ErrorFallback } from '@/components/error-fallback';
+import { handleError } from '@/components/error-boundary/error-handler';
 
 type QueryErrorBoundaryProps = {
   children: React.ReactNode;
@@ -19,19 +19,22 @@ type QueryErrorBoundaryProps = {
  * @param children 자식 컴포넌트
  * @returns 쿼리 에러 바운더리
  */
-export const QueryErrorBoundary = ({ children, fallback }: QueryErrorBoundaryProps) => {
+export const QueryErrorBoundary = ({
+  children,
+  fallback,
+}: QueryErrorBoundaryProps) => {
   return (
     <QueryErrorResetBoundary>
       {({ reset }) => (
         <ErrorBoundary
-          fallback={({ error, resetErrorBoundary }) => (
-            <ErrorFallback
-              error={error}
-              resetErrorBoundary={resetErrorBoundary}
-            >
-              {fallback}
-            </ErrorFallback>
-          )}
+          fallback={({ error, resetErrorBoundary }) => {
+            return fallback
+              ? fallback
+              : handleError({
+                  error,
+                  resetErrorBoundary,
+                });
+          }}
           onReset={reset}
         >
           {children}
