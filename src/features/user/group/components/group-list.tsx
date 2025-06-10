@@ -58,10 +58,10 @@ export const GroupList = () => {
           </p>
         </div>
       ) : (
-        <ul className='flex flex-wrap gap-6'>
+        <ul className='grid grid-cols-1 gap-6 md:grid-cols-3'>
           {groupList.map((group) => (
             // @ts-expect-error 백엔드 응답값에 group 프로퍼티가 존재함. 추후 프로퍼티 수정 필요
-            <li className='w-1/3' key={group?.group?.id}>
+            <li className='w-full' key={group?.group?.id}>
               <GroupCard item={{
                 // @ts-expect-error 백엔드 응답값에 group 프로퍼티가 존재함. 추후 프로퍼티 수정 필요
                 ...group?.group,
