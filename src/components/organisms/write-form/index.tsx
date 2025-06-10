@@ -24,6 +24,7 @@ import {
 import { Position, Skill } from '@/types/enums';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
 import { addDays, isAfter } from 'date-fns';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
@@ -95,6 +96,7 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
   const [isStartDateCalendarOpen, setIsStartDateCalendarOpen] = useState(false);
   const [isEndDateCalendarOpen, setIsEndDateCalendarOpen] = useState(false);
   const router = useRouter();
+  const queryClient = useQueryClient();
   const validDeadline = addDays(new Date(), 7);
 
   const [selectedDeadline, setSelectedDeadline] = useState(validDeadline);
@@ -150,6 +152,10 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
       );
 
       if (result.status.success) {
+        await queryClient.invalidateQueries({
+          queryKey: ['items', '/v2/groups'],
+        }); // 홈으로 이동 후 새로운 데이터로 갱신하기 위해 무효화 시킴
+
         router.push('/');
       } else {
         toast.error('에러가 발생했습니다. 다시 시도해주세요.');
