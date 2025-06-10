@@ -3,7 +3,7 @@ import {
   HydrationBoundary,
   dehydrate,
 } from '@tanstack/react-query';
-import { request } from '@/api/request';
+// import { request } from '@/api/request';
 import { Suspense } from 'react';
 import { GroupFilter } from '@/components/molecules/group-filter/group-filter';
 import { GroupList } from '@/features/user/group/components/group-list';
@@ -29,18 +29,19 @@ export default async function GroupsPage({ searchParams }: GroupsPageProps) {
     sort: sort ?? 'deadline',
     ...(search && { search }),
   };
+  console.log(queryParams);
 
-  await queryClient.fetchInfiniteQuery({
-    queryKey: ['items', '/v2/groups', queryParams],
-    queryFn({ pageParam }) {
-      return request.get('/v2/groups/mygroup', {
-        ...queryParams,
-        cursor: pageParam,
-        size: 10,
-      });
-    },
-    initialPageParam: 0,
-  });
+  // await queryClient.fetchInfiniteQuery({
+  //   queryKey: ['items', '/v2/groups', queryParams],
+  //   queryFn({ pageParam }) {
+  //     return request.get('/v2/groups/mygroup', {
+  //       ...queryParams,
+  //       cursor: pageParam,
+  //       size: 10,
+  //     });
+  //   },
+  //   initialPageParam: 0,
+  // });
 
   return (
     <div>
