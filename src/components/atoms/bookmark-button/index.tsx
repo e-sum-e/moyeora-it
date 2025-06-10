@@ -53,7 +53,7 @@ export const BookmarkButton = ({
   };
 
   return (
-    <button onClick={bookmarkButtonToggleHandler}>
+    <button onClick={bookmarkButtonToggleHandler} className="cursor-pointer">
       <Image
         src={`/icons/bookmark-${isBookmark ? 'active' : 'default'}.svg`}
         alt="찜히기"

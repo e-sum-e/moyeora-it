@@ -27,7 +27,11 @@ export const CancelGroupButton = () => {
   };
 
   return (
-    <Button onClick={cancelGroupHandler} disabled={isPending}>
+    <Button
+      onClick={cancelGroupHandler}
+      disabled={isPending}
+      className="cursor-pointer"
+    >
       모임 취소
     </Button>
   );

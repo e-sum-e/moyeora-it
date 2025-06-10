@@ -67,16 +67,16 @@ export const SortOrder = ({ updateQueryParams }: OrderProps) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" className="flex-none ml-auto">
+        <Button variant="outline" className="flex-none ml-auto cursor-pointer">
           {getSelectedOrderOptionName()}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="flex flex-col gap-1 px-4 py-2 text-sm text-primary font-medium bg-white  rounded-[12px] border border-gray-200">
+      <PopoverContent className="flex flex-col gap-1 px-4 py-2 text-sm text-primary font-medium bg-white  rounded-[12px] border border-gray-200 z-10">
         {orderOptions.map((option) => (
           <PopoverClose
             key={option.name}
             onClick={() => orderSelectHandler(option.value)}
-            className="p-1"
+            className="p-1 cursor-pointer"
           >
             {option.name}
           </PopoverClose>

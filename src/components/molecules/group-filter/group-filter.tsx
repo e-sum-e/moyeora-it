@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/select';
 import { SelectGroup } from '@radix-ui/react-select';
 import { SearchInput } from '@/components/molecules/search-input/search-input';
+import Image from 'next/image';
 
 /**
  * 모임 목록 필터 컴포넌트
@@ -67,7 +68,7 @@ export const GroupFilter = () => {
   return (
     <div className="flex flex-col gap-y-2">
       <div className="flex justify-between">
-        <ul className="flex gap-x-2">
+        <ul className="flex gap-x-2 items-center">
           {[
             {
               label: '스터디',
@@ -79,14 +80,22 @@ export const GroupFilter = () => {
             },
           ].map((item) => (
             <li key={item.value}>
-              <Link href={`${pathname}?type=${item.value}`}>{item.label}</Link>
+              <Link
+                className={`${type === item.value ? 'text-black' : 'text-gray-400'} font-medium`}
+                href={`${pathname}?type=${item.value}`}
+              >
+                {item.label}
+              </Link>
             </li>
           ))}
         </ul>
-        <SearchInput
-          className="w-64"
-          placeholder={`${type === 'project' ? '프로젝트 검색' : '스터디 검색'}`}
-        />
+        <div className="flex items-center gap-x-[10px] rounded-[30px] bg-gray-100 px-5 py-2 w-[200px] text-gray-500 h-9 self-end">
+          <Image src="/icons/search.svg" alt="search" width={17} height={17} />
+          <SearchInput
+            className="bg-gray-100 border-none shadow-none focus-visible:ring-0 p-0"
+            placeholder="검색"
+          />
+        </div>
       </div>
       <div className="flex justify-between">
         <ul className="flex gap-x-2">
@@ -102,6 +111,7 @@ export const GroupFilter = () => {
           ].map((item) => (
             <li
               key={item.value}
+              className={`${status === item.value ? 'text-black' : 'text-gray-400'} font-medium`}
               onClick={() => filterItemClickHandler('status', item.value)}
             >
               {item.label}
