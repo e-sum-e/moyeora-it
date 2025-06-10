@@ -26,7 +26,7 @@ export const GroupList = () => {
     url: '/v2/groups/mygroup',
     queryParams: {
       userId: String(id),
-      type: type ?? 'project',
+      type: type ?? 'study',
       status: status ?? 'RECRUITING',
       sort: sort ?? 'deadline',
       ...(search && { search }),
@@ -45,6 +45,7 @@ export const GroupList = () => {
   });
 
   const groupList = flattenPages<Group>(data.pages);
+  console.log(groupList);
 
   return (
     <>
@@ -57,10 +58,16 @@ export const GroupList = () => {
           </p>
         </div>
       ) : (
-        <ul>
+        <ul className='flex flex-wrap gap-6'>
           {groupList.map((group) => (
-            <li key={group.id}>
-              <GroupCard item={group} />
+            // @ts-expect-error 백엔드 응답값에 group 프로퍼티가 존재함. 추후 프로퍼티 수정 필요
+            <li className='w-1/3' key={group?.group?.id}>
+              <GroupCard item={{
+                // @ts-expect-error 백엔드 응답값에 group 프로퍼티가 존재함. 추후 프로퍼티 수정 필요
+                ...group?.group,
+                // @ts-expect-error participants null 값 처리가 안 되어 있음. 추후 수정 필요
+                participants: group?.group?.participants ?? [],
+              }} />
             </li>
           ))}
           {hasNextPage && <div ref={ref} />}
