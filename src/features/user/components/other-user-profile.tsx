@@ -77,7 +77,7 @@ export const OtherUserProfile = () => {
             <ToggleFollowButton
               isFollowing={isFollowing}
               usedIn="profile"
-              className={`${isFollowing ? 'bg-red-600' : 'bg-black hover:bg-black/70'} text-white h-[28px] text-sm font-semibold rounded-lg py-1 px-3 gap-x-[6px]`}
+              className={`${isFollowing ? 'bg-red-600 hover:bg-red-700' : 'bg-black hover:bg-black/70'} text-white h-[28px] text-sm font-semibold rounded-lg py-1 px-3 gap-x-[6px]`}
             />
           </div>
           <div className="flex flex-col gap-y-1 min-w-0">
