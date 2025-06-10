@@ -48,8 +48,8 @@ export const ReplyList = () => {
   return (
     <section>
       <ReplyForm onSuccess={replyFormSuccessHandler} />
-      <div>
-        <ul>
+      <div className="my-15">
+        <ul className="flex flex-col gap-10">
           {replies.map((reply) => (
             <li
               key={reply.replyId}

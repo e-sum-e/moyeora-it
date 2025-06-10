@@ -2,6 +2,8 @@
 
 import { request } from '@/api/request';
 import { ReplyMeta } from '@/components/molecules/reply/reply-meta';
+import { Button } from '@/components/ui/button';
+import useAuthStore from '@/stores/useAuthStore';
 import { Reply } from '@/types';
 import { useMutation } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
@@ -16,15 +18,16 @@ export const ReplyContent = ({
   writer,
   createdAt,
   parentId,
-  isDeleted = false, // 삭제된 댓글인지 여부
+  deleted: isDeleted, // 삭제된 댓글인지 여부
   onDelete,
 }: ReplyContentProps) => {
   const { groupId } = useParams();
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isLocallyDeleted, setIsLocallyDeleted] = useState<boolean>(isDeleted);
   const [content, setContent] = useState<string>(initalContent);
+  const user = useAuthStore((state) => state.user);
 
-  const isWriter = true; // writer.userId === user.userId
+  const isWriter = user && writer.userId == user.userId;
 
   const { mutate: updateReply } = useMutation({
     mutationFn: async (enteredContent: string) =>
@@ -76,18 +79,24 @@ export const ReplyContent = ({
   if (isLocallyDeleted && parentId) return null;
 
   return (
-    <div>
-      <header className="flex justify-between items-start">
+    <div className="p-5 flex flex-col gap-8">
+      <header className="flex justify-between items-start max-sm:flex-col">
         <ReplyMeta writer={writer} createdAt={createdAt} />
         {isWriter && !isLocallyDeleted && (
-          <div className="flex gap-2">
+          <div className="flex gap-2 max-sm:order-1">
             {!isEditing && (
-              <button onClick={editButtonClickHandler}>수정</button>
+              <Button onClick={editButtonClickHandler} variant="ghost">
+                수정
+              </Button>
             )}
             {isEditing && (
-              <button onClick={saveButtonClickHandler}>저장</button>
+              <Button onClick={saveButtonClickHandler} variant="ghost">
+                저장
+              </Button>
             )}
-            <button onClick={deleteButtonClickHandler}>삭제</button>
+            <Button onClick={deleteButtonClickHandler} variant="ghost">
+              삭제
+            </Button>
           </div>
         )}
       </header>

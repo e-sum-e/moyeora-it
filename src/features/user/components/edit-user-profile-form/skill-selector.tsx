@@ -23,8 +23,9 @@ export const SkillSelector = () => {
   };
 
   return (
-    <div className="flex flex-col gap-y-2">
-      <Label>기술 스택</Label>
+    <div className="flex flex-col gap-y-2 px-6">
+      <Label className='font-medium text-gray-900 text-lg'>Skills</Label>
+      <p className='text-sm font-medium text-gray-500'>사용 중인 기술 태그를 선택해주세요.</p>
       <ul className="flex flex-wrap gap-2 items-center">
         {Object.entries(Skill)
           .filter(([key]) => isNaN(Number(key)))

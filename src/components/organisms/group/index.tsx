@@ -7,8 +7,10 @@ import { GroupCard } from '@/components/molecules/group/group-card';
 import { SortOrder } from '@/components/molecules/group/sort-order';
 import { SearchInput } from '@/components/molecules/search-input/search-input';
 import { Tab, TabType } from '@/components/molecules/tab';
+import { getBookmarkList } from '@/features/bookmark';
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
+import useAuthStore from '@/stores/useAuthStore';
 import { Group, GroupType } from '@/types';
 import { Position, Skill } from '@/types/enums';
 import flattenPages from '@/utils/flattenPages';
@@ -36,6 +38,7 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
   const [emptyInfoMessage, setEmptyInfoMessage] =
     useState<EMPTY_INFO_MESSAGE | null>(null);
   const router = useRouter();
+  const user = useAuthStore((state) => state.user);
 
   /**
    * router.push를 수행하는 함수
@@ -81,11 +84,12 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
   );
 
   const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<Group>({
-    url: '/groups',
+    url: '/v2/groups',
     queryParams: { ...queryParams, size: 10 },
   });
 
   const items = flattenPages(data.pages);
+  console.log(items);
 
   const { ref } = useFetchInView({
     fetchNextPage,
@@ -122,14 +126,32 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
   //   console.log('✅ Hydrated data from client:', queryParams); // DEV : 💡 서버 컴포넌트에서 prefetch 하는지 확인용
   // }, [queryParams]);
 
+  //북마크 처리
+  const [displayItems, setDisplayItems] = useState<Group[]>(items);
+
+  useEffect(() => {
+    if (!user) {
+      const bookmark = getBookmarkList();
+      const processedItems = flattenPages(data.pages).map((item) => ({
+        ...item,
+        isBookmark: bookmark.includes(item.id),
+      }));
+      setDisplayItems(processedItems);
+    } else {
+      setDisplayItems(flattenPages(data.pages));
+    }
+  }, [data.pages, user]);
+
   return (
     <>
       <Tab
         tabList={tabList}
         onValueChange={(value) => updateQueryParams({ type: value })}
       >
-        <Filter updateQueryParams={updateQueryParams} />
-        <SortOrder updateQueryParams={updateQueryParams} />
+        <div className="flex justify-start ">
+          <Filter updateQueryParams={updateQueryParams} />
+          <SortOrder updateQueryParams={updateQueryParams} />
+        </div>
         <SearchInput />
         <ErrorBoundary
           fallback={({ error, resetErrorBoundary }) =>
@@ -143,8 +165,8 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
           {isEmptyItems && emptyInfoMessage !== null ? (
             <div>{emptyInfoMessage}</div>
           ) : (
-            <ul>
-              {items.map((group) => (
+            <ul className="flex flex-col gap-3 mt-8 md:flex-row md:flex-wrap md:gap-6 md:justify-center">
+              {displayItems.map((group) => (
                 <GroupCard key={group.id} item={group} />
               ))}
             </ul>

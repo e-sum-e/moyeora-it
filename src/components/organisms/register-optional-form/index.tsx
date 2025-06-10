@@ -126,7 +126,9 @@ const RegisterOptionalForm = () => {
           label="기술 스택"
           options={skills}
         />
-        <Button disabled={disabled}>프로필 설정하기</Button>
+        <Button className="w-full bg-gray-400" disabled={disabled}>
+          프로필 설정하기
+        </Button>
       </form>
     </Form>
   );

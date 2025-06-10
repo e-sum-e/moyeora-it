@@ -90,9 +90,9 @@ export const userHandlers = [
       const items: Group[] = Array.from({ length: 10 }, () => ({
         id: Math.floor(Math.random() * 1000000) + 1,
         title: '스터디1',
-        deadline: new Date('2025-05-22'),
-        startDate: new Date('2025-05-20'),
-        endDate: new Date('2025-05-24'),
+        deadline: new Date('2025-05-22').toISOString(),
+        startDate: new Date('2025-05-20').toISOString(),
+        endDate: new Date('2025-05-24').toISOString(),
         maxParticipants: 10,
         participants: [],
         description: '스터디1 설명',

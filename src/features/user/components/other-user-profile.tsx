@@ -3,8 +3,7 @@
 import { notFound, useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { Avatar } from '@/components/atoms/avatar';
-import { Badge } from '@/components/atoms/badge';
-import { getPosition, getSkill } from '@/types/enums';
+import { getSkill } from '@/types/enums';
 import { User } from '@/types';
 import { request } from '@/api/request';
 import { ToggleFollowButton } from '@/features/user/follow/components/toggle-follow-button';
@@ -26,9 +25,14 @@ export const OtherUserProfile = () => {
     isError,
   } = useQuery<CommonResponse<User>>({
     queryKey: ['user', id],
-    queryFn: () => request.get(`/v1/user/${id}`, {}, {
-      credentials: 'include',
-    }),
+    queryFn: () =>
+      request.get(
+        `/v1/user/${id}`,
+        {},
+        {
+          credentials: 'include',
+        },
+      ),
     staleTime: 0,
   });
 
@@ -40,49 +44,56 @@ export const OtherUserProfile = () => {
   // 유저가 존재하지 않으면, 404 Not Found 페이지로 이동한다.
   if (!user) notFound();
 
-  const {
-    nickname,
-    email,
-    profileImage,
-    position,
-    skills,
-    rate,
-    isFollowing,
-  } = user;
+  const { nickname, email, profileImage, skills, isFollowing } = user;
 
   return (
     <>
-      <div>
-        <Avatar
-          className="size-36"
-          imageSrc={getDisplayProfileImage(profileImage)}
-          fallback={getDisplayNickname(nickname, email)}
-        />
-        <div className="flex flex-col gap-y-1">
-          <span>{getDisplayNickname(nickname, email)}</span>
-          <span>{email}</span>
-          <span>{position && getPosition(position)}</span>
-          <div className="flex items-center gap-x-2">
-            <span>별점 : {rate}</span>
-            <Badge text="뱃지" className="bg-emerald-50 text-emerald-500" />
-          </div>
-          <ul>
-            {skills?.map((skill) => (
-              <li key={skill}>
-                <Badge
-                  text={getSkill(skill)}
-                  className="bg-gray-100 text-gray-800"
-                />
-              </li>
-            ))}
-          </ul>
+      <div className="flex absolute top-4 left-6 right-6 gap-x-3">
+        <div className="flex flex-col items-center gap-y-4">
+          <Avatar
+            className="size-[4.75rem]"
+            imageSrc={getDisplayProfileImage(profileImage)}
+            fallback={getDisplayNickname(nickname, email)}
+          />
         </div>
-      </div>
-      <div>
-        <ToggleFollowButton
-          isFollowing={isFollowing}
-          usedIn="profile"
-        />
+        <div className="flex flex-col gap-y-9 mt-4 flex-1 min-w-0">
+          <div className="flex items-center justify-between md:gap-x-5 md:justify-start">
+            <span className="font-semibold">
+              {getDisplayNickname(nickname, email)}
+            </span>
+            <ToggleFollowButton
+              isFollowing={isFollowing}
+              usedIn="profile"
+              className={`${isFollowing ? 'bg-red-600' : 'bg-black hover:bg-black/70'} text-white h-[28px] text-sm font-semibold rounded-lg py-1 px-3 gap-x-[6px]`}
+            />
+          </div>
+          <div className="flex flex-col gap-y-1 min-w-0">
+            <div className="flex gap-x-2 min-w-0">
+              <span className="text-sm font-medium shrink-0">Skills</span>
+              <ul className="flex gap-x-3 overflow-x-auto flex-nowrap flex-1 min-w-0 scrollbar-hide">
+                {skills?.length === 0 && (
+                  <p className="text-gray-700 text-sm">
+                    설정된 기술스택이 없어요.
+                  </p>
+                )}
+                {skills?.map((skill) => (
+                  <li
+                    className="text-sm font-normal text-gray-700 whitespace-nowrap shrink-0 relative after:content-[''] after:absolute after:right-[-0.375rem] after:top-1/2 after:-translate-y-1/2 after:w-[1px] after:h-3 after:bg-gray-300 last:after:hidden"
+                    key={skill}
+                  >
+                    {getSkill(skill)}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="flex gap-x-1.5">
+              <span className="text-sm font-medium min-w-fit">E-mail</span>
+              <span className="text-sm font-normal text-gray-700 truncate">
+                {email}
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );

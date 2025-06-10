@@ -36,7 +36,8 @@ export const ReplyForm = ({ onSuccess, parentReplyId }: ReplyFormProps) => {
       queryClient.invalidateQueries({
         queryKey: ['items', endpoint],
       });
-      onSuccess(data.replyId);
+
+      onSuccess(data.items);
       setReplyContent('');
     },
     onError: () => {
@@ -57,9 +58,11 @@ export const ReplyForm = ({ onSuccess, parentReplyId }: ReplyFormProps) => {
         value={replyContent}
         onChange={(e) => setReplyContent(e.target.value)}
       />
-      <LoginRequireButton onClick={submitReplyButtonClickHandler}>
-        등록
-      </LoginRequireButton>
+      <div className="flex justify-end">
+        <LoginRequireButton onClick={submitReplyButtonClickHandler}>
+          등록
+        </LoginRequireButton>
+      </div>
     </div>
   );
 };

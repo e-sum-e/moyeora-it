@@ -7,18 +7,18 @@ export const ReplyItem = ({
   writer,
   createdAt,
   replyId,
-  isDeleted,
+  deleted,
 }: Reply) => {
   return (
-    <>
+    <div className="border-2 rounded-lg">
       <ReplyContent
         content={content}
         writer={writer}
         createdAt={createdAt}
         replyId={replyId}
-        isDeleted={isDeleted}
+        deleted={deleted}
       />
       <ReplyThread parentReplyId={replyId} />
-    </>
+    </div>
   );
 };

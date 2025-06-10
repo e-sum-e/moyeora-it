@@ -59,36 +59,36 @@ export const StartDateCalendar = ({
                   : openStartDateCalendar
               }
             >
-              <div>
-                {field.value ? (
-                  formatYearMonthDayWithDot(field.value)
-                ) : (
-                  <>
-                    <div className="text-gray-500">
-                      {formatYearMonthDayWithDot(validStartDate)}
-                    </div>
-                    <div>날짜를 선택해주세요.</div>
-                  </>
-                )}
+              <div className="flex items-center gap-5">
+                <div>
+                  {field.value ? (
+                    formatYearMonthDayWithDot(field.value)
+                  ) : (
+                    <>
+                      <div className="text-gray-500">
+                        {formatYearMonthDayWithDot(validStartDate)}
+                      </div>
+                    </>
+                  )}
+                </div>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button type="button" className="w-[fit-content]">
+                      <CalendarIcon />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <Calendar
+                    mode="single"
+                    selected={field.value}
+                    onSelect={(e) => {
+                      startDateSelect(e, field.onChange);
+                    }}
+                    disabled={{ before: validStartDate }}
+                  />
+                </PopoverContent>
               </div>
-              <PopoverTrigger asChild>
-                <FormControl>
-                  <Button type="button" className="w-[fit-content]">
-                    <CalendarIcon />
-                  </Button>
-                </FormControl>
-              </PopoverTrigger>
-              <PopoverContent>
-                <Calendar
-                  mode="single"
-                  selected={field.value}
-                  onSelect={(e) => {
-                    startDateSelect(e, field.onChange);
-                  }}
-                  disabled={{ before: validStartDate }}
-                  className="bg-pink-100"
-                />
-              </PopoverContent>
             </Popover>
             <FormMessage />
           </FormItem>

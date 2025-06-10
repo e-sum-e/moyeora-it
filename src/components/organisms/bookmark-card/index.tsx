@@ -1,10 +1,10 @@
 import { BookmarkCardContents } from '@/components/molecules/bookmark-card-contents';
-import { CardImage } from '@/components/molecules/card-image';
 import { Group } from '@/types';
 import { isBeforeToday } from '@/utils/dateUtils';
+
 export type ContentInfo = Pick<
 	Group,
-	'id' | 'title' | 'deadline' | 'maxParticipants' | 'position' | 'skills' | 'participants'
+	'id' | 'title' | 'deadline' | 'maxParticipants' | 'position' | 'skills' | 'participants' | 'isBookmark'
 >;
 
 type CardProps = {
@@ -17,14 +17,6 @@ export const BookmarkCard = ({ info }: CardProps) => {
 	return (
 		<div className="relative">
 			<article className="flex w-full">
-				<figure>
-					<CardImage
-						imageSrc="https://picsum.photos/200/300"
-						alt="card-image"
-						width={280}
-						height={150}
-					/>
-				</figure>
 				<BookmarkCardContents className="flex-1" info={info} />
 			</article>
 			{isBeforeDeadline && (

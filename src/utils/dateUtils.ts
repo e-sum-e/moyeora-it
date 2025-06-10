@@ -8,12 +8,14 @@ import {
 } from 'date-fns';
 
 /** 날짜를 0000.00.00 형태로 반환하는 함수 */
-export const formatYearMonthDayWithDot = (date: Date) => {
+export const formatYearMonthDayWithDot = (utcTime: string | Date) => {
+  const date = typeof utcTime === 'string' ? new Date(utcTime) : utcTime;
   return format(date, 'yyyy.MM.dd');
 };
 
 /** 현재 날짜보다 이전날짜인지 확인 */
-export const isBeforeToday = (date: Date) => {
+export const isBeforeToday = (utcTime: string) => {
+  const date = new Date(utcTime);
   const now = new Date(); // 현재 시각 포함
   return isBefore(date, now);
 };
@@ -32,10 +34,13 @@ export const formatRelativeTime = (utcTime: string): string => {
   const date = new Date(utcTime);
   const now = new Date();
 
-  const seconds = differenceInSeconds(now, date);
-  const minutes = differenceInMinutes(now, date);
-  const hours = differenceInHours(now, date);
-  const days = differenceInDays(now, date);
+  /**
+   * 과거 vs 현재 / 현재 vs 과거
+   */
+  const seconds = Math.abs(differenceInSeconds(now, date));
+  const minutes = Math.abs(differenceInMinutes(now, date));
+  const hours = Math.abs(differenceInHours(now, date));
+  const days = Math.abs(differenceInDays(now, date));
 
   if (seconds < 60) return `${seconds}초 전`;
   if (minutes < 60) return `${minutes}분 전`;

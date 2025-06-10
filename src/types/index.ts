@@ -77,9 +77,9 @@ export type WriteForm = {
 export type Group = {
   id: number;
   title: string;
-  deadline: Date;
-  startDate: Date; // 모임의 시작일
-  endDate: Date; // 모임의 종료일
+  deadline: string;
+  startDate: string; // 모임의 시작일
+  endDate: string; // 모임의 종료일
   maxParticipants: number;
   participants: UserSummary[];
   description: string;
@@ -109,7 +109,7 @@ export type Reply = {
   content: string;
   writer: UserSummary;
   createdAt: string;
-  isDeleted?: boolean; // 삭제된 댓글인지 여부
+  deleted: boolean; // 삭제된 댓글인지 여부
 };
 
 export type GroupDetail = {
@@ -119,7 +119,7 @@ export type GroupDetail = {
     description: string;
     autoAllow: boolean;
     maxParticipants: number;
-    type: string;
+    type: GroupType;
     skills: Skill[];
     position: Position[];
     deadline: string;
@@ -127,7 +127,7 @@ export type GroupDetail = {
     endDate: string;
     createdAt: string;
     participants: UserSummary[];
-    isBbookmark: boolean;
+    isBookmark: boolean;
   };
   host: UserSummary;
   isApplicant: boolean;

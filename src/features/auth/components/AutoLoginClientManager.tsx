@@ -32,8 +32,6 @@ const AutoLoginClientManager = ({
       clearUser();
     }
 
-    // TODO: 실제 배포시 삭제
-    console.log('refreshToken 여부', hasRefreshToken);
     // eslint-disable-next-line
   }, []);
 
