@@ -224,11 +224,14 @@ export const WriteForm = ({ userId }: WriteFormProps) => {
                 variant={'outline'}
                 type="button"
                 onClick={cancelClickHandler}
-                className="flex-1 md:flex-none"
+                className="flex-1 md:flex-none cursor-pointer"
               >
                 취소하기
               </Button>
-              <Button type="submit" className="flex-1 md:flex-none">
+              <Button
+                type="submit"
+                className="flex-1 md:flex-none cursor-pointer"
+              >
                 등록하기
               </Button>
             </div>
