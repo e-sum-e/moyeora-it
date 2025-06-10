@@ -93,7 +93,9 @@ export const GroupDetaiilCard = ({
                   key={userId}
                   imageSrc={getDisplayProfileImage(profileImage)}
                   fallback={getDisplayNickname(nickname, email)}
-                  className={`${index !== 0 ? '-ml-3' : ''} z-${10 + index}`}
+                  className={`${index !== 0 ? '-ml-3' : ''} ${getZIndexClass(
+                    index,
+                  )}`}
                 />
               ))}
             <ParticipantListModal
@@ -108,6 +110,11 @@ export const GroupDetaiilCard = ({
       </section>
     </article>
   );
+};
+
+const getZIndexClass = (index: number) => {
+  const zIndexMap = ['z-10', 'z-20', 'z-30'];
+  return zIndexMap[index] ?? 'z-0';
 };
 
 const GroupInfoItem = ({
