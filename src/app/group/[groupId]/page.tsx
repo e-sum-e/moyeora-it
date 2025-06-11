@@ -7,12 +7,8 @@ import { GroupDetaiilCard } from '@/components/organisms/group-detail-card';
 import { ReplySection } from '@/components/organisms/reply/reply-section';
 import { GroupDetail } from '@/types';
 import { isBeforeToday } from '@/utils/dateUtils';
-import { notFound, useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-
-// type GroupDetailPageProps = {
-//   params: Promise<{ groupId: string }>;
-// };
+import { useQuery } from '@tanstack/react-query';
+import { useParams } from 'next/navigation';
 
 type GroupDetailResponse = {
   status: {
@@ -24,54 +20,34 @@ type GroupDetailResponse = {
 };
 
 export default function GroupDetailPage() {
-  // const groupId = (await params).groupId;
-  // let data: GroupDetail;
+  const { groupId: groupIdParam } = useParams();
+  const groupId = Number(groupIdParam);
 
-  // try {
-  //   const response: GroupDetailResponse = await request.get(
-  //     `/v2/groups/${groupId}`,
-  //     {},
-  //     { credentials: 'include' },
-  //   );
-
-  //   if (!response.status.success || !response.items) {
-  //     return notFound();
-  //   }
-
-  //   data = response.items;
-  // } catch (err) {
-  //   console.error(err);
-  //   notFound();
-  // }
-  const { groupId } = useParams();
-  const [data, setData] = useState<GroupDetail | null>(null);
-
-  // useQuery로 리팩토링 예정
-  useEffect(() => {
-    const fetchGroupDetailData = async () => {
-      const response: GroupDetailResponse = await request.get(
+  const { data, isPending, isError, error } = useQuery({
+    queryKey: ['group', groupId],
+    queryFn: async () => {
+      const res: GroupDetailResponse = await request.get(
         `/v2/groups/${groupId}`,
         {},
         { credentials: 'include' },
       );
+      if (!res.status.success || !res.items) throw new Error('not found');
+      return res.items;
+    },
+  });
 
-      if (!response.status.success || !response.items) {
-        return notFound();
-      }
+  if (isError) {
+    console.error(error);
+    return <div>에러 발생</div>;
+  }
 
-      setData(response.items);
-    };
-    try {
-      fetchGroupDetailData();
-    } catch (err) {
-      console.error(err);
-      notFound();
-    }
-  }, [groupId]);
+  if (!groupIdParam || isNaN(Number(groupIdParam))) {
+    return <div>잘못된 접근입니다.</div>;
+  }
 
-  if (!data) return null;
+  if (isPending) return <div>로딩 중</div>;
 
-  const { group, host, isApplicant } = data;
+  const { group, host, isApplicant, isJoined } = data;
 
   const isRecruiting =
     !isBeforeToday(data.group.deadline) &&
@@ -89,7 +65,12 @@ export default function GroupDetailPage() {
       </main>
       {isRecruiting && (
         <footer className="fixed bottom-0 z-50 bg-white border-t-2 py-2 px-8 w-full flex justify-end gap-4">
-          <GroupActionButtons hostId={host.userId} isApplicant={isApplicant} />
+          <GroupActionButtons
+            hostId={host.userId}
+            isApplicant={isApplicant}
+            isJoined={isJoined}
+            autoAllow={group.autoAllow}
+          />
         </footer>
       )}
     </div>
