@@ -6,12 +6,12 @@ import { Filter } from '@/components/molecules/group/filter';
 import { GroupCard } from '@/components/molecules/group/group-card';
 import { SortOrder } from '@/components/molecules/group/sort-order';
 import { SearchInput } from '@/components/molecules/search-input/search-input';
-import { Tab, TabType } from '@/components/molecules/tab';
+import { TabClientContent } from '@/components/molecules/tab/tab-client-content';
 import { getBookmarkList } from '@/features/bookmark';
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
 import useAuthStore from '@/stores/useAuthStore';
-import { Group, GroupType } from '@/types';
+import { Group } from '@/types';
 import { Position, Skill } from '@/types/enums';
 import flattenPages from '@/utils/flattenPages';
 import { useRouter } from 'next/navigation';
@@ -20,12 +20,6 @@ import { useEffect, useMemo, useState } from 'react';
 type GroupListProps = {
   searchParams: Record<string, string | undefined>;
 };
-
-const tabList: TabType[] = [
-  { value: '', label: '모든 그룹' },
-  { value: GroupType.STUDY, label: '스터디' },
-  { value: GroupType.PROJECT, label: '프로젝트' },
-];
 
 enum EMPTY_INFO_MESSAGE {
   EMPTY_INITIAL = '생성된 그룹이 없습니다',
@@ -144,11 +138,8 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
 
   return (
     <>
-      <Tab
-        tabList={tabList}
-        onValueChange={(value) => updateQueryParams({ type: value })}
-      >
-        <div className="flex justify-start ">
+      <TabClientContent value={queryParams.type}>
+        <div className="flex justify-start py-2">
           <Filter updateQueryParams={updateQueryParams} />
           <SortOrder updateQueryParams={updateQueryParams} />
         </div>
@@ -173,7 +164,7 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
           )}
           {hasNextPage && <div ref={ref}></div>}
         </ErrorBoundary>
-      </Tab>
+      </TabClientContent>
     </>
   );
 };

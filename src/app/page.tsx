@@ -1,5 +1,6 @@
 import { request } from '@/api/request';
 import { WriteGroupButton } from '@/components/molecules/group-create-button';
+import { TabServerHeader } from '@/components/molecules/tab/tab-server-header';
 import { GroupList } from '@/components/organisms/group';
 import RecommendGroup from '@/components/organisms/recommend-group';
 import { Position, Skill } from '@/types/enums';
@@ -60,6 +61,7 @@ export default async function Home({
         <div className="text-2xl font-extrabold">🔥 인기글</div>
         <RecommendGroup />
         <WriteGroupButton />
+        <TabServerHeader currentTab={awaitedSearchParams.type ?? ''} />
         <Suspense fallback={<div>Loading...</div>}>
           <GroupList searchParams={awaitedSearchParams} />
         </Suspense>
