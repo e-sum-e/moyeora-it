@@ -1,11 +1,10 @@
 import { Avatar } from '@/components/atoms/avatar';
-import { Badge } from '@/components/atoms/badge';
 import { BookmarkButton } from '@/components/atoms/bookmark-button';
+import { GroupPositions } from '@/components/atoms/group/group-positions';
 import { GroupSkills } from '@/components/atoms/group/group-skills';
 import { GroupProgress } from '@/components/atoms/group/particiapant-progress';
 import { ParticipantListModal } from '@/components/organisms/participant-list-modal';
 import { GroupDetail, GroupTypeName } from '@/types';
-import { Position } from '@/types/enums';
 import { formatYearMonthDayWithDot } from '@/utils/dateUtils';
 import { getDisplayNickname, getDisplayProfileImage } from '@/utils/fallback';
 import Link from 'next/link';
@@ -57,17 +56,7 @@ export const GroupDetaiilCard = ({
         </GroupInfoItem>
 
         <GroupInfoItem label="모집 분야">
-          <ul className="flex gap-2">
-            {info.group.position.map((position) => (
-              <li key={Position[position]}>
-                <Badge
-                  text={Position[position]}
-                  className="py-0 px-1 border border-gray-800"
-                />
-              </li>
-            ))}
-          </ul>
-          {/* <GroupPositions positions={info.group.position} /> */}
+          <GroupPositions positions={info.group.position} />
         </GroupInfoItem>
 
         <GroupInfoItem label="기술 스택">
