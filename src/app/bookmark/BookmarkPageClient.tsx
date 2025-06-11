@@ -65,7 +65,9 @@ export function BookmarkPageClient() {
       const processedItems = setLocalBookmarkItems(items).filter((item) => item.isBookmark);
       setBookmarkItems(processedItems);
     } else {
-      setBookmarkItems(items);
+      // 서버에서 가져온 데이터 중 찜한 데이터만 가져오기
+      const processedItems = items.filter((item) => item.isBookmark);
+      setBookmarkItems(processedItems);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);

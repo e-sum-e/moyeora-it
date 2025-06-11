@@ -15,6 +15,11 @@ export const UserProfile = () => {
   const { id } = useParams<{ id: string }>();
   const user = useAuthStore((state) => state.user);
 
-  // @ts-expect-error 백엔드에서 주는 사용자 아이디 프로퍼티가 userId가 아닌 id여서 일단 아래와 같이 변경
-  return String(user?.id) === id ? <CurrentUserProfile /> : <OtherUserProfile />;
+  return (
+    <div className='relative h-[168px]'>
+      <div className='rounded-t-2xl h-[73px] bg-green-300'/>
+      {/* @ts-expect-error 백엔드에서 주는 사용자 아이디 프로퍼티가 userId가 아닌 id여서 일단 아래와 같이 변경 */}
+      {String(user?.id) === id ? <CurrentUserProfile /> : <OtherUserProfile />}
+    </div>
+  );
 };
