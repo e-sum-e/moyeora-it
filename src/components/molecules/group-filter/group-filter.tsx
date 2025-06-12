@@ -81,7 +81,7 @@ export const GroupFilter = () => {
           ].map((item) => (
             <li key={item.value}>
               <Link
-                className={`shrink-0 ${type === item.value ? 'text-black' : 'text-gray-400'} font-medium`}
+                className={`shrink-0 ${type === item.value ? 'text-gray-900' : 'text-gray-400'} font-semibold`}
                 href={`${pathname}?type=${item.value}`}
               >
                 {item.label}
