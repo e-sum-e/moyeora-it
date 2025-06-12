@@ -1,14 +1,11 @@
-'use client';
-
-import { request } from '@/api/request';
 import { GroupDescription } from '@/components/atoms/group-description';
 import { GroupActionButtons } from '@/components/molecules/gorup-action-buttons';
 import { GroupDetaiilCard } from '@/components/organisms/group-detail-card';
 import { ReplySection } from '@/components/organisms/reply/reply-section';
 import { GroupDetail } from '@/types';
 import { isBeforeToday } from '@/utils/dateUtils';
-import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'next/navigation';
+import { cookies } from 'next/headers';
+import { notFound } from 'next/navigation';
 
 type GroupDetailResponse = {
   status: {
@@ -19,39 +16,75 @@ type GroupDetailResponse = {
   items: GroupDetail;
 };
 
-export default function GroupDetailPage() {
-  const { groupId: groupIdParam } = useParams();
-  const groupId = Number(groupIdParam);
+type GroupDetailPageProps = {
+  params: Promise<{ groupId: string }>;
+};
 
-  const { data, isPending, isError, error } = useQuery({
-    queryKey: ['group', groupId],
-    queryFn: async () => {
-      const res: GroupDetailResponse = await request.get(
-        `/v2/groups/${groupId}`,
-        {},
-        { credentials: 'include' },
-      );
-      if (!res.status.success || !res.items) throw new Error('not found');
-      return res.items;
-    },
-  });
+export default async function GroupDetailPage({
+  params,
+}: GroupDetailPageProps) {
+  const groupId = (await params).groupId;
 
-  if (isError) {
-    console.error(error);
-    return <div>에러 발생</div>;
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get('accessToken');
+  const refreshToken = cookieStore.get('refreshToken');
+
+  const cookieString = [
+    accessToken && `${accessToken.name}=${accessToken.value}`,
+    refreshToken && `${refreshToken.name}=${refreshToken.value}`,
+  ]
+    .filter(Boolean)
+    .join('; ');
+
+  let response: Response;
+
+  try {
+    response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/v2/groups/${groupId}`,
+      {
+        headers: {
+          Cookie: cookieString,
+        },
+      },
+    );
+  } catch (error) {
+    console.error('Fetch 요청 실패:', error);
+    throw new Error('서버와 연결할 수 없습니다. 잠시 후 다시 시도해주세요.');
   }
 
-  if (!groupIdParam || isNaN(Number(groupIdParam))) {
-    return <div>잘못된 접근입니다.</div>;
+  if (response.status === 404) {
+    return notFound();
   }
 
-  if (isPending) return <div>로딩 중</div>;
+  if (!response.ok) {
+    console.error('응답 상태 오류:', response.status);
+    throw new Error('그룹 정보를 불러오는 데 문제가 발생했습니다.');
+  }
 
+  let responseBody: GroupDetailResponse;
+
+  try {
+    responseBody = await response.json();
+  } catch (err) {
+    console.error('JSON 파싱 오류:', err);
+    throw new Error('서버 응답을 처리하는 중 오류가 발생했습니다.');
+  }
+
+  if (!responseBody.items) {
+    return notFound();
+  }
+
+  if (!responseBody.status.success) {
+    console.error('API 성공 상태 false:', responseBody.status);
+    throw new Error('그룹 정보를 불러오는 데 실패했습니다.');
+  }
+
+  const data = responseBody.items;
   const { group, host, isApplicant, isJoined } = data;
 
   const isRecruiting =
-    !isBeforeToday(data.group.deadline) &&
-    data.group.participants.length < data.group.maxParticipants;
+    !isBeforeToday(group.deadline) &&
+    group.participants.length < group.maxParticipants;
 
   return (
     <div>
