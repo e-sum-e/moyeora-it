@@ -1,8 +1,7 @@
 import { request } from '@/api/request';
 import { WriteGroupButton } from '@/components/molecules/group-create-button';
-import { GroupList } from '@/components/organisms/group';
+import { Groups } from '@/components/organisms/group';
 import RecommendGroup from '@/components/organisms/recommend-group';
-import { QueryErrorBoundary } from '@/components/query-error-boundary';
 import { Position, Skill } from '@/types/enums';
 import {
   dehydrate,
@@ -61,17 +60,9 @@ export default async function Home({
         <div className="text-2xl font-extrabold">🔥 인기글</div>
         <RecommendGroup />
         <WriteGroupButton />
-        <QueryErrorBoundary
-          fallback={
-            <div>
-              ⚠️ 그룹을 불러오는 중 문제가 발생했습니다. 다시 시도해주세요.
-            </div>
-          }
-        >
-          <Suspense fallback={<div>Loading...</div>}>
-            <GroupList searchParams={awaitedSearchParams} />
-          </Suspense>
-        </QueryErrorBoundary>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Groups searchParams={awaitedSearchParams} />
+        </Suspense>
       </HydrationBoundary>
     </div>
   );
