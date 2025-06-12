@@ -8,7 +8,7 @@ import useAuthStore from '@/stores/useAuthStore';
 import { Group } from '@/types';
 import { Position, Skill } from '@/types/enums';
 import flattenPages from '@/utils/flattenPages';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 enum EMPTY_INFO_MESSAGE {
   EMPTY_INITIAL = '생성된 그룹이 없습니다',
@@ -17,28 +17,24 @@ enum EMPTY_INFO_MESSAGE {
 }
 
 type GroupListProps = {
-  searchParams: Record<string, string | undefined>;
+  queryParams: {
+    type: string;
+    skills: Skill;
+    position: Position;
+    sort: string;
+    order: string;
+    cursor: string | number;
+    search: string;
+  };
 };
 
-export const GroupList = ({ searchParams }: GroupListProps) => {
+export const GroupList = ({ queryParams }: GroupListProps) => {
   const [isEmptyItems, setIsEmptyItems] = useState(true);
   const [emptyInfoMessage, setEmptyInfoMessage] =
     useState<EMPTY_INFO_MESSAGE | null>(null);
   const [displayItems, setDisplayItems] = useState<Group[]>([]); //북마크 처리
 
   const user = useAuthStore((state) => state.user);
-  const queryParams = useMemo(
-    () => ({
-      type: searchParams.type ?? '',
-      skills: Skill[searchParams.skill as keyof typeof Skill] ?? '',
-      position: Position[searchParams.position as keyof typeof Position] ?? '',
-      sort: searchParams.sort ?? 'createdAt',
-      order: searchParams.order ?? 'desc',
-      cursor: searchParams.order === 'desc' || !searchParams.order ? 'null' : 0,
-      search: searchParams.search ?? '',
-    }),
-    [searchParams],
-  );
 
   const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<Group>({
     url: '/v2/groups',
@@ -62,14 +58,14 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
     if (items.length === 0) {
       // 받아온 데이터가 없는 경우
       setIsEmptyItems(true);
-      if (searchParams.search) {
+      if (queryParams.search) {
         // 검색어가 있다면 검색어를 우선으로 메시지 설정
         setEmptyInfoMessage(EMPTY_INFO_MESSAGE.SEARCH);
         return;
       } else if (
-        searchParams.type ||
-        searchParams.skill ||
-        searchParams.position
+        queryParams.type ||
+        queryParams.skills ||
+        queryParams.position
       ) {
         setEmptyInfoMessage(EMPTY_INFO_MESSAGE.FILTER);
         return;
@@ -79,7 +75,7 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
     }
     setEmptyInfoMessage(null);
     setIsEmptyItems(false);
-  }, [searchParams, items.length]);
+  }, [queryParams, items.length]);
 
   useEffect(() => {
     if (!user) {

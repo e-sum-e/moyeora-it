@@ -6,6 +6,7 @@ import { SortOrder } from '@/components/molecules/group/sort-order';
 import { SearchInput } from '@/components/molecules/search-input/search-input';
 import { Tab, TabType } from '@/components/molecules/tab';
 import { GroupType } from '@/types';
+import { Position, Skill } from '@/types/enums';
 import { useRouter } from 'next/navigation';
 import { Suspense } from 'react';
 
@@ -20,7 +21,6 @@ const tabList: TabType[] = [
 ];
 
 export const Groups = ({ searchParams }: GroupListProps) => {
-  console.log('client', searchParams);
   const router = useRouter();
   /*
    * router.push를 수행하는 함수
@@ -53,6 +53,16 @@ export const Groups = ({ searchParams }: GroupListProps) => {
     router.push(`?${params.toString()}`);
   };
 
+  const queryParams = {
+    type: searchParams.type ?? '',
+    skills: Skill[searchParams.skill as keyof typeof Skill] ?? '',
+    position: Position[searchParams.position as keyof typeof Position] ?? '',
+    sort: searchParams.sort ?? 'createdAt',
+    order: searchParams.order ?? 'desc',
+    cursor: searchParams.order === 'desc' || !searchParams.order ? 'null' : 0,
+    search: searchParams.search ?? '',
+  };
+
   return (
     <>
       <Tab
@@ -65,7 +75,7 @@ export const Groups = ({ searchParams }: GroupListProps) => {
         </div>
         <SearchInput />
         <Suspense fallback={<div>Loading...</div>}>
-          <GroupList searchParams={searchParams} />
+          <GroupList queryParams={queryParams} />
         </Suspense>
       </Tab>
     </>

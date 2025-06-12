@@ -16,7 +16,14 @@ export default async function Home({
   searchParams: Promise<Record<string, string | undefined>>;
 }) {
   const awaitedSearchParams = await searchParams; // searchParams가 Promise 객체여서 await으로 벗겨내야 함
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 60 * 1000, // 기본 캐싱 시간(1분)
+      },
+    },
+  });
+
   const queryParams = {
     type: awaitedSearchParams.type ?? '',
     skills: Skill[awaitedSearchParams.skill as keyof typeof Skill] ?? '',
