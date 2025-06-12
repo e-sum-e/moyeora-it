@@ -1,7 +1,5 @@
 'use client';
 
-import { ErrorBoundary } from '@/components/error-boundary';
-import { handleError } from '@/components/error-boundary/error-handler';
 import { Filter } from '@/components/molecules/group/filter';
 import { GroupCard } from '@/components/molecules/group/group-card';
 import { SortOrder } from '@/components/molecules/group/sort-order';
@@ -74,7 +72,7 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
   const queryParams = useMemo(
     () => ({
       type: searchParams.type ?? '',
-      skill: Skill[searchParams.skill as keyof typeof Skill] ?? '',
+      skills: Skill[searchParams.skill as keyof typeof Skill] ?? '',
       position: Position[searchParams.position as keyof typeof Position] ?? '',
       sort: searchParams.sort ?? 'createdAt',
       order: searchParams.order ?? 'desc',
@@ -153,26 +151,16 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
           <SortOrder updateQueryParams={updateQueryParams} />
         </div>
         <SearchInput />
-        <ErrorBoundary
-          fallback={({ error, resetErrorBoundary }) =>
-            handleError({
-              error,
-              resetErrorBoundary,
-              defaultMessage: '그룹을 불러오는 중 문제가 발생했습니다',
-            })
-          }
-        >
-          {isEmptyItems && emptyInfoMessage !== null ? (
-            <div>{emptyInfoMessage}</div>
-          ) : (
-            <ul className="flex flex-col gap-3 mt-8 md:flex-row md:flex-wrap md:gap-6 md:justify-center">
-              {displayItems.map((group) => (
-                <GroupCard key={group.id} item={group} />
-              ))}
-            </ul>
-          )}
-          {hasNextPage && <div ref={ref}></div>}
-        </ErrorBoundary>
+        {isEmptyItems && emptyInfoMessage !== null ? (
+          <div>{emptyInfoMessage}</div>
+        ) : (
+          <ul className="flex flex-col gap-3 mt-8 md:flex-row md:flex-wrap md:gap-6 md:justify-center">
+            {displayItems.map((group) => (
+              <GroupCard key={group.id} item={group} />
+            ))}
+          </ul>
+        )}
+        {hasNextPage && <div ref={ref}></div>}
       </Tab>
     </>
   );
