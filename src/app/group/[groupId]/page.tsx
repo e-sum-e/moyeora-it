@@ -23,7 +23,7 @@ type GroupDetailPageProps = {
 export default async function GroupDetailPage({
   params,
 }: GroupDetailPageProps) {
-  const groupId = (await params).groupId;
+  const groupId = Number((await params).groupId);
 
   const cookieStore = await cookies();
   const accessToken = cookieStore.get('accessToken');
@@ -45,6 +45,7 @@ export default async function GroupDetailPage({
         headers: {
           Cookie: cookieString,
         },
+        next: { tags: [`group-detail-${groupId}`] },
       },
     );
   } catch (error) {
@@ -80,6 +81,8 @@ export default async function GroupDetailPage({
   }
 
   const data = responseBody.items;
+  console.log(data);
+
   const { group, host, isApplicant, isJoined } = data;
 
   const isRecruiting =
@@ -99,6 +102,7 @@ export default async function GroupDetailPage({
       {isRecruiting && (
         <footer className="fixed bottom-0 z-50 bg-white border-t-2 py-2 px-8 w-full flex justify-end gap-4">
           <GroupActionButtons
+            groupId={groupId}
             hostId={host.userId}
             isApplicant={isApplicant}
             isJoined={isJoined}
