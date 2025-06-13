@@ -1,6 +1,6 @@
 'use client';
 
-import { revalidateGroupDetailTag } from '@/actions/group';
+import { invalidateTag } from '@/actions/invalidate';
 import { ApplyJoinButton } from '@/components/atoms/apply-join-button.tsx';
 import { CancelGroupButton } from '@/components/atoms/cancel-group-button';
 import { CancelJoinButton } from '@/components/atoms/cancel-join-button';
@@ -38,7 +38,7 @@ export const GroupActionButtons = ({
 
     // 자동 수락일 경우, 모임 상세 페이지 새로 불러오기
     if (autoAllow) {
-      revalidateGroupDetailTag(groupId);
+      invalidateTag(`group-detail-${groupId}`);
     }
   };
 
@@ -47,7 +47,7 @@ export const GroupActionButtons = ({
 
     // 수락된 참여자일 경우, 모임 상세 페이지 새로 불러오기
     if (isJoined) {
-      revalidateGroupDetailTag(groupId);
+      invalidateTag(`group-detail-${groupId}`);
     }
   };
 
