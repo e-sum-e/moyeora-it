@@ -1,10 +1,10 @@
 import { request } from '@/api/request';
+import { Page } from '@/utils/flattenPages';
 import {
   InfiniteData,
   useSuspenseInfiniteQuery,
   UseSuspenseInfiniteQueryOptions,
 } from '@tanstack/react-query';
-import { Page } from '@/utils/flattenPages';
 
 export const useFetchItems = <T>({
   url,
@@ -20,14 +20,14 @@ export const useFetchItems = <T>({
   return useSuspenseInfiniteQuery<Page<T>, Error, InfiniteData<Page<T>>>({
     queryKey: ['items', url, queryParams ?? {}],
     queryFn: async ({ pageParam }): Promise<Page<T>> =>
-      request.get(url, {
-        ...queryParams,
-        cursor: pageParam as number | string,
-      },
-      {
-        credentials: 'include',
-      }
-    ),
+      request.get(
+        url,
+        {
+          cursor: pageParam as number | string,
+          ...queryParams, // groups -> order=desc일 경우 cursor=null로 덮어써주기 위해 cursor 다음에 위치
+        },
+        { credentials: 'include' },
+      ),
     initialPageParam: 0,
     getNextPageParam(lastPage) {
       return lastPage.hasNext ? lastPage.cursor : null;

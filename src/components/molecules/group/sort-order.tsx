@@ -52,14 +52,30 @@ export const SortOrder = ({ updateQueryParams }: OrderProps) => {
 
     // 이미 선택된 sort나 order가 현재 선택한 sort나 order와 같을 경우 updateQueryParams에서 제외하여 토글되지 않게 한다
     if (selectedSort === option.sort) {
+      if (option.order === 'desc') {
+        updateQueryParams({ order: option.order, cursor: 'null' });
+        return;
+      }
       updateQueryParams({ order: option.order });
       return;
     }
     if (selectedOrder === option.order) {
+      if (option.order === 'desc') {
+        updateQueryParams({ sort: option.sort, cursor: 'null' });
+        return;
+      }
       updateQueryParams({ sort: option.sort });
       return;
     }
 
+    if (option.order === 'desc') {
+      updateQueryParams({
+        sort: option.sort,
+        order: option.order,
+        cursor: 'null',
+      });
+      return;
+    }
     // 이미 선택된 정렬 옵션과 아예 다른 경우 updateQueryParams에서 모두 업데이트 한다
     updateQueryParams({ sort: option.sort, order: option.order });
   };
