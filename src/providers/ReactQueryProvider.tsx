@@ -7,6 +7,8 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query';
 
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
 function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {
@@ -19,7 +21,7 @@ function makeQueryClient() {
 
 let browserQueryClient: QueryClient | undefined = undefined;
 
-function getQueryClient() {
+export function getQueryClient() {
   if (isServer) {
     return makeQueryClient(); // 서버에서 실행 중인 경우 새 클라이언트를 반환
   } else {
@@ -36,6 +38,9 @@ export function ReactQueryProvider({
   const queryClient = getQueryClient();
 
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      {children}
+      <ReactQueryDevtools />
+    </QueryClientProvider>
   );
 }
