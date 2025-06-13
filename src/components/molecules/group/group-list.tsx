@@ -8,7 +8,7 @@ import useAuthStore from '@/stores/useAuthStore';
 import { Group } from '@/types';
 import { Position, Skill } from '@/types/enums';
 import flattenPages from '@/utils/flattenPages';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 enum EMPTY_INFO_MESSAGE {
   EMPTY_INITIAL = '생성된 그룹이 없습니다',
@@ -32,7 +32,6 @@ export const GroupList = ({ queryParams }: GroupListProps) => {
   const [isEmptyItems, setIsEmptyItems] = useState(true);
   const [emptyInfoMessage, setEmptyInfoMessage] =
     useState<EMPTY_INFO_MESSAGE | null>(null);
-  const [displayItems, setDisplayItems] = useState<Group[]>([]); //북마크 처리
 
   const user = useAuthStore((state) => state.user);
 
@@ -40,6 +39,7 @@ export const GroupList = ({ queryParams }: GroupListProps) => {
     url: '/v2/groups',
     queryParams: { ...queryParams, size: 10 },
   });
+
   const { ref } = useFetchInView({
     fetchNextPage,
     isLoading,
@@ -50,9 +50,17 @@ export const GroupList = ({ queryParams }: GroupListProps) => {
 
   const items = flattenPages(data.pages);
 
-  // useEffect(() => {
-  //   console.log('✅ Hydrated data from client:', queryParams); // DEV : 💡 서버 컴포넌트에서 prefetch 하는지 확인용
-  // }, [queryParams]);
+  const itemsWithBookmark = useMemo(() => {
+    if (!user) {
+      const bookmarks = getBookmarkList();
+      return items.map((item) => ({
+        ...item,
+        isBookmark: bookmarks.includes(item.id),
+      }));
+    }
+
+    return items;
+  }, [items, user]);
 
   useEffect(() => {
     if (items.length === 0) {
@@ -61,34 +69,25 @@ export const GroupList = ({ queryParams }: GroupListProps) => {
       if (queryParams.search) {
         // 검색어가 있다면 검색어를 우선으로 메시지 설정
         setEmptyInfoMessage(EMPTY_INFO_MESSAGE.SEARCH);
-        return;
       } else if (
         queryParams.type ||
         queryParams.skills ||
         queryParams.position
       ) {
         setEmptyInfoMessage(EMPTY_INFO_MESSAGE.FILTER);
-        return;
+      } else {
+        // 받아온 데이터는 없지만 필터도 없는 경우(아직 생성된 그룹이 하나도 없을 경우)
+        setEmptyInfoMessage(EMPTY_INFO_MESSAGE.EMPTY_INITIAL);
       }
-      setEmptyInfoMessage(EMPTY_INFO_MESSAGE.EMPTY_INITIAL); // 받아온 데이터는 없지만 필터도 없는 경우(아직 생성된 그룹이 하나도 없을 경우)
-      return;
+    } else {
+      setIsEmptyItems(false);
+      setEmptyInfoMessage(null);
     }
-    setEmptyInfoMessage(null);
-    setIsEmptyItems(false);
   }, [queryParams, items.length]);
 
-  useEffect(() => {
-    if (!user) {
-      const bookmark = getBookmarkList();
-      const processedItems = flattenPages(data.pages).map((item) => ({
-        ...item,
-        isBookmark: bookmark.includes(item.id),
-      }));
-      setDisplayItems(processedItems);
-    } else {
-      setDisplayItems(flattenPages(data.pages));
-    }
-  }, [data.pages, user]);
+  // useEffect(() => {
+  //   console.log('✅ Hydrated data from client:', queryParams); // DEV : 💡 서버 컴포넌트에서 prefetch 하는지 확인용
+  // }, [queryParams]);
 
   return (
     <>
@@ -96,12 +95,16 @@ export const GroupList = ({ queryParams }: GroupListProps) => {
         <div>{emptyInfoMessage}</div>
       ) : (
         <ul className="flex flex-col gap-3 mt-8 md:flex-row md:flex-wrap md:gap-6 md:justify-center">
-          {displayItems.map((group) => (
+          {itemsWithBookmark.map((group) => (
             <GroupCard key={group.id} item={group} />
           ))}
         </ul>
       )}
-      {hasNextPage && <div ref={ref}></div>}
+      {hasNextPage && (
+        <div className="h-[300px] border-1 border-blue-800" ref={ref}>
+          무한스크롤 확인
+        </div>
+      )}
     </>
   );
 };
