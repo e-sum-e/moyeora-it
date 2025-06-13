@@ -1,18 +1,11 @@
-'use client';
-
-import { request } from '@/api/request';
 import { GroupDescription } from '@/components/atoms/group-description';
 import { GroupActionButtons } from '@/components/molecules/gorup-action-buttons';
 import { GroupDetaiilCard } from '@/components/organisms/group-detail-card';
 import { ReplySection } from '@/components/organisms/reply/reply-section';
 import { GroupDetail } from '@/types';
 import { isBeforeToday } from '@/utils/dateUtils';
-import { notFound, useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-
-// type GroupDetailPageProps = {
-//   params: Promise<{ groupId: string }>;
-// };
+import { cookies } from 'next/headers';
+import { notFound } from 'next/navigation';
 
 type GroupDetailResponse = {
   status: {
@@ -23,59 +16,78 @@ type GroupDetailResponse = {
   items: GroupDetail;
 };
 
-export default function GroupDetailPage() {
-  // const groupId = (await params).groupId;
-  // let data: GroupDetail;
+type GroupDetailPageProps = {
+  params: Promise<{ groupId: string }>;
+};
 
-  // try {
-  //   const response: GroupDetailResponse = await request.get(
-  //     `/v2/groups/${groupId}`,
-  //     {},
-  //     { credentials: 'include' },
-  //   );
+export default async function GroupDetailPage({
+  params,
+}: GroupDetailPageProps) {
+  const groupId = Number((await params).groupId);
 
-  //   if (!response.status.success || !response.items) {
-  //     return notFound();
-  //   }
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get('accessToken');
+  const refreshToken = cookieStore.get('refreshToken');
 
-  //   data = response.items;
-  // } catch (err) {
-  //   console.error(err);
-  //   notFound();
-  // }
-  const { groupId } = useParams();
-  const [data, setData] = useState<GroupDetail | null>(null);
+  const cookieString = [
+    accessToken && `${accessToken.name}=${accessToken.value}`,
+    refreshToken && `${refreshToken.name}=${refreshToken.value}`,
+  ]
+    .filter(Boolean)
+    .join('; ');
 
-  // useQuery로 리팩토링 예정
-  useEffect(() => {
-    const fetchGroupDetailData = async () => {
-      const response: GroupDetailResponse = await request.get(
-        `/v2/groups/${groupId}`,
-        {},
-        { credentials: 'include' },
-      );
+  let response: Response;
 
-      if (!response.status.success || !response.items) {
-        return notFound();
-      }
+  try {
+    response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/v2/groups/${groupId}`,
+      {
+        headers: {
+          Cookie: cookieString,
+        },
+        next: { tags: [`group-detail-${groupId}`] },
+      },
+    );
+  } catch (error) {
+    console.error('Fetch 요청 실패:', error);
+    throw new Error('서버와 연결할 수 없습니다. 잠시 후 다시 시도해주세요.');
+  }
 
-      setData(response.items);
-    };
-    try {
-      fetchGroupDetailData();
-    } catch (err) {
-      console.error(err);
-      notFound();
-    }
-  }, [groupId]);
+  if (response.status === 404) {
+    return notFound();
+  }
 
-  if (!data) return null;
+  if (!response.ok) {
+    console.error('응답 상태 오류:', response.status);
+    throw new Error('그룹 정보를 불러오는 데 문제가 발생했습니다.');
+  }
 
-  const { group, host, isApplicant } = data;
+  let responseBody: GroupDetailResponse;
+
+  try {
+    responseBody = await response.json();
+  } catch (err) {
+    console.error('JSON 파싱 오류:', err);
+    throw new Error('서버 응답을 처리하는 중 오류가 발생했습니다.');
+  }
+
+  if (!responseBody.items) {
+    return notFound();
+  }
+
+  if (!responseBody.status.success) {
+    console.error('API 성공 상태 false:', responseBody.status);
+    throw new Error('그룹 정보를 불러오는 데 실패했습니다.');
+  }
+
+  const data = responseBody.items;
+  console.log(data);
+
+  const { group, host, isApplicant, isJoined } = data;
 
   const isRecruiting =
-    !isBeforeToday(data.group.deadline) &&
-    data.group.participants.length < data.group.maxParticipants;
+    !isBeforeToday(group.deadline) &&
+    group.participants.length < group.maxParticipants;
 
   return (
     <div>
@@ -89,7 +101,13 @@ export default function GroupDetailPage() {
       </main>
       {isRecruiting && (
         <footer className="fixed bottom-0 z-50 bg-white border-t-2 py-2 px-8 w-full flex justify-end gap-4">
-          <GroupActionButtons hostId={host.userId} isApplicant={isApplicant} />
+          <GroupActionButtons
+            groupId={groupId}
+            hostId={host.userId}
+            isApplicant={isApplicant}
+            isJoined={isJoined}
+            autoAllow={group.autoAllow}
+          />
         </footer>
       )}
     </div>

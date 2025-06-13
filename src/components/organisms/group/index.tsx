@@ -78,6 +78,7 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
       position: Position[searchParams.position as keyof typeof Position] ?? '',
       sort: searchParams.sort ?? 'createdAt',
       order: searchParams.order ?? 'desc',
+      cursor: searchParams.order === 'desc' || !searchParams.order ? 'null' : 0,
       search: searchParams.search ?? '',
     }),
     [searchParams],
@@ -89,7 +90,6 @@ export const GroupList = ({ searchParams }: GroupListProps) => {
   });
 
   const items = flattenPages(data.pages);
-  console.log(items);
 
   const { ref } = useFetchInView({
     fetchNextPage,
