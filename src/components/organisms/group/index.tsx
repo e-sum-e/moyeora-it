@@ -9,6 +9,7 @@ import { GroupType } from '@/types';
 import { Position, Skill } from '@/types/enums';
 import { useRouter } from 'next/navigation';
 import { Suspense } from 'react';
+import { Loading } from '../loading';
 
 type GroupListProps = {
   searchParams: Record<string, string | undefined>;
@@ -74,7 +75,13 @@ export const Groups = ({ searchParams }: GroupListProps) => {
           <SortOrder updateQueryParams={updateQueryParams} />
         </div>
         <SearchInput />
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense
+          fallback={
+            <div>
+              <Loading />
+            </div>
+          }
+        >
           <GroupList queryParams={queryParams} />
         </Suspense>
       </Tab>
