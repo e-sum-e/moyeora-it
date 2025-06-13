@@ -113,6 +113,7 @@ const RegisterForm = () => {
       <form
         onSubmit={registerForm.handleSubmit(onRegisterSubmit)}
         className="space-y-8"
+        role="register-form"
       >
         <InputTextField
           form={registerForm}
