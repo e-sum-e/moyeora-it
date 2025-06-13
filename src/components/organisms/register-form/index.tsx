@@ -15,7 +15,7 @@ import addBookmarkWhenAuth from '@/features/auth/utils/addBookmarkWhenAuth';
 const registerFormSchema = z
   .object({
     email: z.string().nonempty({ message: '이메일을 입력해주세요' }).email({
-      message: '유효한 이메일이 아닙니다.',
+      message: '유효한 이메일이 아닙니다',
     }),
     password: z
       .string()
@@ -31,7 +31,7 @@ const registerFormSchema = z
     if (password && passwordConfirm && password !== passwordConfirm) {
       ctx.addIssue({
         path: ['passwordConfirm'],
-        message: '비밀번호가 일치하지 않습니다.',
+        message: '비밀번호가 일치하지 않습니다',
         code: z.ZodIssueCode.custom,
       });
     }

@@ -21,6 +21,25 @@ describe('로그인 페이지', () => {
         },
       );
 
+      cy.intercept('GET', 'https://my-api.sjcpop.com/api/v1/notification*', {
+        statusCode: 200,
+        body: {
+          notifications: [],
+          totalCount: 0,
+        },
+      });
+
+      cy.intercept(
+        'GET',
+        'https://my-api.sjcpop.com/api/v1/notification/unread-count*',
+        {
+          statusCode: 200,
+          body: {
+            unreadCount: 0,
+          },
+        },
+      );
+
       cy.intercept(
         'GET',
         'https://my-api.sjcpop.com/api/v1/user/info*',
@@ -55,8 +74,6 @@ describe('로그인 페이지', () => {
 
   // 로그인 폼 유효성 테스트
   it('로그인 폼 유효성 테스트: 아무것도 입력하지 않은 경우', () => {
-    // 로그인 페이지 접속
-
     // 아무 것도 없이 클릭이 에러 텍스트 확인
     cy.contains('button', /^로그인$/).click();
     cy.get('p').contains('이메일을 입력해주세요').should('exist');
