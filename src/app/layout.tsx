@@ -24,7 +24,7 @@ export default function RootLayout({
           <AutoLoginManager />
           <SocketProvider>
             <Header />
-            <div className="w-full md:max-w-[1280px] mx-auto px-4">
+            <div className="w-full md:max-w-[1200px] mx-auto">
               {children}
             </div>
           </SocketProvider>

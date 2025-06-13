@@ -37,9 +37,11 @@ export const CurrentUserProfile = () => {
           <EditUserProfileDialog />
         </div>
         <div className="flex flex-col gap-y-9 mt-4 flex-1 min-w-0">
-          <span className="font-semibold">
-            {getDisplayNickname(nickname, email)}
-          </span>
+          <div className='h-[28px] flex items-center'>
+            <span className="font-semibold">
+              {getDisplayNickname(nickname, email)}
+            </span>
+          </div>
           <div className="flex flex-col gap-y-1 min-w-0">
             <div className="flex gap-x-2 min-w-0">
               <span className="text-sm font-medium shrink-0">Skills</span>
