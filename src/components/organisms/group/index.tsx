@@ -39,7 +39,7 @@ export const Groups = ({ searchParams }: GroupListProps) => {
     // 업데이트할 쿼리 적용
     Object.entries(queries).forEach(([key, value]) => {
       const prevValue = params.get(key);
-      if (value === '' || value === 'all') {
+      if (value === '' || value === 'all' || value === 'null') {
         // 전체 선택 시 해당 key 삭제
         params.delete(key);
       } else if (prevValue === value) {
@@ -59,8 +59,10 @@ export const Groups = ({ searchParams }: GroupListProps) => {
     position: Position[searchParams.position as keyof typeof Position] ?? '',
     sort: searchParams.sort ?? 'createdAt',
     order: searchParams.order ?? 'desc',
-    cursor: searchParams.order === 'desc' || !searchParams.order ? 'null' : 0,
     search: searchParams.search ?? '',
+    ...(searchParams.order === 'desc' || !searchParams.order
+      ? { cursor: 'null' }
+      : {}),
   };
 
   return (
