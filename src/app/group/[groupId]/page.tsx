@@ -90,7 +90,7 @@ export default async function GroupDetailPage({
     group.participants.length < group.maxParticipants;
 
   return (
-    <div>
+    <>
       <main className="w-4/5 mx-auto flex flex-col gap-10 my-15">
         <GroupDetaiilCard info={data} isRecruiting={isRecruiting} />
         <GroupDescription
@@ -100,7 +100,7 @@ export default async function GroupDetailPage({
         <ReplySection />
       </main>
       {isRecruiting && (
-        <footer className="fixed bottom-0 z-50 bg-white border-t-2 py-2 px-8 w-full flex justify-end gap-4">
+        <footer className="fixed bottom-0 left-0 z-50 bg-white border-t-2 py-2 px-8 w-full flex justify-end gap-4">
           <GroupActionButtons
             groupId={groupId}
             hostId={host.userId}
@@ -110,6 +110,6 @@ export default async function GroupDetailPage({
           />
         </footer>
       )}
-    </div>
+    </>
   );
 }
