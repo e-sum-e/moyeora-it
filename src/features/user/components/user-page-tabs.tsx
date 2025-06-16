@@ -15,7 +15,7 @@ export const UserPageTabs = () => {
       {[
         { label: '팔로잉', href: `/users/${id}/followings` },
         { label: '팔로워', href: `/users/${id}/followers` },
-        { label: '모임', href: `/users/${id}/groups` },
+        { label: '개설한 모임', href: `/users/${id}/groups/created`}
       ].map(({ label, href }) => (
         <li className="relative" key={label}>
           <Link
