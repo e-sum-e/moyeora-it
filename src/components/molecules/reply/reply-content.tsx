@@ -2,6 +2,7 @@
 
 import { request } from '@/api/request';
 import { ReplyMeta } from '@/components/molecules/reply/reply-meta';
+import { Button } from '@/components/ui/button';
 import useAuthStore from '@/stores/useAuthStore';
 import { Reply } from '@/types';
 import { useMutation } from '@tanstack/react-query';
@@ -17,7 +18,7 @@ export const ReplyContent = ({
   writer,
   createdAt,
   parentId,
-  isDeleted = false, // 삭제된 댓글인지 여부
+  deleted: isDeleted, // 삭제된 댓글인지 여부
   onDelete,
 }: ReplyContentProps) => {
   const { groupId } = useParams();
@@ -78,18 +79,36 @@ export const ReplyContent = ({
   if (isLocallyDeleted && parentId) return null;
 
   return (
-    <div>
-      <header className="flex justify-between items-start">
+    <div className="p-5 flex flex-col gap-8">
+      <header className="flex justify-between items-start max-sm:flex-col">
         <ReplyMeta writer={writer} createdAt={createdAt} />
         {isWriter && !isLocallyDeleted && (
-          <div className="flex gap-2">
+          <div className="flex gap-2 max-sm:order-1">
             {!isEditing && (
-              <button onClick={editButtonClickHandler}>수정</button>
+              <Button
+                onClick={editButtonClickHandler}
+                variant="ghost"
+                className="cursor-pointer"
+              >
+                수정
+              </Button>
             )}
             {isEditing && (
-              <button onClick={saveButtonClickHandler}>저장</button>
+              <Button
+                onClick={saveButtonClickHandler}
+                variant="ghost"
+                className="cursor-pointer"
+              >
+                저장
+              </Button>
             )}
-            <button onClick={deleteButtonClickHandler}>삭제</button>
+            <Button
+              onClick={deleteButtonClickHandler}
+              variant="ghost"
+              className="cursor-pointer"
+            >
+              삭제
+            </Button>
           </div>
         )}
       </header>
@@ -97,7 +116,7 @@ export const ReplyContent = ({
         <textarea
           value={content}
           onChange={(e) => setContent(e.currentTarget.value)}
-          className="h-10 w-full border-2 border-slate-950"
+          className="max-h-20 w-full border-2 border-slate-800 rounded-sm p-3 resize-none"
         />
       ) : (
         <p className={`${isLocallyDeleted ? 'text-gray-500' : ''}`}>

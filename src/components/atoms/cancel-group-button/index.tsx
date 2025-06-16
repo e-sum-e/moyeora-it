@@ -17,7 +17,6 @@ export const CancelGroupButton = () => {
       toast.error('모임 취소에 실패하였습니다. 잠시 후 다시 시도해주세요.');
     },
     onSuccess: () => {
-      console.log(groupId);
       router.push('/');
       toast.success('모임이 취소되었습니다.');
     },
@@ -28,7 +27,11 @@ export const CancelGroupButton = () => {
   };
 
   return (
-    <Button onClick={cancelGroupHandler} disabled={isPending}>
+    <Button
+      onClick={cancelGroupHandler}
+      disabled={isPending}
+      className="cursor-pointer"
+    >
       모임 취소
     </Button>
   );

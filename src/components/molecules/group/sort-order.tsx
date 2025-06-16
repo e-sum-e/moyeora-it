@@ -52,14 +52,30 @@ export const SortOrder = ({ updateQueryParams }: OrderProps) => {
 
     // 이미 선택된 sort나 order가 현재 선택한 sort나 order와 같을 경우 updateQueryParams에서 제외하여 토글되지 않게 한다
     if (selectedSort === option.sort) {
+      if (option.order === 'desc') {
+        updateQueryParams({ order: option.order, cursor: 'null' });
+        return;
+      }
       updateQueryParams({ order: option.order });
       return;
     }
     if (selectedOrder === option.order) {
+      if (option.order === 'desc') {
+        updateQueryParams({ sort: option.sort, cursor: 'null' });
+        return;
+      }
       updateQueryParams({ sort: option.sort });
       return;
     }
 
+    if (option.order === 'desc') {
+      updateQueryParams({
+        sort: option.sort,
+        order: option.order,
+        cursor: 'null',
+      });
+      return;
+    }
     // 이미 선택된 정렬 옵션과 아예 다른 경우 updateQueryParams에서 모두 업데이트 한다
     updateQueryParams({ sort: option.sort, order: option.order });
   };
@@ -67,16 +83,16 @@ export const SortOrder = ({ updateQueryParams }: OrderProps) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" className="flex-none ml-auto">
+        <Button variant="outline" className="flex-none ml-auto cursor-pointer">
           {getSelectedOrderOptionName()}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="flex flex-col gap-1 px-4 py-2 text-sm text-primary font-medium bg-white  rounded-[12px] border border-gray-200">
+      <PopoverContent className="flex flex-col gap-1 px-4 py-2 text-sm text-primary font-medium bg-white  rounded-[12px] border border-gray-200 z-10">
         {orderOptions.map((option) => (
           <PopoverClose
             key={option.name}
             onClick={() => orderSelectHandler(option.value)}
-            className="p-1"
+            className="p-1 cursor-pointer"
           >
             {option.name}
           </PopoverClose>

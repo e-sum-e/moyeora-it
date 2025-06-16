@@ -20,7 +20,9 @@ export const WriteGroupButton = () => {
 
   return (
     <div className="absolute right-0 mt-6">
-      <Button onClick={writeButtonClickHandler}>만들기</Button>
+      <Button onClick={writeButtonClickHandler} className="cursor-pointer">
+        만들기
+      </Button>
     </div>
   );
 };

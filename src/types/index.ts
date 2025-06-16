@@ -32,7 +32,7 @@ export type WriteFormWithCreatedAt = WriteForm & { createdAt: Date };
 export const DEFAULT_SKILL_NAMES = [
   'Java',
   'JavaScript',
-  'HTML/CSS',
+  'HTML_CSS',
   'REACT',
   'Vue',
   'Kotlin',
@@ -98,7 +98,10 @@ export type Order = 'asc' | 'desc';
 export type Notification = {
   id: number;
   message: string | null; // 추후 채팅의 경우 가장 간략한 채팅메세지 전달용 현재는 빈값으로 리턴
+  content?: string | null; // TODO: socket, notification 타입 통일 후 제거 
   isRead: boolean; // 읽음 여부 default: false
+  read?: boolean; // TODO: socket, notification 타입 통일 후 제거 
+  created_at?: Date; // 알람 생성날짜
   createdAt: Date; // 알람 생성날짜
   type: eNotification;
   url: string | null; // 연결되는 url -> NotificationType에 따라 필요한 부분 다름
@@ -109,7 +112,7 @@ export type Reply = {
   content: string;
   writer: UserSummary;
   createdAt: string;
-  isDeleted?: boolean; // 삭제된 댓글인지 여부
+  deleted: boolean; // 삭제된 댓글인지 여부
 };
 
 export type GroupDetail = {
@@ -119,7 +122,7 @@ export type GroupDetail = {
     description: string;
     autoAllow: boolean;
     maxParticipants: number;
-    type: string;
+    type: GroupType;
     skills: Skill[];
     position: Position[];
     deadline: string;
@@ -127,7 +130,7 @@ export type GroupDetail = {
     endDate: string;
     createdAt: string;
     participants: UserSummary[];
-    isBbookmark: boolean;
+    isBookmark: boolean;
   };
   host: UserSummary;
   isApplicant: boolean;

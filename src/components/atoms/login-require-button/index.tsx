@@ -42,7 +42,7 @@ export const LoginRequireButton = ({
       <Button
         onClick={LoginRequireButtonClickHandler}
         disabled={disabled}
-        className={className}
+        className={`cursor-pointer ${className}`}
       >
         {children}
       </Button>
@@ -54,7 +54,7 @@ export const LoginRequireButton = ({
           <DialogDescription className="sr-only">
             해당 기능을 사용하려면 먼저 로그인해 주세요.
           </DialogDescription>
-          <DialogFooter className="p-4">
+          <DialogFooter className="mt-5">
             <Button onClick={() => router.push('/login')}>
               로그인하러 가기
             </Button>

@@ -1,6 +1,9 @@
+"use client"
+
 import { BookmarkCardContents } from '@/components/molecules/bookmark-card-contents';
 import { Group } from '@/types';
 import { isBeforeToday } from '@/utils/dateUtils';
+import { useRouter } from 'next/navigation';
 
 export type ContentInfo = Pick<
 	Group,
@@ -12,10 +15,11 @@ type CardProps = {
 };
 
 export const BookmarkCard = ({ info }: CardProps) => {
+	const router = useRouter();
 	const isBeforeDeadline = isBeforeToday(info.deadline);
 
 	return (
-		<div className="relative">
+		<div className="relative" onClick={() => router.push(`/group/${info.id}`)}>
 			<article className="flex w-full">
 				<BookmarkCardContents className="flex-1" info={info} />
 			</article>

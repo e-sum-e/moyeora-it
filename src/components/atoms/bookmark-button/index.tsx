@@ -1,12 +1,16 @@
 'use client';
 
 import { request } from '@/api/request';
-import { addBookmarkItem, removeBookmarkItem } from '@/features/bookmark';
+import {
+  addBookmarkItem,
+  getBookmarkList,
+  removeBookmarkItem,
+} from '@/features/bookmark';
 import useAuthStore from '@/stores/useAuthStore';
 import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
-import { toast } from 'sonner';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 type BookmarkButtonProps = {
   groupId: number;
@@ -34,7 +38,9 @@ export const BookmarkButton = ({
     },
   });
 
-  const bookmarkButtonToggleHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const bookmarkButtonToggleHandler = (
+    e: React.MouseEvent<HTMLButtonElement>,
+  ) => {
     e.preventDefault();
     setIsBookmark((prev) => !prev);
 
@@ -50,9 +56,21 @@ export const BookmarkButton = ({
     }
   };
 
+  useEffect(() => {
+    if (!user) {
+      const bookmarkList = getBookmarkList();
+      setIsBookmark(bookmarkList.includes(groupId));
+    }
+  }, [groupId, user]);
+
   return (
-    <button onClick={bookmarkButtonToggleHandler}>
-      <Image src={`/icons/bookmark-${isBookmark ? 'active' : 'default'}.svg`} alt="찜히기" width={24} height={24} />
+    <button onClick={bookmarkButtonToggleHandler} className="cursor-pointer">
+      <Image
+        src={`/icons/bookmark-${isBookmark ? 'active' : 'default'}.svg`}
+        alt="찜히기"
+        width={24}
+        height={24}
+      />
     </button>
   );
 };

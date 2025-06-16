@@ -22,10 +22,15 @@ export default async function UserPageLayout({
   // }
 
   return (
-    <>
-      <UserProfile />
-      <UserPageTabs />
-      <main>{children}</main>
-    </>
+    <div className="flex flex-col gap-y-5 pt-6 px-4 md:px-25 bg-gray-50 min-h-[calc(100dvh-4rem)]">
+      <h1 className="font-semibold text-lg">유저 페이지</h1>
+      <div className="flex flex-col gap-y-5 bg-white rounded-t-2xl rounded-b-2xl mb-4 flex-1">
+        <UserProfile />
+        <div className="bg-white flex flex-col gap-y-2.5 rounded-b-2xl flex-1">
+          <UserPageTabs />
+          <main className="mx-4 flex-1 flex flex-col">{children}</main>
+        </div>
+      </div>
+    </div>
   );
 }

@@ -17,8 +17,10 @@ type GroupCardProps = {
 // TODO : 섹션별로 component 나누기
 export const GroupCard = ({ item }: GroupCardProps) => {
   return (
-    <div className="p-6 md:w-[300px] bg-white shadow-sm shadow-gray-400">
-      <BookmarkButton groupId={item.id} isBookmark={item.isBookmark} />
+    <div className="relative p-6 md:w-[300px] bg-white shadow-sm shadow-gray-400">
+      <div className="absolute top-0 right-0 m-6">
+        <BookmarkButton groupId={item.id} isBookmark={item.isBookmark} />
+      </div>
       <Link href={routes.groupDetail(item.id)}>
         <div>
           <Badge

@@ -189,3 +189,28 @@
   --font-semibold: 600;
   --font-bold: 700;
 }
+
+/* 손 흔드는 애니메이션 */
+@theme {
+  --animate-hello: hello 1s ease-in infinite;
+  --animate-bounce-up: bounce-up 1s linear infinite;
+  @keyframes hello {
+    0%,
+    100% {
+      transform: rotate(20deg);
+    }
+    50% {
+      transform: rotate(0deg);
+    }
+  }
+
+  @keyframes bounce-up {
+    0%,
+    100% {
+      transform: translateY(-10px);
+    }
+    50% {
+      transform: translateY(0px);
+    }
+  }
+}
