@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { Notification } from '@/types';
+import { request } from '@/api/request';
 
 export type NotificationState = {
   notifications: Notification[];
@@ -33,17 +34,25 @@ const useNotificationStore = create<NotificationStore>((set, get) => ({
   setNotifications: (notifications: Notification[]) => set(() => ({
     notifications,
   })),
-  setReadNotification: (id: number) => set((state) => ({
-    unreadCount: state.unreadCount - 1,
-    notifications: state.notifications.map((notification: Notification) => ({
-      ...notification,
-      isRead: notification.id === id ? true : notification.isRead,
-    })),
-  })),
+  setReadNotification: async (id: number) => {
+    const { notifications } = get();
+    await request.patch(`/v1/notification/${id}/read`, {},{}, { credentials: 'include' });
+    set((state) => {
+      const updatedNotifications = notifications.map((notification: Notification) => ({
+        ...notification,
+        isRead: notification.id === id ? true : notification.isRead,
+      }));
+      return {
+        unreadCount: state.unreadCount - 1,
+        notifications: updatedNotifications,
+      };
+    });
+  },
   setUnreadCount: (count: number) => set(() => ({
     unreadCount: count,
   })),
   clearAllNotifications: async () => {
+    console.log('clearAllNotifications');
     await fetch('/api/v1/notification', { method: 'DELETE' });
     set(() => ({
       notifications: [],

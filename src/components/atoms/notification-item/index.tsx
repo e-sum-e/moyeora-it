@@ -14,7 +14,7 @@ export const NotificationItem = ({
   const { setReadNotification } = useNotificationStore();
   const router = useRouter();
 
-  const handleClick = () => {
+  const alarmClickHandler = () => {
     // 읽음 처리
     setReadNotification(notification.id);
     
@@ -36,7 +36,7 @@ export const NotificationItem = ({
         border-b border-gray-100
         ${notification.isRead ? 'bg-gray-50' : 'bg-white'}
       `}
-      onClick={handleClick}
+      onClick={alarmClickHandler}
     >
       <div className="flex flex-col gap-1">
         <p className={`text-sm ${notification.isRead ? 'text-gray-500' : 'text-gray-800'}`}>
@@ -47,7 +47,7 @@ export const NotificationItem = ({
         </span>
       </div>
       {!notification.isRead && (
-        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+        <div className="relative right-3 top-1/2 -translate-y-1/2">
           <div className="w-2 h-2 bg-blue-500 rounded-full" />
         </div>
       )}
