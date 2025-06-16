@@ -17,13 +17,13 @@ type FilterProps = {
 
 export const Filter = ({ updateQueryParams }: FilterProps) => {
   const searchParams = useSearchParams();
-  const selectedSkills = searchParams.get('skill')?.split(',') ?? [];
+  const selectedSkills = searchParams.get('skills')?.split(',') ?? [];
   const selectedPositions = searchParams.get('position')?.split(',') ?? [];
   const isSelectedSkills = selectedSkills?.length > 0;
   const isSelectedPosition = selectedPositions?.length > 0;
 
   const skillSelectHandler = (skill: SkillName) => {
-    updateQueryParams({ skill: skill });
+    updateQueryParams({ skills: skill });
   };
 
   const positionSelectHandler = (position: PositionName) => {
