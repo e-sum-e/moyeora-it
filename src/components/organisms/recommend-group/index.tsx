@@ -10,9 +10,9 @@ import { Group } from '@/types';
 import { isBeforeToday } from '@/utils/dateUtils';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
+import { Empty } from '../empty';
 
 export default function RecommendGroup() {
-
   const { data: items = [], isLoading } = useQuery<Group[]>({
     queryKey: ['recommendGroups'],
     queryFn: async () => {
@@ -46,7 +46,13 @@ export default function RecommendGroup() {
   }
 
   if (validItems.length === 0) {
-    return <div>현재 추천할 그룹이 없습니다.</div>;
+    return (
+      <Empty
+        mainText="추천할 모임이 없습니다."
+        subText=""
+        className="h-[134px]"
+      />
+    );
   }
 
   return (

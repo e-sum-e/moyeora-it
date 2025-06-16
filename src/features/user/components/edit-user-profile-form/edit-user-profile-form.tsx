@@ -94,6 +94,7 @@ export const EditUserProfileForm = ({
                     label: key,
                     value: String(value),
                   }))}
+                selectTriggerClassName='bg-gray-50 w-full border-none'
               />
             </div>
           </div>
