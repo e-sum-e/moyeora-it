@@ -92,7 +92,7 @@ describe('회원가입 페이지', () => {
   });
 
   // 회원가입 폼 유효성 테스트
-  it('회원가입 폼 유효성 테스트: 아무것도 입력하지 않은 경우', () => {
+  it('회원가입 폼 유효성 테스트: 아무것도 입력하지 않은 경우 => 에러 메시지 출력 확인', () => {
     // 아무 것도 없이 클릭이 에러 텍스트 확인
     cy.contains('button', /^회원가입$/).click();
 
@@ -102,7 +102,7 @@ describe('회원가입 페이지', () => {
   });
 
   // 잘못된 형식
-  it('회원가입 폼 유효성 테스트: 잘못된 이메일, 비밀번호 형식 에러 메시지 출력되야함', () => {
+  it('회원가입 폼 유효성 테스트: 잘못된 이메일, 비밀번호 형식 => 에러 메시지 출력 확인', () => {
     // 잘못된 이메일 형식 입력
     cy.get('input[name="email"]').type('asd@a');
     cy.get('input[name="password"]').type('invalid123');
@@ -120,7 +120,7 @@ describe('회원가입 페이지', () => {
   });
 
   // 올바른 형식의 이메일과 비밀번호
-  it('회원가입 API 요청 실패 테스트: 이메일 중복 에러 메시지 출력되야함', () => {
+  it('회원가입 API 요청 실패 테스트: 이메일 중복 => 에러 메시지 출력 확인', () => {
     // 올바른 이메일과 비밀번호 입력
     cy.get('input[name="email"]').type('same@same.com');
     cy.get('input[name="password"]').type('correctPassword123!@#');
@@ -181,7 +181,7 @@ describe('회원가입 페이지', () => {
   });
 
   // 프로필 설정 폼 유효성 검사
-  it('프로필 설정 빈값 테스트', () => {
+  it('프로필 설정 빈값 입력 => 에러 메시지 출력 확인', () => {
     // 올바른 이메일과 비밀번호 입력
     cy.get('input[name="email"]').type('notsame@notsame.com');
     cy.get('input[name="password"]').type('correctPassword123!@#');
