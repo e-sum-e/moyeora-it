@@ -26,9 +26,22 @@ export default async function Home({
 
   const queryParams = {
     type: awaitedSearchParams.type ?? '',
-    skill: Skill[awaitedSearchParams.skills as keyof typeof Skill] ?? '',
-    position:
-      Position[awaitedSearchParams.position as keyof typeof Position] ?? '',
+    skill: awaitedSearchParams.skill
+      ? awaitedSearchParams.skill.split(',')
+        ? awaitedSearchParams.skill
+            .split(',')
+            .map((v) => Skill[v as keyof typeof Skill])
+            .join(',')
+        : Skill[awaitedSearchParams.skill as keyof typeof Skill]
+      : '',
+    position: awaitedSearchParams.position
+      ? awaitedSearchParams.position.split(',')
+        ? awaitedSearchParams.position
+            .split(',')
+            .map((v) => Position[v as keyof typeof Position])
+            .join(',')
+        : Position[awaitedSearchParams.position as keyof typeof Position]
+      : '',
     sort: awaitedSearchParams.sort ?? 'createdAt',
     order: awaitedSearchParams.order ?? 'desc',
     search: awaitedSearchParams.search ?? '',

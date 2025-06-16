@@ -32,10 +32,20 @@ export const GroupList = ({ serverQueryParams }: GroupListProps) => {
     return {
       type: serverQueryParams.type ?? '',
       skill: serverQueryParams.skill
-        ? Skill[serverQueryParams.skill as keyof typeof Skill]
+        ? serverQueryParams.skill.split(',')
+          ? serverQueryParams.skill
+              .split(',')
+              .map((v) => Skill[v as keyof typeof Skill])
+              .join(',')
+          : Skill[serverQueryParams.skill as keyof typeof Skill]
         : '',
       position: serverQueryParams.position
-        ? Position[serverQueryParams.position as keyof typeof Position]
+        ? serverQueryParams.position.split(',')
+          ? serverQueryParams.position
+              .split(',')
+              .map((v) => Position[v as keyof typeof Position])
+              .join(',')
+          : Position[serverQueryParams.position as keyof typeof Position]
         : '',
       sort: serverQueryParams.sort ?? 'createdAt',
       order: serverQueryParams.order ?? 'desc',
