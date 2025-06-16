@@ -26,7 +26,10 @@ export const useFetchItems = <T>({
         url,
         {
           ...queryParams,
-          cursor: isCursorNull ? 'null' : (pageParam as number | string),
+          cursor:
+            isCursorNull && pageParam === 0
+              ? 'null'
+              : (pageParam as number | string),
         },
         { credentials: 'include' },
       ),
