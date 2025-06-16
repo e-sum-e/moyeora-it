@@ -23,7 +23,6 @@ type GroupListProps = {
     position: Position;
     sort: string;
     order: string;
-    cursor: string | number;
     search: string;
   };
 };

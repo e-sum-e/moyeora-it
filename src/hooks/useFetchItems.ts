@@ -23,8 +23,8 @@ export const useFetchItems = <T>({
       request.get(
         url,
         {
+          ...queryParams,
           cursor: pageParam as number | string,
-          ...queryParams, // groups -> order=desc일 경우 cursor=null로 덮어써주기 위해 cursor 다음에 위치
         },
         { credentials: 'include' },
       ),
