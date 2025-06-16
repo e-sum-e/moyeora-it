@@ -32,9 +32,6 @@ export default async function Home({
     sort: awaitedSearchParams.sort ?? 'createdAt',
     order: awaitedSearchParams.order ?? 'desc',
     search: awaitedSearchParams.search ?? '',
-    ...(awaitedSearchParams.order === 'desc' || !awaitedSearchParams.order
-      ? { cursor: 'null' }
-      : {}),
   };
 
   // console.log('✅ Fetching data from server ', queryParams); // DEV: 💡 서버 컴포넌트에서 prefetch 하는지 확인용
@@ -47,8 +44,8 @@ export default async function Home({
           ...queryParams,
           size: 10,
           cursor:
-            awaitedSearchParams.order === 'desc' || !awaitedSearchParams.order
-              ? 'null' // order가 desc이거나 최초 진입시 에는 cursor=null로 가야함
+            queryParams.order === 'desc' || !queryParams.order
+              ? 'null'
               : pageParam,
         });
       },

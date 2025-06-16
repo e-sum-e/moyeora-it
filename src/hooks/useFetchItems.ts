@@ -17,6 +17,8 @@ export const useFetchItems = <T>({
     UseSuspenseInfiniteQueryOptions<Page<T>, Error, InfiniteData<Page<T>>>
   >;
 }) => {
+  const isCursorNull = queryParams.order === 'desc';
+
   return useSuspenseInfiniteQuery<Page<T>, Error, InfiniteData<Page<T>>>({
     queryKey: ['items', url, queryParams ?? {}],
     queryFn: async ({ pageParam }): Promise<Page<T>> =>
@@ -24,7 +26,7 @@ export const useFetchItems = <T>({
         url,
         {
           ...queryParams,
-          cursor: pageParam as number | string,
+          cursor: isCursorNull ? 'null' : (pageParam as number | string),
         },
         { credentials: 'include' },
       ),
