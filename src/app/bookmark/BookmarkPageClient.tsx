@@ -5,14 +5,15 @@ import {
   BookmarkCard,
   ContentInfo,
 } from '@/components/organisms/bookmark-card';
+import { Empty } from '@/components/organisms/empty';
+import { setLocalBookmarkItems } from '@/features/bookmark';
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
+import useAuthStore from '@/stores/useAuthStore';
 import { GroupType } from '@/types';
 import flattenPages from '@/utils/flattenPages';
-import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import useAuthStore from '@/stores/useAuthStore';
-import { setLocalBookmarkItems } from '@/features/bookmark';
+import { useEffect, useState } from 'react';
 
 const CURSOR_SIZE = 10;
 
@@ -33,20 +34,16 @@ export function BookmarkPageClient() {
   });
 
   //ISSUE: 일단 전체 그룹 데이터 가져오기
-  const {
-    data,
-    isLoading,
-    isError,
-    fetchNextPage,
-  } = useFetchItems<ContentInfo>({ 
-    url: '/v2/groups', 
-    queryParams,
-    options: {
-      staleTime: 1000 * 30,
-      gcTime: 1000 * 60 * 30,
-      refetchOnWindowFocus: true,
-    }
-  });
+  const { data, isLoading, isError, fetchNextPage } =
+    useFetchItems<ContentInfo>({
+      url: '/v2/groups',
+      queryParams,
+      options: {
+        staleTime: 1000 * 30,
+        gcTime: 1000 * 60 * 30,
+        refetchOnWindowFocus: true,
+      },
+    });
 
   const { ref } = useFetchInView({
     fetchNextPage,
@@ -62,7 +59,9 @@ export function BookmarkPageClient() {
 
   useEffect(() => {
     if (!user) {
-      const processedItems = setLocalBookmarkItems(items).filter((item) => item.isBookmark);
+      const processedItems = setLocalBookmarkItems(items).filter(
+        (item) => item.isBookmark,
+      );
       setBookmarkItems(processedItems);
     } else {
       // 서버에서 가져온 데이터 중 찜한 데이터만 가져오기
@@ -72,7 +71,6 @@ export function BookmarkPageClient() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-
   // 탭 변경 핸들러
   const handleValueChange = (value: GroupType) => {
     setQueryParams((prev) => ({
@@ -81,15 +79,14 @@ export function BookmarkPageClient() {
     }));
   };
 
-
   return (
     <div>
       <section className="flex flex-row gap-4 mb-8 w-full">
-        <Image 
-          src="/logos/logo-img.svg" 
-          alt="모여라-IT" 
-          width={50} 
-          height={50} 
+        <Image
+          src="/logos/logo-img.svg"
+          alt="모여라-IT"
+          width={50}
+          height={50}
         />
         <div className="flex flex-col gap-2 justify-center">
           <h2 className="text-xl font-bold">찜한 그룹</h2>
@@ -102,17 +99,11 @@ export function BookmarkPageClient() {
             {isError && <div>에러가 발생했습니다.</div>}
             {isLoading && <div>로딩 중...</div>}
             {bookmarkItems.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 gap-4">
-                <Image
-                  src="/logos/my-img.png" 
-                  alt="빈 북마크"
-                  width={120}
-                  height={120}
-                  className="grayscale"
-                />
-                <p className="text-gray-500 text-lg">아직 찜한 프로젝트가 없어요</p>
-                <p className="text-gray-400">관심있는 프로젝트를 찜해보세요!</p>
-              </div>
+              <Empty
+                mainText="아직 찜한 프로젝트가 없어요."
+                subText="관심있는 프로젝트를 찜해보세요!"
+                className="mt-[100px]"
+              />
             ) : (
               bookmarkItems.map((item: ContentInfo, index: number) => (
                 <div
@@ -128,4 +119,4 @@ export function BookmarkPageClient() {
       </main>
     </div>
   );
-} 
+}

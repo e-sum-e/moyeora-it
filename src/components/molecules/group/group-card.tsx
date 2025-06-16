@@ -1,9 +1,9 @@
 import { Badge } from '@/components/atoms/badge';
+import { BookmarkButton } from '@/components/atoms/bookmark-button';
 import { Deadline } from '@/components/atoms/group/deadline';
 import { GroupPositions } from '@/components/atoms/group/group-positions';
 import { GroupTitle } from '@/components/atoms/group/group-title';
 import { GroupProgress } from '@/components/atoms/group/particiapant-progress';
-import { BookmarkButtonContainer } from '@/components/organisms/group-detail-card/BookmarkButtonContainer';
 import { Group, GroupTypeName } from '@/types';
 import { formatYearMonthDayWithDot } from '@/utils/dateUtils';
 import { routes } from '@/utils/routes';
@@ -19,10 +19,7 @@ export const GroupCard = ({ item }: GroupCardProps) => {
   return (
     <div className="relative p-6 md:w-[300px] bg-white shadow-sm shadow-gray-400">
       <div className="absolute top-0 right-0 m-6">
-        <BookmarkButtonContainer
-          groupId={item.id}
-          isBookmark={item.isBookmark}
-        />
+        <BookmarkButton groupId={item.id} isBookmark={item.isBookmark} />
       </div>
       <Link href={routes.groupDetail(item.id)}>
         <div>

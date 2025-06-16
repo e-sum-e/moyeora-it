@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { useParams, useSearchParams } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
 import { useFetchItems } from '@/hooks/useFetchItems';
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { Avatar } from '@/components/atoms/avatar';
@@ -11,7 +10,6 @@ import { ToggleFollowButton } from '@/features/user/follow/components/toggle-fol
 import useAuthStore from '@/stores/useAuthStore';
 import { User } from '@/types/index';
 import { RemoveFollowerButton } from '@/features/user/follow/components/remove-follower-button';
-import { request } from '@/api/request';
 import flattenPages from '@/utils/flattenPages';
 import { getDisplayNickname, getDisplayProfileImage } from '@/utils/fallback';
 import Image from 'next/image';
@@ -20,6 +18,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Page } from '@/utils/flattenPages';
 
 export const FollowersList = () => {
   const { id } = useParams();
@@ -39,14 +38,7 @@ export const FollowersList = () => {
     },
   });
 
-  const { data: { count: followersCount } = {} } = useQuery({
-    queryKey: ['user', id, 'followers count'],
-    queryFn() {
-      return request.get(`/v1/follow/${id}/followers/count`);
-    },
-    staleTime: 0,
-    refetchOnMount: true,
-  });
+  const followersCount = (data.pages[0] as Page<User> & { totalCount: number; }).totalCount;
 
   const { ref } = useFetchInView({
     fetchNextPage,
@@ -56,18 +48,28 @@ export const FollowersList = () => {
   const followersList = flattenPages<User>(data.pages);
 
   return (
-    <div className="flex flex-col gap-y-6">
-      <div className="flex items-center gap-x-[10px] rounded-[30px] bg-gray-100 px-5 py-2 w-[200px] text-gray-500 h-9 self-end">
-        <Image src="/icons/search.svg" alt="search" width={17} height={17} />
-        <SearchInput
-          className="bg-gray-100 border-none shadow-none focus-visible:ring-0 p-0"
-          placeholder="검색"
-        />
+    <div className="flex flex-col gap-y-6 pb-4 rounded-b-2xl flex-1">
+      <div className="flex justify-between items-center">
+        <div className="flex gap-x-1 items-center">
+          <span className="text-lg font-semibold text-gray-900">팔로워</span>
+          <span className="inline-flex items-center justify-center rounded-[8.5px] bg-gray-900 px-[7px] min-w-[28px] h-4 text-white text-xs font-semibold">
+            {followersCount ?? 0}
+          </span>
+        </div>
+        <div className="flex items-center gap-x-[10px] rounded-[30px] bg-gray-100 px-5 py-2 w-[200px] text-gray-500 h-9 self-end">
+          <Image src="/icons/search.svg" alt="search" width={17} height={17} />
+          <SearchInput
+            className="bg-gray-100 border-none shadow-none focus-visible:ring-0 p-0"
+            placeholder="검색"
+          />
+        </div>
       </div>
       {followersList.length === 0 ? (
-        <p className="text-center font-medium text-gray-500">
-          아직 팔로워가 없어요.
-        </p>
+        <div className="flex flex-1 justify-center items-center">
+          <p className="text-center text-lg font-medium text-gray-500">
+            아직 팔로워가 없어요.
+          </p>
+        </div>
       ) : (
         <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <h1 className="hidden">팔로워 {followersCount ?? null}</h1>

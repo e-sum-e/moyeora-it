@@ -22,6 +22,9 @@ const buildUrl = (
 ) => {
   if (!queryParams) return `${baseUrl}${endpoint}`;
   const queryString = Object.entries(queryParams)
+    .filter(([, value]) => {
+      return value !== 'null';
+    }) // order가 desc인 경우 cursor=null이고 이는 제외하고 요청해야 함
     .map(([key, value]) => {
       const encodedKey = encodeURIComponent(key); // 특수문자, 한글인 경우가 있을 수 있으므로 인코딩
       if (Array.isArray(value)) {

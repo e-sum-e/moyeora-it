@@ -23,6 +23,7 @@ type InputSelectFieldProps<T extends FieldValues> = {
     value: string;
     label: string;
   }[];
+  selectTriggerClassName?: string;
 };
 
 export const InputSelectField = <T extends FieldValues>({
@@ -31,6 +32,7 @@ export const InputSelectField = <T extends FieldValues>({
   label,
   placeholder,
   options,
+  selectTriggerClassName,
 }: InputSelectFieldProps<T>) => {
   return (
     <FormField
@@ -41,7 +43,7 @@ export const InputSelectField = <T extends FieldValues>({
           <FormLabel>{label}</FormLabel>
           <Select onValueChange={field.onChange} defaultValue={field.value ?? undefined}>
             <FormControl>
-              <SelectTrigger>
+              <SelectTrigger className={selectTriggerClassName ?? ''}>
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>

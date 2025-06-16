@@ -81,7 +81,7 @@ export const GroupFilter = () => {
           ].map((item) => (
             <li key={item.value}>
               <Link
-                className={`${type === item.value ? 'text-black' : 'text-gray-400'} font-medium`}
+                className={`shrink-0 ${type === item.value ? 'text-gray-900' : 'text-gray-400'} font-semibold`}
                 href={`${pathname}?type=${item.value}`}
               >
                 {item.label}
@@ -89,7 +89,7 @@ export const GroupFilter = () => {
             </li>
           ))}
         </ul>
-        <div className="flex items-center gap-x-[10px] rounded-[30px] bg-gray-100 px-5 py-2 w-[200px] text-gray-500 h-9 self-end">
+        <div className="flex items-center gap-x-[10px] rounded-[30px] bg-gray-100 px-5 py-2 w-[150px] md:w-[200px] text-gray-500 h-9 self-end">
           <Image src="/icons/search.svg" alt="search" width={17} height={17} />
           <SearchInput
             className="bg-gray-100 border-none shadow-none focus-visible:ring-0 p-0"

@@ -1,11 +1,15 @@
 'use client';
 
 import { request } from '@/api/request';
-import { addBookmarkItem, removeBookmarkItem } from '@/features/bookmark';
+import {
+  addBookmarkItem,
+  getBookmarkList,
+  removeBookmarkItem,
+} from '@/features/bookmark';
 import useAuthStore from '@/stores/useAuthStore';
 import { useMutation } from '@tanstack/react-query';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 type BookmarkButtonProps = {
@@ -52,6 +56,13 @@ export const BookmarkButton = ({
       mutate(!isBookmark);
     }
   };
+
+  useEffect(() => {
+    if (!user) {
+      const bookmarkList = getBookmarkList();
+      setIsBookmark(bookmarkList.includes(groupId));
+    }
+  }, [groupId, user]);
 
   return (
     <button onClick={bookmarkButtonToggleHandler} className="cursor-pointer">
