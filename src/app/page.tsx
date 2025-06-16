@@ -26,7 +26,7 @@ export default async function Home({
 
   const queryParams = {
     type: awaitedSearchParams.type ?? '',
-    skills: Skill[awaitedSearchParams.skill as keyof typeof Skill] ?? '',
+    skill: Skill[awaitedSearchParams.skills as keyof typeof Skill] ?? '',
     position:
       Position[awaitedSearchParams.position as keyof typeof Position] ?? '',
     sort: awaitedSearchParams.sort ?? 'createdAt',
@@ -70,7 +70,7 @@ export default async function Home({
             </div>
           }
         >
-          <Groups searchParams={awaitedSearchParams} />
+          <Groups serverQueryParams={awaitedSearchParams} />
         </QueryErrorBoundary>
       </HydrationBoundary>
     </div>
