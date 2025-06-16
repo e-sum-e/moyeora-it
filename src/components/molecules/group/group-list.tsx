@@ -1,6 +1,7 @@
 'use client';
 
 import { GroupCard } from '@/components/molecules/group/group-card';
+import { Empty } from '@/components/organisms/empty';
 import { getBookmarkList } from '@/features/bookmark';
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
@@ -23,7 +24,6 @@ type GroupListProps = {
     position: Position;
     sort: string;
     order: string;
-    cursor: string | number;
     search: string;
   };
 };
@@ -92,7 +92,7 @@ export const GroupList = ({ queryParams }: GroupListProps) => {
   return (
     <>
       {isEmptyItems && emptyInfoMessage !== null ? (
-        <div>{emptyInfoMessage}</div>
+        <Empty mainText={emptyInfoMessage} subText="" />
       ) : (
         <ul className="flex flex-col gap-3 mt-8 md:flex-row md:flex-wrap md:gap-6 md:justify-center">
           {itemsWithBookmark.map((group) => (
