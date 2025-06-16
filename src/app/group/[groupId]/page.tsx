@@ -3,8 +3,8 @@ import { GroupActionButtons } from '@/components/molecules/gorup-action-buttons'
 import { GroupDetaiilCard } from '@/components/organisms/group-detail-card';
 import { ReplySection } from '@/components/organisms/reply/reply-section';
 import { GroupDetail } from '@/types';
+import { getAuthCookieHeader } from '@/utils/cookie';
 import { isBeforeToday } from '@/utils/dateUtils';
-import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 type GroupDetailResponse = {
@@ -24,17 +24,7 @@ export default async function GroupDetailPage({
   params,
 }: GroupDetailPageProps) {
   const groupId = Number((await params).groupId);
-
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get('accessToken');
-  const refreshToken = cookieStore.get('refreshToken');
-
-  const cookieString = [
-    accessToken && `${accessToken.name}=${accessToken.value}`,
-    refreshToken && `${refreshToken.name}=${refreshToken.value}`,
-  ]
-    .filter(Boolean)
-    .join('; ');
+  const cookieString = await getAuthCookieHeader();
 
   let response: Response;
 
