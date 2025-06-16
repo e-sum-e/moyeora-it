@@ -75,17 +75,19 @@ const FindPassword = () => {
 
         {/* 이메일 전송시 로그인페이지로 가기*/}
         {isSuccessEmailSend && (
-          <div className="flex flex-col">
+          <div className="flex flex-col justify-center items-center gap-2">
             <p className="text-blue-900">이메일을 확인해주세요!</p>
             <Link href="/login">로그인하러 가기</Link>
           </div>
         )}
 
         {isNotExisted && (
-          <p className="text-red-600">해당 이메일이 존재하지 않습니다</p>
+          <p className="text-red-600 text-center">
+            해당 이메일이 존재하지 않습니다
+          </p>
         )}
         <Button className="w-full bg-gray-400" disabled={disabled}>
-          비밀번호 찾기
+          비밀번호 초기화
         </Button>
       </form>
     </Form>
