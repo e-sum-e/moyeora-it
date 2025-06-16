@@ -14,6 +14,7 @@ import {
 import useAuthStore from '@/stores/useAuthStore';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter, usePathname } from 'next/navigation';
 import { useState } from 'react';
 
 type MenuItem = {
@@ -39,13 +40,13 @@ const Logo = ({ isMobile = false }: { isMobile?: boolean }) => (
   </Link>
 );
 
-const MenuLinks = ({ onClick }: { onClick?: () => void }) => (
+const MenuLinks = ({ onClick, pathname }: { onClick?: () => void, pathname: string }) => (
   <>
     {menuItems.map(({ label, href }) => (
       <Link
         key={href}
         href={href}
-        className="text-sm font-medium text-gray-800 hover:text-primary"
+        className={`text-sm font-medium text-gray-800 hover:text-primary ${pathname === href ? 'text-primary' : ''}`}
         onClick={onClick}
       >
         {label}
@@ -54,11 +55,11 @@ const MenuLinks = ({ onClick }: { onClick?: () => void }) => (
   </>
 );
 
-const MobileMenuLinks = ({ onClick }: { onClick?: () => void }) => (
+const MobileMenuLinks = ({ onClick, pathname }: { onClick?: () => void, pathname: string }) => (
   <>
     {menuItems.map(({ label, href }) => (
       <DropdownMenuItem key={href} asChild onClick={onClick}>
-        <Link href={href}>{label}</Link>
+        <Link href={href} className={`text-sm font-medium text-gray-800 hover:text-primary ${pathname === href ? 'text-primary' : ''}`}>{label}</Link>
       </DropdownMenuItem>
     ))}
   </>
@@ -99,6 +100,8 @@ export const Header = () => {
   const isLoggedIn = Boolean(user);
   const userId = user?.userId ?? 0;
   const profileImage = user?.profileImage || '';
+  const pathname = usePathname();
+
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -107,7 +110,7 @@ export const Header = () => {
       <nav className="hidden md:flex items-center">
         <Logo />
         <ul className="flex gap-8 ml-8">
-          <MenuLinks />
+          <MenuLinks pathname={pathname} />
         </ul>
       </nav>
 
@@ -144,7 +147,7 @@ export const Header = () => {
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <MobileMenuLinks onClick={() => setIsMenuOpen(false)} />
+              <MobileMenuLinks onClick={() => setIsMenuOpen(false)} pathname={pathname} />
               {!isLoggedIn ? (
                 <DropdownMenuItem asChild onClick={() => setIsMenuOpen(false)}>
                   <Link href="/login">로그인 및 회원가입</Link>
