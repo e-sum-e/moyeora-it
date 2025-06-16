@@ -1,14 +1,13 @@
 'use client';
 
 import { GroupCard } from '@/components/molecules/group/group-card';
-import { getBookmarkList } from '@/features/bookmark';
+import { useBookmarkItems } from '@/hooks/useBookmarkItems';
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
-import useAuthStore from '@/stores/useAuthStore';
 import { Group } from '@/types';
 import { Position, Skill } from '@/types/enums';
 import flattenPages from '@/utils/flattenPages';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 enum EMPTY_INFO_MESSAGE {
   EMPTY_INITIAL = '생성된 그룹이 없습니다',
@@ -33,8 +32,6 @@ export const GroupList = ({ queryParams }: GroupListProps) => {
   const [emptyInfoMessage, setEmptyInfoMessage] =
     useState<EMPTY_INFO_MESSAGE | null>(null);
 
-  const user = useAuthStore((state) => state.user);
-
   const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<Group>({
     url: '/v2/groups',
     queryParams: { ...queryParams, size: 10 },
@@ -48,19 +45,15 @@ export const GroupList = ({ queryParams }: GroupListProps) => {
     },
   });
 
-  const items = flattenPages(data.pages);
+  const { items, toggleBookmark, setInitialItems } = useBookmarkItems<Group>();
 
-  const itemsWithBookmark = useMemo(() => {
-    if (!user) {
-      const bookmarks = getBookmarkList();
-      return items.map((item) => ({
-        ...item,
-        isBookmark: bookmarks.includes(item.id),
-      }));
-    }
+  // 초기 데이터 수신 후 북마크 상태 포함한 모임 배열 설정
+  useEffect(() => {
+    if (!data) return;
 
-    return items;
-  }, [items, user]);
+    const flattenItems = flattenPages(data.pages);
+    setInitialItems(flattenItems);
+  }, [data, setInitialItems]);
 
   useEffect(() => {
     if (items.length === 0) {
@@ -95,8 +88,12 @@ export const GroupList = ({ queryParams }: GroupListProps) => {
         <div>{emptyInfoMessage}</div>
       ) : (
         <ul className="flex flex-col gap-3 mt-8 md:flex-row md:flex-wrap md:gap-6 md:justify-center">
-          {itemsWithBookmark.map((group) => (
-            <GroupCard key={group.id} item={group} />
+          {items.map((group) => (
+            <GroupCard
+              key={group.id}
+              item={group}
+              onToggleBookmark={toggleBookmark}
+            />
           ))}
         </ul>
       )}

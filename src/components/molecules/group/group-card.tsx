@@ -1,3 +1,5 @@
+'use client';
+
 import { Badge } from '@/components/atoms/badge';
 import { BookmarkButton } from '@/components/atoms/bookmark-button';
 import { Deadline } from '@/components/atoms/group/deadline';
@@ -12,14 +14,18 @@ import { GroupSkills } from '../../atoms/group/group-skills';
 
 type GroupCardProps = {
   item: Group;
+  onToggleBookmark: (groupId: number, next: boolean) => void;
 };
 
 // TODO : 섹션별로 component 나누기
-export const GroupCard = ({ item }: GroupCardProps) => {
+export const GroupCard = ({ item, onToggleBookmark }: GroupCardProps) => {
   return (
     <div className="relative p-6 md:w-[300px] bg-white shadow-sm shadow-gray-400">
       <div className="absolute top-0 right-0 m-6">
-        <BookmarkButton groupId={item.id} isBookmark={item.isBookmark} />
+        <BookmarkButton
+          isBookmark={item.isBookmark}
+          onToggle={() => onToggleBookmark(item.id, !item.isBookmark)}
+        />
       </div>
       <Link href={routes.groupDetail(item.id)}>
         <div>
