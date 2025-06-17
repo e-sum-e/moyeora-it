@@ -9,11 +9,13 @@ import { formatYearMonthDayWithDot } from '@/utils/dateUtils';
 type BookmarkCardContentsProps = {
   className?: string;
   info: ContentInfo;
+  bookmarkToggleHandler: (groupId: number, nextBookmarkState: boolean) => void;
 };
 
 export const BookmarkCardContents = ({
   className,
   info,
+  bookmarkToggleHandler,
 }: BookmarkCardContentsProps) => {
   const isCompleted = info.participants.length === info.maxParticipants;
   return (
@@ -38,7 +40,12 @@ export const BookmarkCardContents = ({
               ))}
             </div>
           </div>
-          <BookmarkButton groupId={info.id} isBookmark={info.isBookmark} />
+          <BookmarkButton
+            isBookmark={info.isBookmark}
+            bookmarkToggleHandler={() =>
+              bookmarkToggleHandler(info.id, !info.isBookmark)
+            }
+          />
         </div>
         <footer>
           <div className="flex flex-col gap-2">
