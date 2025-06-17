@@ -14,17 +14,19 @@ import { GroupSkills } from '../../atoms/group/group-skills';
 
 type GroupCardProps = {
   item: Group;
-  onToggleBookmark: (groupId: number, next: boolean) => void;
+  bookmarkToggleHandler: (groupId: number, nextBookmarkState: boolean) => void;
 };
 
 // TODO : 섹션별로 component 나누기
-export const GroupCard = ({ item, onToggleBookmark }: GroupCardProps) => {
+export const GroupCard = ({ item, bookmarkToggleHandler }: GroupCardProps) => {
   return (
     <div className="relative p-6 md:w-[300px] bg-white shadow-sm shadow-gray-400">
       <div className="absolute top-0 right-0 m-6">
         <BookmarkButton
           isBookmark={item.isBookmark}
-          onToggle={() => onToggleBookmark(item.id, !item.isBookmark)}
+          bookmarkToggleHandler={() =>
+            bookmarkToggleHandler(item.id, !item.isBookmark)
+          }
         />
       </div>
       <Link href={routes.groupDetail(item.id)}>

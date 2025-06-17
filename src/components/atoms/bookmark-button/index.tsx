@@ -4,12 +4,15 @@ import Image from 'next/image';
 
 type Props = {
   isBookmark: boolean;
-  onToggle: () => void;
+  bookmarkToggleHandler: () => void;
 };
 
-export const BookmarkButton = ({ isBookmark, onToggle }: Props) => {
+export const BookmarkButton = ({
+  isBookmark,
+  bookmarkToggleHandler,
+}: Props) => {
   return (
-    <button onClick={onToggle} className="cursor-pointer">
+    <button onClick={bookmarkToggleHandler} className="cursor-pointer">
       <Image
         src={`/icons/bookmark-${isBookmark ? 'active' : 'default'}.svg`}
         alt="찜하기"

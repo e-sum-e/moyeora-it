@@ -92,7 +92,7 @@ export const GroupList = ({ queryParams }: GroupListProps) => {
             <GroupCard
               key={group.id}
               item={group}
-              onToggleBookmark={toggleBookmark}
+              bookmarkToggleHandler={toggleBookmark}
             />
           ))}
         </ul>

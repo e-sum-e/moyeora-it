@@ -72,5 +72,10 @@ export const BookmarkButtonContainer = ({
     }
   };
 
-  return <BookmarkButton isBookmark={isBookmark} onToggle={toggleBookmark} />;
+  return (
+    <BookmarkButton
+      isBookmark={isBookmark}
+      bookmarkToggleHandler={toggleBookmark}
+    />
+  );
 };
