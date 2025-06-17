@@ -23,11 +23,58 @@ export const Filter = ({ updateQueryParams }: FilterProps) => {
   const isSelectedPosition = selectedPositions?.length > 0;
 
   const skillSelectHandler = (skill: SkillName) => {
-    updateQueryParams({ skill: skill });
+    if (skill === '') {
+      // 전체 선택한 경우 삭제
+      updateQueryParams({ skill: '' });
+      return;
+    }
+
+    if (selectedSkills.length === 0) {
+      // 아직 선택한 기술이 하나도 없다면 현재 선택한 기술만 추가
+      updateQueryParams({ skill: skill });
+      return;
+    }
+    if (!selectedSkills.includes(skill)) {
+      // 기존에 선택된 기술에 현재 선택한 기술이 없다면 추가
+      updateQueryParams({ skill: [...selectedSkills, skill].join(',') });
+      return;
+    }
+
+    // 위에 해당하지 않는다면 이미 선택되어있는 기술을 또 선택한 것이므로 삭제돼야 함
+    const nextSkill = selectedSkills.filter(
+      (selectedSkill) => selectedSkill !== skill,
+    );
+
+    updateQueryParams({
+      skill: nextSkill.join(','),
+    });
   };
 
+  // skillSlectHandler와 동일한 로직
   const positionSelectHandler = (position: PositionName) => {
-    updateQueryParams({ position: position });
+    if (position === '') {
+      updateQueryParams({ position: '' });
+      return;
+    }
+
+    if (selectedPositions.length === 0) {
+      updateQueryParams({ position: position });
+      return;
+    }
+    if (!selectedPositions.includes(position)) {
+      updateQueryParams({
+        position: [...selectedPositions, position].join(','),
+      });
+      return;
+    }
+
+    const nextSelectedPositions = selectedPositions.filter(
+      (selectedPosition) => selectedPosition !== position,
+    );
+
+    updateQueryParams({
+      position: nextSelectedPositions.join(','),
+    });
   };
 
   return (
@@ -45,7 +92,9 @@ export const Filter = ({ updateQueryParams }: FilterProps) => {
           <Button
             variant="outline"
             onClick={() => skillSelectHandler('')}
-            className="cursor-pointer"
+            className={`cursor-pointer
+                ${selectedSkills.length === 0 ? 'ring-2 ring-green-400' : ''} 
+              `}
           >
             전체
           </Button>
@@ -78,7 +127,11 @@ export const Filter = ({ updateQueryParams }: FilterProps) => {
           <Button
             variant="outline"
             onClick={() => positionSelectHandler('')}
-            cursor-pointer
+            className={`cursor-pointer
+                ${
+                  selectedPositions.length === 0 ? 'ring-2 ring-green-400' : ''
+                } 
+              `}
           >
             전체
           </Button>
