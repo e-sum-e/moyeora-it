@@ -66,7 +66,7 @@ export const EditableAvatar = ({ imageSrc, fallback }: EditableAvatarProps) => {
       });
       setCurrentImageSrc('/images/default-profile.png');
       setValue('profileImageFile', null);
-    } catch (error) {
+    } catch {
       toast.error('프로필 이미지 삭제에 실패하였습니다.', {
         description: '잠시 후 다시 시도해주세요.',
       });
