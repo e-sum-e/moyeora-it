@@ -9,7 +9,7 @@ export const useFetchInView = ({
 }: {
   fetchNextPage: (options?: FetchNextPageOptions) => void;
   options?: IntersectionOptions;
-  isLoading: boolean;
+  isLoading?: boolean;
 }) => {
   const { ref, inView } = useInView({ ...options });
 

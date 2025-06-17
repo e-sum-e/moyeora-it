@@ -12,7 +12,7 @@ export const useFetchItems = <T>({
   options = {},
 }: {
   url: string;
-  queryParams?: Record<string, string | number>;
+  queryParams?: Record<string, string | number | null>;
   options?: Partial<
     UseSuspenseInfiniteQueryOptions<Page<T>, Error, InfiniteData<Page<T>>>
   >;
