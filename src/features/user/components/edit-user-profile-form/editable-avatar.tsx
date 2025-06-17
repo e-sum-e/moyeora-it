@@ -7,6 +7,7 @@ import { useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { useFormContext } from 'react-hook-form';
 import { type FormData } from '@/features/user/components/edit-user-profile-form/edit-user-profile-form';
+import { request } from '@/api/request';
 
 type EditableAvatarProps = {
   imageSrc: string;
@@ -52,6 +53,26 @@ export const EditableAvatar = ({ imageSrc, fallback }: EditableAvatarProps) => {
     }
   };
 
+  /**
+   * 프로필 이미지 제거 버튼 클릭 핸들러
+   * 
+   * 프로필 이미지를 제거하고, 수정 폼에서 보이는 이미지 경로를 업데이트한다.
+   * 프로필 이미지 제거 요청이 실패하면, 토스트 메시지를 표시한다.
+   */
+  const removeProfileImgButtonClickHandler = async () => {
+    try {
+      await request.delete('/v1/user/profile-image-delete', {
+        credentials: 'include',
+      });
+      setCurrentImageSrc('/images/default-profile.png');
+      setValue('profileImageFile', null);
+    } catch (error) {
+      toast.error('프로필 이미지 삭제에 실패하였습니다.', {
+        description: '잠시 후 다시 시도해주세요.',
+      });
+    }
+  };
+
   return (
     <div className={'relative'}>
       <div className="flex flex-col gap-y-3 items-center">
@@ -60,7 +81,7 @@ export const EditableAvatar = ({ imageSrc, fallback }: EditableAvatarProps) => {
           fallback={fallback}
           className={'size-20'}
         />
-        <div className='flex flex-col gap-y-2'>
+        <div className="flex flex-col gap-y-2">
           <Button
             type="button"
             onClick={() => {
@@ -72,11 +93,7 @@ export const EditableAvatar = ({ imageSrc, fallback }: EditableAvatarProps) => {
           </Button>
           <button
             type="button"
-            onClick={() => {
-              setCurrentImageSrc(
-                'https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=',
-              );
-            }}
+            onClick={removeProfileImgButtonClickHandler}
             className="h-8 text-sm font-medium bg-white text-gray-400 shadow-none hover:bg-none cursor-pointer"
           >
             사진 제거
