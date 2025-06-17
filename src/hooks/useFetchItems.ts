@@ -10,12 +10,14 @@ export const useFetchItems = <T>({
   url,
   queryParams = {},
   options = {},
+  getNextPageParam,
 }: {
   url: string;
   queryParams?: Record<string, string | number>;
   options?: Partial<
     UseSuspenseInfiniteQueryOptions<Page<T>, Error, InfiniteData<Page<T>>>
   >;
+  getNextPageParam?: (lastPage: Page<T>) => number | null;
 }) => {
   return useSuspenseInfiniteQuery<Page<T>, Error, InfiniteData<Page<T>>>({
     queryKey: ['items', url, queryParams ?? {}],
@@ -30,7 +32,7 @@ export const useFetchItems = <T>({
       ),
     initialPageParam: 0,
     getNextPageParam(lastPage) {
-      return lastPage.hasNext ? lastPage.cursor : null;
+      return getNextPageParam ? getNextPageParam(lastPage) : lastPage.hasNext ? lastPage.cursor : null;
     },
     ...options,
   });
