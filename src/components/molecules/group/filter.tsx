@@ -92,7 +92,9 @@ export const Filter = ({ updateQueryParams }: FilterProps) => {
           <Button
             variant="outline"
             onClick={() => skillSelectHandler('')}
-            className="cursor-pointer"
+            className={`cursor-pointer
+                ${selectedSkills.length === 0 ? 'ring-2 ring-green-400' : ''} 
+              `}
           >
             전체
           </Button>
@@ -125,7 +127,11 @@ export const Filter = ({ updateQueryParams }: FilterProps) => {
           <Button
             variant="outline"
             onClick={() => positionSelectHandler('')}
-            className="cursor-pointer"
+            className={`cursor-pointer
+                ${
+                  selectedPositions.length === 0 ? 'ring-2 ring-green-400' : ''
+                } 
+              `}
           >
             전체
           </Button>
