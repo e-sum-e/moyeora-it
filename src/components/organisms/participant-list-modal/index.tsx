@@ -47,7 +47,7 @@ export const ParticipantListModal = ({
         </div>
         <DialogFooter className="p-4">
           <DialogClose asChild>
-            <Button>확인</Button>
+            <Button className="cursor-pointer">확인</Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>

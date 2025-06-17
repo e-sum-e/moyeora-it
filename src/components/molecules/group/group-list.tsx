@@ -2,14 +2,13 @@
 
 import { GroupCard } from '@/components/molecules/group/group-card';
 import { Empty } from '@/components/organisms/empty';
-import { getBookmarkList } from '@/features/bookmark';
+import { useBookmarkItems } from '@/hooks/useBookmarkItems';
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
-import useAuthStore from '@/stores/useAuthStore';
 import { Group } from '@/types';
 import { Position, Skill } from '@/types/enums';
 import flattenPages from '@/utils/flattenPages';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 enum EMPTY_INFO_MESSAGE {
   EMPTY_INITIAL = '생성된 그룹이 없습니다',
@@ -18,26 +17,54 @@ enum EMPTY_INFO_MESSAGE {
 }
 
 type GroupListProps = {
-  queryParams: {
-    type: string;
-    skills: Skill;
-    position: Position;
-    sort: string;
-    order: string;
-    search: string;
-  };
+  serverQueryParams: Record<string, string | undefined>;
 };
 
-export const GroupList = ({ queryParams }: GroupListProps) => {
+export const GroupList = ({ serverQueryParams }: GroupListProps) => {
   const [isEmptyItems, setIsEmptyItems] = useState(true);
   const [emptyInfoMessage, setEmptyInfoMessage] =
     useState<EMPTY_INFO_MESSAGE | null>(null);
 
   const user = useAuthStore((state) => state.user);
 
+  const queryParams = useMemo(() => {
+    return {
+      type: serverQueryParams.type ?? '',
+      skill: serverQueryParams.skill
+        ? serverQueryParams.skill.split(',')
+          ? serverQueryParams.skill
+              .split(',')
+              .map((v) => Skill[v as keyof typeof Skill])
+              .join(',')
+          : Skill[serverQueryParams.skill as keyof typeof Skill]
+        : '',
+      position: serverQueryParams.position
+        ? serverQueryParams.position.split(',')
+          ? serverQueryParams.position
+              .split(',')
+              .map((v) => Position[v as keyof typeof Position])
+              .join(',')
+          : Position[serverQueryParams.position as keyof typeof Position]
+        : '',
+      sort: serverQueryParams.sort ?? 'createdAt',
+      order: serverQueryParams.order ?? 'desc',
+      search: serverQueryParams.search ?? '',
+    };
+  }, [
+    serverQueryParams.type,
+    serverQueryParams.skill,
+    serverQueryParams.position,
+    serverQueryParams.sort,
+    serverQueryParams.order,
+    serverQueryParams.search,
+  ]);
+
   const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<Group>({
     url: '/v2/groups',
-    queryParams: { ...queryParams, size: 10 },
+    queryParams: {
+      ...queryParams,
+      size: 10,
+    },
   });
 
   const { ref } = useFetchInView({
@@ -48,19 +75,15 @@ export const GroupList = ({ queryParams }: GroupListProps) => {
     },
   });
 
-  const items = flattenPages(data.pages);
+  const { items, toggleBookmark, setInitialItems } = useBookmarkItems<Group>();
 
-  const itemsWithBookmark = useMemo(() => {
-    if (!user) {
-      const bookmarks = getBookmarkList();
-      return items.map((item) => ({
-        ...item,
-        isBookmark: bookmarks.includes(item.id),
-      }));
-    }
+  // 초기 데이터 수신 후 북마크 상태 포함한 모임 배열 설정
+  useEffect(() => {
+    if (!data) return;
 
-    return items;
-  }, [items, user]);
+    const flattenItems = flattenPages(data.pages);
+    setInitialItems(flattenItems);
+  }, [data, setInitialItems]);
 
   useEffect(() => {
     if (items.length === 0) {
@@ -71,7 +94,7 @@ export const GroupList = ({ queryParams }: GroupListProps) => {
         setEmptyInfoMessage(EMPTY_INFO_MESSAGE.SEARCH);
       } else if (
         queryParams.type ||
-        queryParams.skills ||
+        queryParams.skill ||
         queryParams.position
       ) {
         setEmptyInfoMessage(EMPTY_INFO_MESSAGE.FILTER);
@@ -95,8 +118,12 @@ export const GroupList = ({ queryParams }: GroupListProps) => {
         <Empty mainText={emptyInfoMessage} subText="" />
       ) : (
         <ul className="flex flex-col gap-3 mt-8 md:flex-row md:flex-wrap md:gap-6 md:justify-center">
-          {itemsWithBookmark.map((group) => (
-            <GroupCard key={group.id} item={group} />
+          {items.map((group) => (
+            <GroupCard
+              key={group.id}
+              item={group}
+              bookmarkToggleHandler={toggleBookmark}
+            />
           ))}
         </ul>
       )}
