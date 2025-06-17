@@ -1,12 +1,6 @@
-import { request } from '@/api/request';
-import {
-  addBookmarkItem,
-  getBookmarkList,
-  removeBookmarkItem,
-} from '@/features/bookmark';
+import { getBookmarkList, updateBookmark } from '@/features/bookmark';
 import useAuthStore from '@/stores/useAuthStore';
 import { useCallback, useState } from 'react';
-import { toast } from 'sonner';
 
 /**
  * 북마크 상태를 목록 단위로 통합 관리하는 훅
@@ -42,36 +36,31 @@ export const useBookmarkItems = <
     [user],
   );
 
-  const toggleBookmark = async (groupId: number, next: boolean) => {
+  const toggleBookmark = async (
+    groupId: number,
+    nextBookmarkStatus: boolean,
+  ) => {
     setItems((prev) =>
       prev.map((item) =>
-        item.id === groupId ? { ...item, isBookmark: next } : item,
+        item.id === groupId
+          ? { ...item, isBookmark: nextBookmarkStatus }
+          : item,
       ),
     );
 
-    if (!user) {
-      if (next) {
-        addBookmarkItem(groupId);
-      } else {
-        removeBookmarkItem(groupId);
-      }
-    } else {
-      try {
-        await request.patch(
-          '/v2/bookmark',
-          { 'Content-Type': 'application/json' },
-          { groupId, bookmark: next },
-          { credentials: 'include' },
-        );
-      } catch {
-        toast.error('찜하기에 실패했습니다.');
+    await updateBookmark({
+      user,
+      groupId,
+      nextBookmarkStatus,
+      onFail: () =>
         setItems((prev) =>
           prev.map((item) =>
-            item.id === groupId ? { ...item, isBookmark: !next } : item,
+            item.id === groupId
+              ? { ...item, isBookmark: !nextBookmarkStatus }
+              : item,
           ),
-        );
-      }
-    }
+        ),
+    });
   };
 
   return { items, toggleBookmark, setInitialItems };

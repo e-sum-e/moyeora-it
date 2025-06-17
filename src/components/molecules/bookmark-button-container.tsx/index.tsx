@@ -1,16 +1,9 @@
 'use client';
 
-import { request } from '@/api/request';
 import { BookmarkButton } from '@/components/atoms/bookmark-button';
-import {
-  addBookmarkItem,
-  getBookmarkList,
-  removeBookmarkItem,
-} from '@/features/bookmark';
+import { getBookmarkList, updateBookmark } from '@/features/bookmark';
 import useAuthStore from '@/stores/useAuthStore';
-import { useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
 
 type BookmarkButtonContainerProps = {
   groupId: number;
@@ -43,33 +36,16 @@ export const BookmarkButtonContainer = ({
     }
   }, [user, groupId, initialIsBookmarkState]);
 
-  const { mutate } = useMutation({
-    mutationFn: (next: boolean) =>
-      request.patch(
-        '/v2/bookmark',
-        { 'Content-Type': 'application/json' },
-        { groupId, bookmark: next },
-        { credentials: 'include' },
-      ),
-    onError: () => {
-      toast.error('찜하기에 실패했습니다.');
-      setIsBookmark((prev) => !prev);
-    },
-  });
+  const toggleBookmark = async () => {
+    const nextBookmarkStatus = !isBookmark;
+    setIsBookmark(nextBookmarkStatus);
 
-  const toggleBookmark = () => {
-    const next = !isBookmark;
-    setIsBookmark(next);
-
-    if (!user) {
-      if (isBookmark) {
-        removeBookmarkItem(groupId);
-      } else {
-        addBookmarkItem(groupId);
-      }
-    } else {
-      mutate(next);
-    }
+    await updateBookmark({
+      user,
+      groupId,
+      nextBookmarkStatus,
+      onFail: () => setIsBookmark((prev) => !prev),
+    });
   };
 
   return (
