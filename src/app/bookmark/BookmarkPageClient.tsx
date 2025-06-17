@@ -15,7 +15,23 @@ import flattenPages from '@/utils/flattenPages';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
-const CURSOR_SIZE = 10;
+const CURSOR_SIZE = 100;
+
+export const CardSkeleton = () => {
+  return (
+    <div className="flex flex-col gap-4">
+      {[1,2,3].map((i) => (
+        <div key={i} className="animate-pulse bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex gap-4 items-center">
+          <div className="flex-1 space-y-3">
+            <div className="h-4 bg-gray-200 rounded w-1/2" />
+            <div className="h-3 bg-gray-100 rounded w-1/3" />
+            <div className="h-3 bg-gray-100 rounded w-1/4" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 export function BookmarkPageClient() {
   const user = useAuthStore((state) => state.user);
@@ -30,11 +46,11 @@ export function BookmarkPageClient() {
     size: CURSOR_SIZE,
     cursor: 0,
     sort: 'createdAt',
-    order: 'desc',
+    order: 'asc',
   });
 
   //ISSUE: 일단 전체 그룹 데이터 가져오기
-  const { data, isLoading, isError, fetchNextPage } =
+  const { data, isError, fetchNextPage } =
     useFetchItems<ContentInfo>({
       url: '/v2/groups',
       queryParams,
@@ -43,21 +59,22 @@ export function BookmarkPageClient() {
         gcTime: 1000 * 60 * 30,
         refetchOnWindowFocus: true,
       },
-    });
+  });
 
   const { ref } = useFetchInView({
     fetchNextPage,
     options: {
       rootMargin: '50px',
     },
-    isLoading,
   });
 
   // 데이터 가공
   const items = flattenPages(data.pages);
   const [bookmarkItems, setBookmarkItems] = useState<ContentInfo[]>([]);
-
+  const [isLoading, setIsLoading] = useState(true); //데이터 가공 중 로딩 처리
+  
   useEffect(() => {
+    setIsLoading(true);
     if (!user) {
       const processedItems = setLocalBookmarkItems(items).filter(
         (item) => item.isBookmark,
@@ -68,17 +85,20 @@ export function BookmarkPageClient() {
       const processedItems = items.filter((item) => item.isBookmark);
       setBookmarkItems(processedItems);
     }
+    setIsLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  }, [user, queryParams]);
 
   // 탭 변경 핸들러
   const handleValueChange = (value: GroupType) => {
     setQueryParams((prev) => ({
       ...prev,
-      type: `bookmark,${value}`,
+      type: `${value}`,
     }));
   };
-
+  
+  
+  
   return (
     <div>
       <section className="flex flex-row gap-4 mb-8 w-full">
@@ -94,11 +114,12 @@ export function BookmarkPageClient() {
         </div>
       </section>
       <main>
-        <Tab tabList={tabList} onValueChange={handleValueChange}>
+        <Tab tabList={tabList} onValueChange={handleValueChange} >
           <div className="flex flex-col gap-4">
             {isError && <div>에러가 발생했습니다.</div>}
-            {isLoading && <div>로딩 중...</div>}
-            {bookmarkItems.length === 0 ? (
+            {isLoading ? (
+              <CardSkeleton />
+            ) : bookmarkItems.length === 0 && !isError ? (
               <Empty
                 mainText="아직 찜한 프로젝트가 없어요."
                 subText="관심있는 프로젝트를 찜해보세요!"
