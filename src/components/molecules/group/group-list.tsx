@@ -17,24 +17,54 @@ enum EMPTY_INFO_MESSAGE {
 }
 
 type GroupListProps = {
-  queryParams: {
-    type: string;
-    skills: Skill;
-    position: Position;
-    sort: string;
-    order: string;
-    search: string;
-  };
+  serverQueryParams: Record<string, string | undefined>;
 };
 
-export const GroupList = ({ queryParams }: GroupListProps) => {
+export const GroupList = ({ serverQueryParams }: GroupListProps) => {
   const [isEmptyItems, setIsEmptyItems] = useState(true);
   const [emptyInfoMessage, setEmptyInfoMessage] =
     useState<EMPTY_INFO_MESSAGE | null>(null);
 
+  const user = useAuthStore((state) => state.user);
+
+  const queryParams = useMemo(() => {
+    return {
+      type: serverQueryParams.type ?? '',
+      skill: serverQueryParams.skill
+        ? serverQueryParams.skill.split(',')
+          ? serverQueryParams.skill
+              .split(',')
+              .map((v) => Skill[v as keyof typeof Skill])
+              .join(',')
+          : Skill[serverQueryParams.skill as keyof typeof Skill]
+        : '',
+      position: serverQueryParams.position
+        ? serverQueryParams.position.split(',')
+          ? serverQueryParams.position
+              .split(',')
+              .map((v) => Position[v as keyof typeof Position])
+              .join(',')
+          : Position[serverQueryParams.position as keyof typeof Position]
+        : '',
+      sort: serverQueryParams.sort ?? 'createdAt',
+      order: serverQueryParams.order ?? 'desc',
+      search: serverQueryParams.search ?? '',
+    };
+  }, [
+    serverQueryParams.type,
+    serverQueryParams.skill,
+    serverQueryParams.position,
+    serverQueryParams.sort,
+    serverQueryParams.order,
+    serverQueryParams.search,
+  ]);
+
   const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<Group>({
     url: '/v2/groups',
-    queryParams: { ...queryParams, size: 10 },
+    queryParams: {
+      ...queryParams,
+      size: 10,
+    },
   });
 
   const { ref } = useFetchInView({
@@ -64,7 +94,7 @@ export const GroupList = ({ queryParams }: GroupListProps) => {
         setEmptyInfoMessage(EMPTY_INFO_MESSAGE.SEARCH);
       } else if (
         queryParams.type ||
-        queryParams.skills ||
+        queryParams.skill ||
         queryParams.position
       ) {
         setEmptyInfoMessage(EMPTY_INFO_MESSAGE.FILTER);

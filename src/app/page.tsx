@@ -26,15 +26,25 @@ export default async function Home({
 
   const queryParams = {
     type: awaitedSearchParams.type ?? '',
-    skills: Skill[awaitedSearchParams.skill as keyof typeof Skill] ?? '',
-    position:
-      Position[awaitedSearchParams.position as keyof typeof Position] ?? '',
+    skill: awaitedSearchParams.skill
+      ? awaitedSearchParams.skill.split(',')
+        ? awaitedSearchParams.skill
+            .split(',')
+            .map((v) => Skill[v as keyof typeof Skill])
+            .join(',')
+        : Skill[awaitedSearchParams.skill as keyof typeof Skill]
+      : '',
+    position: awaitedSearchParams.position
+      ? awaitedSearchParams.position.split(',')
+        ? awaitedSearchParams.position
+            .split(',')
+            .map((v) => Position[v as keyof typeof Position])
+            .join(',')
+        : Position[awaitedSearchParams.position as keyof typeof Position]
+      : '',
     sort: awaitedSearchParams.sort ?? 'createdAt',
     order: awaitedSearchParams.order ?? 'desc',
     search: awaitedSearchParams.search ?? '',
-    ...(awaitedSearchParams.order === 'desc' || !awaitedSearchParams.order
-      ? { cursor: 'null' }
-      : {}),
   };
 
   // console.log('✅ Fetching data from server ', queryParams); // DEV: 💡 서버 컴포넌트에서 prefetch 하는지 확인용
@@ -47,8 +57,8 @@ export default async function Home({
           ...queryParams,
           size: 10,
           cursor:
-            awaitedSearchParams.order === 'desc' || !awaitedSearchParams.order
-              ? 'null' // order가 desc이거나 최초 진입시 에는 cursor=null로 가야함
+            queryParams.order === 'desc' || !queryParams.order
+              ? 'null'
               : pageParam,
         });
       },
@@ -73,7 +83,7 @@ export default async function Home({
             </div>
           }
         >
-          <Groups searchParams={awaitedSearchParams} />
+          <Groups serverQueryParams={awaitedSearchParams} />
         </QueryErrorBoundary>
       </HydrationBoundary>
     </div>
