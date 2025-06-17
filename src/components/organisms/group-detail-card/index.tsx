@@ -1,8 +1,8 @@
 import { Avatar } from '@/components/atoms/avatar';
-import { BookmarkButton } from '@/components/atoms/bookmark-button';
 import { GroupPositions } from '@/components/atoms/group/group-positions';
 import { GroupSkills } from '@/components/atoms/group/group-skills';
 import { GroupProgress } from '@/components/atoms/group/particiapant-progress';
+import { BookmarkButtonContainer } from '@/components/molecules/bookmark-button-container.tsx';
 import { ParticipantListModal } from '@/components/organisms/participant-list-modal';
 import { GroupDetail, GroupTypeName } from '@/types';
 import { formatYearMonthDayWithDot } from '@/utils/dateUtils';
@@ -23,7 +23,7 @@ export const GroupDetaiilCard = ({
       <header className="flex flex-col gap-8">
         <div className="flex justify-between items-start">
           <h1 className="font-bold text-3xl">{info.group.title}</h1>
-          <BookmarkButton
+          <BookmarkButtonContainer
             groupId={info.group.id}
             isBookmark={info.group.isBookmark}
           />

@@ -6,10 +6,9 @@ import {
   ContentInfo,
 } from '@/components/organisms/bookmark-card';
 import { Empty } from '@/components/organisms/empty';
-import { setLocalBookmarkItems } from '@/features/bookmark';
+import { useBookmarkItems } from '@/hooks/useBookmarkItems';
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
-import useAuthStore from '@/stores/useAuthStore';
 import { GroupType } from '@/types';
 import flattenPages from '@/utils/flattenPages';
 import Image from 'next/image';
@@ -33,13 +32,13 @@ export const CardSkeleton = () => {
   );
 };
 
-export function BookmarkPageClient() {
-  const user = useAuthStore((state) => state.user);
-  const tabList: TabType[] = [
+const tabList: TabType[] = [
     { value: '', label: '모든 그룹' },
     { value: GroupType.STUDY, label: '스터디' },
     { value: GroupType.PROJECT, label: '프로젝트' },
   ];
+export function BookmarkPageClient() {
+  const [isLoading, setIsLoading] = useState(true); // 데이터 가공 중 로딩 처리
 
   // 쿼리 파라미터는 state로 관리
   const [queryParams, setQueryParams] = useState({
@@ -68,26 +67,18 @@ export function BookmarkPageClient() {
     },
   });
 
-  // 데이터 가공
-  const items = flattenPages(data.pages);
-  const [bookmarkItems, setBookmarkItems] = useState<ContentInfo[]>([]);
-  const [isLoading, setIsLoading] = useState(true); //데이터 가공 중 로딩 처리
-  
+  const { items, setInitialItems, toggleBookmark } =
+    useBookmarkItems<ContentInfo>();
+
   useEffect(() => {
-    setIsLoading(true);
-    if (!user) {
-      const processedItems = setLocalBookmarkItems(items).filter(
-        (item) => item.isBookmark,
-      );
-      setBookmarkItems(processedItems);
-    } else {
-      // 서버에서 가져온 데이터 중 찜한 데이터만 가져오기
-      const processedItems = items.filter((item) => item.isBookmark);
-      setBookmarkItems(processedItems);
-    }
+    if (!data) return;
+
+    const flattenItems = flattenPages(data.pages);
+    setInitialItems(flattenItems);
     setIsLoading(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, queryParams]);
+  }, [data, setInitialItems]);
+
+  const bookmarkItems = items.filter((item) => item.isBookmark);
 
   // 탭 변경 핸들러
   const handleValueChange = (value: GroupType) => {
@@ -96,8 +87,6 @@ export function BookmarkPageClient() {
       type: `${value}`,
     }));
   };
-  
-  
   
   return (
     <div>
@@ -131,7 +120,10 @@ export function BookmarkPageClient() {
                   key={item.id}
                   ref={index === bookmarkItems.length - 1 ? ref : undefined}
                 >
-                  <BookmarkCard info={item} />
+                  <BookmarkCard
+                    info={item}
+                    bookmarkToggleHandler={toggleBookmark}
+                  />
                 </div>
               ))
             )}
