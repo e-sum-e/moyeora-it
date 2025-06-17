@@ -7,21 +7,22 @@ import useNotificationStore from '@/stores/useNotificationStore';
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
 import useAuthStore from '@/stores/useAuthStore';
-import { NotificationBadge } from '../notification-badge';
 import { useQuery } from '@tanstack/react-query';
 import { request } from '@/api/request';
-import flattenPages from '@/utils/flattenPages';
 import Image from 'next/image';
 
 const MAX_PAGE_SIZE = 10;
 
 export const NotificationList = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { notifications, setNotifications, setUnreadCount, unreadCount } = useNotificationStore();
+  const { setNotifications, setUnreadCount } = useNotificationStore();
+  const unreadCount = useNotificationStore((state) => state.unreadCount);
+  const notifications = useNotificationStore((state) => state.notifications);
   const user = useAuthStore((state) => state.user);
 
   // 전체 알림 목록 조회
-  const { data, fetchNextPage, hasNextPage } = useFetchItems<NotificationType>({
+  // TODO: 백엔드 데이터 타입 고쳐야됨 - 프젝 끝나고 고칠예정
+  const { data, fetchNextPage, hasNextPage } = useFetchItems({
     url: '/v1/notification',
     queryParams: {
       cursor: 0,
@@ -45,35 +46,51 @@ export const NotificationList = () => {
   });
   
   useEffect(() => {
-    if (!data || !isOpen) return;
-    const notificationList = flattenPages(data.pages)
-    setNotifications(notificationList);
+    if (!data || !isOpen || notifications.length) return;
+
+    //@ts-expect-error 백엔드 수정되면 타입도 수정
+    const page: {
+      status: { code: number; message: string; success: boolean };
+      notifications: { items: NotificationType[]; hasNext: boolean; cursor: number };
+    } = data.pages[0];
+    
+    const items = page.notifications?.items ?? [];
+    
+    const newItems = items.map((item) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { content, created_at, createdAt, isRead, read, message, ...rest} = item;
+      return {
+        ...rest,
+        message: item.content || item.message,
+        isRead: !!(item.isRead || item.read),
+        createdAt: item.createdAt || item.created_at,
+      };
+    });
+    
+    setNotifications(newItems);
   }, [isOpen, data, setNotifications]);
 
   useEffect(() => {
     if (!unreadData) return;
-    setUnreadCount(unreadData.unreadCount);
+    setUnreadCount(Number(unreadData.unreadCount) || 0);
   }, [unreadData, setUnreadCount]);
 
-  const onOpenChange = (open: boolean) => {
+  
+
+  const openhandler = (open: boolean) => {
+    console.log('notifications', notifications);
     setIsOpen(open);
   };
 
   if(!user) return null;
 
   return (
-    <Popover open={isOpen} onOpenChange={onOpenChange}>
+    <Popover open={isOpen} onOpenChange={openhandler}>
       <PopoverTrigger className="relative">
         <div className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200">
-          <Image 
-            src="/icons/alarm-default.svg" 
-            alt="알림" 
-            width={24} 
-            height={24}
-            className="opacity-70" 
-          />
+           <Image src={`/icons/alarm-${unreadCount > 0 ? 'active' : 'default'}.svg`} alt="알림" width={24} height={24} className="opacity-70" />
+           {notifications.length}
         </div>
-        {unreadCount > 0 && <NotificationBadge />}
       </PopoverTrigger>
       <PopoverContent className="w-80 p-0 shadow-lg" align="end">
         <div className="flex flex-col">

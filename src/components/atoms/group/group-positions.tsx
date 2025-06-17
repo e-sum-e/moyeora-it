@@ -11,7 +11,7 @@ export const GroupPositions = ({
   className,
 }: GroupPositionsProps) => {
   return (
-    <ul className="flex gap-2">
+    <ul className="flex gap-2 w-full overflow-y-scroll scrollbar-hide">
       {positions.map((position, i) => (
         <li key={i} className={className}>
           <PositionBadge name={Position[position]} />

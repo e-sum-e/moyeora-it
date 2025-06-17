@@ -3,8 +3,8 @@ import { GroupActionButtons } from '@/components/molecules/gorup-action-buttons'
 import { GroupDetaiilCard } from '@/components/organisms/group-detail-card';
 import { ReplySection } from '@/components/organisms/reply/reply-section';
 import { GroupDetail } from '@/types';
+import { getAuthCookieHeader } from '@/utils/cookie';
 import { isBeforeToday } from '@/utils/dateUtils';
-import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 type GroupDetailResponse = {
@@ -24,17 +24,7 @@ export default async function GroupDetailPage({
   params,
 }: GroupDetailPageProps) {
   const groupId = Number((await params).groupId);
-
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get('accessToken');
-  const refreshToken = cookieStore.get('refreshToken');
-
-  const cookieString = [
-    accessToken && `${accessToken.name}=${accessToken.value}`,
-    refreshToken && `${refreshToken.name}=${refreshToken.value}`,
-  ]
-    .filter(Boolean)
-    .join('; ');
+  const cookieString = await getAuthCookieHeader();
 
   let response: Response;
 
@@ -90,7 +80,7 @@ export default async function GroupDetailPage({
     group.participants.length < group.maxParticipants;
 
   return (
-    <div>
+    <>
       <main className="w-4/5 mx-auto flex flex-col gap-10 my-15">
         <GroupDetaiilCard info={data} isRecruiting={isRecruiting} />
         <GroupDescription
@@ -100,7 +90,7 @@ export default async function GroupDetailPage({
         <ReplySection />
       </main>
       {isRecruiting && (
-        <footer className="fixed bottom-0 z-50 bg-white border-t-2 py-2 px-8 w-full flex justify-end gap-4">
+        <footer className="fixed bottom-0 left-0 z-50 bg-white border-t-2 py-2 px-8 w-full flex justify-end gap-4">
           <GroupActionButtons
             groupId={groupId}
             hostId={host.userId}
@@ -110,6 +100,6 @@ export default async function GroupDetailPage({
           />
         </footer>
       )}
-    </div>
+    </>
   );
 }
