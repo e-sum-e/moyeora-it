@@ -75,6 +75,7 @@ export const GroupList = ({ status }: GroupListProps) => {
               key={group.id}
               group={group}
               isCurrentUser={isCurrentUser}
+              status={status}
             />
           ))}
           {hasNextPage && <div ref={ref} className="h-10" />}

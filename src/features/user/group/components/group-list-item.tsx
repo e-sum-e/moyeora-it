@@ -11,6 +11,7 @@ import { MemberListDialog } from '@/features/user/group/components/member-list-m
 type GroupListItemProps = {
   group: Group;
   isCurrentUser: boolean;
+  status: 'PARTICIPATING' | 'RECRUITING' | 'ENDED';
 };
 
 const getIsRecruiting = (group: Group) => {
@@ -23,14 +24,18 @@ const getIsRecruiting = (group: Group) => {
 
 /**
  * 모임 목록 아이템 컴포넌트
- * 
+ *
  * 모임 목록 아이템을 보여준다.
- * 
+ *
  * @param group 모임 정보
  * @param isCurrentUser 현재 사용자가 로그인한 사용자인지 여부
  * @returns 모임 목록 아이템 컴포넌트
  */
-export const GroupListItem = ({ group, isCurrentUser }: GroupListItemProps) => {
+export const GroupListItem = ({
+  group,
+  isCurrentUser,
+  status,
+}: GroupListItemProps) => {
   const { id, title, deadline, position } = group;
 
   return (
@@ -80,9 +85,13 @@ export const GroupListItem = ({ group, isCurrentUser }: GroupListItemProps) => {
           </div>
         </div>
       </Link>
-      {isCurrentUser && (
+      {isCurrentUser && status === 'RECRUITING' && (
         <MemberListDialog groupId={String(id)} groupTitle={title} />
       )}
+      {
+        isCurrentUser && status === 'ENDED' && false
+        // TODO: 별점을 달 수 있는 모달 같은 것을 추가
+      }
     </li>
   );
 };
