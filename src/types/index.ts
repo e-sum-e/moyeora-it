@@ -15,7 +15,7 @@ export type User = {
 
 export type UserSummary = Pick<
   User,
-  'userId' | 'nickname' | 'profileImage' | 'email'
+  'userId' | 'nickname' | 'profileImage' | 'email' | 'rate'
 >;
 
 export enum GroupType {

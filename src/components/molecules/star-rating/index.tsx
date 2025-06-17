@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { Star } from "@/components/atoms/star";
 
 interface StarRatingProps {
@@ -6,6 +6,7 @@ interface StarRatingProps {
   onRatingChange?: (rating: number) => void;
   readOnly?: boolean;
   maxRating?: number;
+  sendRating?: (rating: number) => void;
 }
 
 /**
@@ -16,7 +17,7 @@ interface StarRatingProps {
  * @param maxRating 최대 별점
  * @returns 별점 컴포넌트
  */
-export const StarRating: React.FC<StarRatingProps> = ({ initialRating = 0, onRatingChange, readOnly = false, maxRating = 5 }) => {
+export const StarRating: React.FC<StarRatingProps> = ({ initialRating = 0, onRatingChange, readOnly = false, maxRating = 5, sendRating }) => {
   const [rating, setRating] = useState(initialRating);
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null); //별점 컨테이너
@@ -38,8 +39,7 @@ export const StarRating: React.FC<StarRatingProps> = ({ initialRating = 0, onRat
     }
   }
 
-  //
-  const mouseMoveHandler = (e: React.MouseEvent) => {
+  const mouseMoveHandler = useCallback((e: React.MouseEvent) => {
     console.log("mouseMoveHandler");
     if (isDragging) {
       const newRating = calculateRating(e.clientX);
@@ -48,11 +48,14 @@ export const StarRating: React.FC<StarRatingProps> = ({ initialRating = 0, onRat
         onRatingChange?.(Math.min(maxRating, Math.max(0, newRating)));
       }
     }
-  }
+  }, [isDragging, maxRating, rating, onRatingChange]);
+
 
   const mouseUpHandler = () => {
     setIsDragging(false);
+    sendRating?.(rating);
   }
+  
 
   const mouseLeaveHandler = () => {
     setIsDragging(false);
@@ -64,7 +67,6 @@ export const StarRating: React.FC<StarRatingProps> = ({ initialRating = 0, onRat
     onMouseUp: mouseUpHandler,
     onMouseLeave: mouseLeaveHandler,
   };
-
   return (
     <div className="flex items-center flex-col">
       <div 

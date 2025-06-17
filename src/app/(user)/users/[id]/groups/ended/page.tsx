@@ -8,6 +8,7 @@ import { QueryErrorBoundary } from '@/components/query-error-boundary';
 import { GroupList } from '@/features/user/group/components/group-list';
 import { request } from '@/api/request';
 import { getAuthCookieHeader } from '@/utils/cookie';
+import { RateButton } from '@/components/molecules/rate-button.tsx';
 
 type EndedGroupsPageProps = {
   searchParams: Promise<{
@@ -59,6 +60,7 @@ export default async function EndedGroupsPage({
       <QueryErrorBoundary>
         <Suspense fallback={<div>loading...</div>}>
           <GroupList status="ENDED" />
+          
         </Suspense>
       </QueryErrorBoundary>
     </HydrationBoundary>

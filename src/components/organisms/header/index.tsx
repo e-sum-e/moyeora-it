@@ -14,7 +14,7 @@ import {
 import useAuthStore from '@/stores/useAuthStore';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
 type MenuItem = {
