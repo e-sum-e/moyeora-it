@@ -1,8 +1,8 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
-import { useFetchItems } from '@/hooks/useFetchItems';
+import { useBookmarkItems } from '@/hooks/useBookmarkItems';
 import { useFetchInView } from '@/hooks/useFetchInView';
+import { useFetchItems } from '@/hooks/useFetchItems';
 import { Group } from '@/types';
 import { useParams } from 'next/navigation';
 import flattenPages from '@/utils/flattenPages';
@@ -12,6 +12,8 @@ import { GroupListItem } from '@/features/user/group/components/group-list-item'
 type GroupListProps = {
   status: 'PARTICIPATING' | 'RECRUITING';
 }
+import { useParams, useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 
 /**
  * 모임 목록 컴포넌트
