@@ -41,11 +41,12 @@ export const Filter = ({ updateQueryParams }: FilterProps) => {
     }
 
     // 위에 해당하지 않는다면 이미 선택되어있는 기술을 또 선택한 것이므로 삭제돼야 함
-    const targetIndex = selectedSkills.findIndex(
-      (selectedSkill) => selectedSkill === skill,
+    const nextSkill = selectedSkills.filter(
+      (selectedSkill) => selectedSkill !== skill,
     );
+
     updateQueryParams({
-      skill: selectedSkills.splice(targetIndex, 1).join(','),
+      skill: nextSkill.join(','),
     });
   };
 
@@ -67,11 +68,12 @@ export const Filter = ({ updateQueryParams }: FilterProps) => {
       return;
     }
 
-    const targetIndex = selectedPositions.findIndex(
-      (selectedPosition) => selectedPosition === position,
+    const nextSelectedPositions = selectedPositions.filter(
+      (selectedPosition) => selectedPosition !== position,
     );
+
     updateQueryParams({
-      position: selectedPositions.splice(targetIndex, 1).join(','),
+      position: nextSelectedPositions.join(','),
     });
   };
 
