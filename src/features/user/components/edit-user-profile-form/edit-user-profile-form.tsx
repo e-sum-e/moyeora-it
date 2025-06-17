@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Position, Skill } from '@/types/enums';
 import useAuthStore from '@/stores/useAuthStore';
 import { useUpdateProfileMutation } from '@/features/user/hooks/useUpdateProfileMutation';
+import { getDisplayProfileImage, getDisplayNickname } from '@/utils/fallback';
 
 const schema = z.object({
   nickname: z.string().nonempty('닉네임을 입력해주세요.'),
@@ -71,12 +72,15 @@ export const EditUserProfileForm = ({
           className="flex flex-col gap-y-7"
           onSubmit={formMethods.handleSubmit(formSubmitHandler)}
         >
-          <div className='flex gap-x-6 px-6'>
+          <div className="flex gap-x-6 px-6">
             <EditableAvatar
-              imageSrc={user?.profileImage ?? ''}
-              fallback={user?.nickname?.slice(0, 2) ?? ''}
+              imageSrc={getDisplayProfileImage(user?.profileImage ?? null)}
+              fallback={getDisplayNickname(
+                user?.nickname ?? '',
+                user?.email ?? '',
+              )}
             />
-            <div className='flex flex-col gap-y-[20px] flex-grow min-w-0'>
+            <div className="flex flex-col gap-y-[20px] flex-grow min-w-0">
               <InputTextField
                 label="닉네임"
                 name="nickname"
@@ -94,16 +98,26 @@ export const EditUserProfileForm = ({
                     label: key,
                     value: String(value),
                   }))}
-                selectTriggerClassName='bg-gray-50 w-full border-none'
+                selectTriggerClassName="bg-gray-50 w-full border-none"
               />
             </div>
           </div>
           <SkillSelector />
           <div className="flex gap-x-2 justify-end border-t-[6px] border-[#f5f6f7] py-[20px] px-6">
-            <Button className='w-1/2 shrink-0 h-12 text-sm rounded-lg font-semibold border-gray-300 text-gray-600' type="button" onClick={closeDialog} variant="outline">
+            <Button
+              className="w-1/2 shrink-0 h-12 text-sm rounded-lg font-semibold border-gray-300 text-gray-600"
+              type="button"
+              onClick={closeDialog}
+              variant="outline"
+            >
               취소하기
             </Button>
-            <Button className='w-1/2 shrink-0 h-12 text-sm rounded-lg font-semibold'>수정하기</Button>
+            <Button
+              className="w-1/2 shrink-0 h-12 text-sm rounded-lg font-semibold"
+              disabled={formMethods.formState.isSubmitting}
+            >
+              수정하기
+            </Button>
           </div>
         </form>
       </Form>
