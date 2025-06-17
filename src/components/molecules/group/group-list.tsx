@@ -2,13 +2,14 @@
 
 import { GroupCard } from '@/components/molecules/group/group-card';
 import { Empty } from '@/components/organisms/empty';
+import { Loading } from '@/components/organisms/loading';
 import { useBookmarkItems } from '@/hooks/useBookmarkItems';
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
 import { Group } from '@/types';
 import { Position, Skill } from '@/types/enums';
 import flattenPages from '@/utils/flattenPages';
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 
 enum EMPTY_INFO_MESSAGE {
   EMPTY_INITIAL = '생성된 그룹이 없습니다',
@@ -24,27 +25,22 @@ export const GroupList = ({ serverQueryParams }: GroupListProps) => {
   const [isEmptyItems, setIsEmptyItems] = useState(true);
   const [emptyInfoMessage, setEmptyInfoMessage] =
     useState<EMPTY_INFO_MESSAGE | null>(null);
-
-  const user = useAuthStore((state) => state.user);
+  const [isBookmarkLoading, setIsBookmarkLoading] = useState(true); // 북마크 로직 계산 시간이 오래 걸리기 때문에 계산하는 동안에도 로딩을 보여주기 위한 상태값
 
   const queryParams = useMemo(() => {
     return {
       type: serverQueryParams.type ?? '',
       skill: serverQueryParams.skill
-        ? serverQueryParams.skill.split(',')
-          ? serverQueryParams.skill
-              .split(',')
-              .map((v) => Skill[v as keyof typeof Skill])
-              .join(',')
-          : Skill[serverQueryParams.skill as keyof typeof Skill]
+        ? serverQueryParams.skill
+            .split(',')
+            .map((v) => Skill[v as keyof typeof Skill])
+            .join(',')
         : '',
       position: serverQueryParams.position
-        ? serverQueryParams.position.split(',')
-          ? serverQueryParams.position
-              .split(',')
-              .map((v) => Position[v as keyof typeof Position])
-              .join(',')
-          : Position[serverQueryParams.position as keyof typeof Position]
+        ? serverQueryParams.position
+            .split(',')
+            .map((v) => Position[v as keyof typeof Position])
+            .join(',')
         : '',
       sort: serverQueryParams.sort ?? 'createdAt',
       order: serverQueryParams.order ?? 'desc',
@@ -77,40 +73,42 @@ export const GroupList = ({ serverQueryParams }: GroupListProps) => {
 
   const { items, toggleBookmark, setInitialItems } = useBookmarkItems<Group>();
 
-  // 초기 데이터 수신 후 북마크 상태 포함한 모임 배열 설정
-  useEffect(() => {
-    if (!data) return;
-
+  // 초기 데이터가 들어오면 bookmark 상태 포함하여 아이템 세팅
+  useLayoutEffect(() => {
     const flattenItems = flattenPages(data.pages);
     setInitialItems(flattenItems);
-  }, [data, setInitialItems]);
 
+    setIsBookmarkLoading(false); // setInitialItems(flattenItems)로 북마크 로직 계산이 완료된 이후에는 로딩이 끝난 상태임
+  }, [isLoading, data, setInitialItems]);
+
+  // 빈 data 처리 로직
   useEffect(() => {
-    if (items.length === 0) {
-      // 받아온 데이터가 없는 경우
+    const flattenItems = flattenPages(data.pages);
+    if (flattenItems.length === 0) {
       setIsEmptyItems(true);
       if (queryParams.search) {
-        // 검색어가 있다면 검색어를 우선으로 메시지 설정
         setEmptyInfoMessage(EMPTY_INFO_MESSAGE.SEARCH);
+        return;
       } else if (
         queryParams.type ||
         queryParams.skill ||
         queryParams.position
       ) {
         setEmptyInfoMessage(EMPTY_INFO_MESSAGE.FILTER);
+        return;
       } else {
-        // 받아온 데이터는 없지만 필터도 없는 경우(아직 생성된 그룹이 하나도 없을 경우)
         setEmptyInfoMessage(EMPTY_INFO_MESSAGE.EMPTY_INITIAL);
+        return;
       }
     } else {
       setIsEmptyItems(false);
       setEmptyInfoMessage(null);
     }
-  }, [queryParams, items.length]);
+  }, [queryParams, data]);
 
-  // useEffect(() => {
-  //   console.log('✅ Hydrated data from client:', queryParams); // DEV : 💡 서버 컴포넌트에서 prefetch 하는지 확인용
-  // }, [queryParams]);
+  if (isBookmarkLoading) {
+    return <Loading />;
+  }
 
   return (
     <>
