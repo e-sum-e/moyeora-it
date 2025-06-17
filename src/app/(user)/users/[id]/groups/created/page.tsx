@@ -1,5 +1,4 @@
 import { Suspense } from 'react';
-import { cookies } from 'next/headers';
 import {
   QueryClient,
   HydrationBoundary,
@@ -9,6 +8,7 @@ import { QueryErrorBoundary } from '@/components/query-error-boundary';
 import { GroupFilter } from '@/components/molecules/group-filter/group-filter';
 import { GroupList } from '@/features/user/group/components/group-list';
 import { request } from '@/api/request';
+import { getAuthCookieHeader } from '@/utils/cookie';
 
 type CreatedGroupsPageProps = {
   searchParams: Promise<{
@@ -22,15 +22,7 @@ export default async function CreatedGroupsPage({
 }: CreatedGroupsPageProps) {
   const { search, type } = await searchParams;
 
-  const cookieStore = await cookies();
-
-  const accessToken = cookieStore.get(
-    process.env.ACCESS_TOKEN as string,
-  )?.value;
-
-  const refreshToken = cookieStore.get(
-    process.env.REFRESH_TOKEN as string,
-  )?.value;
+  const cookieHeaderValue = await getAuthCookieHeader();
 
   const queryClient = new QueryClient();
 
@@ -54,7 +46,7 @@ export default async function CreatedGroupsPage({
           credentials: 'include',
         },
         {
-          Cookie: `${process.env.ACCESS_TOKEN}=${accessToken}; ${process.env.REFRESH_TOKEN}=${refreshToken}`,
+          Cookie: cookieHeaderValue,
         },
       );
     },
