@@ -5,7 +5,7 @@ type BookmarkStore = {
   initializeFromLocalStorage: () => void;
   addBookmark: (id: number) => void;
   removeBookmark: (id: number) => void;
-  resetBookmarkSet: () => void;
+  resetBookmark: () => void;
   hasBookmark: (id: number) => boolean;
 };
 
@@ -19,18 +19,22 @@ export const useBookmarkStore = create<BookmarkStore>((set, get) => ({
     set({ bookmarkSet: new Set(parsedbookmarkList) });
   },
   addBookmark: (id) => {
+    console.log('✅ addBookmark 호출됨');
     const setCopy = new Set(get().bookmarkSet);
     setCopy.add(id);
+    console.log('✅ 새 Set:', Array.from(setCopy));
+
     localStorage.setItem('bookmarkList', JSON.stringify(Array.from(setCopy)));
     set({ bookmarkSet: setCopy });
   },
   removeBookmark: (id) => {
+    console.log('✅ removeBookmark 호출됨');
     const setCopy = new Set(get().bookmarkSet);
     setCopy.delete(id);
     localStorage.setItem('bookmarkList', JSON.stringify(Array.from(setCopy)));
     set({ bookmarkSet: setCopy });
   },
-  resetBookmarkSet: () => {
+  resetBookmark: () => {
     localStorage.removeItem('bookmarkList');
     set({ bookmarkSet: new Set() });
   },

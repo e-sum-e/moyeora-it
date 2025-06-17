@@ -6,13 +6,12 @@ import {
   ContentInfo,
 } from '@/components/organisms/bookmark-card';
 import { Empty } from '@/components/organisms/empty';
-import { useBookmarkItems } from '@/hooks/useBookmarkItems';
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
 import { GroupType } from '@/types';
 import flattenPages from '@/utils/flattenPages';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const CURSOR_SIZE = 10;
 
@@ -51,16 +50,7 @@ export function BookmarkPageClient() {
     isLoading,
   });
 
-  const { items, setInitialItems, toggleBookmark } =
-    useBookmarkItems<ContentInfo>();
-
-  useEffect(() => {
-    if (!data) return;
-
-    const flattenItems = flattenPages(data.pages);
-    setInitialItems(flattenItems);
-  }, [data, setInitialItems]);
-
+  const items = flattenPages(data.pages);
   const bookmarkItems = items.filter((item) => item.isBookmark);
 
   // 탭 변경 핸들러
@@ -102,10 +92,7 @@ export function BookmarkPageClient() {
                   key={item.id}
                   ref={index === bookmarkItems.length - 1 ? ref : undefined}
                 >
-                  <BookmarkCard
-                    info={item}
-                    bookmarkToggleHandler={toggleBookmark}
-                  />
+                  <BookmarkCard info={item} />
                 </div>
               ))
             )}
