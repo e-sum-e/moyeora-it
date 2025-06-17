@@ -8,7 +8,7 @@ import { useFetchItems } from '@/hooks/useFetchItems';
 import { Group } from '@/types';
 import { Position, Skill } from '@/types/enums';
 import flattenPages from '@/utils/flattenPages';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 enum EMPTY_INFO_MESSAGE {
   EMPTY_INITIAL = '생성된 그룹이 없습니다',
@@ -24,8 +24,6 @@ export const GroupList = ({ serverQueryParams }: GroupListProps) => {
   const [isEmptyItems, setIsEmptyItems] = useState(true);
   const [emptyInfoMessage, setEmptyInfoMessage] =
     useState<EMPTY_INFO_MESSAGE | null>(null);
-
-  const user = useAuthStore((state) => state.user);
 
   const queryParams = useMemo(() => {
     return {
