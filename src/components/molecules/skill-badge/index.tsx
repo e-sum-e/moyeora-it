@@ -1,3 +1,8 @@
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { SkillName } from '@/types';
 import { Skill } from '@/types/enums';
 import Image from 'next/image';
@@ -20,10 +25,17 @@ type SkillBadgeProps = {
 
 export const SkillBadge = ({ name, isDefault = true }: SkillBadgeProps) => {
   return (
-    <div className="skill-badge flex flex-row border p-1 border-primary rounded-full cursor-pointer">
-      {isDefault && (
-        <Image src={skillLogoMap[name]} alt="logo" width={24} height={24} />
-      )}
-    </div>
+    <Tooltip>
+      <div className="skill-badge flex flex-row border p-1 border-primary rounded-full cursor-pointer">
+        <TooltipTrigger>
+          {isDefault && (
+            <Image src={skillLogoMap[name]} alt="logo" width={24} height={24} />
+          )}
+        </TooltipTrigger>
+      </div>
+      <TooltipContent>
+        <p>{name}</p>
+      </TooltipContent>
+    </Tooltip>
   );
 };
