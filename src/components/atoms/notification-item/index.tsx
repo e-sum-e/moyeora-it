@@ -3,8 +3,9 @@ import useNotificationStore from '@/stores/useNotificationStore';
 import { useRouter } from 'next/navigation';
 import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
+import React from 'react';
 
-export const NotificationItem = ({ 
+const NotificationItemComponent = ({ 
   notification,
   onClose,
 }: { 
@@ -14,10 +15,12 @@ export const NotificationItem = ({
   const { setReadNotification } = useNotificationStore();
   const router = useRouter();
 
-  const handleClick = () => {
+  const alarmClickHandler = () => {
     // 읽음 처리
-    setReadNotification(notification.id);
-    
+    if(!notification.isRead){
+      setReadNotification(notification.id);
+    }
+
     // URL이 있는 경우 해당 페이지로 이동
     if (notification.url) {
       router.push(notification.url); 
@@ -34,9 +37,10 @@ export const NotificationItem = ({
         transition-colors duration-200
         hover:bg-gray-50 
         border-b border-gray-100
+        relative
         ${notification.isRead ? 'bg-gray-50' : 'bg-white'}
       `}
-      onClick={handleClick}
+      onClick={alarmClickHandler}
     >
       <div className="flex flex-col gap-1">
         <p className={`text-sm ${notification.isRead ? 'text-gray-500' : 'text-gray-800'}`}>
@@ -47,10 +51,12 @@ export const NotificationItem = ({
         </span>
       </div>
       {!notification.isRead && (
-        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+        <span className="absolute right-3 top-1/2 -translate-y-1/2">
           <div className="w-2 h-2 bg-blue-500 rounded-full" />
-        </div>
+        </span>
       )}
     </div>
   );
 };
+
+export const NotificationItem = React.memo(NotificationItemComponent);

@@ -139,11 +139,13 @@ export const request = {
     endpoint: string,
     queryParams?: Record<string, string | number | Array<string | number>>,
     options?: Pick<RequestOptions, 'credentials'>,
+    headers?: HeadersInit,
   ) => {
     const url = buildUrl(endpoint, queryParams);
     return await fetchHandler(url, {
       method: 'GET',
       credentials: options?.credentials ?? 'same-origin', // 기본값 설정
+      headers,
     });
   },
   post: async (

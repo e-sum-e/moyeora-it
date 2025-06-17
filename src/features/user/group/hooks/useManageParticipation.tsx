@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { request } from '@/api/request';
 import { toast } from 'sonner';
+import { useQueryClient } from '@tanstack/react-query';
 
 /**
  * 사용자의 모임 참가를 관리하는 커스텀 훅
@@ -10,6 +11,8 @@ import { toast } from 'sonner';
  * @returns useMutation 훅 반환값
  */
 export const useManageParticipation = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn({
       groupId,
@@ -26,19 +29,22 @@ export const useManageParticipation = () => {
           'Content-Type': 'application/json',
         },
         JSON.stringify({
-          userId,
+          userId: Number(userId),
           status,
         }),
+        {
+          credentials: 'include',
+        },
       );
     },
     onSuccess() {
-      // TODO: 쿼리 무효화
-    },
-    onError() {
-      toast('에러가 발생했습니다.', {
-        description:
-          '요청사항을 처리하는 데 실패했습니다. 잠시 후 다시 시도해주세요.',
+      return queryClient.invalidateQueries({
+        queryKey: ['group-member-list'],
       });
+    },
+    onError(error) {
+      const errMessage = JSON.parse(error.message.split('-')[1]).message;
+      toast.error(errMessage);
     },
   });
 };
