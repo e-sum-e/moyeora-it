@@ -22,6 +22,7 @@ import TaskList from '@tiptap/extension-task-list';
 import Typography from '@tiptap/extension-typography';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import clsx from 'clsx';
 import { useEffect } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { emojiRules } from './emojiRules';
@@ -86,6 +87,8 @@ type DescriptionProps = {
 };
 
 export const Description = ({ form }: DescriptionProps) => {
+  const hasError = !!form.formState.errors.description;
+
   const editor = useEditor({
     editable: true,
     extensions: [
@@ -97,8 +100,12 @@ export const Description = ({ form }: DescriptionProps) => {
     ],
     editorProps: {
       attributes: {
-        class:
-          'h-[500px] w-full mt-0 py-2 px-3 text-black text-2xl bg-white  border roundedfocus:outline-none focus:shadow-outline',
+        class: clsx(
+          'h-[500px] w-full mt-0 py-2 px-3 text-sm rounded-md border border-input bg-background ring-offset-background shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px]',
+          hasError
+            ? 'text-red-500 border-red-500 focus-visible:ring-red-500/20'
+            : 'focus-visible:border-ring focus-visible:ring-ring/50',
+        ),
       },
     },
   });
