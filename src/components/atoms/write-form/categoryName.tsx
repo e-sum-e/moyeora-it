@@ -12,7 +12,7 @@ export const CategoryName = ({
   className,
 }: CategoryNameProps) => {
   return (
-    <div className="flex items-center mb-1 p-2 md:p-4 border-b-4 border-gray-100">
+    <div className="flex items-center mb-1 py-2 md:py-4 border-b-4 border-gray-100">
       {number && <CircleNumber number={number} />}
       <div className={`ml-2 font-bold ${className}`}>{text}</div>
     </div>
