@@ -1,21 +1,42 @@
 import { FormLabel } from '@/components/ui/form';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { CircleInfo } from '../circle-icon/circle-info';
 
 type WriteFormLabelProps = {
   htmlFor?: string;
   text: string;
   className?: string;
+  info?: string;
 };
 
 export const WriteFormLabel = ({
   htmlFor,
   text,
   className,
+  info,
 }: WriteFormLabelProps) => {
   return (
-    <>
-      <FormLabel htmlFor={htmlFor} className={`mb-1 text-base ${className}`}>
+    <div className="flex">
+      <FormLabel
+        htmlFor={htmlFor}
+        className={`mb-1 text-base my-auto ${className}`}
+      >
         {text}
       </FormLabel>
-    </>
+      {info && (
+        <Tooltip>
+          <TooltipTrigger>
+            <CircleInfo />
+          </TooltipTrigger>
+          <TooltipContent className="left-[100%]">
+            <p>{info}</p>
+          </TooltipContent>
+        </Tooltip>
+      )}
+    </div>
   );
 };
