@@ -1,5 +1,4 @@
 import { request } from '@/api/request';
-import { useBookmarkStore } from '@/stores/useBookmarkStore';
 
 // 북마크 정보를 로그인 후 서버에 저장하는 함수
 const addBookmarkWhenAuth = async (bookmarkListStr: string) => {
@@ -16,7 +15,7 @@ const addBookmarkWhenAuth = async (bookmarkListStr: string) => {
     );
 
     // db에 북마크 추가 성공 후 로컬 스토리지에서 북마크 정보 삭제
-    useBookmarkStore.getState().resetBookmark();
+    localStorage.removeItem('bookmarkList');
   } catch (e) {
     console.error('북마크 추가 중 오류 발생:', e);
   }

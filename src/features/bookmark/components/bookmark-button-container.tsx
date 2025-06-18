@@ -3,10 +3,10 @@
 import { request } from '@/api/request';
 import { BookmarkButton } from '@/components/atoms/bookmark-button';
 import useAuthStore from '@/stores/useAuthStore';
-import { useBookmarkStore } from '@/stores/useBookmarkStore';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { addBookmarkItem, getBookmarkList, removeBookmarkItem } from '../utils';
 
 type BookmarkButtonContainerProps = {
   groupId: number;
@@ -24,7 +24,6 @@ export const BookmarkButtonContainer = ({
 }: BookmarkButtonContainerProps) => {
   const user = useAuthStore((state) => state.user);
   const [isBookmark, setIsBookmark] = useState(initialIsBookmark);
-  const { hasBookmark, addBookmark, removeBookmark } = useBookmarkStore();
 
   const { mutate } = useMutation({
     mutationFn: (nextBookmarkStatus: boolean) =>
@@ -42,19 +41,20 @@ export const BookmarkButtonContainer = ({
 
   useEffect(() => {
     if (!user) {
-      setIsBookmark(hasBookmark(groupId));
+      const bookmarkList = getBookmarkList();
+      setIsBookmark(bookmarkList.includes(groupId));
     }
-  }, [groupId, hasBookmark, user]);
+  }, [groupId, user]);
 
   const toggleBookmark = async () => {
-    const nextBookmarkStatus = !isBookmark;
-    setIsBookmark(nextBookmarkStatus);
+    const nextBookmarkState = !isBookmark;
+    setIsBookmark(nextBookmarkState);
 
     if (!user) {
-      if (nextBookmarkStatus) addBookmark(groupId);
-      else removeBookmark(groupId);
+      if (nextBookmarkState) addBookmarkItem(groupId);
+      else removeBookmarkItem(groupId);
     } else {
-      mutate(nextBookmarkStatus);
+      mutate(nextBookmarkState);
     }
   };
 

@@ -1,6 +1,5 @@
 import { Header } from '@/components/organisms/header';
 import { AutoLoginManager } from '@/features/auth/components/AutoLoginManager';
-import { BookmarkInitializer } from '@/features/bookmark/components/bookmark-initializer';
 import { ReactQueryProvider } from '@/providers/ReactQueryProvider';
 import { SocketProvider } from '@/providers/WSProvider';
 import type { Metadata } from 'next';
@@ -20,7 +19,6 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body>
-        <BookmarkInitializer />
         <ReactQueryProvider>
           {/* 소켓 설정 전에 로그인 판단해야하므로 로그인 위로 올림 */}
           <AutoLoginManager />
