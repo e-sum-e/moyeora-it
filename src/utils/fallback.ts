@@ -18,5 +18,5 @@ export const getDisplayNickname = (nickname: string | null, email: string) => {
  * @returns 화면 표시용 프로필 이미지 URL
  */
 export const getDisplayProfileImage = (profileImage: string | null) => {
-  return profileImage || 'https://github.com/shadcn.png';
+  return profileImage || '/images/default-profile.png';
 };

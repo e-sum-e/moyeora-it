@@ -1,10 +1,30 @@
 import { Badge } from '@/components/atoms/badge';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { Position } from '@/types/enums';
 
 /**  숫자 enum Skill의 키 이름으로 이미지 주소와 매칭 시키기 */
 export const allPositionlKeys = Object.keys(Position).filter((key) =>
   isNaN(Number(key)),
 );
+
+const positionWithDescription: Record<
+  (typeof allPositionlKeys)[number],
+  string
+> = {
+  PM: '프로젝트 매니저',
+  PL: '파트 리더',
+  AA: '개발 설계 담당자',
+  TA: '기술 담당자',
+  DA: '데이터 분석가',
+  QA: '품질 보증 담당자',
+  FE: '프론트엔드 개발자',
+  BE: '백엔드 개발자',
+  FS: '풀스택 개발자',
+};
 
 const positionLogoMap: { [key: string]: string } = {};
 
@@ -21,8 +41,15 @@ type PositionBadgeProps = {
 
 export const PositionBadge = ({ name }: PositionBadgeProps) => {
   return (
-    <div className="position-badge flex flex-row border border-primary rounded-md cursor-pointer">
-      <Badge text={name} className="" />
-    </div>
+    <Tooltip>
+      <div className="position-badge flex flex-row border border-primary rounded-md cursor-pointer">
+        <TooltipTrigger>
+          <Badge text={name} className="" />
+        </TooltipTrigger>
+      </div>
+      <TooltipContent>
+        <p>{positionWithDescription[name]}</p>
+      </TooltipContent>
+    </Tooltip>
   );
 };
