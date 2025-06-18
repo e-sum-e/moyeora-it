@@ -5,7 +5,6 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { useFetchItems } from '@/hooks/useFetchItems';
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { Avatar } from '@/components/atoms/avatar';
-import { SearchInput } from '@/components/molecules/search-input/search-input';
 import { ToggleFollowButton } from '@/features/user/follow/components/toggle-follow-button';
 import useAuthStore from '@/stores/useAuthStore';
 import { User } from '@/types/index';
@@ -19,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Page } from '@/utils/flattenPages';
+import FollowListItemsLoading from '@/features/user/follow/components/follow-list-items-loading';
 
 export const FollowersList = () => {
   const { id } = useParams();
@@ -29,49 +29,45 @@ export const FollowersList = () => {
 
   const search = searchParams.get('search');
 
-  const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<User>({
-    url: `/v1/follow/${id}/followers`,
-    ...(search && { queryParams: { name: search } }),
-    options: {
-      refetchOnMount: true,
-      staleTime: 0,
-    },
-  });
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useFetchItems<User>({
+      url: `/v1/follow/${id}/followers`,
+      ...(search && { queryParams: { name: search } }),
+      options: {
+        refetchOnMount: true,
+        staleTime: 0,
+        retry: 0,
+      },
+    });
 
-  const followersCount = (data.pages[0] as Page<User> & { totalCount: number; }).totalCount;
+  const followersCount = (data.pages[0] as Page<User> & { totalCount: number })
+    .totalCount;
 
   const { ref } = useFetchInView({
     fetchNextPage,
-    isLoading,
+    isLoading: isFetchingNextPage,
   });
 
   const followersList = flattenPages<User>(data.pages);
 
   return (
-    <div className="flex flex-col gap-y-6 pb-4 rounded-b-2xl flex-1">
-      <div className="flex justify-between items-center">
+    <div className="flex flex-col gap-y-6 pb-4 rounded-b-2xl flex-1 mt-3">
+      <div className="flex items-center">
         <div className="flex gap-x-1 items-center">
-          <span className="text-lg font-semibold text-gray-900">팔로워</span>
-          <span className="inline-flex items-center justify-center rounded-[8.5px] bg-gray-900 px-[7px] min-w-[28px] h-4 text-white text-xs font-semibold">
+          <span className="text-sm font-semibold text-gray-500">총 팔로워 수 : </span>
+          <span className="text-sm font-semibold text-gray-500">
             {followersCount ?? 0}
           </span>
-        </div>
-        <div className="flex items-center gap-x-[10px] rounded-[30px] bg-gray-100 px-5 py-2 w-[200px] text-gray-500 h-9 self-end">
-          <Image src="/icons/search.svg" alt="search" width={17} height={17} />
-          <SearchInput
-            className="bg-gray-100 border-none shadow-none focus-visible:ring-0 p-0"
-            placeholder="검색"
-          />
         </div>
       </div>
       {followersList.length === 0 ? (
         <div className="flex flex-1 justify-center items-center">
-          <p className="text-center text-lg font-medium text-gray-500">
+          <p className="text-center font-medium text-gray-400">
             아직 팔로워가 없어요.
           </p>
         </div>
       ) : (
-        <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <ul className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <h1 className="hidden">팔로워 {followersCount ?? null}</h1>
           {followersList.map(
             // @ts-expect-error 현재 User 타입에는 id 프로퍼티가 없음 -> 추후 수정 필요
@@ -133,7 +129,10 @@ export const FollowersList = () => {
               </li>
             ),
           )}
-          {hasNextPage && <div ref={ref} className="h-10" />}
+          {isFetchingNextPage && <FollowListItemsLoading itemCount={4} />}
+          {!isFetchingNextPage && hasNextPage && (
+            <div ref={ref} className="h-10" />
+          )}
         </ul>
       )}
     </div>

@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { useParams, useSearchParams } from 'next/navigation';
 import { Avatar } from '@/components/atoms/avatar';
-import { SearchInput } from '@/components/molecules/search-input/search-input';
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
 import { User } from '@/types';
@@ -18,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Page } from '@/utils/flattenPages';
+import FollowListItemsLoading from '@/features/user/follow/components/follow-list-items-loading';
 
 export const FollowingList = () => {
   const searchParams = useSearchParams();
@@ -26,49 +26,44 @@ export const FollowingList = () => {
 
   const search = searchParams.get('search');
 
-  const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<User>({
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useFetchItems<User>({
     url: `/v1/follow/${id}/following`,
     ...(search && { queryParams: { name: search } }),
     options: {
       refetchOnMount: true,
       staleTime: 0,
+      retry: 0,
     },
   });
-  
-  const followingCount = (data.pages[0] as Page<User> & { totalCount: number; }).totalCount;
+
+  const followingCount = (data.pages[0] as Page<User> & { totalCount: number })
+    .totalCount;
 
   const { ref } = useFetchInView({
     fetchNextPage,
-    isLoading,
+    isLoading: isFetchingNextPage,
   });
 
   const followingList = flattenPages<User>(data.pages);
 
   return (
-    <div className="flex flex-col gap-y-6 pb-4 rounded-b-2xl flex-1">
-      <div className="flex justify-between items-center">
+    <div className="flex flex-col gap-y-6 pb-4 rounded-b-2xl flex-1 mt-3">
+      <div className="flex items-center">
         <div className="flex gap-x-1 items-center">
-          <span className="text-lg font-semibold text-gray-900">팔로잉</span>
-          <span className="inline-flex items-center justify-center rounded-[8.5px] bg-gray-900 px-[7px] min-w-[28px] h-4 text-white text-xs font-semibold">
+          <span className="text-sm font-semibold text-gray-500">총 팔로잉 수 : </span>
+          <span className="text-sm font-semibold text-gray-500">
             {followingCount ?? 0}
           </span>
-        </div>
-        <div className="flex items-center gap-x-[10px] rounded-[30px] bg-gray-100 px-5 py-2 w-[200px] text-gray-500 h-9 self-end">
-          <Image src="/icons/search.svg" alt="search" width={17} height={17} />
-          <SearchInput
-            className="bg-gray-100 border-none shadow-none focus-visible:ring-0 p-0"
-            placeholder="검색"
-          />
         </div>
       </div>
       {followingList.length === 0 ? (
         <div className="flex flex-1 justify-center items-center">
-          <p className="text-center text-lg font-medium text-gray-500">
+          <p className="text-center font-medium text-gray-400">
             아직 팔로우 하는 사람이 없어요.
           </p>
         </div>
       ) : (
-        <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <ul className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {followingList?.map(
             /* @ts-expect-error 현재 User 타입에는 id 프로퍼티가 없음 -> 추후 수정 필요 */
             ({ id: userId, nickname, profileImage, email, isFollowing }) => (
@@ -125,7 +120,8 @@ export const FollowingList = () => {
               </li>
             ),
           )}
-          {hasNextPage && <div ref={ref} className="h-10" />}
+          {isFetchingNextPage && <FollowListItemsLoading itemCount={4} />}
+          {!isFetchingNextPage && hasNextPage && <div ref={ref} className="h-10" />}
         </ul>
       )}
     </div>
