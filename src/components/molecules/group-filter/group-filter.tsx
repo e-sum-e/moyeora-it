@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { SearchInput } from '@/components/molecules/search-input/search-input';
-import Image from 'next/image';
 
 /**
  * 모임 목록 필터 컴포넌트
