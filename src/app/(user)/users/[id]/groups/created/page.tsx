@@ -56,7 +56,6 @@ export default async function CreatedGroupsPage({
 
   return (
     <>
-      <GroupFilter />
       <QueryErrorBoundary>
         <HydrationBoundary state={dehydrate(queryClient)}>
           <Suspense fallback={<div>loading...</div>}>
