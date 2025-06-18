@@ -38,7 +38,11 @@ export const MaxParticipants = ({ form }: TitleProps) => {
         name="maxParticipants"
         render={({ field }) => (
           <FormItem>
-            <WriteFormLabel htmlFor="maxParticipants" text="정원" />
+            <WriteFormLabel
+              htmlFor="maxParticipants"
+              text="정원"
+              info="최소 2명 ~ 최대 30명까지 가능합니다"
+            />
             <FormControl>
               <Input
                 id="maxParticipants"

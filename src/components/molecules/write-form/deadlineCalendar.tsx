@@ -55,7 +55,10 @@ export const DeadlineCalendar = ({
         name="deadline"
         render={({ field, fieldState }) => (
           <FormItem>
-            <WriteFormLabel text="모집 마감일" className="" />
+            <WriteFormLabel
+              text="모집 마감일"
+              info="오늘 이후의 날짜부터 선택 가능합니다"
+            />
             <Popover
               open={isDeadlineCalendarOpen}
               onOpenChange={

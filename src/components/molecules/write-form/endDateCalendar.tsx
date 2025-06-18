@@ -53,7 +53,10 @@ export const EndDateCalendar = ({
         name="endDate"
         render={({ field, fieldState }) => (
           <FormItem>
-            <WriteFormLabel text="모임 종료일" />
+            <WriteFormLabel
+              text="모임 종료일"
+              info="모임 시작일의 일주일 이후부터 선택 가능합니다"
+            />
             <Popover
               open={isEndDateCalendarOpen}
               onOpenChange={

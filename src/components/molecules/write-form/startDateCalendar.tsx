@@ -53,7 +53,10 @@ export const StartDateCalendar = ({
         name="startDate"
         render={({ field, fieldState }) => (
           <FormItem>
-            <WriteFormLabel text="모임 시작일" />
+            <WriteFormLabel
+              text="모임 시작일"
+              info="모집 마감일의 다음 날부터 선택 가능합니다"
+            />
             <Popover
               open={isStartDateCalendarOpen}
               onOpenChange={
