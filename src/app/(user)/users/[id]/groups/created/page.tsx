@@ -5,7 +5,6 @@ import {
   dehydrate,
 } from '@tanstack/react-query';
 import { QueryErrorBoundary } from '@/components/query-error-boundary';
-import { GroupFilter } from '@/components/molecules/group-filter/group-filter';
 import { GroupList } from '@/features/user/group/components/group-list';
 import { request } from '@/api/request';
 import { getAuthCookieHeader } from '@/utils/cookie';
