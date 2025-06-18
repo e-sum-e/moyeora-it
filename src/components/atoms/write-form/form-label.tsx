@@ -20,7 +20,7 @@ export const WriteFormLabel = ({
   info,
 }: WriteFormLabelProps) => {
   return (
-    <div className="flex">
+    <div className="flex gap-1">
       <FormLabel
         htmlFor={htmlFor}
         className={`mb-1 text-base my-auto ${className}`}
@@ -32,7 +32,7 @@ export const WriteFormLabel = ({
           <TooltipTrigger>
             <CircleInfo />
           </TooltipTrigger>
-          <TooltipContent className="left-[100%]">
+          <TooltipContent className="bg-gray-400 fill-gray-400">
             <p>{info}</p>
           </TooltipContent>
         </Tooltip>
