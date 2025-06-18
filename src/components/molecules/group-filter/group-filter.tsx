@@ -43,13 +43,10 @@ export const GroupFilter = () => {
             </li>
           ))}
         </ul>
-        <div className="flex items-center gap-x-[10px] rounded-[30px] bg-gray-100 px-5 py-2 w-[150px] md:w-[200px] text-gray-500 h-9 self-end">
-          <Image src="/icons/search.svg" alt="search" width={17} height={17} />
-          <SearchInput
-            className="bg-gray-100 border-none shadow-none focus-visible:ring-0 p-0"
-            placeholder="검색"
-          />
-        </div>
+        <SearchInput
+          containerClassName="w-[150px] md:w-[200px]"
+          placeholder="검색"
+        />
       </div>
     </div>
   );
