@@ -26,7 +26,7 @@ export const BookmarkCard = ({ info }: CardProps) => {
   const isBeforeDeadline = isBeforeToday(info.deadline);
 
   return (
-    <div className="relative" onClick={() => router.push(`/group/${info.id}`)}>
+    <div className="relative" onClick={() => router.push(`/groups/${info.id}`)}>
       <article className="flex w-full">
         <BookmarkCardContents className="flex-1" info={info} />
       </article>

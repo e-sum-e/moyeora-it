@@ -1,12 +1,11 @@
 'use client';
 
-import { Group } from '@/types';
-import Link from 'next/link';
 import { Separator } from '@/components/ui/separator';
-import { formatYearMonthDayWithDot } from '@/utils/dateUtils';
-import { getPosition, Position } from '@/types/enums';
-import { isBeforeToday } from '@/utils/dateUtils';
 import { MemberListDialog } from '@/features/user/group/components/member-list-modal/member-list-dialog';
+import { Group } from '@/types';
+import { getPosition, Position } from '@/types/enums';
+import { formatYearMonthDayWithDot, isBeforeToday } from '@/utils/dateUtils';
+import Link from 'next/link';
 
 type GroupListItemProps = {
   group: Group;
@@ -40,7 +39,7 @@ export const GroupListItem = ({
 
   return (
     <li className="border-b-2 border-gray-200 h-25 last:border-b-0 relative">
-      <Link href={`/group/${id}`}>
+      <Link href={`/groups/${id}`}>
         <div className="h-full flex flex-col w-full">
           <div className="flex flex-col gap-y-2">
             <div className="flex items-center gap-x-2">
