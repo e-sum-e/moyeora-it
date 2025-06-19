@@ -51,16 +51,16 @@ export const useReplyScrollIntoView = ({
 
     if (targetElement) {
       targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      const newParams = new URLSearchParams(searchParams.toString());
+
       if (replyType === 'reply') {
         setTargetReply({ targetReplyId: null });
+        const newParams = new URLSearchParams(searchParams.toString());
         newParams.delete('replyId');
         const newQuery = newParams.toString();
         const newUrl = newQuery ? `${pathname}?${newQuery}` : pathname;
         router.replace(newUrl, { scroll: false });
       } else {
         setTargetReply({ targetRereplyId: null });
-        newParams.delete('rereplyId');
         router.replace(pathname, { scroll: false });
       }
     } else {

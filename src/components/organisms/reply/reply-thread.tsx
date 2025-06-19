@@ -27,6 +27,11 @@ export const ReplyThread = ({ parentReplyId }: { parentReplyId: number }) => {
     setTargetReply,
   ]);
 
+  const toggleRereplyListHandler = () => {
+    setTargetReply({ targetReplyId: null, targetRereplyId: null });
+    setIsOpen(true);
+  };
+
   return (
     <div className="bg-gray-100">
       <div>
@@ -43,7 +48,7 @@ export const ReplyThread = ({ parentReplyId }: { parentReplyId: number }) => {
       </div>
       <RereplyFormToggle
         parentReplyId={parentReplyId}
-        openRereplyList={() => setIsOpen(true)}
+        openRereplyList={toggleRereplyListHandler}
         isOpenRereplyList={isOpen}
       />
     </div>

@@ -35,7 +35,9 @@ export const RereplyList = ({ parentReplyId }: RereplyListProps) => {
     replyType: 'rereply',
   });
 
-  const rereplies = flattenPages(data.pages);
+  const rereplies = flattenPages(data.pages).filter(
+    (rereply) => !rereply.deleted,
+  );
 
   if (rereplies.length === 0) return null;
 
