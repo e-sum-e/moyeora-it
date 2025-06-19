@@ -34,9 +34,6 @@ export const formatRelativeTime = (utcTime: string): string => {
   const date = new Date(utcTime);
   const now = new Date();
 
-  /**
-   * 과거 vs 현재 / 현재 vs 과거
-   */
   const seconds = Math.abs(differenceInSeconds(now, date));
   const minutes = Math.abs(differenceInMinutes(now, date));
   const hours = Math.abs(differenceInHours(now, date));
