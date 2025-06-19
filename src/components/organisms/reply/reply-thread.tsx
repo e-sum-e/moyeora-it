@@ -2,27 +2,30 @@
 
 import { RereplyFormToggle } from '@/components/molecules/reply/rereply-form-toggle';
 import { RereplyList } from '@/components/organisms/reply/rereply-list';
-import { useReplyScrollParams } from '@/hooks/useReplyScrollParams';
-import { useState } from 'react';
+import { useTargetReplyParams } from '@/hooks/useTargetReplyParams ';
+import { useTargetReplyStore } from '@/stores/useTargetReply';
+import { useEffect, useState } from 'react';
 
 export const ReplyThread = ({ parentReplyId }: { parentReplyId: number }) => {
-  const { targetParentId, targetId } = useReplyScrollParams('rereply');
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [targetReplyId, setTargetReplyId] = useState<number | null>(() => {
-    if (parentReplyId === targetParentId) return targetId;
-    return null;
-  });
+  const { notificationTargetReplyId, notificationTargetRereplyId } =
+    useTargetReplyParams();
+  const setTargetReply = useTargetReplyStore((state) => state.setTargetReply);
 
-  // useEffect(() => {
-  //   if (targetReplyId) {
-  //     setIsOpen(true);
-  //   }
-  // }, [parentReplyId, targetParentId, targetReplyId]);
-
-  // const replyFormSuccessHandler = (newReplyId: number | null) => {
-  //   setTargetReplyId(newReplyId);
-  //   setIsOpen(true);
-  // };
+  useEffect(() => {
+    if (
+      notificationTargetRereplyId &&
+      parentReplyId === notificationTargetReplyId
+    ) {
+      setIsOpen(true);
+      setTargetReply({ targetRereplyId: notificationTargetRereplyId });
+    }
+  }, [
+    notificationTargetReplyId,
+    notificationTargetRereplyId,
+    parentReplyId,
+    setTargetReply,
+  ]);
 
   return (
     <div className="bg-gray-100">
@@ -36,15 +39,13 @@ export const ReplyThread = ({ parentReplyId }: { parentReplyId: number }) => {
             {isOpen ? '접기' : '펼치기'}
           </button>
         </div>
-        {isOpen && (
-          <RereplyList
-            targetReplyId={targetReplyId}
-            setTargetReplyId={setTargetReplyId}
-            parentReplyId={parentReplyId}
-          />
-        )}
+        {isOpen && <RereplyList parentReplyId={parentReplyId} />}
       </div>
-      <RereplyFormToggle parentReplyId={parentReplyId} onSuccess={() => {}} />
+      <RereplyFormToggle
+        parentReplyId={parentReplyId}
+        openRereplyList={() => setIsOpen(true)}
+        isOpenRereplyList={isOpen}
+      />
     </div>
   );
 };

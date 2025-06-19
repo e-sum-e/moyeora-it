@@ -6,18 +6,20 @@ import { ReplyForm } from './reply-form';
 
 type RereplyFormToggleProps = {
   parentReplyId: number;
-  onSuccess: (newReplyId: number) => void;
+  openRereplyList: () => void;
+  isOpenRereplyList: boolean;
 };
 
 export const RereplyFormToggle = ({
   parentReplyId,
-  onSuccess,
+  openRereplyList,
+  isOpenRereplyList,
 }: RereplyFormToggleProps) => {
   const [isWriting, setIsWriting] = useState<boolean>(false);
 
-  const rereplyFormSuccessHandler = (newReplyId: number) => {
+  const rereplyFormSuccessHandler = () => {
     setIsWriting(false);
-    onSuccess(newReplyId);
+    openRereplyList();
   };
 
   return isWriting ? (
@@ -25,6 +27,7 @@ export const RereplyFormToggle = ({
       <ReplyForm
         parentReplyId={parentReplyId}
         onSuccess={rereplyFormSuccessHandler}
+        isOpenRereplyList={isOpenRereplyList}
       />
     </div>
   ) : (
