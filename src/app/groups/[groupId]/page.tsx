@@ -6,6 +6,7 @@ import { GroupDetail } from '@/types';
 import { getAuthCookieHeader } from '@/utils/cookie';
 import { isBeforeToday } from '@/utils/dateUtils';
 import { notFound } from 'next/navigation';
+import { GroupDetailError } from './group-detail-error';
 
 type GroupDetailResponse = {
   status: {
@@ -40,7 +41,9 @@ export default async function GroupDetailPage({
     );
   } catch (error) {
     console.error('Fetch 요청 실패:', error);
-    throw new Error('서버와 연결할 수 없습니다. 잠시 후 다시 시도해주세요.');
+    return (
+      <GroupDetailError message="서버와 연결할 수 없습니다. 잠시 후 다시 시도해주세요." />
+    );
   }
 
   if (response.status === 404) {
@@ -49,7 +52,9 @@ export default async function GroupDetailPage({
 
   if (!response.ok) {
     console.error('응답 상태 오류:', response.status);
-    throw new Error('그룹 정보를 불러오는 데 문제가 발생했습니다.');
+    return (
+      <GroupDetailError message="모임 정보를 불러오는 데 문제가 발생했습니다." />
+    );
   }
 
   let responseBody: GroupDetailResponse;
@@ -58,7 +63,9 @@ export default async function GroupDetailPage({
     responseBody = await response.json();
   } catch (err) {
     console.error('JSON 파싱 오류:', err);
-    throw new Error('서버 응답을 처리하는 중 오류가 발생했습니다.');
+    return (
+      <GroupDetailError message="모임 정보를 처리하는 중 문제가 발생했습니다." />
+    );
   }
 
   if (!responseBody.items) {
@@ -67,7 +74,7 @@ export default async function GroupDetailPage({
 
   if (!responseBody.status.success) {
     console.error('API 성공 상태 false:', responseBody.status);
-    throw new Error('그룹 정보를 불러오는 데 실패했습니다.');
+    return <GroupDetailError message="모임 정보를 불러오는 데 실패했습니다." />;
   }
 
   const data = responseBody.items;
