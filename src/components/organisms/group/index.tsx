@@ -6,13 +6,12 @@ import { SortOrder } from '@/components/molecules/group/sort-order';
 import { SearchInput } from '@/components/molecules/search-input/search-input';
 import { Tab, TabType } from '@/components/molecules/tab';
 import { GroupType } from '@/types';
-import { Position, Skill } from '@/types/enums';
 import { useRouter } from 'next/navigation';
 import { Suspense } from 'react';
 import { Loading } from '../loading';
 
 type GroupListProps = {
-  searchParams: Record<string, string | undefined>;
+  serverQueryParams: Record<string, string | undefined>;
 };
 
 const tabList: TabType[] = [
@@ -21,7 +20,7 @@ const tabList: TabType[] = [
   { value: GroupType.PROJECT, label: '프로젝트' },
 ];
 
-export const Groups = ({ searchParams }: GroupListProps) => {
+export const Groups = ({ serverQueryParams }: GroupListProps) => {
   const router = useRouter();
   /*
    * router.push를 수행하는 함수
@@ -31,9 +30,9 @@ export const Groups = ({ searchParams }: GroupListProps) => {
     const params = new URLSearchParams();
 
     // 기존 searchParams를 params에 넣기
-    Object.entries(searchParams).forEach(([key, value]) => {
+    Object.entries(serverQueryParams).forEach(([key, value]) => {
       if (value !== undefined && value !== '') {
-        params.set(key, value);
+        params.set(key, value.toString());
       }
     });
 
@@ -54,18 +53,6 @@ export const Groups = ({ searchParams }: GroupListProps) => {
     router.push(`?${params.toString()}`);
   };
 
-  const queryParams = {
-    type: searchParams.type ?? '',
-    skills: Skill[searchParams.skill as keyof typeof Skill] ?? '',
-    position: Position[searchParams.position as keyof typeof Position] ?? '',
-    sort: searchParams.sort ?? 'createdAt',
-    order: searchParams.order ?? 'desc',
-    search: searchParams.search ?? '',
-    ...(searchParams.order === 'desc' || !searchParams.order
-      ? { cursor: 'null' }
-      : {}),
-  };
-
   return (
     <>
       <Tab
@@ -84,7 +71,7 @@ export const Groups = ({ searchParams }: GroupListProps) => {
             </div>
           }
         >
-          <GroupList queryParams={queryParams} />
+          <GroupList serverQueryParams={serverQueryParams} />
         </Suspense>
       </Tab>
     </>

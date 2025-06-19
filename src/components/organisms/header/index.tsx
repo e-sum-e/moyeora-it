@@ -16,6 +16,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import { getDisplayProfileImage, getDisplayNickname } from '@/utils/fallback';
 
 type MenuItem = {
   label: string;
@@ -72,14 +73,16 @@ const MobileMenuLinks = ({ onClick }: { onClick?: () => void }) => {
 const UserProfile = ({
   userId,
   profileImage,
+  fallback,
 }: {
   userId: number;
   profileImage: string;
+  fallback: string;
 }) => (
   <Link href={`/users/${userId}`}>
     <Avatar
       imageSrc={profileImage}
-      fallback={userId.toString()}
+      fallback={fallback}
       className="rounded-full w-8 h-8"
     />
   </Link>
@@ -103,8 +106,8 @@ export const Header = () => {
   const user = useAuthStore((state) => state.user);
   const isLoggedIn = Boolean(user);
   const userId = user?.userId ?? 0;
-  const profileImage = user?.profileImage || '';
-  
+  const profileImage = getDisplayProfileImage(user?.profileImage ?? null);
+
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -121,7 +124,14 @@ export const Header = () => {
         {isLoggedIn ? (
           <>
             <NotificationWithBoundary />
-            <UserProfile userId={userId} profileImage={profileImage} />
+            <UserProfile
+              userId={userId}
+              profileImage={profileImage}
+              fallback={getDisplayNickname(
+                user?.nickname ?? '',
+                user?.email ?? '',
+              )}
+            />
           </>
         ) : (
           <Link href="/login">

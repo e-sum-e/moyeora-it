@@ -6,13 +6,12 @@ import {
   ContentInfo,
 } from '@/components/organisms/bookmark-card';
 import { Empty } from '@/components/organisms/empty';
-import { useBookmarkItems } from '@/hooks/useBookmarkItems';
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
 import { GroupType } from '@/types';
 import flattenPages from '@/utils/flattenPages';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const CURSOR_SIZE = 100;
 
@@ -38,8 +37,6 @@ const tabList: TabType[] = [
     { value: GroupType.PROJECT, label: '프로젝트' },
   ];
 export function BookmarkPageClient() {
-  const [isLoading, setIsLoading] = useState(true); // 데이터 가공 중 로딩 처리
-
   // 쿼리 파라미터는 state로 관리
   const [queryParams, setQueryParams] = useState({
     size: CURSOR_SIZE,
@@ -67,17 +64,8 @@ export function BookmarkPageClient() {
     },
   });
 
-  const { items, setInitialItems, toggleBookmark } =
-    useBookmarkItems<ContentInfo>();
 
-  useEffect(() => {
-    if (!data) return;
-
-    const flattenItems = flattenPages(data.pages);
-    setInitialItems(flattenItems);
-    setIsLoading(false);
-  }, [data, setInitialItems]);
-
+  const items = flattenPages(data.pages);
   const bookmarkItems = items.filter((item) => item.isBookmark);
 
   // 탭 변경 핸들러
@@ -120,10 +108,7 @@ export function BookmarkPageClient() {
                   key={item.id}
                   ref={index === bookmarkItems.length - 1 ? ref : undefined}
                 >
-                  <BookmarkCard
-                    info={item}
-                    bookmarkToggleHandler={toggleBookmark}
-                  />
+                  <BookmarkCard info={item} />
                 </div>
               ))
             )}

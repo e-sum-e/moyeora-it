@@ -40,6 +40,7 @@ const useAuthStore = create<UserStore>()(
                 //@ts-expect-error 백엔드에서 제공하는 타입이 이상해서 임시로 처리
                 userId: responseBody.items.items.id,
                 ...responseBody.items.items,
+                profileImage: responseBody.items.items.profileImage ?? '/images/default-profile.png',
               },
             });
           } else {

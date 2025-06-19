@@ -19,21 +19,16 @@ export type ContentInfo = Pick<
 
 type CardProps = {
   info: ContentInfo;
-  bookmarkToggleHandler: (groupId: number, nextBookmarkState: boolean) => void;
 };
 
-export const BookmarkCard = ({ info, bookmarkToggleHandler }: CardProps) => {
+export const BookmarkCard = ({ info }: CardProps) => {
   const router = useRouter();
   const isBeforeDeadline = isBeforeToday(info.deadline);
 
   return (
-    <div className="relative" onClick={() => router.push(`/group/${info.id}`)}>
+    <div className="relative" onClick={() => router.push(`/groups/${info.id}`)}>
       <article className="flex w-full">
-        <BookmarkCardContents
-          className="flex-1"
-          info={info}
-          bookmarkToggleHandler={bookmarkToggleHandler}
-        />
+        <BookmarkCardContents className="flex-1" info={info} />
       </article>
       {isBeforeDeadline && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-lg">

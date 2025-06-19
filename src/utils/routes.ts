@@ -15,7 +15,7 @@ export const routes = {
   bookmark: '/bookmark',
 
   // group
-  groupDetail: (id: number) => `/group/${id}`,
+  groupDetail: (id: number) => `/groups/${id}`,
 
   // write
   write: '/write',

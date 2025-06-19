@@ -2,13 +2,12 @@
 
 import { GroupCard } from '@/components/molecules/group/group-card';
 import { Empty } from '@/components/organisms/empty';
-import { useBookmarkItems } from '@/hooks/useBookmarkItems';
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
 import { Group } from '@/types';
 import { Position, Skill } from '@/types/enums';
 import flattenPages from '@/utils/flattenPages';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 enum EMPTY_INFO_MESSAGE {
   EMPTY_INITIAL = '생성된 그룹이 없습니다',
@@ -17,24 +16,48 @@ enum EMPTY_INFO_MESSAGE {
 }
 
 type GroupListProps = {
-  queryParams: {
-    type: string;
-    skills: Skill;
-    position: Position;
-    sort: string;
-    order: string;
-    search: string;
-  };
+  serverQueryParams: Record<string, string | undefined>;
 };
 
-export const GroupList = ({ queryParams }: GroupListProps) => {
+export const GroupList = ({ serverQueryParams }: GroupListProps) => {
   const [isEmptyItems, setIsEmptyItems] = useState(true);
   const [emptyInfoMessage, setEmptyInfoMessage] =
     useState<EMPTY_INFO_MESSAGE | null>(null);
 
+  const queryParams = useMemo(() => {
+    return {
+      type: serverQueryParams.type ?? '',
+      skill: serverQueryParams.skill
+        ? serverQueryParams.skill
+            .split(',')
+            .map((v) => Skill[v as keyof typeof Skill])
+            .join(',')
+        : '',
+      position: serverQueryParams.position
+        ? serverQueryParams.position
+            .split(',')
+            .map((v) => Position[v as keyof typeof Position])
+            .join(',')
+        : '',
+      sort: serverQueryParams.sort ?? 'createdAt',
+      order: serverQueryParams.order ?? 'desc',
+      search: serverQueryParams.search ?? '',
+    };
+  }, [
+    serverQueryParams.type,
+    serverQueryParams.skill,
+    serverQueryParams.position,
+    serverQueryParams.sort,
+    serverQueryParams.order,
+    serverQueryParams.search,
+  ]);
+
   const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<Group>({
     url: '/v2/groups',
-    queryParams: { ...queryParams, size: 10 },
+    queryParams: {
+      ...queryParams,
+      size: 10,
+    },
   });
 
   const { ref } = useFetchInView({
@@ -45,42 +68,31 @@ export const GroupList = ({ queryParams }: GroupListProps) => {
     },
   });
 
-  const { items, toggleBookmark, setInitialItems } = useBookmarkItems<Group>();
+  const items = flattenPages(data.pages);
 
-  // 초기 데이터 수신 후 북마크 상태 포함한 모임 배열 설정
-  useEffect(() => {
-    if (!data) return;
-
-    const flattenItems = flattenPages(data.pages);
-    setInitialItems(flattenItems);
-  }, [data, setInitialItems]);
-
+  // 빈 data 처리 로직
   useEffect(() => {
     if (items.length === 0) {
-      // 받아온 데이터가 없는 경우
       setIsEmptyItems(true);
       if (queryParams.search) {
-        // 검색어가 있다면 검색어를 우선으로 메시지 설정
         setEmptyInfoMessage(EMPTY_INFO_MESSAGE.SEARCH);
+        return;
       } else if (
         queryParams.type ||
-        queryParams.skills ||
+        queryParams.skill ||
         queryParams.position
       ) {
         setEmptyInfoMessage(EMPTY_INFO_MESSAGE.FILTER);
+        return;
       } else {
-        // 받아온 데이터는 없지만 필터도 없는 경우(아직 생성된 그룹이 하나도 없을 경우)
         setEmptyInfoMessage(EMPTY_INFO_MESSAGE.EMPTY_INITIAL);
+        return;
       }
     } else {
       setIsEmptyItems(false);
       setEmptyInfoMessage(null);
     }
   }, [queryParams, items.length]);
-
-  // useEffect(() => {
-  //   console.log('✅ Hydrated data from client:', queryParams); // DEV : 💡 서버 컴포넌트에서 prefetch 하는지 확인용
-  // }, [queryParams]);
 
   return (
     <>
@@ -89,11 +101,7 @@ export const GroupList = ({ queryParams }: GroupListProps) => {
       ) : (
         <ul className="flex flex-col gap-3 mt-8 md:flex-row md:flex-wrap md:gap-6 md:justify-center">
           {items.map((group) => (
-            <GroupCard
-              key={group.id}
-              item={group}
-              bookmarkToggleHandler={toggleBookmark}
-            />
+            <GroupCard key={group.id} item={group} />
           ))}
         </ul>
       )}
