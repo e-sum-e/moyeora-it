@@ -13,7 +13,8 @@ export const metadata: Metadata = {
     ],
   },
 }
-
 export default function BookmarkPage() {
-  return <BookmarkPageClient />;
+  return (
+      <BookmarkPageClient />
+  );
 }

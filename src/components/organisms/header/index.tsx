@@ -14,6 +14,7 @@ import {
 import useAuthStore from '@/stores/useAuthStore';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { getDisplayProfileImage, getDisplayNickname } from '@/utils/fallback';
 
@@ -40,30 +41,34 @@ const Logo = ({ isMobile = false }: { isMobile?: boolean }) => (
   </Link>
 );
 
-const MenuLinks = ({ onClick }: { onClick?: () => void }) => (
-  <>
-    {menuItems.map(({ label, href }) => (
-      <Link
-        key={href}
-        href={href}
-        className="text-sm font-medium text-gray-800 hover:text-primary"
+const MenuLinks = ({ onClick }: { onClick?: () => void }) => {
+  const pathname = usePathname();
+  return (
+    <>
+      {menuItems.map(({ label, href }) => (
+        <Link
+          key={href}
+          href={href}
+          className={`text-sm font-medium text-gray-800 hover:text-primary ${pathname === href ? 'text-primary' : ''}`}
         onClick={onClick}
       >
         {label}
       </Link>
     ))}
   </>
-);
+)};
 
-const MobileMenuLinks = ({ onClick }: { onClick?: () => void }) => (
-  <>
-    {menuItems.map(({ label, href }) => (
-      <DropdownMenuItem key={href} asChild onClick={onClick}>
-        <Link href={href}>{label}</Link>
+const MobileMenuLinks = ({ onClick }: { onClick?: () => void }) => {
+  const pathname = usePathname();
+  return (
+    <>
+      {menuItems.map(({ label, href }) => (
+        <DropdownMenuItem key={href} asChild onClick={onClick}>
+        <Link href={href} className={`${pathname === href ? 'text-primary' : ''}`}>{label}</Link>
       </DropdownMenuItem>
     ))}
   </>
-);
+)};
 
 const UserProfile = ({
   userId,
@@ -102,6 +107,7 @@ export const Header = () => {
   const isLoggedIn = Boolean(user);
   const userId = user?.userId ?? 0;
   const profileImage = getDisplayProfileImage(user?.profileImage ?? null);
+
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
