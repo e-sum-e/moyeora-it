@@ -22,7 +22,7 @@ export const GroupDetaiilCard = ({
 }: GroupDetaiilCardProps) => {
   return (
     <article className="flex flex-col gap-5 w-full items-center">
-      <header className="flex flex-col gap-8 w-full max-w-[1200px] px-3">
+      <header className="flex flex-col gap-8 w-full max-w-[900px] px-3">
         <div className="flex justify-between items-start">
           <h1 className="font-bold text-3xl flex flex-col gap-2">
             <Badge
@@ -49,7 +49,7 @@ export const GroupDetaiilCard = ({
         </div>
       </header>
 
-      <section className="border border-gray-200 rounded-2xl bg-white flex flex-col gap-5 py-8 px-6 w-full max-w-[1200px]">
+      <section className="border border-gray-200 rounded-2xl bg-white flex flex-col gap-5 py-8 px-6 w-full max-w-[900px]">
         <GroupInfoItem label="모집 구분">
           <Badge
             text={GroupTypeName[info.group.type]}
