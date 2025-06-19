@@ -1,10 +1,12 @@
 import { Avatar } from '@/components/atoms/avatar';
-import { GroupPositions } from '@/components/atoms/group/group-positions';
-import { GroupSkills } from '@/components/atoms/group/group-skills';
+import { Badge } from '@/components/atoms/badge';
 import { GroupProgress } from '@/components/atoms/group/particiapant-progress';
+import { PositionBadge } from '@/components/molecules/position-badge';
+import { SkillBadge } from '@/components/molecules/skill-badge';
 import { ParticipantListModal } from '@/components/organisms/participant-list-modal';
 import { BookmarkButtonContainer } from '@/features/bookmark/components/bookmark-button-container';
 import { GroupDetail, GroupTypeName } from '@/types';
+import { Position, Skill } from '@/types/enums';
 import { formatYearMonthDayWithDot } from '@/utils/dateUtils';
 import { getDisplayNickname, getDisplayProfileImage } from '@/utils/fallback';
 import Link from 'next/link';
@@ -19,10 +21,16 @@ export const GroupDetaiilCard = ({
   isRecruiting,
 }: GroupDetaiilCardProps) => {
   return (
-    <article className="flex flex-col gap-5 w-full">
-      <header className="flex flex-col gap-8">
+    <article className="flex flex-col gap-5 w-full items-center">
+      <header className="flex flex-col gap-8 w-full max-w-[1200px] px-3">
         <div className="flex justify-between items-start">
-          <h1 className="font-bold text-3xl">{info.group.title}</h1>
+          <h1 className="font-bold text-3xl flex flex-col gap-2">
+            <Badge
+              text={isRecruiting ? '모집 중' : '모집 마감'}
+              className="w-[fit-content] text-sm font-semibold bg-primary"
+            />
+            {info.group.title}
+          </h1>
           <BookmarkButtonContainer
             groupId={info.group.id}
             isBookmark={info.group.isBookmark}
@@ -41,9 +49,12 @@ export const GroupDetaiilCard = ({
         </div>
       </header>
 
-      <section className="border-t-2 border-gray-200 flex flex-col gap-5 pt-8">
+      <section className="border border-gray-200 rounded-2xl bg-white flex flex-col gap-5 py-8 px-6 w-full max-w-[1200px]">
         <GroupInfoItem label="모집 구분">
-          {GroupTypeName[info.group.type]}
+          <Badge
+            text={GroupTypeName[info.group.type]}
+            className="w-[fit-content] text-sm font-semibold bg-gray-200"
+          />
         </GroupInfoItem>
 
         <GroupInfoItem label="모집 마감">
@@ -56,15 +67,29 @@ export const GroupDetaiilCard = ({
         </GroupInfoItem>
 
         <GroupInfoItem label="모집 분야">
-          <GroupPositions positions={info.group.position} />
+          <ul className="flex gap-2 w-full flex-wrap">
+            {info.group.position.map((position, i) => (
+              <li key={i}>
+                <PositionBadge name={Position[position]} />
+              </li>
+            ))}
+          </ul>
         </GroupInfoItem>
 
         <GroupInfoItem label="기술 스택">
-          <GroupSkills skills={info.group.skills} />
+          <ul className="flex gap-2 w-full flex-wrap">
+            {info.group.skills?.map((skill, i) => (
+              <li key={i}>
+                <SkillBadge name={Skill[skill]} />
+              </li>
+            ))}
+          </ul>
         </GroupInfoItem>
 
-        <div>
-          <div>모집 현황</div>
+        <div className="font-bold">
+          <div className="whitespace-nowrap text-gray-600">
+            모집 현황 ({isRecruiting ? '모집 중' : '모집 마감'})
+          </div>
           <div className="-mt-3">
             <GroupProgress
               participantsCount={info.group.participants.length}
@@ -73,29 +98,30 @@ export const GroupDetaiilCard = ({
           </div>
         </div>
 
-        <div className="flex justify-between">
-          <div className="flex">
-            {info.group.participants
-              .slice(0, 3)
-              .map(({ userId, profileImage, email, nickname }, index) => (
-                <Avatar
-                  key={userId}
-                  imageSrc={getDisplayProfileImage(profileImage)}
-                  fallback={getDisplayNickname(nickname, email)}
-                  className={`${index !== 0 ? '-ml-3' : ''} ${getZIndexClass(
-                    index,
-                  )}`}
-                />
-              ))}
-            <ParticipantListModal
-              participants={info.group.participants}
-              className={`z-50 ${
-                info.group.participants.length > 0 ? '-ml-3' : ''
-              }`}
-            />
+        <GroupInfoItem label="참여자">
+          <div className="flex justify-between">
+            <div className="flex">
+              {info.group.participants
+                .slice(0, 3)
+                .map(({ userId, profileImage, email, nickname }, index) => (
+                  <Avatar
+                    key={userId}
+                    imageSrc={getDisplayProfileImage(profileImage)}
+                    fallback={getDisplayNickname(nickname, email)}
+                    className={`${index !== 0 ? '-ml-3' : ''} ${getZIndexClass(
+                      index,
+                    )}`}
+                  />
+                ))}
+              <ParticipantListModal
+                participants={info.group.participants}
+                className={`z-50 ${
+                  info.group.participants.length > 0 ? '-ml-3' : ''
+                }`}
+              />
+            </div>
           </div>
-          <div>{isRecruiting ? '모집 중' : '모집 마감'}</div>
-        </div>
+        </GroupInfoItem>
       </section>
     </article>
   );
@@ -115,7 +141,7 @@ const GroupInfoItem = ({
 }) => {
   return (
     <div className="flex gap-4 font-bold items-center">
-      <div className="whitespace-nowrap">{label}</div>
+      <div className="whitespace-nowrap text-gray-600">{label}</div>
       <div>{children}</div>
     </div>
   );

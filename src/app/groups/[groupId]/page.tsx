@@ -88,13 +88,17 @@ export default async function GroupDetailPage({
 
   return (
     <>
-      <main className="w-4/5 mx-auto flex flex-col gap-10 my-15">
-        <GroupDetaiilCard info={data} isRecruiting={isRecruiting} />
-        <GroupDescription
-          description={group.description}
-          groupType={group.type}
-        />
-        <ReplySection />
+      <main className="mx-auto flex flex-col gap-10 mb-15">
+        <div className="bg-gray-50 items-center py-15 px-5 sm:px-10 md:px-20">
+          <GroupDetaiilCard info={data} isRecruiting={isRecruiting} />
+        </div>
+        <div className="mx-auto flex flex-col gap-10 w-full max-w-[1200px] px-5 sm:px-10 md:px-20">
+          <GroupDescription
+            description={group.description}
+            groupType={group.type}
+          />
+          <ReplySection />
+        </div>
       </main>
       {isRecruiting && (
         <footer className="fixed bottom-0 left-0 z-50 bg-white border-t-2 py-2 px-8 w-full flex justify-end gap-4">
