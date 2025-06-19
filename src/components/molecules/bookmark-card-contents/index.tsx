@@ -1,21 +1,19 @@
 import { Badge } from '@/components/atoms/badge';
-import { BookmarkButton } from '@/components/atoms/bookmark-button';
 import { Title } from '@/components/atoms/title';
 import { ContentInfo } from '@/components/organisms/bookmark-card';
 import { Progress } from '@/components/ui/progress';
+import { BookmarkButtonContainer } from '@/features/bookmark/components/bookmark-button-container';
 import { getPosition } from '@/types/enums';
 import { formatYearMonthDayWithDot } from '@/utils/dateUtils';
 
 type BookmarkCardContentsProps = {
   className?: string;
   info: ContentInfo;
-  bookmarkToggleHandler: (groupId: number, nextBookmarkState: boolean) => void;
 };
 
 export const BookmarkCardContents = ({
   className,
   info,
-  bookmarkToggleHandler,
 }: BookmarkCardContentsProps) => {
   const isCompleted = info.participants.length === info.maxParticipants;
   return (
@@ -40,11 +38,9 @@ export const BookmarkCardContents = ({
               ))}
             </div>
           </div>
-          <BookmarkButton
+          <BookmarkButtonContainer
             isBookmark={info.isBookmark}
-            bookmarkToggleHandler={() =>
-              bookmarkToggleHandler(info.id, !info.isBookmark)
-            }
+            groupId={info.id}
           />
         </div>
         <footer>

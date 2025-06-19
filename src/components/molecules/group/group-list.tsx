@@ -2,14 +2,12 @@
 
 import { GroupCard } from '@/components/molecules/group/group-card';
 import { Empty } from '@/components/organisms/empty';
-import { Loading } from '@/components/organisms/loading';
-import { useBookmarkItems } from '@/hooks/useBookmarkItems';
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
 import { Group } from '@/types';
 import { Position, Skill } from '@/types/enums';
 import flattenPages from '@/utils/flattenPages';
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 enum EMPTY_INFO_MESSAGE {
   EMPTY_INITIAL = '생성된 그룹이 없습니다',
@@ -25,7 +23,6 @@ export const GroupList = ({ serverQueryParams }: GroupListProps) => {
   const [isEmptyItems, setIsEmptyItems] = useState(true);
   const [emptyInfoMessage, setEmptyInfoMessage] =
     useState<EMPTY_INFO_MESSAGE | null>(null);
-  const [isBookmarkLoading, setIsBookmarkLoading] = useState(true); // 북마크 로직 계산 시간이 오래 걸리기 때문에 계산하는 동안에도 로딩을 보여주기 위한 상태값
 
   const queryParams = useMemo(() => {
     return {
@@ -71,20 +68,11 @@ export const GroupList = ({ serverQueryParams }: GroupListProps) => {
     },
   });
 
-  const { items, toggleBookmark, setInitialItems } = useBookmarkItems<Group>();
-
-  // 초기 데이터가 들어오면 bookmark 상태 포함하여 아이템 세팅
-  useLayoutEffect(() => {
-    const flattenItems = flattenPages(data.pages);
-    setInitialItems(flattenItems);
-
-    setIsBookmarkLoading(false); // setInitialItems(flattenItems)로 북마크 로직 계산이 완료된 이후에는 로딩이 끝난 상태임
-  }, [isLoading, data, setInitialItems]);
+  const items = flattenPages(data.pages);
 
   // 빈 data 처리 로직
   useEffect(() => {
-    const flattenItems = flattenPages(data.pages);
-    if (flattenItems.length === 0) {
+    if (items.length === 0) {
       setIsEmptyItems(true);
       if (queryParams.search) {
         setEmptyInfoMessage(EMPTY_INFO_MESSAGE.SEARCH);
@@ -104,11 +92,7 @@ export const GroupList = ({ serverQueryParams }: GroupListProps) => {
       setIsEmptyItems(false);
       setEmptyInfoMessage(null);
     }
-  }, [queryParams, data]);
-
-  if (isBookmarkLoading) {
-    return <Loading />;
-  }
+  }, [queryParams, items.length]);
 
   return (
     <>
@@ -117,11 +101,7 @@ export const GroupList = ({ serverQueryParams }: GroupListProps) => {
       ) : (
         <ul className="flex flex-col gap-3 mt-8 md:flex-row md:flex-wrap md:gap-6 md:justify-center">
           {items.map((group) => (
-            <GroupCard
-              key={group.id}
-              item={group}
-              bookmarkToggleHandler={toggleBookmark}
-            />
+            <GroupCard key={group.id} item={group} />
           ))}
         </ul>
       )}

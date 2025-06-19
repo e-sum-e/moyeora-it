@@ -1,5 +1,5 @@
 import { Header } from '@/components/organisms/header';
-import AutoLoginManager from '@/features/auth/components/AutoLoginManager';
+import { AutoLoginManager } from '@/features/auth/components/AutoLoginManager';
 import { ReactQueryProvider } from '@/providers/ReactQueryProvider';
 import { SocketProvider } from '@/providers/WSProvider';
 import type { Metadata } from 'next';
@@ -17,16 +17,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="ko">
       <body>
         <ReactQueryProvider>
           {/* 소켓 설정 전에 로그인 판단해야하므로 로그인 위로 올림 */}
           <AutoLoginManager />
           <SocketProvider>
             <Header />
-            <div className="w-full md:max-w-[1200px] mx-auto">
-              {children}
-            </div>
+            <div className="w-full md:max-w-[1200px] mx-auto">{children}</div>
           </SocketProvider>
         </ReactQueryProvider>
         <Toaster />
