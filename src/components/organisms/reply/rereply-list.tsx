@@ -42,7 +42,7 @@ export const RereplyList = ({ parentReplyId }: RereplyListProps) => {
   if (rereplies.length === 0) return null;
 
   return (
-    <div>
+    <div className="mx-3">
       <ul className="flex flex-col gap-3">
         {rereplies.map((rereply) => (
           <RereplyItem

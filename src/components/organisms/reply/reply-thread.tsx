@@ -33,15 +33,15 @@ export const ReplyThread = ({ parentReplyId }: { parentReplyId: number }) => {
   };
 
   return (
-    <div className="bg-gray-100">
+    <div>
       <div>
-        <div className="flex justify-between mb-2 pt-3 px-3">
-          <div>대댓글</div>
+        <div className="flex justify-between mb-2 pt-3 px-5">
+          <div className="font-semibold text-gray-500">대댓글</div>
           <button
-            className="cursor-pointer"
+            className="cursor-pointer text-gray-500 text-sm"
             onClick={() => setIsOpen((prev) => !prev)}
           >
-            {isOpen ? '접기' : '펼치기'}
+            {isOpen ? '접기' : '보기'}
           </button>
         </div>
         {isOpen && <RereplyList parentReplyId={parentReplyId} />}

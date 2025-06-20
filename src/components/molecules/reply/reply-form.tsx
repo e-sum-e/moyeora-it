@@ -76,7 +76,7 @@ export const ReplyForm = ({
       />
       <div className="flex justify-end">
         <LoginRequireButton onClick={submitReplyButtonClickHandler}>
-          댓글 등록
+          등록
         </LoginRequireButton>
       </div>
     </div>

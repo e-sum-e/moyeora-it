@@ -1,6 +1,5 @@
 'use client';
 
-import { ReplyForm } from '@/components/molecules/reply/reply-form';
 import { ReplyItem } from '@/components/organisms/reply/reply-item';
 import { useFetchInView } from '@/hooks/useFetchInView';
 import { useFetchItems } from '@/hooks/useFetchItems';
@@ -50,27 +49,24 @@ export const ReplyList = () => {
   const replies = flattenPages(data.pages);
 
   return (
-    <section>
-      <ReplyForm />
-      <div className="my-15">
-        <ul className="flex flex-col gap-10">
-          {replies.map((reply) => (
-            <li
-              key={reply.replyId}
-              className="space-y-2"
-              ref={(el) => {
-                replyRefs.current[reply.replyId] = el;
-              }}
-            >
-              <ReplyItem {...reply} />
-            </li>
-          ))}
-        </ul>
-        <div ref={bottomRef} id="reply-list-bottom" />
-        {hasNextPage && !isFetchingNextPage && (
-          <div ref={ref} className="h-2 -translate-y-100 bg-transparent" />
-        )}
-      </div>
+    <section className="my-15">
+      <ul className="flex flex-col gap-10">
+        {replies.map((reply) => (
+          <li
+            key={reply.replyId}
+            className="space-y-2"
+            ref={(el) => {
+              replyRefs.current[reply.replyId] = el;
+            }}
+          >
+            <ReplyItem {...reply} />
+          </li>
+        ))}
+      </ul>
+      <div ref={bottomRef} id="reply-list-bottom" />
+      {hasNextPage && !isFetchingNextPage && (
+        <div ref={ref} className="h-2 -translate-y-100 bg-transparent" />
+      )}
     </section>
   );
 };

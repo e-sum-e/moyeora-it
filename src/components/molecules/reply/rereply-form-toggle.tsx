@@ -23,7 +23,7 @@ export const RereplyFormToggle = ({
   };
 
   return isWriting ? (
-    <div className="px-3 py-5">
+    <div className="px-5 py-5">
       <ReplyForm
         parentReplyId={parentReplyId}
         onSuccess={rereplyFormSuccessHandler}
