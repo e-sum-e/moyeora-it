@@ -7,6 +7,7 @@ import {
 } from '@/components/ui/form';
 import { DEFAULT_SKILL_NAMES, WriteForm } from '@/types';
 import { SkillName } from '@/types/index';
+import clsx from 'clsx';
 import { useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { SkillBadge } from '../skill-badge';
@@ -17,6 +18,7 @@ type SelectSkillProps = {
 
 export const SelectSkill = ({ form }: SelectSkillProps) => {
   const [selectedSkills, setSelectedSkills] = useState<SkillName[]>([]);
+  const hasError = !!form.formState.errors.skills;
 
   const skillClickHandler = (skill: SkillName) => {
     const isSelected = selectedSkills.find(
@@ -43,10 +45,23 @@ export const SelectSkill = ({ form }: SelectSkillProps) => {
       <FormField
         control={form.control}
         name="skills"
-        render={({}) => (
+        render={({ field, fieldState }) => (
           <FormItem>
             <WriteFormLabel text="기술 스택" />
-            <FormControl>
+            <div className="relative w-[fit-content]">
+              <FormControl>
+                <input
+                  {...field}
+                  tabIndex={-1}
+                  className={clsx(
+                    'absolute top-[-4px] right-[-4px] bottom-[-4px] left-[-4px] text-transparent caret-transparent z-[-1]  rounded-md',
+                    hasError
+                      ? 'outline-1 outline-destructive focus-visible:ring-red-500/20 focus-visible:ring-[3px]'
+                      : 'border-none outline-none',
+                  )}
+                  aria-hidden="true"
+                />
+              </FormControl>
               <ul className="flex gap-2">
                 {DEFAULT_SKILL_NAMES.map((skill, i) => (
                   <li
@@ -68,8 +83,8 @@ export const SelectSkill = ({ form }: SelectSkillProps) => {
                   </li>
                 ))}
               </ul>
-            </FormControl>
-            <FormMessage />
+            </div>
+            <FormMessage>{fieldState.error?.message}</FormMessage>
           </FormItem>
         )}
       />

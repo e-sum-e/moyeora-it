@@ -7,6 +7,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { DEFAULT_POSITION_NAMES, PositionName, WriteForm } from '@/types';
+import clsx from 'clsx';
 import { useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 
@@ -18,6 +19,11 @@ export const SelectPosition = ({ form }: SelectPositionProps) => {
   const [selectedPositions, setSelectedPositions] = useState<PositionName[]>(
     [],
   );
+  const hasError = !!form.formState.errors.position;
+  // const { field, fieldState } = useController({
+  //   name: 'position',
+  //   control: form.control,
+  // });
 
   const positionClickHandler = (position: PositionName) => {
     const isSelected = selectedPositions.find(
@@ -44,10 +50,23 @@ export const SelectPosition = ({ form }: SelectPositionProps) => {
       <FormField
         control={form.control}
         name="position"
-        render={({}) => (
+        render={({ field, fieldState }) => (
           <FormItem>
             <WriteFormLabel text="모집 포지션" />
-            <FormControl>
+            <div className="relative w-[fit-content]">
+              <FormControl>
+                <input
+                  {...field}
+                  tabIndex={-1}
+                  className={clsx(
+                    'absolute top-[-4px] right-[-4px] bottom-[-4px] left-[-4px] text-transparent caret-transparent z-[-1]  rounded-md',
+                    hasError
+                      ? 'outline-1 outline-destructive focus-visible:ring-red-500/20 focus-visible:ring-[3px]'
+                      : 'border-none outline-none',
+                  )}
+                  aria-hidden="true"
+                />
+              </FormControl>
               <ul className="flex gap-2">
                 {DEFAULT_POSITION_NAMES.map((position, i) => (
                   <li
@@ -69,8 +88,8 @@ export const SelectPosition = ({ form }: SelectPositionProps) => {
                   </li>
                 ))}
               </ul>
-            </FormControl>
-            <FormMessage />
+            </div>
+            <FormMessage>{fieldState.error?.message}</FormMessage>
           </FormItem>
         )}
       />
