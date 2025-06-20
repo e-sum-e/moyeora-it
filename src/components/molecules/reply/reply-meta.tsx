@@ -18,7 +18,9 @@ export const ReplyMeta = ({ writer, createdAt }: ReplyMetaProps) => {
       />
       <div className="flex flex-col">
         <div>{getDisplayNickname(writer.nickname, writer.email)}</div>
-        <div className="text-gray-500 text-sm">{formatDateTime(createdAt)}</div>
+        <div className="text-gray-500 text-xs sm:text-sm">
+          {formatDateTime(createdAt)}
+        </div>
       </div>
     </div>
   );

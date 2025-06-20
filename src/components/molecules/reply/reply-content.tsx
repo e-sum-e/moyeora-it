@@ -80,31 +80,22 @@ export const ReplyContent = ({
 
   return (
     <div className="p-5 flex flex-col gap-8">
-      <header className="flex justify-between items-start max-sm:flex-col">
+      <header className="flex justify-between items-center max-[500px]:flex-col-reverse max-[500px]:items-start">
         <ReplyMeta writer={writer} createdAt={createdAt} />
         {isWriter && !isLocallyDeleted && (
-          <div className="flex gap-2 max-sm:order-1">
-            {!isEditing && (
-              <Button
-                onClick={editButtonClickHandler}
-                variant="ghost"
-                className="cursor-pointer"
-              >
-                수정
-              </Button>
-            )}
-            {isEditing && (
-              <Button
-                onClick={saveButtonClickHandler}
-                variant="ghost"
-                className="cursor-pointer"
-              >
-                저장
-              </Button>
-            )}
+          <div className="flex gap-2 items-center max-[500px]:w-full max-[500px]:justify-start max-[500px]:mb-5 ">
+            <Button
+              onClick={
+                isEditing ? saveButtonClickHandler : editButtonClickHandler
+              }
+              variant="outline"
+              className="cursor-pointer"
+            >
+              {isEditing ? '저장' : '수정'}
+            </Button>
             <Button
               onClick={deleteButtonClickHandler}
-              variant="ghost"
+              variant="outline"
               className="cursor-pointer"
             >
               삭제
