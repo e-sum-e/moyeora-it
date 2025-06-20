@@ -105,11 +105,7 @@ export const GroupList = ({ serverQueryParams }: GroupListProps) => {
           ))}
         </ul>
       )}
-      {hasNextPage && (
-        <div className="h-[300px] border-1 border-blue-800" ref={ref}>
-          무한스크롤 확인
-        </div>
-      )}
+      {hasNextPage && <div className="h-[300px]" ref={ref}></div>}
     </>
   );
 };
