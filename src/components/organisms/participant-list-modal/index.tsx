@@ -1,15 +1,12 @@
-import { ParticipantCard } from '@/components/molecules/participant-card';
-import { Button } from '@/components/ui/button';
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { MemberInfo } from '@/features/user/group/components/member-list-modal/member-info';
 import { UserSummary } from '@/types';
 import { PlusIcon } from 'lucide-react';
 
@@ -29,25 +26,41 @@ export const ParticipantListModal = ({
           <PlusIcon className="w-3 h-3" />
         </button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] max-h-[90vh] p-0">
-        <DialogHeader className="sticky top-0 z-10 bg-white p-4 border-b">
+      <DialogContent className="max-w-80 p-0 gap-0">
+        <DialogHeader className="sticky top-0 -z-10 rounded-t-lg bg-white p-4 border-b">
           <DialogTitle>참여자 목록</DialogTitle>
           <DialogDescription className="sr-only">
             이 모달은 참여자 목록을 보여줍니다.
           </DialogDescription>
         </DialogHeader>
-        <div className="overflow-y-auto max-h-[60vh] px-4 py-2">
-          <div className="grid gap-4">
-            {participants.map((participant, i) => (
-              <ParticipantCard key={i} {...participant} />
+        <div className="overflow-y-auto max-h-[60vh] px-4 pt-6 pb-4 -z-20">
+          <ul className="flex flex-col gap-4">
+            {participants.map((participant) => (
+              <li
+                key={participant.userId}
+                className="pb-5 border-b-2 border-gray-300 last:border-none border-dashed flex justify-between"
+              >
+                <MemberInfo {...participant} />
+              </li>
+            ))}{' '}
+            {participants.map((participant) => (
+              <li
+                key={participant.userId}
+                className="pb-5 border-b-2 border-gray-300 last:border-none border-dashed flex justify-between"
+              >
+                <MemberInfo {...participant} />
+              </li>
+            ))}{' '}
+            {participants.map((participant) => (
+              <li
+                key={participant.userId}
+                className="pb-5 border-b-2 border-gray-300 last:border-none border-dashed flex justify-between"
+              >
+                <MemberInfo {...participant} />
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
-        <DialogFooter className="p-4">
-          <DialogClose asChild>
-            <Button className="cursor-pointer">확인</Button>
-          </DialogClose>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
