@@ -45,6 +45,8 @@ const EndedGroupsPage = async ({
   params,
   searchParams,
 }: EndedGroupsPageProps) => {
+  const { id } = await params;
+
   const { search, type } = await searchParams;
 
   const queryClient = new QueryClient();
@@ -57,11 +59,11 @@ const EndedGroupsPage = async ({
     size: 50,
   };
 
-  await queryClient.prefetchInfiniteQuery({
-    queryKey: ['items', '/v2/groups/mygroup', queryParams],
+  await queryClient.fetchInfiniteQuery({
+    queryKey: ['items', `/v2/groups/usergroup/${id}`, queryParams],
     queryFn({ pageParam }) {
       return request.get(
-        '/v2/groups/mygroup',
+        `/v2/groups/usergroup/${id}`,
         {
           ...queryParams,
           cursor: pageParam,
@@ -78,13 +80,11 @@ const EndedGroupsPage = async ({
     retry: 0,
   });
 
-  const dehydratedState = dehydrate(queryClient);
-
   return (
-    <HydrationBoundary state={dehydratedState}>
-      <QueryErrorBoundary>
+    <QueryErrorBoundary>
+      <HydrationBoundary state={dehydrate(queryClient)}>
         <GroupList status="ENDED" />
-      </QueryErrorBoundary>
-    </HydrationBoundary>
+      </HydrationBoundary>
+    </QueryErrorBoundary>
   );
 };

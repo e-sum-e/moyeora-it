@@ -17,7 +17,7 @@ type CreatedGroupsPageWrapperProps = {
     type: string;
     order: string;
   }>;
-};
+}
 
 type CreatedGroupsPageProps = {
   params: Promise<{ id: string }>;
@@ -38,20 +38,22 @@ export default async function CreatedGroupsPageWrapper({
   searchParams,
 }: CreatedGroupsPageWrapperProps) {
   return (
-    <Suspense
-      fallback={<GroupListLoading />}
-      key={JSON.stringify(searchParams)}
-    >
-      <CreatedGroupsPage params={params} searchParams={searchParams} />
+    <Suspense fallback={<GroupListLoading />} key={JSON.stringify(searchParams)}>
+      <CreatedGroupsPage
+        params={params}
+        searchParams={searchParams}
+      />
     </Suspense>
-  );
+  )
 }
 
 const CreatedGroupsPage = async ({
   params,
   searchParams,
 }: CreatedGroupsPageProps) => {
-  const { search, type } = await searchParams;
+  const { search, type, order } = await searchParams;
+
+  const { id } = await params;
 
   const cookieHeaderValue = await getAuthCookieHeader();
 
@@ -62,16 +64,16 @@ const CreatedGroupsPage = async ({
     status: 'PARTICIPATING',
     ...(search && { search }),
     size: 10,
+    order: order === 'latest' || !order ? 'desc' : 'asc',
   };
 
   await queryClient.fetchInfiniteQuery({
-    queryKey: ['items', '/v2/groups/mygroup', queryParams],
-    queryFn({ pageParam }) {
+    queryKey: ['items', `/v2/groups/usergroup/${id}`, queryParams],
+    queryFn() {
       return request.get(
-        '/v2/groups/mygroup',
+        `/v2/groups/usergroup/${id}`,
         {
           ...queryParams,
-          cursor: pageParam,
         },
         {
           credentials: 'include',
@@ -94,4 +96,4 @@ const CreatedGroupsPage = async ({
       </QueryErrorBoundary>
     </>
   );
-};
+}
