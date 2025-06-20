@@ -70,7 +70,7 @@ export const ReplyForm = ({
     <div className="space-y-2">
       <textarea
         placeholder="댓글을 입력하세요."
-        className="w-full p-2 border rounded h-20 resize-none"
+        className="w-full p-2 border rounded-lg h-20 resize-none"
         value={replyContent}
         onChange={(e) => setReplyContent(e.target.value)}
       />
