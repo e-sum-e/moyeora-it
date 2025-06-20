@@ -5,8 +5,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { ArrowUpRight } from 'lucide-react';
 import { GroupMemberList } from '@/features/user/group/components/member-list-modal/group-member-list';
+import { ArrowUpRight } from 'lucide-react';
 
 type MemberListDialogProps = {
   groupId: string;
@@ -15,9 +15,9 @@ type MemberListDialogProps = {
 
 /**
  * 모임 참여/신청자 목록 모달 컴포넌트
- * 
+ *
  * 모임 참여/신청자 목록을 보여준다.
- * 
+ *
  * @param groupId 모임 id
  * @param groupTitle 모임 제목
  * @returns 모임 참여/신청자 목록 모달 컴포넌트

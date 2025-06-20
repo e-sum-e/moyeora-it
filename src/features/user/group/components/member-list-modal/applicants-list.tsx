@@ -1,11 +1,11 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
 import { request } from '@/api/request';
-import { UserSummary } from '@/types';
-import { useManageParticipation } from '@/features/user/group/hooks/useManageParticipation';
 import { Button } from '@/components/ui/button';
 import { MemberInfo } from '@/features/user/group/components/member-list-modal/member-info';
+import { useManageParticipation } from '@/features/user/group/hooks/useManageParticipation';
+import { UserSummary } from '@/types';
+import { useQuery } from '@tanstack/react-query';
 
 type ApplicantsListProps = {
   groupId: string;
@@ -56,7 +56,7 @@ export const ApplicantsList = ({ groupId }: ApplicantsListProps) => {
               className="pb-5 border-b-2 border-gray-300 last:border-none border-dashed flex justify-between"
             >
               <MemberInfo
-                userId={String(applicant.userId)}
+                userId={applicant.userId}
                 nickname={applicant.nickname}
                 email={applicant.email}
                 profileImage={applicant.profileImage}
