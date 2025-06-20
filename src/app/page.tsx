@@ -1,5 +1,4 @@
 import { request } from '@/api/request';
-import { WriteGroupButton } from '@/components/molecules/group-create-button';
 import { Groups } from '@/components/organisms/group';
 import RecommendGroup from '@/components/organisms/recommend-group';
 import { QueryErrorBoundary } from '@/components/query-error-boundary';
@@ -80,9 +79,12 @@ export default async function Home({
   return (
     <div className="relative m-auto mb-10">
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <div className="text-2xl font-extrabold">🔥 인기글</div>
+        <div className="text-[20px] md:text-2xl font-extrabold">🔥 인기글</div>
         <RecommendGroup />
-        <WriteGroupButton />
+        {/* <div className="flex gap-2 absolute right-0">
+          <SearchInput />
+          <WriteGroupButton />
+        </div> */}
         <QueryErrorBoundary
           fallback={
             <div>

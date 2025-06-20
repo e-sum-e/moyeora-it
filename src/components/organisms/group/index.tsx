@@ -1,5 +1,6 @@
 'use client';
 
+import { WriteGroupButton } from '@/components/molecules/group-create-button';
 import { Filter } from '@/components/molecules/group/filter';
 import { GroupList } from '@/components/molecules/group/group-list';
 import { SortOrder } from '@/components/molecules/group/sort-order';
@@ -54,16 +55,20 @@ export const Groups = ({ serverQueryParams }: GroupListProps) => {
   };
 
   return (
-    <>
+    <div className="relative">
       <Tab
         tabList={tabList}
         onValueChange={(value) => updateQueryParams({ type: value })}
       >
+        <WriteGroupButton />
+
         <div className="flex justify-start ">
           <Filter updateQueryParams={updateQueryParams} />
-          <SortOrder updateQueryParams={updateQueryParams} />
+          <div className="flex-none flex gap-1 ml-auto">
+            <SearchInput />
+            <SortOrder updateQueryParams={updateQueryParams} />
+          </div>
         </div>
-        <SearchInput />
         <Suspense
           fallback={
             <div>
@@ -74,6 +79,6 @@ export const Groups = ({ serverQueryParams }: GroupListProps) => {
           <GroupList serverQueryParams={serverQueryParams} />
         </Suspense>
       </Tab>
-    </>
+    </div>
   );
 };
