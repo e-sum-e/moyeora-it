@@ -4,6 +4,7 @@ import { Groups } from '@/components/organisms/group';
 import RecommendGroup from '@/components/organisms/recommend-group';
 import { QueryErrorBoundary } from '@/components/query-error-boundary';
 import { Position, Skill } from '@/types/enums';
+import { getAuthCookieHeader } from '@/utils/cookie';
 import {
   dehydrate,
   HydrationBoundary,
@@ -48,19 +49,25 @@ export default async function Home({
   };
 
   // console.log('✅ Fetching data from server ', queryParams); // DEV: 💡 서버 컴포넌트에서 prefetch 하는지 확인용
+  const cookieHeaderValue = await getAuthCookieHeader();
 
   try {
     await queryClient.fetchInfiniteQuery({
       queryKey: ['items', '/v2/groups', { size: 10, ...queryParams }],
       queryFn({ pageParam }) {
-        return request.get('/v2/groups', {
-          ...queryParams,
-          size: 10,
-          cursor:
-            queryParams.order === 'desc' || !queryParams.order
-              ? 'null'
-              : pageParam,
-        });
+        return request.get(
+          '/v2/groups',
+          {
+            ...queryParams,
+            size: 10,
+            cursor:
+              queryParams.order === 'desc' || !queryParams.order
+                ? 'null'
+                : pageParam,
+          },
+          { credentials: 'include' },
+          { Cookie: cookieHeaderValue },
+        );
       },
       initialPageParam: 0,
     });
