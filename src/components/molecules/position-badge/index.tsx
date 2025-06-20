@@ -42,9 +42,12 @@ type PositionBadgeProps = {
 export const PositionBadge = ({ name }: PositionBadgeProps) => {
   return (
     <Tooltip>
-      <div className="position-badge flex flex-row border border-primary rounded-md cursor-pointer">
-        <TooltipTrigger>
-          <Badge text={name} className="" />
+      <div className="position-badge flex flex-row cursor-pointer">
+        <TooltipTrigger type="button">
+          <Badge
+            text={name}
+            className="text-sm font-medium bg-gray-100 text-gray-600 px-1"
+          />
         </TooltipTrigger>
       </div>
       <TooltipContent>
