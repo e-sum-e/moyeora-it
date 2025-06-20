@@ -41,8 +41,15 @@ jobs:
             git pull origin ${{ github.ref_name }}
 
             echo "Installing dependencies and building"
-            yarn install --frozen-lockfile
-            yarn build
+            rm -rf ~/.cache/yarn
+            rm -rf node_modules
+            yarn config set registry https://registry.npmjs.org
+
+            for i in 1 2 3; do
+              yarn install --network-timeout 300000 --force && break
+              echo "⚠️ yarn install 재시도 중... ($i)"
+              sleep 10
+            done
 
             echo "Restarting PM2"
             pm2 restart ecosystem.config.js --env development
