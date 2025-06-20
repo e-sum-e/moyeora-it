@@ -22,7 +22,7 @@ export default async function UserPageLayout({
   // }
 
   return (
-    <div className="flex flex-col gap-y-5 pt-6 px-4 md:px-25 bg-gray-50 min-h-[calc(100dvh-4rem)]">
+    <div className="flex flex-col gap-y-5 pt-6 px-4 md:px-10 lg:px-25 bg-gray-50 min-h-[calc(100dvh-4rem)]">
       <h1 className="font-semibold text-lg">유저 페이지</h1>
       <div className="flex flex-col gap-y-5 bg-white rounded-t-2xl rounded-b-2xl mb-4 flex-1">
         <UserProfile />
