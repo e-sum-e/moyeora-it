@@ -5,10 +5,12 @@ import useAuthStore from '@/stores/useAuthStore';
 import { routes } from '@/utils/routes';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import useIsClient from '@/hooks/useIsClient';
 
 export default function Page() {
   const user = useAuthStore((state) => state.user);
   const router = useRouter();
+  const isClient = useIsClient();
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -21,6 +23,8 @@ export default function Page() {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, []);
+
+  if (!isClient) return null;
 
   if (!user) {
     router.push(routes.login);
