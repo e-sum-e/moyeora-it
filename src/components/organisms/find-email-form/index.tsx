@@ -78,15 +78,19 @@ const FindEmailForm = () => {
 
         {/* 성공시 로그인페이지로 갈지 비밀번호 찾기로 갈지 물어보기 */}
         {isExisted && (
-          <div className="flex flex-col">
-            <p className="text-blue-900">해당 이메일이 존재합니다!</p>
+          <div className="flex flex-col justify-center items-center gap-2">
+            <p className="text-blue-900 text-center">
+              해당 이메일이 존재합니다!
+            </p>
             <Link href="/login">로그인하러 가기</Link>
             <Link href="/find-password">비밀번호 찾기</Link>
           </div>
         )}
 
         {isNotExisted && (
-          <p className="text-red-600">해당 이메일이 존재하지 않습니다</p>
+          <p className="text-red-600 text-center">
+            해당 이메일이 존재하지 않습니다
+          </p>
         )}
         <Button className="w-full bg-gray-400" disabled={disabled}>
           이메일 찾기
