@@ -19,7 +19,7 @@ type GroupCardProps = {
 // TODO : 섹션별로 component 나누기
 export const GroupCard = ({ item }: GroupCardProps) => {
   return (
-    <div className="relative p-5 md:w-[300px] bg-white shadow-sm shadow-gray-400 rounded-lg">
+    <div className="relative p-5 h-[310px] lg:h-[346px] bg-white shadow-sm shadow-gray-400 rounded-lg">
       <div className="absolute top-0 right-0 m-6">
         <BookmarkButtonContainer
           isBookmark={item.isBookmark}
