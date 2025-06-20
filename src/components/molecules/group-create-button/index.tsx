@@ -1,5 +1,6 @@
 'use client';
 
+import { LoginRequireButton } from '@/components/atoms/login-require-button';
 import { Button } from '@/components/ui/button';
 import useAuthStore from '@/stores/useAuthStore';
 import { routes } from '@/utils/routes';
@@ -27,12 +28,12 @@ export const WriteGroupButton = () => {
       >
         <PlusIcon />
       </Button>
-      <Button
+      <LoginRequireButton
         onClick={writeButtonClickHandler}
         className="hidden md:block cursor-pointer"
       >
         만들기
-      </Button>
+      </LoginRequireButton>
     </div>
   );
 };
