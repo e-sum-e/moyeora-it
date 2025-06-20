@@ -8,17 +8,43 @@ import { QueryErrorBoundary } from '@/components/query-error-boundary';
 import { GroupList } from '@/features/user/group/components/group-list';
 import { request } from '@/api/request';
 import { getAuthCookieHeader } from '@/utils/cookie';
+import { GroupListLoading } from '@/features/user/group/components/group-list-loading';
+
+type EndedGroupsPageWrapperProps = {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{
+    search: string;
+    type: string;
+    order: string;
+  }>;
+};
 
 type EndedGroupsPageProps = {
+  params: Promise<{ id: string }>;
   searchParams: Promise<{
     search: string;
     type: string;
   }>;
 };
 
-export default async function EndedGroupsPage({
+export default async function EndedGroupsPageWrapper({
+  params,
   searchParams,
-}: EndedGroupsPageProps) {
+}: EndedGroupsPageWrapperProps) {
+  return (
+    <Suspense
+      fallback={<GroupListLoading />}
+      key={JSON.stringify(searchParams)}
+    >
+      <EndedGroupsPage params={params} searchParams={searchParams} />
+    </Suspense>
+  );
+}
+
+const EndedGroupsPage = async ({
+  params,
+  searchParams,
+}: EndedGroupsPageProps) => {
   const { search, type } = await searchParams;
 
   const queryClient = new QueryClient();
@@ -57,10 +83,8 @@ export default async function EndedGroupsPage({
   return (
     <HydrationBoundary state={dehydratedState}>
       <QueryErrorBoundary>
-        <Suspense fallback={<div>loading...</div>}>
-          <GroupList status="ENDED" />
-        </Suspense>
+        <GroupList status="ENDED" />
       </QueryErrorBoundary>
     </HydrationBoundary>
   );
-}
+};
