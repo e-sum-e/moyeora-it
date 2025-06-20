@@ -1,7 +1,7 @@
 'use client';
 
 import { Progress } from '@/components/ui/progress';
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type GroupProgressProps = {
   participantsCount: number;
@@ -14,18 +14,18 @@ export const GroupProgress = ({
   maxParticipants,
   className,
 }: GroupProgressProps) => {
-  const [value, setValue] = useState<number>(0);
+  const [progress, setProgress] = useState<number>(0);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     requestAnimationFrame(() => {
-      setValue((100 * participantsCount) / maxParticipants);
+      setProgress((participantsCount / maxParticipants) * 100);
     });
   }, [maxParticipants, participantsCount]);
 
   return (
     <div className="flex flex-col mt-4 gap-1">
       <div>{`👤 ${participantsCount}/${maxParticipants}`}</div>
-      <Progress value={value} className={className} />
+      <Progress value={progress} className={className} />
     </div>
   );
 };
