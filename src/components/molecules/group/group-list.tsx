@@ -64,7 +64,7 @@ export const GroupList = ({ serverQueryParams }: GroupListProps) => {
     fetchNextPage,
     isLoading,
     options: {
-      rootMargin: '50px',
+      rootMargin: '300px',
     },
   });
 
@@ -103,9 +103,9 @@ export const GroupList = ({ serverQueryParams }: GroupListProps) => {
           {items.map((group) => (
             <GroupCard key={group.id} item={group} />
           ))}
+          {hasNextPage && <div className="h-[300px]" ref={ref}></div>}
         </ul>
       )}
-      {hasNextPage && <div className="h-[300px]" ref={ref}></div>}
     </>
   );
 };

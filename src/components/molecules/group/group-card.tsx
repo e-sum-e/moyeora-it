@@ -19,14 +19,17 @@ type GroupCardProps = {
 // TODO : 섹션별로 component 나누기
 export const GroupCard = ({ item }: GroupCardProps) => {
   return (
-    <div className="relative p-5 h-[310px] lg:h-[346px] bg-white shadow-sm shadow-gray-400 rounded-lg">
+    <div className="relative p-5 h-[280px] lg:h-[316px] bg-white shadow-sm ring-2 ring-gray-300/30 rounded-lg">
       <div className="absolute top-0 right-0 m-6">
         <BookmarkButtonContainer
           isBookmark={item.isBookmark}
           groupId={item.id}
         />
       </div>
-      <Link href={routes.groupDetail(item.id)}>
+      <Link
+        href={routes.groupDetail(item.id)}
+        className="flex flex-col justify-between h-full"
+      >
         <div>
           <Badge
             text={GroupTypeName[item.type]}
