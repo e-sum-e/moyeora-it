@@ -81,7 +81,7 @@ export const GroupListItem = ({
                 {participants.map((participant, i) => {
                   if (i > 3) {
                     return (
-                      <div className="size-8 bg-gray-100 border border-gray-200 text-gray-600 rounded-full flex items-center justify-center z-10 -ml-3">
+                      <div key={'indicator'} className="size-8 bg-gray-100 border border-gray-200 text-gray-600 rounded-full flex items-center justify-center z-10 -ml-3">
                         <span className="text-xs font-medium">
                           +{participants.length - 4}
                         </span>
