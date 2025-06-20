@@ -35,7 +35,7 @@ export const GroupCard = ({ item }: GroupCardProps) => {
             text={GroupTypeName[item.type]}
             className="w-[fit-content] text-sm font-semibold bg-gray-200"
           />
-          <Deadline text={formatYearMonthDayWithDot(item.endDate)} />
+          <Deadline text={formatYearMonthDayWithDot(item.deadline)} />
           <GroupTitle text={item.title} />
         </div>
         <GroupProgress
