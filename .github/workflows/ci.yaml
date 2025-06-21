@@ -26,10 +26,7 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.ref_name }}
           token: ${{ secrets.MOYEORAIT_TOKEN }}
-          
-      - name: Clean Yarn Cache
-        run: yarn cache clean
-
+                  
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
