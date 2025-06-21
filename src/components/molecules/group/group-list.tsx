@@ -64,7 +64,7 @@ export const GroupList = ({ serverQueryParams }: GroupListProps) => {
     fetchNextPage,
     isLoading,
     options: {
-      rootMargin: '50px',
+      rootMargin: '300px',
     },
   });
 
@@ -99,16 +99,12 @@ export const GroupList = ({ serverQueryParams }: GroupListProps) => {
       {isEmptyItems && emptyInfoMessage !== null ? (
         <Empty mainText={emptyInfoMessage} subText="" />
       ) : (
-        <ul className="flex flex-col gap-3 mt-8 md:flex-row md:flex-wrap md:gap-6 md:justify-center">
+        <ul className="grid mt-8 gap-4 md:grid-cols-2 xl:grid-cols-4">
           {items.map((group) => (
             <GroupCard key={group.id} item={group} />
           ))}
+          {hasNextPage && <div className="h-[300px]" ref={ref}></div>}
         </ul>
-      )}
-      {hasNextPage && (
-        <div className="h-[300px] border-1 border-blue-800" ref={ref}>
-          무한스크롤 확인
-        </div>
       )}
     </>
   );

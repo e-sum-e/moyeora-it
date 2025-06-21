@@ -3,6 +3,13 @@
 import { Input } from '@/components/ui/input';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { ComponentProps, useEffect, useRef } from 'react';
+import { cn } from '@/lib/utils';
+import Image from 'next/image';
+
+type SearchInputProps = {
+  inputClassName?: string;
+  containerClassName?: string;
+};
 
 /**
  * 사용자 이름, 모임 명을 검색하기 위한 컴포넌트
@@ -10,7 +17,11 @@ import { ComponentProps, useEffect, useRef } from 'react';
  * @param props 기본 input 요소의 props
  * @returns 검색 인풋 컴포넌트
  */
-export const SearchInput = (props: ComponentProps<'input'>) => {
+export const SearchInput = ({
+  inputClassName,
+  containerClassName,
+  ...props
+}: ComponentProps<'input'> & SearchInputProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -48,5 +59,23 @@ export const SearchInput = (props: ComponentProps<'input'>) => {
     }
   };
 
-  return <Input {...props} onKeyDown={keyDownHandler} ref={inputRef} />;
+  return (
+    <div
+      className={cn(
+        'flex items-center gap-x-[10px] rounded-[30px] bg-gray-100 px-5 py-2 w-[200px] text-gray-500 h-9 self-end',
+        containerClassName,
+      )}
+    >
+      <Image src="/icons/search.svg" alt="search-icon" width={17} height={17} />
+      <Input
+        {...props}
+        className={cn(
+          'bg-gray-100 border-none shadow-none focus-visible:ring-0 p-0',
+          inputClassName,
+        )}
+        onKeyDown={keyDownHandler}
+        ref={inputRef}
+      />
+    </div>
+  );
 };

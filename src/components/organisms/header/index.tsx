@@ -14,7 +14,9 @@ import {
 import useAuthStore from '@/stores/useAuthStore';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import { getDisplayProfileImage, getDisplayNickname } from '@/utils/fallback';
 
 type MenuItem = {
   label: string;
@@ -39,42 +41,48 @@ const Logo = ({ isMobile = false }: { isMobile?: boolean }) => (
   </Link>
 );
 
-const MenuLinks = ({ onClick }: { onClick?: () => void }) => (
-  <>
-    {menuItems.map(({ label, href }) => (
-      <Link
-        key={href}
-        href={href}
-        className="text-sm font-medium text-gray-800 hover:text-primary"
+const MenuLinks = ({ onClick }: { onClick?: () => void }) => {
+  const pathname = usePathname();
+  return (
+    <>
+      {menuItems.map(({ label, href }) => (
+        <Link
+          key={href}
+          href={href}
+          className={`text-sm font-medium text-gray-800 hover:text-primary ${pathname === href ? 'text-primary' : ''}`}
         onClick={onClick}
       >
         {label}
       </Link>
     ))}
   </>
-);
+)};
 
-const MobileMenuLinks = ({ onClick }: { onClick?: () => void }) => (
-  <>
-    {menuItems.map(({ label, href }) => (
-      <DropdownMenuItem key={href} asChild onClick={onClick}>
-        <Link href={href}>{label}</Link>
+const MobileMenuLinks = ({ onClick }: { onClick?: () => void }) => {
+  const pathname = usePathname();
+  return (
+    <>
+      {menuItems.map(({ label, href }) => (
+        <DropdownMenuItem key={href} asChild onClick={onClick}>
+        <Link href={href} className={`${pathname === href ? 'text-primary' : ''}`}>{label}</Link>
       </DropdownMenuItem>
     ))}
   </>
-);
+)};
 
 const UserProfile = ({
   userId,
   profileImage,
+  fallback,
 }: {
   userId: number;
   profileImage: string;
+  fallback: string;
 }) => (
   <Link href={`/users/${userId}`}>
     <Avatar
       imageSrc={profileImage}
-      fallback={userId.toString()}
+      fallback={fallback}
       className="rounded-full w-8 h-8"
     />
   </Link>
@@ -98,7 +106,8 @@ export const Header = () => {
   const user = useAuthStore((state) => state.user);
   const isLoggedIn = Boolean(user);
   const userId = user?.userId ?? 0;
-  const profileImage = user?.profileImage || '';
+  const profileImage = getDisplayProfileImage(user?.profileImage ?? null);
+
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -115,7 +124,14 @@ export const Header = () => {
         {isLoggedIn ? (
           <>
             <NotificationWithBoundary />
-            <UserProfile userId={userId} profileImage={profileImage} />
+            <UserProfile
+              userId={userId}
+              profileImage={profileImage}
+              fallback={getDisplayNickname(
+                user?.nickname ?? '',
+                user?.email ?? '',
+              )}
+            />
           </>
         ) : (
           <Link href="/login">

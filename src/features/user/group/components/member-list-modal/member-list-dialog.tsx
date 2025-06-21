@@ -27,7 +27,7 @@ export const MemberListDialog = ({
   groupTitle,
 }: MemberListDialogProps) => {
   return (
-    <div className="absolute bottom-0 right-0">
+    <div className="absolute bottom-3 right-4">
       <Dialog>
         <DialogTrigger asChild>
           <button

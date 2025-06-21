@@ -1,9 +1,9 @@
 import { request } from '@/api/request';
-import { WriteGroupButton } from '@/components/molecules/group-create-button';
 import { Groups } from '@/components/organisms/group';
 import RecommendGroup from '@/components/organisms/recommend-group';
 import { QueryErrorBoundary } from '@/components/query-error-boundary';
 import { Position, Skill } from '@/types/enums';
+import { getAuthCookieHeader } from '@/utils/cookie';
 import {
   dehydrate,
   HydrationBoundary,
@@ -48,19 +48,25 @@ export default async function Home({
   };
 
   // console.log('✅ Fetching data from server ', queryParams); // DEV: 💡 서버 컴포넌트에서 prefetch 하는지 확인용
+  const cookieHeaderValue = await getAuthCookieHeader();
 
   try {
     await queryClient.fetchInfiniteQuery({
       queryKey: ['items', '/v2/groups', { size: 10, ...queryParams }],
       queryFn({ pageParam }) {
-        return request.get('/v2/groups', {
-          ...queryParams,
-          size: 10,
-          cursor:
-            queryParams.order === 'desc' || !queryParams.order
-              ? 'null'
-              : pageParam,
-        });
+        return request.get(
+          '/v2/groups',
+          {
+            ...queryParams,
+            size: 10,
+            cursor:
+              queryParams.order === 'desc' || !queryParams.order
+                ? 'null'
+                : pageParam,
+          },
+          { credentials: 'include' },
+          { Cookie: cookieHeaderValue },
+        );
       },
       initialPageParam: 0,
     });
@@ -71,11 +77,14 @@ export default async function Home({
   }
 
   return (
-    <div className="relative w-[300px] sm:w-[370px] md:w-[740px] m-auto mb-10">
+    <div className="relative m-auto mb-10">
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <div className="text-2xl font-extrabold">🔥 인기글</div>
+        <div className="text-[20px] md:text-2xl font-extrabold">🔥 인기글</div>
         <RecommendGroup />
-        <WriteGroupButton />
+        {/* <div className="flex gap-2 absolute right-0">
+          <SearchInput />
+          <WriteGroupButton />
+        </div> */}
         <QueryErrorBoundary
           fallback={
             <div>

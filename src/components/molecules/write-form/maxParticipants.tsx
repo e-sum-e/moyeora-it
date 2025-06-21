@@ -7,6 +7,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { WriteForm } from '@/types';
+import { useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 
 type TitleProps = {
@@ -14,6 +15,22 @@ type TitleProps = {
 };
 
 export const MaxParticipants = ({ form }: TitleProps) => {
+  const [maxParticipants, setMaxParticipants] = useState(2);
+
+  const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    if (value > 30) {
+      setMaxParticipants(30);
+      return;
+    }
+    if (value < 2) {
+      setMaxParticipants(2);
+      return;
+    }
+
+    setMaxParticipants(value);
+  };
+
   return (
     <>
       <FormField
@@ -21,14 +38,21 @@ export const MaxParticipants = ({ form }: TitleProps) => {
         name="maxParticipants"
         render={({ field }) => (
           <FormItem>
-            <WriteFormLabel htmlFor="maxParticipants" text="정원" />
+            <WriteFormLabel
+              htmlFor="maxParticipants"
+              text="정원"
+              info="최소 2명 ~ 최대 30명까지 가능합니다"
+            />
             <FormControl>
               <Input
                 id="maxParticipants"
+                min={2}
+                max={30}
                 placeholder="정원을 입력해주세요"
                 {...field}
                 type="number"
-                max="30"
+                onChange={inputChangeHandler}
+                value={maxParticipants}
               />
             </FormControl>
             <FormMessage />

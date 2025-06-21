@@ -2,10 +2,10 @@
 'use client';
 
 import useAuthStore from '@/stores/useAuthStore';
+import useNotificationStore from '@/stores/useNotificationStore';
+import { eNotification } from '@/types/enums';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Socket, io } from 'socket.io-client';
-import { eNotification } from '@/types/enums';
-import useNotificationStore from '@/stores/useNotificationStore';
 
 type SocketMessage = {
   id: number;
@@ -17,11 +17,7 @@ type SocketMessage = {
 
 const SocketContext = createContext<Socket | null>(null);
 
-export const SocketProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const user = useAuthStore((state) => state.user);
 
@@ -43,10 +39,10 @@ export const SocketProvider = ({
     newSocket.on('connect', () => {
       console.log('socket.io 연결됨', user.userId);
       // 로그인 이벤트에 콜백 추가
-      newSocket.emit('login', user.userId)
+      newSocket.emit('login', user.userId);
       newSocket.on('loginSuccess', (response: { userId: number }) => {
         console.log('서버 응답:', response.userId);
-        if(response.userId !== user.userId) {
+        if (response.userId !== user.userId) {
           newSocket.disconnect();
           setSocket(null);
           return;
@@ -61,7 +57,9 @@ export const SocketProvider = ({
         message: message.message,
         isRead: false,
         createdAt: new Date(),
-        type: eNotification[message.notificationType as keyof typeof eNotification],
+        type: eNotification[
+          message.notificationType as keyof typeof eNotification
+        ],
         url: message.url,
       });
       console.log('messageC 이벤트 발생!', message);
@@ -72,7 +70,6 @@ export const SocketProvider = ({
         targetUserId: message.targetUserId,
         url: message.url,
       });
-
     });
 
     newSocket.connect();
@@ -82,12 +79,11 @@ export const SocketProvider = ({
       newSocket.removeAllListeners(); // 모든 리스너 제거
       newSocket.disconnect();
     };
+    // eslint-disable-next-line
   }, [user]);
 
   return (
-    <SocketContext.Provider value={socket}>
-      {children}
-    </SocketContext.Provider>
+    <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
   );
 };
 

@@ -34,11 +34,11 @@ export default function RecommendGroup() {
 
   if (isLoading) {
     return (
-      <div className="flex gap-2 overflow-x-auto whitespace-nowrap scrollbar-hide py-2">
+      <div className="flex gap-4 mt-4 overflow-x-auto whitespace-nowrap scrollbar-hide py-2">
         {Array.from({ length: 10 }).map((_, i) => (
           <Skeleton
             key={i}
-            className="inline-block w-[200px] h-[134px] flex-shrink-0 rounded-md"
+            className="inline-block w-[210px] h-[120px] lg:w-[276px] lg:h-[160px]  flex-shrink-0 p-4 lg:p-6 ring-2 ring-gray-400/30 rounded-xl"
           />
         ))}
       </div>
@@ -50,7 +50,7 @@ export default function RecommendGroup() {
       <Empty
         mainText="추천할 모임이 없습니다."
         subText=""
-        className="h-[134px]"
+        className="h-[120px] lg:h-[160px]"
       />
     );
   }
@@ -69,12 +69,12 @@ export default function RecommendGroup() {
         <div className="overflow-hidden px-1 py-2">
           <ul
             className="flex transition-transform duration-300 ease-in-out"
-            style={{ transform: `translateX(-${currentIndex * 220}px)` }} // 200px + 5vw ≈ 220px 가정
+            style={{ transform: `translateX(-${currentIndex * 220}px)` }}
           >
             {validItems.map((group) => (
               <li
                 key={group.id}
-                className="w-[200px] h-[134px] mr-[2vw] bg-gray-300 rounded flex-shrink-0"
+                className="w-[210px] h-[120px] lg:w-[276px] lg:h-[160px] mr-4 bg-white rounded-lg flex-shrink-0"
               >
                 <RecommendGroupCard item={group} />
               </li>
@@ -85,14 +85,14 @@ export default function RecommendGroup() {
         <Button
           onClick={handlePrev}
           disabled={currentIndex === 0}
-          className="w-9 h-9 absolute top-0 left-0 bottom-0 m-auto rounded-full"
+          className="w-9 h-9 absolute top-0 left-[-10px] bottom-0 m-auto rounded-full"
         >
           ◀
         </Button>
         <Button
           onClick={handleNext}
           disabled={currentIndex === maxIndex}
-          className="w-9 h-9 absolute top-0 right-0 bottom-0 m-auto rounded-full"
+          className="w-9 h-9 absolute top-0 right-[-10px] bottom-0 m-auto rounded-full"
         >
           ▶
         </Button>

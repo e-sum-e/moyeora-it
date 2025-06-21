@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/popover';
 import { WriteForm } from '@/types';
 import { formatYearMonthDayWithDot } from '@/utils/dateUtils';
+import clsx from 'clsx';
 import { CalendarIcon } from 'lucide-react';
 import { UseFormReturn } from 'react-hook-form';
 
@@ -32,6 +33,8 @@ export const EndDateCalendar = ({
   closeEndDateCalendar,
   validEndDate,
 }: TitleProps) => {
+  const hasError = !!form.formState.errors.endDate;
+
   /** calendar에서 날짜 선택 후 calendar가 닫히게 하기 위한 함수 */
   const endDateSelect = (
     date: Date | undefined,
@@ -48,9 +51,12 @@ export const EndDateCalendar = ({
       <FormField
         control={form.control}
         name="endDate"
-        render={({ field }) => (
+        render={({ field, fieldState }) => (
           <FormItem>
-            <WriteFormLabel text="모임 종료일" />
+            <WriteFormLabel
+              text="모임 종료일"
+              info="모임 시작일의 일주일 이후부터 선택 가능합니다"
+            />
             <Popover
               open={isEndDateCalendarOpen}
               onOpenChange={
@@ -71,12 +77,24 @@ export const EndDateCalendar = ({
                     </>
                   )}
                 </div>
+                <FormControl>
+                  <input
+                    {...field}
+                    tabIndex={-1}
+                    className={clsx(
+                      'absolute top-[-4px] right-[-4px] bottom-[-4px] left-[-4px] text-transparent caret-transparent z-[-1] rounded-md',
+                      hasError
+                        ? 'outline-1 outline-destructive focus-visible:ring-red-500/20 focus-visible:ring-[3px]'
+                        : 'border-none outline-none',
+                    )}
+                    aria-hidden="true"
+                    value={field.value ? field.value.toISOString() : ''}
+                  />
+                </FormControl>
                 <PopoverTrigger className="cursor-pointer" asChild>
-                  <FormControl>
-                    <Button type="button" className="w-[fit-content]">
-                      <CalendarIcon />
-                    </Button>
-                  </FormControl>
+                  <Button type="button" className="w-[fit-content]">
+                    <CalendarIcon />
+                  </Button>
                 </PopoverTrigger>
                 <PopoverContent>
                   <Calendar
@@ -90,7 +108,7 @@ export const EndDateCalendar = ({
                 </PopoverContent>
               </div>
             </Popover>
-            <FormMessage />
+            <FormMessage>{fieldState.error?.message}</FormMessage>
           </FormItem>
         )}
       />

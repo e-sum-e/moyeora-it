@@ -8,17 +8,45 @@ import { QueryErrorBoundary } from '@/components/query-error-boundary';
 import { GroupList } from '@/features/user/group/components/group-list';
 import { request } from '@/api/request';
 import { getAuthCookieHeader } from '@/utils/cookie';
+import { GroupListLoading } from '@/features/user/group/components/group-list-loading';
+
+type EndedGroupsPageWrapperProps = {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{
+    search: string;
+    type: string;
+    order: string;
+  }>;
+};
 
 type EndedGroupsPageProps = {
+  params: Promise<{ id: string }>;
   searchParams: Promise<{
     search: string;
     type: string;
   }>;
 };
 
-export default async function EndedGroupsPage({
+export default async function EndedGroupsPageWrapper({
+  params,
   searchParams,
-}: EndedGroupsPageProps) {
+}: EndedGroupsPageWrapperProps) {
+  return (
+    <Suspense
+      fallback={<GroupListLoading />}
+      key={JSON.stringify(searchParams)}
+    >
+      <EndedGroupsPage params={params} searchParams={searchParams} />
+    </Suspense>
+  );
+}
+
+const EndedGroupsPage = async ({
+  params,
+  searchParams,
+}: EndedGroupsPageProps) => {
+  const { id } = await params;
+
   const { search, type } = await searchParams;
 
   const queryClient = new QueryClient();
@@ -31,11 +59,11 @@ export default async function EndedGroupsPage({
     size: 50,
   };
 
-  await queryClient.prefetchInfiniteQuery({
-    queryKey: ['items', '/v2/groups/mygroup', queryParams],
+  await queryClient.fetchInfiniteQuery({
+    queryKey: ['items', `/v2/groups/usergroup/${id}`, queryParams],
     queryFn({ pageParam }) {
       return request.get(
-        '/v2/groups/mygroup',
+        `/v2/groups/usergroup/${id}`,
         {
           ...queryParams,
           cursor: pageParam,
@@ -52,15 +80,11 @@ export default async function EndedGroupsPage({
     retry: 0,
   });
 
-  const dehydratedState = dehydrate(queryClient);
-
   return (
-    <HydrationBoundary state={dehydratedState}>
-      <QueryErrorBoundary>
-        <Suspense fallback={<div>loading...</div>}>
-          <GroupList status="ENDED" />
-        </Suspense>
-      </QueryErrorBoundary>
-    </HydrationBoundary>
+    <QueryErrorBoundary>
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <GroupList status="ENDED" />
+      </HydrationBoundary>
+    </QueryErrorBoundary>
   );
-}
+};

@@ -30,7 +30,7 @@ export const BookmarkButtonContainer = ({
       request.patch(
         '/v2/bookmark',
         { 'Content-Type': 'application/json' },
-        { groupId, bookmark: nextBookmarkStatus },
+        { groupId, isBookmark: nextBookmarkStatus },
         { credentials: 'include' },
       ),
     onError: () => {

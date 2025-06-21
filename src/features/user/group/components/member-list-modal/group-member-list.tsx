@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { ApplicantsList } from '@/features/user/group/components/member-list-modal/applicants-list';
 import { ParticipantsList } from '@/features/user/group/components/member-list-modal/participants-list';
 import { useQueryClient } from '@tanstack/react-query';
+import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 type GroupMemberListProps = {
   groupId: string;
@@ -11,13 +12,15 @@ type GroupMemberListProps = {
 
 /**
  * 모임 참여/신청자 목록 컴포넌트
- * 
+ *
  * 탭에 따라 모임 참여/신청자 목록을 보여준다.
- * 
+ *
  * @param groupId 모임 id
  * @returns 모임 참여/신청자 목록 컴포넌트
  */
 export const GroupMemberList = ({ groupId }: GroupMemberListProps) => {
+  const { id } = useParams();
+
   const queryClient = useQueryClient();
 
   const [currentTab, setCurrentTab] = useState<'participants' | 'applicants'>(
@@ -27,9 +30,10 @@ export const GroupMemberList = ({ groupId }: GroupMemberListProps) => {
   useEffect(() => {
     return () => {
       queryClient.invalidateQueries({
-        queryKey: ['items', '/v2/groups/mygroup'],
+        queryKey: ['items', `/v2/groups/usergroup/${id}`],
       });
     };
+    // eslint-disable-next-line
   }, []);
 
   return (
@@ -39,7 +43,11 @@ export const GroupMemberList = ({ groupId }: GroupMemberListProps) => {
           <li key={tab} className="relative">
             <button
               type="button"
-              className={`font-medium ${tab === currentTab ? 'after:content-[""] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[2px] after:bg-gray-900' : 'text-gray-400'}`}
+              className={`font-medium ${
+                tab === currentTab
+                  ? 'after:content-[""] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[2px] after:bg-gray-900'
+                  : 'text-gray-400'
+              }`}
               onClick={() =>
                 setCurrentTab(tab as 'participants' | 'applicants')
               }

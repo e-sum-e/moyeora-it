@@ -40,7 +40,6 @@ jobs:
             git reset --hard origin/${{ github.ref_name }}
             git pull origin ${{ github.ref_name }}
 
-            echo "Installing dependencies and building"
             yarn install --frozen-lockfile
             yarn build
 

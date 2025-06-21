@@ -1,9 +1,16 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { SearchInput } from '@/components/molecules/search-input/search-input';
-import Image from 'next/image';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { SelectGroup } from '@radix-ui/react-select';
 
 /**
  * 모임 목록 필터 컴포넌트
@@ -13,11 +20,24 @@ import Image from 'next/image';
  * @returns 모임 목록 필터 컴포넌트
  */
 export const GroupFilter = () => {
+  const router = useRouter();
+
   const pathname = usePathname();
 
   const searchParams = useSearchParams();
 
   const type = searchParams.get('type') ?? 'study';
+
+  const order = searchParams.get('order') ?? 'latest';
+
+  const handleOrderSelectChange = (value: string) => {
+    const queryParams = new URLSearchParams(searchParams);
+    if (queryParams.has('order') && queryParams.get('order') === value) {
+      return;
+    }
+    queryParams.set('order', value);
+    router.push(`${pathname}?${queryParams.toString()}`);
+  };
 
   return (
     <div className="flex flex-col gap-y-2">
@@ -43,13 +63,28 @@ export const GroupFilter = () => {
             </li>
           ))}
         </ul>
-        <div className="flex items-center gap-x-[10px] rounded-[30px] bg-gray-100 px-5 py-2 w-[150px] md:w-[200px] text-gray-500 h-9 self-end">
-          <Image src="/icons/search.svg" alt="search" width={17} height={17} />
-          <SearchInput
-            className="bg-gray-100 border-none shadow-none focus-visible:ring-0 p-0"
-            placeholder="검색"
-          />
-        </div>
+        <SearchInput
+          containerClassName="w-[150px] md:w-[200px]"
+          placeholder="검색"
+        />
+      </div>
+      <div className="flex">
+        <Select
+          defaultValue={order ?? 'latest'}
+          onValueChange={handleOrderSelectChange}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="최신순" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem defaultChecked value="latest">
+                최신순
+              </SelectItem>
+              <SelectItem value="oldest">오래된 순</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );
