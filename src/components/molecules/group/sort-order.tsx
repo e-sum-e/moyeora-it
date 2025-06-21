@@ -83,7 +83,7 @@ export const SortOrder = ({ updateQueryParams }: OrderProps) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" className="flex-none ml-auto cursor-pointer">
+        <Button variant="outline" className=" ml-auto cursor-pointer">
           {getSelectedOrderOptionName()}
         </Button>
       </PopoverTrigger>
