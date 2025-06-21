@@ -1,9 +1,9 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
 import { request } from '@/api/request';
 import { MemberInfo } from '@/features/user/group/components/member-list-modal/member-info';
 import { UserSummary } from '@/types';
+import { useQuery } from '@tanstack/react-query';
 
 type ParticipantsListProps = {
   groupId: string;
@@ -11,9 +11,9 @@ type ParticipantsListProps = {
 
 /**
  * 모임에 참여한 사용자 목록 컴포넌트
- * 
+ *
  * 모임에 참여한 사용자의 목록을 보여준다.
- * 
+ *
  * @param groupId 모임 id
  * @returns 모임에 참여한 사용자 목록 컴포넌트
  */
@@ -45,7 +45,7 @@ export const ParticipantsList = ({ groupId }: ParticipantsListProps) => {
               className="pb-5 border-b-2 border-gray-300 last:border-none border-dashed"
             >
               <MemberInfo
-                userId={String(participant.userId)}
+                userId={participant.userId}
                 nickname={participant.nickname}
                 email={participant.email}
                 profileImage={participant.profileImage}

@@ -5,8 +5,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { ArrowUpRight } from 'lucide-react';
 import { GroupMemberList } from '@/features/user/group/components/member-list-modal/group-member-list';
+import { ArrowUpRight } from 'lucide-react';
 
 type MemberListDialogProps = {
   groupId: string;

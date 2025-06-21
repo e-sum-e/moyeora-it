@@ -1,14 +1,13 @@
-import { Notification } from '@/types/index';
 import useNotificationStore from '@/stores/useNotificationStore';
+import { Notification } from '@/types/index';
+import { formatRelativeTime } from '@/utils/dateUtils';
 import { useRouter } from 'next/navigation';
-import { formatDistanceToNow } from 'date-fns';
-import { ko } from 'date-fns/locale';
 import React from 'react';
 
-const NotificationItemComponent = ({ 
+const NotificationItemComponent = ({
   notification,
   onClose,
-}: { 
+}: {
   notification: Notification;
   onClose?: () => void;
 }) => {
@@ -17,20 +16,20 @@ const NotificationItemComponent = ({
 
   const alarmClickHandler = () => {
     // 읽음 처리
-    if(!notification.isRead){
+    if (!notification.isRead) {
       setReadNotification(notification.id);
     }
 
     // URL이 있는 경우 해당 페이지로 이동
     if (notification.url) {
-      router.push(notification.url); 
+      router.push(notification.url);
       // 팝오버 닫기
       onClose?.();
     }
   };
 
   return (
-    <div 
+    <div
       className={`
         px-4 py-3 
         cursor-pointer 
@@ -43,11 +42,15 @@ const NotificationItemComponent = ({
       onClick={alarmClickHandler}
     >
       <div className="flex flex-col gap-1">
-        <p className={`text-sm ${notification.isRead ? 'text-gray-500' : 'text-gray-800'}`}>
+        <p
+          className={`text-sm ${
+            notification.isRead ? 'text-gray-500' : 'text-gray-800'
+          }`}
+        >
           {notification.message}
         </p>
         <span className="text-xs text-gray-400">
-          {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true, locale: ko })}
+          {formatRelativeTime(notification.createdAt)}
         </span>
       </div>
       {!notification.isRead && (

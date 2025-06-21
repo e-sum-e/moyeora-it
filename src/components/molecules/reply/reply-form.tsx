@@ -2,19 +2,26 @@
 
 import { request } from '@/api/request';
 import { LoginRequireButton } from '@/components/atoms/login-require-button';
+import { useTargetReplyStore } from '@/stores/useTargetReply';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
 type ReplyFormProps = {
-  onSuccess: (id: number) => void;
+  onSuccess?: () => void;
   parentReplyId?: number;
+  isOpenRereplyList?: boolean;
 };
 
-export const ReplyForm = ({ onSuccess, parentReplyId }: ReplyFormProps) => {
+export const ReplyForm = ({
+  onSuccess,
+  parentReplyId,
+  isOpenRereplyList,
+}: ReplyFormProps) => {
   const { groupId } = useParams();
   const [replyContent, setReplyContent] = useState<string>('');
+  const setTargetReply = useTargetReplyStore((state) => state.setTargetReply);
 
   const endpoint =
     parentReplyId === undefined
@@ -37,8 +44,17 @@ export const ReplyForm = ({ onSuccess, parentReplyId }: ReplyFormProps) => {
         queryKey: ['items', endpoint],
       });
 
-      onSuccess(data.items);
+      onSuccess?.();
       setReplyContent('');
+
+      if (parentReplyId === undefined) {
+        setTargetReply({ targetReplyId: data.items, targetRereplyId: null });
+      } else if (!isOpenRereplyList) {
+        setTargetReply({
+          targetReplyId: parentReplyId,
+          targetRereplyId: data.items,
+        });
+      }
     },
     onError: () => {
       toast.error('댓글 등록에 실패하였습니다.');
@@ -54,7 +70,7 @@ export const ReplyForm = ({ onSuccess, parentReplyId }: ReplyFormProps) => {
     <div className="space-y-2">
       <textarea
         placeholder="댓글을 입력하세요."
-        className="w-full p-2 border rounded h-20 resize-none"
+        className="w-full p-2 border rounded-lg h-20 resize-none"
         value={replyContent}
         onChange={(e) => setReplyContent(e.target.value)}
       />

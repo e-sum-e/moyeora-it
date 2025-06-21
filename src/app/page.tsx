@@ -77,24 +77,28 @@ export default async function Home({
   }
 
   return (
-    <div className="relative m-auto mb-10">
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <div className="text-[20px] md:text-2xl font-extrabold">🔥 인기글</div>
-        <RecommendGroup />
-        {/* <div className="flex gap-2 absolute right-0">
+    <div className="w-full max-w-[1200px] mx-auto px-4">
+      <div className="relative m-auto mb-10">
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <div className="text-[20px] md:text-2xl font-extrabold">
+            🔥 인기글
+          </div>
+          <RecommendGroup />
+          {/* <div className="flex gap-2 absolute right-0">
           <SearchInput />
           <WriteGroupButton />
         </div> */}
-        <QueryErrorBoundary
-          fallback={
-            <div>
-              ⚠️ 그룹을 불러오는 중 문제가 발생했습니다. 다시 시도해주세요.
-            </div>
-          }
-        >
-          <Groups serverQueryParams={awaitedSearchParams} />
-        </QueryErrorBoundary>
-      </HydrationBoundary>
+          <QueryErrorBoundary
+            fallback={
+              <div>
+                ⚠️ 그룹을 불러오는 중 문제가 발생했습니다. 다시 시도해주세요.
+              </div>
+            }
+          >
+            <Groups serverQueryParams={awaitedSearchParams} />
+          </QueryErrorBoundary>
+        </HydrationBoundary>
+      </div>
     </div>
   );
 }

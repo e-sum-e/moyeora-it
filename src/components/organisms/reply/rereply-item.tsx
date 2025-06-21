@@ -9,7 +9,7 @@ export const RereplyItem = forwardRef<HTMLLIElement, Reply>((props, ref) => {
   if (isDeleted) return null;
 
   return (
-    <li ref={ref} className="border-[1px] rounded-md mx-2">
+    <li ref={ref} className="border-[1px] rounded-md mx-2 first:mt-6 last:mb-3">
       <ReplyContent {...props} onDelete={() => setIsDeleted(true)} />
     </li>
   );

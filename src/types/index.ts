@@ -98,11 +98,11 @@ export type Order = 'asc' | 'desc';
 export type Notification = {
   id: number;
   message: string | null; // 추후 채팅의 경우 가장 간략한 채팅메세지 전달용 현재는 빈값으로 리턴
-  content?: string | null; // TODO: socket, notification 타입 통일 후 제거 
+  content?: string | null; // TODO: socket, notification 타입 통일 후 제거
   isRead: boolean; // 읽음 여부 default: false
-  read?: boolean; // TODO: socket, notification 타입 통일 후 제거 
+  read?: boolean; // TODO: socket, notification 타입 통일 후 제거
   created_at?: Date; // 알람 생성날짜
-  createdAt: Date; // 알람 생성날짜
+  createdAt: string; // 알람 생성날짜
   type: eNotification;
   url: string | null; // 연결되는 url -> NotificationType에 따라 필요한 부분 다름
 };

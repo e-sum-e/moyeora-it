@@ -10,15 +10,9 @@ import { RereplyItem } from './rereply-item';
 
 type RereplyListProps = {
   parentReplyId: number;
-  targetReplyId: number | null;
-  setTargetReplyId: (id: number | null) => void;
 };
 
-export const RereplyList = ({
-  targetReplyId,
-  parentReplyId,
-  setTargetReplyId,
-}: RereplyListProps) => {
+export const RereplyList = ({ parentReplyId }: RereplyListProps) => {
   const { groupId } = useParams();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useFetchItems<Reply & { parentId: number }>({
@@ -38,17 +32,17 @@ export const RereplyList = ({
 
   const { itemRefs: rereplyRefs, bottomRef } = useReplyScrollIntoView({
     data,
-    targetReplyId,
-    setTargetReplyId,
-    hasNextPage,
+    replyType: 'rereply',
   });
 
-  const rereplies = flattenPages(data.pages);
+  const rereplies = flattenPages(data.pages).filter(
+    (rereply) => !rereply.deleted,
+  );
 
   if (rereplies.length === 0) return null;
 
   return (
-    <div className="pb-6 pt-3">
+    <div className="mx-3">
       <ul className="flex flex-col gap-3">
         {rereplies.map((rereply) => (
           <RereplyItem

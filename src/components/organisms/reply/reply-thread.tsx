@@ -2,49 +2,55 @@
 
 import { RereplyFormToggle } from '@/components/molecules/reply/rereply-form-toggle';
 import { RereplyList } from '@/components/organisms/reply/rereply-list';
-import { useReplyScrollParams } from '@/hooks/useReplyScrollParams';
-import { useState } from 'react';
+import { useTargetReplyParams } from '@/hooks/useTargetReplyParams ';
+import { useTargetReplyStore } from '@/stores/useTargetReply';
+import { useEffect, useState } from 'react';
 
 export const ReplyThread = ({ parentReplyId }: { parentReplyId: number }) => {
-  const { targetParentId, targetId } = useReplyScrollParams('rereply');
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [targetReplyId, setTargetReplyId] = useState<number | null>(() => {
-    if (parentReplyId === targetParentId) return targetId;
-    return null;
-  });
+  const { notificationTargetReplyId, notificationTargetRereplyId } =
+    useTargetReplyParams();
+  const setTargetReply = useTargetReplyStore((state) => state.setTargetReply);
 
-  // useEffect(() => {
-  //   if (targetReplyId) {
-  //     setIsOpen(true);
-  //   }
-  // }, [parentReplyId, targetParentId, targetReplyId]);
+  useEffect(() => {
+    if (
+      notificationTargetRereplyId &&
+      parentReplyId === notificationTargetReplyId
+    ) {
+      setIsOpen(true);
+      setTargetReply({ targetRereplyId: notificationTargetRereplyId });
+    }
+  }, [
+    notificationTargetReplyId,
+    notificationTargetRereplyId,
+    parentReplyId,
+    setTargetReply,
+  ]);
 
-  // const replyFormSuccessHandler = (newReplyId: number | null) => {
-  //   setTargetReplyId(newReplyId);
-  //   setIsOpen(true);
-  // };
+  const toggleRereplyListHandler = () => {
+    setTargetReply({ targetReplyId: null, targetRereplyId: null });
+    setIsOpen(true);
+  };
 
   return (
-    <div className="bg-gray-100">
+    <div>
       <div>
-        <div className="flex justify-between mb-2 pt-3 px-3">
-          <div>대댓글</div>
+        <div className="flex justify-between mb-2 pt-3 px-5">
+          <div className="font-semibold text-gray-500">대댓글</div>
           <button
-            className="cursor-pointer"
+            className="cursor-pointer text-gray-500 text-sm"
             onClick={() => setIsOpen((prev) => !prev)}
           >
-            {isOpen ? '접기' : '펼치기'}
+            {isOpen ? '접기' : '보기'}
           </button>
         </div>
-        {isOpen && (
-          <RereplyList
-            targetReplyId={targetReplyId}
-            setTargetReplyId={setTargetReplyId}
-            parentReplyId={parentReplyId}
-          />
-        )}
+        {isOpen && <RereplyList parentReplyId={parentReplyId} />}
       </div>
-      <RereplyFormToggle parentReplyId={parentReplyId} onSuccess={() => {}} />
+      <RereplyFormToggle
+        parentReplyId={parentReplyId}
+        openRereplyList={toggleRereplyListHandler}
+        isOpenRereplyList={isOpen}
+      />
     </div>
   );
 };

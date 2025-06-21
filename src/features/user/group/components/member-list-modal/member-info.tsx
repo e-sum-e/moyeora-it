@@ -1,22 +1,16 @@
 'use client';
 
-import Link from 'next/link';
 import { Avatar } from '@/components/atoms/avatar';
+import { UserSummary } from '@/types';
 import { getDisplayNickname, getDisplayProfileImage } from '@/utils/fallback';
-
-type MemberInfoProps = {
-  userId: string;
-  nickname: string|null;
-  email: string;
-  profileImage: string|null;
-};
+import Link from 'next/link';
 
 export const MemberInfo = ({
   userId,
   nickname,
   email,
   profileImage,
-}: MemberInfoProps) => (
+}: UserSummary) => (
   <div className="flex gap-x-6">
     <Link href={`/users/${userId}`}>
       <Avatar
@@ -26,9 +20,9 @@ export const MemberInfo = ({
       />
     </Link>
     <div className="flex flex-col">
-      <span className="text-lg font-semibold">
+      <Link href={`/users/${userId}`} className="text-lg font-semibold">
         {getDisplayNickname(nickname, email)}
-      </span>
+      </Link>
       <span className="text-sm text-gray-400">{email}</span>
     </div>
   </div>

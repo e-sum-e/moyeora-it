@@ -47,15 +47,18 @@ export const LoginRequireButton = ({
         {children}
       </Button>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="sm:max-w-[425px] max-h-[90vh] p-10">
-          <DialogTitle className="font-normal">
+        <DialogContent className="sm:max-w-90 max-h-[90vh] p-10">
+          <DialogTitle className="text-center font-normal pt-2">
             로그인이 필요한 서비스입니다
           </DialogTitle>
           <DialogDescription className="sr-only">
             해당 기능을 사용하려면 먼저 로그인해 주세요.
           </DialogDescription>
           <DialogFooter className="mt-5">
-            <Button onClick={() => router.push('/login')}>
+            <Button
+              onClick={() => router.push('/login')}
+              className="cursor-pointer"
+            >
               로그인하러 가기
             </Button>
           </DialogFooter>

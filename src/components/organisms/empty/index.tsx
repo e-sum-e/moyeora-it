@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 type EmptyProps = {
   mainText: string;
-  subText: string;
+  subText?: string;
   targetUrl?: string;
   className?: string;
 };
@@ -26,7 +26,7 @@ export const Empty = ({
         className="grayscale"
       />
       <p className="mt-2 text-gray-500 text-lg">{mainText}</p>
-      <p className="text-gray-400">{subText}</p>
+      {subText && <p className="text-gray-400">{subText}</p>}
       {targetUrl && (
         <p className="text-gray-400">
           자세한 내용은 <Link href={targetUrl}>이곳</Link>에서 확인해보세요
