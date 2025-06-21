@@ -1,7 +1,7 @@
 // import checkAuthCookie from '@/features/auth/utils/checkAuthCookie';
 // import { redirect } from 'next/navigation';
-import { UserProfile } from '@/features/user/components/user-profile';
 import { UserPageTabs } from '@/features/user/components/user-page-tabs';
+import { UserProfile } from '@/features/user/components/user-profile';
 
 export default async function UserPageLayout({
   children,
@@ -22,13 +22,15 @@ export default async function UserPageLayout({
   // }
 
   return (
-    <div className="flex flex-col gap-y-5 pt-6 px-4 md:px-10 lg:px-25 bg-gray-50 min-h-[calc(100dvh-4rem)]">
-      <h1 className="font-semibold text-lg">유저 페이지</h1>
-      <div className="flex flex-col gap-y-5 bg-white rounded-t-2xl rounded-b-2xl mb-4 flex-1">
-        <UserProfile />
-        <div className="bg-white flex flex-col gap-y-2.5 rounded-b-2xl flex-1">
-          <UserPageTabs />
-          <main className="mx-4 flex-1 flex flex-col">{children}</main>
+    <div className=" bg-gray-50">
+      <div className="w-full max-w-[1200px] mx-auto flex flex-col gap-y-5 pt-6 px-4 md:px-10 lg:px-25 min-h-[calc(100dvh-4rem)]">
+        <h1 className="font-semibold text-lg">유저 페이지</h1>
+        <div className="flex flex-col gap-y-5 bg-white rounded-t-2xl rounded-b-2xl mb-4 flex-1">
+          <UserProfile />
+          <div className="bg-white flex flex-col gap-y-2.5 rounded-b-2xl flex-1">
+            <UserPageTabs />
+            <main className="mx-4 flex-1 flex flex-col">{children}</main>
+          </div>
         </div>
       </div>
     </div>

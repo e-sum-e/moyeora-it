@@ -24,7 +24,7 @@ export default function RootLayout({
           <AutoLoginManager />
           <SocketProvider>
             <Header />
-            <div className="w-full mx-auto">{children}</div>
+            {children}
           </SocketProvider>
         </ReactQueryProvider>
         <Toaster />
