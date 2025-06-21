@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { ApplicantsList } from '@/features/user/group/components/member-list-modal/applicants-list';
 import { ParticipantsList } from '@/features/user/group/components/member-list-modal/participants-list';
 import { useQueryClient } from '@tanstack/react-query';
+import { useParams } from 'next/navigation';
 
 type GroupMemberListProps = {
   groupId: string;
@@ -18,6 +19,8 @@ type GroupMemberListProps = {
  * @returns 모임 참여/신청자 목록 컴포넌트
  */
 export const GroupMemberList = ({ groupId }: GroupMemberListProps) => {
+  const { id } = useParams();
+
   const queryClient = useQueryClient();
 
   const [currentTab, setCurrentTab] = useState<'participants' | 'applicants'>(
@@ -27,7 +30,7 @@ export const GroupMemberList = ({ groupId }: GroupMemberListProps) => {
   useEffect(() => {
     return () => {
       queryClient.invalidateQueries({
-        queryKey: ['items', '/v2/groups/mygroup'],
+        queryKey: ['items', `/v2/groups/usergroup/${id}`],
       });
     };
   }, []);

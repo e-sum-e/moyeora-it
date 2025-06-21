@@ -15,9 +15,9 @@ type MemberListDialogProps = {
 
 /**
  * 모임 참여/신청자 목록 모달 컴포넌트
- * 
+ *
  * 모임 참여/신청자 목록을 보여준다.
- * 
+ *
  * @param groupId 모임 id
  * @param groupTitle 모임 제목
  * @returns 모임 참여/신청자 목록 모달 컴포넌트
@@ -27,7 +27,7 @@ export const MemberListDialog = ({
   groupTitle,
 }: MemberListDialogProps) => {
   return (
-    <div className="absolute bottom-0 right-0">
+    <div className="absolute bottom-3 right-4">
       <Dialog>
         <DialogTrigger asChild>
           <button

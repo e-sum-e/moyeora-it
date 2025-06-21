@@ -29,15 +29,16 @@ export const GroupList = ({ status }: GroupListProps) => {
 
   const searchParams = useSearchParams();
 
-  const { search, type } = Object.fromEntries(searchParams.entries());
+  const { search, type, order } = Object.fromEntries(searchParams.entries());
 
-  const { data, fetchNextPage, hasNextPage, isLoading } = useFetchItems<Group>({
-    url: '/v2/groups/mygroup',
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useFetchItems<Group>({
+    url: `/v2/groups/usergroup/${id}`,
     queryParams: {
       type: type ?? 'study',
       status: 'PARTICIPATING',
-      size: status === 'ENDED' ? 50 : 10,
+      size: status !== 'ENDED' ? 10 : 50,
       ...(search && { search }),
+      order: order === 'latest' || !order ? 'desc' : 'asc',
     },
     options: {
       staleTime: 0,
@@ -49,13 +50,17 @@ export const GroupList = ({ status }: GroupListProps) => {
 
   const { ref } = useFetchInView({
     fetchNextPage,
-    isLoading,
+    isLoading: isFetchingNextPage,
   });
 
   // @ts-expect-error 객체 안에 또 group 프로퍼티가 존재함.
   let groupList = flattenPages<Group>(data.pages).map((e) => e.group);
   if (status === 'ENDED') {
     groupList = groupList.filter((group) => isBeforeToday(group.endDate));
+  }
+
+  if(status === 'RECRUITING') {
+    groupList = groupList.filter((group) => group.createUserId === Number(id));
   }
 
   return (
@@ -69,7 +74,7 @@ export const GroupList = ({ status }: GroupListProps) => {
           </p>
         </div>
       ) : (
-        <ul className="flex flex-col mt-7.5 gap-y-4">
+        <ul className="grid grid-cols-1 md:grid-cols-2 mt-7.5 gap-4 mb-3">
           {groupList.map((group) => (
             <GroupListItem
               key={group.id}

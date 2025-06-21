@@ -1,11 +1,14 @@
 'use client';
 
-import { Separator } from '@/components/ui/separator';
-import { MemberListDialog } from '@/features/user/group/components/member-list-modal/member-list-dialog';
-import { Group } from '@/types';
-import { getPosition, Position } from '@/types/enums';
-import { formatYearMonthDayWithDot, isBeforeToday } from '@/utils/dateUtils';
 import Link from 'next/link';
+import { Group } from '@/types';
+import { formatYearMonthDayWithDot, isBeforeToday } from '@/utils/dateUtils';
+import { MemberListDialog } from '@/features/user/group/components/member-list-modal/member-list-dialog';
+import { CalendarDays, UsersRound } from 'lucide-react';
+import { Avatar } from '@/components/atoms/avatar';
+import { getDisplayProfileImage, getDisplayNickname } from '@/utils/fallback';
+import { GroupSkills } from '@/components/atoms/group/group-skills';
+import { GroupPositions } from '@/components/atoms/group/group-positions';
 
 type GroupListItemProps = {
   group: Group;
@@ -15,70 +18,90 @@ type GroupListItemProps = {
 
 const getIsRecruiting = (group: Group) => {
   if (!isBeforeToday(group.deadline)) {
-    if (group.participants === null) return true;
-    if (group.participants.length < group.maxParticipants) return true;
+    return group.participants.length < group.maxParticipants;
   }
   return false;
 };
 
-/**
- * 모임 목록 아이템 컴포넌트
- *
- * 모임 목록 아이템을 보여준다.
- *
- * @param group 모임 정보
- * @param isCurrentUser 현재 사용자가 로그인한 사용자인지 여부
- * @returns 모임 목록 아이템 컴포넌트
- */
 export const GroupListItem = ({
   group,
   isCurrentUser,
   status,
 }: GroupListItemProps) => {
-  const { id, title, deadline, position } = group;
+  const { id, startDate, endDate, title, participants, maxParticipants, type } =
+    group;
 
   return (
-    <li className="border-b-2 border-gray-200 h-25 last:border-b-0 relative">
+    <li className="border border-gray-200 rounded-2xl h-60 p-4 hover:bg-gray-50 transition-colors relative">
       <Link href={`/groups/${id}`}>
-        <div className="h-full flex flex-col w-full">
-          <div className="flex flex-col gap-y-2">
-            <div className="flex items-center gap-x-2">
-              <h3 className="text-lg font-semibold">{title}</h3>
-              <span className="text-sm text-green-500 font-semibold">
+        <div className="flex flex-col justify-between h-full">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold truncate">{title}</h3>
+            {status === 'RECRUITING' ? (
+              <span
+                className={`text-sm inline-block font-medium px-3 py-1 rounded-lg shrink-0 ${
+                  getIsRecruiting(group)
+                    ? 'bg-gray-50 text-gray-600'
+                    : 'bg-green-50 text-green-500'
+                }`}
+              >
                 {getIsRecruiting(group) ? '모집중' : '모집완료'}
               </span>
-            </div>
-            <div className="flex items-center gap-x-5">
-              <div className="flex items-center gap-x-1.5">
-                <span className="text-gray-700 font-semibold text-sm">
-                  담당 포지션
+            ) : (
+              <span
+                className={`text-sm inline-block font-medium px-3 py-1 rounded-lg bg-green-50 text-green-500`}
+              >
+                {type === 'study' ? '스터디' : '프로젝트'}
+              </span>
+            )}
+          </div>
+          <div className="flex flex-col gap-y-2.5">
+            <div className="flex items-center gap-x-1.5">
+              <div className="flex items-center gap-x-0.5">
+                <CalendarDays className="w-4 h-4 text-gray-600" />
+                <span className="text-sm text-gray-600 font-medium">
+                  진행 기간
                 </span>
-                <Separator
-                  orientation="vertical"
-                  className="data-[orientation=vertical]:h-4 min-h-4 bg-gray-300"
-                />
-                <div className="flex items-center gap-x-2">
-                  {position.map((position: Position) => (
-                    <span
-                      className="bg-gray-600 py-1 px-3 rounded-[8px] flex items-center justify-center text-white text-sm"
-                      key={position}
-                    >
-                      {getPosition(position)}
-                    </span>
-                  ))}
-                </div>
               </div>
+              <span className="text-sm text-gray-600 font-medium">
+                {formatYearMonthDayWithDot(startDate)} ~{' '}
+                {formatYearMonthDayWithDot(endDate)}
+              </span>
+            </div>
+            <GroupSkills skills={group.skills} />
+            <GroupPositions positions={group.position} />
+            <div className="flex items-center gap-x-3 border-t border-gray-200 pt-3">
               <div className="flex items-center gap-x-1.5">
-                <span className="text-gray-700 font-semibold text-sm">
-                  모임 마감일
+                <UsersRound className="w-4 h-4 text-gray-600" />
+                <span className="text-sm text-gray-600 font-medium">
+                  {participants.length} / {maxParticipants}명
                 </span>
-                <Separator
-                  orientation="vertical"
-                  className="data-[orientation=vertical]:h-4 min-h-4 bg-gray-300"
-                />
-                <span className="text-gray-700 font-semibold text-sm">
-                  ~{formatYearMonthDayWithDot(deadline)}
-                </span>
+              </div>
+              <div className="items-center hidden md:flex">
+                {participants.map((participant, i) => {
+                  if (i > 3) {
+                    return (
+                      <div key={'indicator'} className="size-8 bg-gray-100 border border-gray-200 text-gray-600 rounded-full flex items-center justify-center z-10 -ml-3">
+                        <span className="text-xs font-medium">
+                          +{participants.length - 4}
+                        </span>
+                      </div>
+                    );
+                  }
+                  return (
+                    <Avatar
+                      key={participant.userId}
+                      imageSrc={getDisplayProfileImage(
+                        participant.profileImage,
+                      )}
+                      fallback={getDisplayNickname(
+                        participant.nickname,
+                        participant.email,
+                      )}
+                      className={`border border-gray-200 size-8 ${i >= 1 ? '-ml-3' : 'ml-0'} z-10`}
+                    />
+                  );
+                })}
               </div>
             </div>
           </div>

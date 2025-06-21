@@ -8,18 +8,52 @@ import { QueryErrorBoundary } from '@/components/query-error-boundary';
 import { GroupList } from '@/features/user/group/components/group-list';
 import { request } from '@/api/request';
 import { getAuthCookieHeader } from '@/utils/cookie';
+import { GroupListLoading } from '@/features/user/group/components/group-list-loading';
 
-type CreatedGroupsPageProps = {
+type CreatedGroupsPageWrapperProps = {
+  params: Promise<{ id: string }>;
   searchParams: Promise<{
     search: string;
     type: string;
+    order: string;
+  }>;
+}
+
+type CreatedGroupsPageProps = {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{
+    search: string;
+    type: string;
+    order: string;
   }>;
 };
 
-export default async function CreatedGroupsPage({
+/**
+ * loading.tsx 파일의 로딩 컴포넌트는 라우트 세그먼트가 변경될 때만 호출되는 듯 함.
+ * 쿼리 파라미터가 변경되어도 loading.tsx 파일의 로딩 컴포넌트가 호출되지 않음.
+ * 그래서 따로 Wrapper 컴포넌트를 만들어서 쿼리 파라미터가 변경될 때 로딩 중이면, 로딩 컴포넌트를 호출하도록 함.
+ */
+export default async function CreatedGroupsPageWrapper({
+  params,
   searchParams,
-}: CreatedGroupsPageProps) {
-  const { search, type } = await searchParams;
+}: CreatedGroupsPageWrapperProps) {
+  return (
+    <Suspense fallback={<GroupListLoading />} key={JSON.stringify(searchParams)}>
+      <CreatedGroupsPage
+        params={params}
+        searchParams={searchParams}
+      />
+    </Suspense>
+  )
+}
+
+const CreatedGroupsPage = async ({
+  params,
+  searchParams,
+}: CreatedGroupsPageProps) => {
+  const { search, type, order } = await searchParams;
+
+  const { id } = await params;
 
   const cookieHeaderValue = await getAuthCookieHeader();
 
@@ -30,16 +64,16 @@ export default async function CreatedGroupsPage({
     status: 'PARTICIPATING',
     ...(search && { search }),
     size: 10,
+    order: order === 'latest' || !order ? 'desc' : 'asc',
   };
 
   await queryClient.fetchInfiniteQuery({
-    queryKey: ['items', '/v2/groups/mygroup', queryParams],
-    queryFn({ pageParam }) {
+    queryKey: ['items', `/v2/groups/usergroup/${id}`, queryParams],
+    queryFn() {
       return request.get(
-        '/v2/groups/mygroup',
+        `/v2/groups/usergroup/${id}`,
         {
           ...queryParams,
-          cursor: pageParam,
         },
         {
           credentials: 'include',
@@ -57,9 +91,7 @@ export default async function CreatedGroupsPage({
     <>
       <QueryErrorBoundary>
         <HydrationBoundary state={dehydrate(queryClient)}>
-          <Suspense fallback={<div>loading...</div>}>
-            <GroupList status="RECRUITING" />
-          </Suspense>
+          <GroupList status="RECRUITING" />
         </HydrationBoundary>
       </QueryErrorBoundary>
     </>
