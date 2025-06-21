@@ -12,11 +12,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import useAuthStore from '@/stores/useAuthStore';
+import { getDisplayNickname, getDisplayProfileImage } from '@/utils/fallback';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { getDisplayProfileImage, getDisplayNickname } from '@/utils/fallback';
 
 type MenuItem = {
   label: string;
@@ -25,7 +25,7 @@ type MenuItem = {
 
 const menuItems: MenuItem[] = [
   // { label: '프로젝트 찾기', href: '/projects' },
-  { label: '찜한 프로젝트', href: '/bookmark' },
+  { label: '찜한 모임', href: '/bookmark' },
 ];
 
 const Logo = ({ isMobile = false }: { isMobile?: boolean }) => (
@@ -49,14 +49,17 @@ const MenuLinks = ({ onClick }: { onClick?: () => void }) => {
         <Link
           key={href}
           href={href}
-          className={`text-sm font-medium text-gray-800 hover:text-primary ${pathname === href ? 'text-primary' : ''}`}
-        onClick={onClick}
-      >
-        {label}
-      </Link>
-    ))}
-  </>
-)};
+          className={`text-sm font-medium text-gray-800 hover:text-primary ${
+            pathname === href ? 'text-primary' : ''
+          }`}
+          onClick={onClick}
+        >
+          {label}
+        </Link>
+      ))}
+    </>
+  );
+};
 
 const MobileMenuLinks = ({ onClick }: { onClick?: () => void }) => {
   const pathname = usePathname();
@@ -64,11 +67,17 @@ const MobileMenuLinks = ({ onClick }: { onClick?: () => void }) => {
     <>
       {menuItems.map(({ label, href }) => (
         <DropdownMenuItem key={href} asChild onClick={onClick}>
-        <Link href={href} className={`${pathname === href ? 'text-primary' : ''}`}>{label}</Link>
-      </DropdownMenuItem>
-    ))}
-  </>
-)};
+          <Link
+            href={href}
+            className={`${pathname === href ? 'text-primary' : ''}`}
+          >
+            {label}
+          </Link>
+        </DropdownMenuItem>
+      ))}
+    </>
+  );
+};
 
 const UserProfile = ({
   userId,
@@ -107,7 +116,6 @@ export const Header = () => {
   const isLoggedIn = Boolean(user);
   const userId = user?.userId ?? 0;
   const profileImage = getDisplayProfileImage(user?.profileImage ?? null);
-
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
