@@ -42,7 +42,7 @@ jobs:
 
             yarn cache clean
             rm -rf .next
-            yarn install --frozen-lockfile
+            yarn install --frozen-lockfile --check-files --force
             yarn build
 
             echo "Restarting PM2"
@@ -64,6 +64,3 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
-
-      
-      
